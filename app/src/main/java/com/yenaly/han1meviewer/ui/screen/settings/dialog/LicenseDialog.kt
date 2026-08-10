@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,9 +26,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import com.mikepenz.aboutlibraries.ui.compose.LibraryDefaults
 import com.mikepenz.aboutlibraries.ui.compose.android.produceLibraries
 import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
+import com.mikepenz.aboutlibraries.ui.compose.variant.LibraryBadges
 import com.yenaly.han1meviewer.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,14 +71,13 @@ fun LicenseDialog(
                         LibrariesContainer(
                             libraries = libraries,
                             modifier = Modifier,
-                            libraryModifier = Modifier
-                                .clip(MaterialTheme.shapes.large)
-                                .background(MaterialTheme.colorScheme.surface),
-                            dimensions = LibraryDefaults.libraryDimensions(
-                                itemSpacing = 8.dp
+                            badges = LibraryBadges(
+                                description = true,
+                                funding = true
                             ),
-                            showDescription = true,
-                            showFundingBadges = true
+                            divider = {
+                                Spacer(Modifier.height(8.dp))
+                            }
                         )
                     }
 
