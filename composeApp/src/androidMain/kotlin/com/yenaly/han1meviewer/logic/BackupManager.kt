@@ -17,6 +17,7 @@ import com.yenaly.han1meviewer.logic.entity.download.DownloadCategoryEntity
 import com.yenaly.han1meviewer.logic.entity.download.DownloadGroupEntity
 import com.yenaly.han1meviewer.logic.entity.download.HanimeCategoryCrossRef
 import com.yenaly.han1meviewer.logic.entity.download.HanimeDownloadEntity
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import java.io.OutputStream
@@ -28,6 +29,8 @@ object BackupManager {
         ignoreUnknownKeys = true
         prettyPrint = true
         encodeDefaults = true
+        explicitNulls = true
+        classDiscriminator = "type"
     }
 
     @Serializable
@@ -50,21 +53,27 @@ object BackupManager {
     @Serializable
     private sealed interface PreferenceValue {
         @Serializable
+        @SerialName("com.yenaly.han1meviewer.logic.BackupManager.PreferenceValue.BooleanValue")
         data class BooleanValue(val value: Boolean) : PreferenceValue
 
         @Serializable
+        @SerialName("com.yenaly.han1meviewer.logic.BackupManager.PreferenceValue.FloatValue")
         data class FloatValue(val value: Float) : PreferenceValue
 
         @Serializable
+        @SerialName("com.yenaly.han1meviewer.logic.BackupManager.PreferenceValue.IntValue")
         data class IntValue(val value: Int) : PreferenceValue
 
         @Serializable
+        @SerialName("com.yenaly.han1meviewer.logic.BackupManager.PreferenceValue.LongValue")
         data class LongValue(val value: Long) : PreferenceValue
 
         @Serializable
+        @SerialName("com.yenaly.han1meviewer.logic.BackupManager.PreferenceValue.StringValue")
         data class StringValue(val value: String) : PreferenceValue
 
         @Serializable
+        @SerialName("com.yenaly.han1meviewer.logic.BackupManager.PreferenceValue.StringSetValue")
         data class StringSetValue(val value: Set<String>) : PreferenceValue
     }
 

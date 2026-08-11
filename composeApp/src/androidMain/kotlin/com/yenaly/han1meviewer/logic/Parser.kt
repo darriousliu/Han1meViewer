@@ -26,9 +26,9 @@ import com.yenaly.han1meviewer.logic.model.VideoComments
 import com.yenaly.han1meviewer.logic.state.PageLoadingState
 import com.yenaly.han1meviewer.logic.state.VideoLoadingState
 import com.yenaly.han1meviewer.logic.state.WebsiteState
+import com.yenaly.han1meviewer.serialization.requiredLegacyJsonValue
 import com.yenaly.han1meviewer.toVideoCode
 import kotlinx.datetime.LocalDate
-import org.json.JSONObject
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Comment
 import org.jsoup.nodes.Element
@@ -897,8 +897,7 @@ object Parser {
 
     @SuppressLint("BuildListAdds")
     fun comments(body: String): WebsiteState<VideoComments> {
-        val jsonObject = JSONObject(body)
-        val commentBody = jsonObject.get("comments").toString()
+        val commentBody = body.requiredLegacyJsonValue("comments")
         val parseBody = Jsoup.parse(commentBody).body()
         val csrfToken = parseBody.selectFirst("input[name=_token]")?.attr("value")
         val currentUserId = parseBody.selectFirst("input[name=comment-user-id]")?.attr("value")
@@ -982,8 +981,7 @@ object Parser {
     }
 
     fun commentReply(body: String): WebsiteState<VideoComments> {
-        val jsonObject = JSONObject(body)
-        val replyBody = jsonObject.get("replies").toString()
+        val replyBody = body.requiredLegacyJsonValue("replies")
         val replyList = mutableListOf<VideoComments.VideoComment>()
         val parseBody = Jsoup.parse(replyBody).body()
         val replyStart = parseBody.selectFirst("div[id^=reply-start]")

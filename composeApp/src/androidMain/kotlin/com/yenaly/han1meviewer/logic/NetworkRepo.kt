@@ -21,6 +21,9 @@ import com.yenaly.han1meviewer.logic.network.HanimeNetwork
 import com.yenaly.han1meviewer.logic.state.PageLoadingState
 import com.yenaly.han1meviewer.logic.state.VideoLoadingState
 import com.yenaly.han1meviewer.logic.state.WebsiteState
+import com.yenaly.han1meviewer.serialization.asLegacyBooleanOrFalse
+import com.yenaly.han1meviewer.serialization.parseLegacyJsonObject
+import com.yenaly.han1meviewer.serialization.requiredLegacyJsonValue
 import com.yenaly.yenaly_libs.utils.applicationContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -32,7 +35,6 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
-import org.json.JSONObject
 import retrofit2.Response
 import java.io.File
 import javax.net.ssl.SSLHandshakeException
@@ -244,8 +246,7 @@ object NetworkRepo {
             )
         },
     ) {
-        val jsonObject = JSONObject(it)
-        val success = jsonObject.optBoolean("success", false)
+        val success = parseDeleteOnlineWatchHistorySuccess(it)
         if (success) {
             WebsiteState.Success(position)
         } else {
@@ -278,8 +279,7 @@ object NetworkRepo {
             }
         }
     ) { deleteBody ->
-        val jsonObject = JSONObject(deleteBody)
-        val returnVideoCode = jsonObject.get("video_id").toString()
+        val returnVideoCode = parseDeletedVideoCode(deleteBody)
         if (videoCode == returnVideoCode) {
             return@websiteIOFlow WebsiteState.Success(position)
         }
@@ -668,3 +668,9 @@ object NetworkRepo {
 
     private fun getString(resId: Int) = applicationContext.getString(resId)
 }
+
+internal fun parseDeleteOnlineWatchHistorySuccess(body: String): Boolean =
+    body.parseLegacyJsonObject()["success"].asLegacyBooleanOrFalse()
+
+internal fun parseDeletedVideoCode(body: String): String =
+    body.requiredLegacyJsonValue("video_id")

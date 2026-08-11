@@ -6,7 +6,10 @@ import com.yenaly.han1meviewer.GETCHU_BASE_URL
 import com.yenaly.han1meviewer.logic.model.GetchuPreview
 import com.yenaly.han1meviewer.logic.model.GetchuPreviewDetail
 import com.yenaly.han1meviewer.logic.state.WebsiteState
-import org.json.JSONObject
+import com.yenaly.han1meviewer.serialization.asLegacyOptionalString
+import com.yenaly.han1meviewer.serialization.parseLegacyJsonObjectOrNull
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.util.regex.Pattern
@@ -98,29 +101,28 @@ object GetchuParser {
             .asSequence()
             .mapNotNull { script ->
                 val jsonText = script.data().ifBlank { script.html() }.trim()
-                runCatching { JSONObject(jsonText) }.getOrNull()
+                jsonText.toGetchuJsonObjectOrNull()
             }
             .plus(body.extractGetchuJsonLdObjects())
             .flatMap { json ->
-                val graph = json.optJSONArray("@graph")
-                (0 until (graph?.length() ?: 0)).asSequence()
-                    .mapNotNull { graph?.optJSONObject(it) }
+                val graph = json["@graph"] as? JsonArray
+                graph.orEmpty().asSequence().mapNotNull { it as? JsonObject }
             }
-            .firstOrNull { it.optString("@type") == "Product" }
+            .firstOrNull { it.optLegacyString("@type") == "Product" }
 
-        val title = productJson?.optString("name")?.cleanGetchuText()?.takeIf { it.isNotBlank() }
+        val title = productJson?.optLegacyString("name")?.cleanGetchuText()?.takeIf { it.isNotBlank() }
             ?: parseBody.getElementById("soft-title")?.text()?.cleanGetchuText()
                 ?.takeIf { it.isNotBlank() }
             ?: parseBody.selectFirst("meta[property=og:title]")?.attr("content")?.cleanGetchuText()
             ?: parseBody.ownerDocument()?.title()?.substringBefore(" | ")?.cleanGetchuText()
             ?: EMPTY_STRING
         val specMap = parseBody.extractGetchuSpecMap() + body.extractGetchuSpecMapFromRawHtml()
-        val brand = productJson?.optJSONObject("brand")?.optString("name")?.cleanGetchuText()
+        val brand = productJson?.optObject("brand")?.optLegacyString("name")?.cleanGetchuText()
             ?.takeIf { it.isNotBlank() }
             ?: parseBody.getElementById("brandsite")?.text()?.cleanGetchuText()
                 ?.takeIf { it.isNotBlank() }
             ?: specMap.firstValueContains("ブランド")
-        val coverUrl = productJson?.optJSONArray("image")?.optString(0)?.toGetchuAbsUrl()
+        val coverUrl = productJson?.optArray("image")?.optLegacyString(0)?.toGetchuAbsUrl()
             ?: parseBody.selectFirst("meta[property=og:image]")?.attr("content")?.toGetchuAbsUrl()
             ?: body.extractMetaContent("og:image")?.toGetchuAbsUrl()
             ?: body.extractMetaContent("twitter:image:src")?.toGetchuAbsUrl()
@@ -129,18 +131,18 @@ object GetchuParser {
             ?: Regex("href=[\"']([^\"']*?/brandnew/$id/[^\"']*?package\\.jpg)[\"']")
                 .find(body)?.groupValues?.getOrNull(1)?.toGetchuAbsUrl()
         val metaDescription =
-            productJson?.optString("description")?.cleanGetchuText()?.takeIf { it.isNotBlank() }
+            productJson?.optLegacyString("description")?.cleanGetchuText()?.takeIf { it.isNotBlank() }
                 ?: parseBody.selectFirst("meta[name=description]")?.attr("content")
                     ?.cleanGetchuText()
-        val offer = productJson?.optJSONObject("offers")
-        val price = offer?.optString("price")?.takeIf { it.isNotBlank() }?.let { "¥$it" }
+        val offer = productJson?.optObject("offers")
+        val price = offer?.optLegacyString("price")?.takeIf { it.isNotBlank() }?.let { "¥$it" }
             ?: parseBody.selectFirst("span.redb2")?.text()?.cleanGetchuText()
             ?: specMap.firstValueContains("価格")
             ?: parseBody.select("#soft_table tr").firstNotNullOfOrNull { row ->
                 row.text().cleanGetchuText()
                     .takeIf { text -> text.contains("¥") || text.contains("￥") || text.contains("円") }
             }
-        val productUrl = offer?.optString("url")?.takeIf { it.isNotBlank() }
+        val productUrl = offer?.optLegacyString("url")?.takeIf { it.isNotBlank() }
             ?: "${GETCHU_BASE_URL}item/$id/"
 
         val releaseDateRegex =
@@ -182,9 +184,9 @@ object GetchuParser {
             .takeIf { it.isNotBlank() }
             ?: metaDescription
 
-        val jsonLdImages = productJson?.optJSONArray("image")?.let { images ->
-            (0 until images.length()).mapNotNull { index ->
-                images.optString(index).toGetchuAbsUrl()?.withGetchuGc()
+        val jsonLdImages = productJson?.optArray("image")?.let { images ->
+            images.indices.mapNotNull { index ->
+                images.optLegacyString(index).toGetchuAbsUrl()?.withGetchuGc()
             }
         }.orEmpty().drop(1)
         val sampleImages = (parseBody.select("div.item-Samplecard a[href]")
@@ -343,14 +345,25 @@ object GetchuParser {
         )
     }
 
-    private fun String.extractGetchuJsonLdObjects(): Sequence<JSONObject> {
+    private fun String.extractGetchuJsonLdObjects(): Sequence<JsonObject> {
         return Regex(
             "<script[^>]*type=[\"'][^\"']*ld\\+json[^\"']*[\"'][^>]*>([\\s\\S]*?)</script>",
             RegexOption.IGNORE_CASE,
         ).findAll(this).mapNotNull { match ->
-            runCatching { JSONObject(match.groupValues[1].trim()) }.getOrNull()
+            match.groupValues[1].trim().toGetchuJsonObjectOrNull()
         }
     }
+
+    private fun String.toGetchuJsonObjectOrNull(): JsonObject? =
+        parseLegacyJsonObjectOrNull()
+
+    private fun JsonObject.optObject(key: String): JsonObject? = this[key] as? JsonObject
+
+    private fun JsonObject.optArray(key: String): JsonArray? = this[key] as? JsonArray
+
+    private fun JsonObject.optLegacyString(key: String): String = this[key].asLegacyOptionalString()
+
+    private fun JsonArray.optLegacyString(index: Int): String = getOrNull(index).asLegacyOptionalString()
 
     private fun String.extractMetaContent(propertyOrName: String): String? {
         val escaped = Pattern.quote(propertyOrName)

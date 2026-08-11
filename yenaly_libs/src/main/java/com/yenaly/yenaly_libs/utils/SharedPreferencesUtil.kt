@@ -7,13 +7,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
 
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.ObjectInputStream
-import java.io.ObjectOutputStream
-import java.net.URLDecoder
-import java.net.URLEncoder
-
 /**
  * 创建SharedPreferences
  *
@@ -48,7 +41,8 @@ fun <Ace> putSpValue(
             is Int -> putInt(key, value)
             is Boolean -> putBoolean(key, value)
             is Float -> putFloat(key, value)
-            else -> putString(key, serialize(value))
+            is Set<*> -> putStringSet(key, value.requireStringSet())
+            else -> error("Unsupported SharedPreferences value type: ${value?.let { it::class }}")
         }
     }
 }
@@ -76,7 +70,8 @@ fun <Taffy> getSpValue(
             is Int -> getInt(key, default)
             is Boolean -> getBoolean(key, default)
             is Float -> getFloat(key, default)
-            else -> deSerialization(getString(key, serialize(default)))
+            is Set<*> -> getStringSet(key, default.requireStringSet())?.toSet() ?: default
+            else -> error("Unsupported SharedPreferences value type: ${default?.let { it::class }}")
         }
         result as Taffy
     }
@@ -126,29 +121,7 @@ fun clearSharedPreferences(
     applicationContext.sp(name = name).edit { clear() }
 }
 
-/**
- * 序列化
- */
-private fun <Nyaru> serialize(obj: Nyaru): String {
-    val byteArrayOutputStream = ByteArrayOutputStream()
-    val objectOutputStream = ObjectOutputStream(byteArrayOutputStream)
-    objectOutputStream.writeObject(obj)
-    var serStr = byteArrayOutputStream.toString("ISO-8859-1")
-    serStr = URLEncoder.encode(serStr, "UTF-8")
-    objectOutputStream.close()
-    byteArrayOutputStream.close()
-    return serStr
-}
-
-/**
- * 反序列化
- */
-private fun <Bekki> deSerialization(str: String?): Bekki {
-    val redStr = URLDecoder.decode(str, "UTF-8")
-    val byteArrayInputStream = ByteArrayInputStream(redStr.toByteArray(charset("ISO-8859-1")))
-    val objectInputStream = ObjectInputStream(byteArrayInputStream)
-    val obj = objectInputStream.readObject() as Bekki
-    objectInputStream.close()
-    byteArrayInputStream.close()
-    return obj
+private fun Set<*>.requireStringSet(): Set<String> {
+    require(all { it is String }) { "SharedPreferences sets may only contain strings" }
+    return filterIsInstanceTo(linkedSetOf())
 }

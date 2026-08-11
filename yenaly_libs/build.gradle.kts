@@ -44,8 +44,7 @@ kotlin {
         jvmTarget.value(JvmTarget.JVM_21)
         freeCompilerArgs.addAll(
             "-opt-in=kotlin.RequiresOptIn",
-            "-Xskip-prerelease-check",
-            "-opt-in=kotlin.ExperimentalStdlibApi"
+            "-Xskip-prerelease-check"
         )
     }
 }
@@ -62,8 +61,6 @@ dependencies {
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.preference.ktx)
     implementation(libs.startup.runtime)
-    implementation(libs.gson)
-
     testImplementation(libs.junit)
 
     androidTestImplementation(libs.test.junit)

@@ -40,11 +40,8 @@ object HUpdater {
         if (forceCheck || Preferences.isUpdateDialogVisible) {
             if (Preferences.useCIUpdateChannel && Firebase.remoteConfig.getBoolean(FirebaseConstants.ENABLE_CI_UPDATE)) {
                 val curSha = AppBuildInfoProvider.current.commitSha
-                // 特殊情况下才用注释部分，一般情况下 branch 都是固定的，要不然多一次
-                // request 会对我的 API Token 造成负担。
-                // val apiReq = request(HA1_GITHUB_API_URL)
-                // val branch = apiReq.body?.string()?.let(::JSONObject)?.getString("default_branch")
-                //     ?: return null
+                // 默认分支固定，避免额外请求消耗 API Token。若需恢复动态查询，应通过统一的
+                // kotlinx.serialization JSON 解析入口读取 default_branch。
                 val workflowRun = HanimeNetwork.githubService.getWorkflowRuns()
                     .workflowRuns.firstOrNull() ?: return null
                 val shortSha = workflowRun.headSha.take(7)

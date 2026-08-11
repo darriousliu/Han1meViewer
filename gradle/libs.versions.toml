@@ -40,7 +40,6 @@ serialization = "1.11.0"
 ktor = "3.5.2"
 ksoup = "0.2.6"
 sqlite = "2.7.0"
-gson = "2.14.0"
 jsoup = "1.23.1"
 retrofit = "3.0.0"
 converterSerialization = "1.0.0"
@@ -127,7 +126,6 @@ navigation-compose-multiplatform = { module = "org.jetbrains.androidx.navigation
 
 # Parse
 serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
 ksoup = { module = "com.fleeksoft.ksoup:ksoup", version.ref = "ksoup" }
 
