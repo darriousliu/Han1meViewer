@@ -22,17 +22,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.yenaly.han1meviewer.R
+import com.yenaly.han1meviewer.generated.resources.*
 import com.yenaly.han1meviewer.logic.model.CreatorSort
 import com.yenaly.han1meviewer.logic.model.CreatorUploadingItem
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * 排序筛选行：最新/热门/最旧。
@@ -49,15 +49,15 @@ internal fun CreatorSortRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         CreatorSortChip(
-            text = stringResource(R.string.sort_by_newest),
+            text = stringResource(Res.string.sort_by_newest),
             selected = sort == CreatorSort.Latest
         ) { onRefresh(CreatorSort.Latest) }
         CreatorSortChip(
-            text = stringResource(R.string.popular),
+            text = stringResource(Res.string.popular),
             selected = sort == CreatorSort.Popular
         ) { onRefresh(CreatorSort.Popular) }
         CreatorSortChip(
-            text = stringResource(R.string.sort_by_oldest),
+            text = stringResource(Res.string.sort_by_oldest),
             selected = sort == CreatorSort.Oldest
         ) { onRefresh(CreatorSort.Oldest) }
     }
@@ -99,9 +99,9 @@ internal fun CreatorUploadingCard(
                         .aspectRatio(16f / 9f)
                         .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
                     contentScale = ContentScale.Crop,
-                    placeholder = painterResource(R.drawable.h_chan_loading),
-                    error = painterResource(R.drawable.h_chan_load_failed),
-                    fallback = painterResource(R.drawable.h_chan_load_failed),
+                    placeholder = painterResource(Res.drawable.h_chan_loading),
+                    error = painterResource(Res.drawable.h_chan_load_failed),
+                    fallback = painterResource(Res.drawable.h_chan_load_failed),
                 )
                 Box(
                     modifier = Modifier
