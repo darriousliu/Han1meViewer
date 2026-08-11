@@ -1,8 +1,6 @@
 package com.yenaly.han1meviewer.ui.screen.video
 
 import android.content.res.Configuration
-import android.view.View
-import android.view.ViewGroup
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -35,7 +33,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import com.yenaly.han1meviewer.logic.model.HanimeInfo
 
 @Composable
@@ -46,7 +43,7 @@ fun VideoShellContent(
     onHideRelatedInIntroChange: (Boolean) -> Unit,
     onSideRelatedCollapsedChange: (Boolean) -> Unit,
     onOpenVideo: (HanimeInfo) -> Unit,
-    mainHostFactory: () -> View,
+    mainContent: @Composable () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val configuration = LocalConfiguration.current
@@ -63,30 +60,32 @@ fun VideoShellContent(
         onSideRelatedCollapsedChange(showSideRelated && isSideRelatedCollapsed)
     }
 
-    if (showSideRelated) {
-        val indicatorWidth = 28.dp
-        BoxWithConstraints(
-            modifier = modifier
-                .fillMaxSize()
-                .statusBarsPadding()
-        ) {
-            val sideWidth by animateDpAsState(
-                targetValue = if (isSideRelatedCollapsed) indicatorWidth else maxWidth * 0.38f,
-                animationSpec = tween(durationMillis = 300),
-                label = "sideRelatedWidth",
-            )
-            Row(
-                modifier = Modifier.fillMaxSize()
+    val indicatorWidth = 28.dp
+    BoxWithConstraints(
+        modifier = modifier
+            .fillMaxSize()
+            .then(if (showSideRelated) Modifier.statusBarsPadding() else Modifier)
+    ) {
+        val containerWidth = maxWidth
+        Row(modifier = Modifier.fillMaxSize()) {
+            // Keep this call before the conditional side panel so the player composition and its
+            // Surface survive normal/fullscreen/PiP and tablet layout changes.
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight(),
             ) {
-                AndroidView(
-                    factory = {
-                        mainHostFactory().also { view ->
-                            (view.parent as? ViewGroup)?.removeView(view)
-                        }
+                mainContent()
+            }
+            if (showSideRelated) {
+                val sideWidth by animateDpAsState(
+                    targetValue = if (isSideRelatedCollapsed) {
+                        indicatorWidth
+                    } else {
+                        containerWidth * 0.38f
                     },
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight(),
+                    animationSpec = tween(durationMillis = 300),
+                    label = "sideRelatedWidth",
                 )
                 Row(
                     modifier = Modifier
@@ -116,15 +115,6 @@ fun VideoShellContent(
                 }
             }
         }
-    } else {
-        AndroidView(
-            factory = {
-                mainHostFactory().also { view ->
-                    (view.parent as? ViewGroup)?.removeView(view)
-                }
-            },
-            modifier = modifier.fillMaxSize(),
-        )
     }
 }
 

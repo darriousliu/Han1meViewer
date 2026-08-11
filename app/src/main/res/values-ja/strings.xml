@@ -475,6 +475,7 @@ hanime1.me以外のドメインは、特定の時間帯にhanime1.meにリダイ
     <string name="allow_pip_disc">ホーム画面戻った時にピクチャインピクチャモードに入ることを許可 （ピクチャインピクチャ権限要）</string>
     <string name="allow_pip_title">ピクチャインピクチャ許可</string>
     <string name="play_pause">再生/一時停止</string>
+    <string name="mobile_data_playback_warning">Wi-Fi に接続されていません。再生を続けるとモバイルデータを使用する場合があります。</string>
     <string name="request_pip_alert">ピクチャインピクチャ権限未許可、自動オフ</string>
     <string name="specific_y_m">特定年月</string>
     <string name="approximate_range">おおよその範囲</string>

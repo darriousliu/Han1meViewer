@@ -12,6 +12,7 @@ object SettingsPreferenceKeys {
     const val USE_DYNAMIC_COLOR = "use_dynamic_color"
     const val THEME_COLOR = "theme_color"
     const val ALLOW_RESUME_PLAYBACK = "allow_resume_playback"
+    const val ALLOW_PIP_MODE = "allow_pip_mode"
     const val SEARCH_ARTIST_IGNORE_VIDEO_TYPE = "search_artist_ignore_video_type"
     const val DISABLE_MOBILE_DATA_WARNING = "disable_mobile_data_warning"
     const val COLLAPSE_DOWNLOADED_GROUP = "collapse_downloaded_group"

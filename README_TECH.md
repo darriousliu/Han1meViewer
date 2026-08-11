@@ -18,10 +18,10 @@ Han1meViewer 当前是以 Kotlin + Jetpack Compose 为主的 Android 应用，�
 - Room + KSP。
 - WorkManager 后台下载和更新任务。
 - Coil 3 Compose 图片加载。
-- Media3 ExoPlayer、JZVD、MPV Android 播放链路。
+- Compose 播放器、Media3 ExoPlayer、MPV Android 播放链路。
 - Firebase Analytics、Crashlytics、Performance、Remote Config、Realtime Database。
 
-当前代码仍有少量历史 View/XML 组件，例如 JZVD 自定义 View、部分设置/播放器相关布局和 `yenaly_libs` 基础库组件，但主业务页面已经以 Compose 为主。
+当前代码仍有少量历史 View/XML 组件，例如部分设置布局、WebView 平台边界和 `yenaly_libs` 基础库组件，但主业务页面已经以 Compose 为主。
 
 ## 2. 模块结构
 
@@ -44,13 +44,14 @@ app/src/main/java/com/yenaly/han1meviewer/
 │   ├── NetworkRepo.kt     网络仓库入口
 │   ├── DatabaseRepo.kt    本地仓库入口
 │   └── Parser.kt          HTML/JSON 解析入口
+├── playback/              播放模型、统一控制器、双内核 adapter、Compose Surface 与平台桥
 ├── ui/
 │   ├── activity/          MainActivity、登录、Cloudflare、手动 Cookie 页面
 │   ├── navigation/        主导航、设置导航、路由和安全跳转
 │   ├── screen/            Compose 页面
 │   ├── component/         Compose 组件
 │   ├── viewmodel/         页面 ViewModel
-│   ├── view/              自定义 View 和播放器 View
+│   ├── view/              仍需保留的 Android View 平台组件
 │   └── theme/             Compose 主题、颜色、尺寸
 ├── util/                  文件、网络、权限、主题、Cookie、Toast 等工具
 ├── worker/                下载 Worker、更新 Worker、下载管理器
@@ -266,22 +267,25 @@ VideoRoute(videoCode = "-1", localUri) -> VideoViewModel.buildLocalPlayInfo -> H
 
 ## 8. 播放器链路
 
-项目保留了历史 JZVD 播放器封装，同时引入 Media3 和 MPV 能力。
+播放器采用 Compose 控制层和统一的 `PlaybackController`，底层保留 Media3 与 MPV 两套 adapter。业务 UI 不直接接触 `ExoPlayer`、`MPVLib`、`View` 或 `Surface`；渲染细节限制在 Compose Surface/平台桥内部。
 
 关键文件：
 
-- `ui/view/video/HJzvdStd.kt`
-- `ui/view/video/HMediaKernel.kt`
-- `ui/view/video/HanimeDataSource.kt`
+- `playback/model/PlaybackState.kt`
+- `playback/core/PlaybackController.kt`
+- `playback/media3/Media3PlaybackEngine.kt`
+- `playback/mpv/MpvPlaybackEngine.kt`
+- `playback/compose/PlaybackSurface.kt`
+- `playback/platform/PlaybackPlatformBridge.kt`
 - `ui/screen/video/VideoPlayerUi.kt`
-- `util/Videos.kt`
+- `ui/viewmodel/VideoPlaybackViewModel.kt`
 - `HanimeResolution.kt`
 
 播放相关约定：
 
-- 画质信息由 `HanimeResolution` 解析后提供给播放器。
-- 播放器 UI 状态不要直接写入网络模型，应通过 ViewModel 或播放器状态对象同步。
-- PIP、屏幕方向、播放器高度、滚动禁用等与页面布局相关的状态归 `VideoViewModel.VideoHostUiState` 管理。
+- 画质信息由 `HanimeResolution` 解析为 `PlaybackSource`，清晰度切换由 controller 保持位置、速度与播放状态。
+- `PlaybackState` 是播放事实的唯一来源；控件显隐、锁定、拖动预览等视觉瞬态保留在 Compose 路由。
+- PiP、屏幕方向、亮度、音量、保持亮屏等 Android 行为统一由 `PlaybackPlatformBridge` 管理。
 - MPV 相关设置归 `MpvPlayerSettingsRouteScreen` 和偏好设置管理。
 
 ## 9. 下载架构

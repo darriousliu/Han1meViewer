@@ -44,23 +44,23 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.firebase.Firebase
 import com.google.firebase.analytics.analytics
 import com.yenaly.han1meviewer.BuildConfig
-import com.yenaly.han1meviewer.HanimeConstants
 import com.yenaly.han1meviewer.HA1_GITHUB_FORUM_URL
 import com.yenaly.han1meviewer.HA1_GITHUB_ISSUE_URL
 import com.yenaly.han1meviewer.HanimeApplication
+import com.yenaly.han1meviewer.HanimeConstants
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.BackupManager
 import com.yenaly.han1meviewer.logic.state.WebsiteState
 import com.yenaly.han1meviewer.ui.activity.MainActivity
 import com.yenaly.han1meviewer.ui.component.ConfirmDialog
-import com.yenaly.han1meviewer.ui.screen.settings.HomeSettingsScreen
-import com.yenaly.han1meviewer.ui.screen.settings.dialog.LicenseDialog
-import com.yenaly.han1meviewer.ui.screen.settings.model.HomeSettingsUiState
 import com.yenaly.han1meviewer.ui.screen.home.homepage.defaultHomeCategoryPreferenceItems
 import com.yenaly.han1meviewer.ui.screen.home.homepage.hiddenHomeCategoryKeys
 import com.yenaly.han1meviewer.ui.screen.home.homepage.homeCategoryOrder
 import com.yenaly.han1meviewer.ui.screen.home.homepage.saveHomeCategoryPreferences
+import com.yenaly.han1meviewer.ui.screen.settings.HomeSettingsScreen
+import com.yenaly.han1meviewer.ui.screen.settings.dialog.LicenseDialog
+import com.yenaly.han1meviewer.ui.screen.settings.model.HomeSettingsUiState
 import com.yenaly.han1meviewer.ui.theme.ThemeColorPreset
 import com.yenaly.han1meviewer.ui.viewmodel.AppViewModel
 import com.yenaly.han1meviewer.util.ThemeUtils
@@ -77,7 +77,6 @@ import kotlinx.coroutines.withContext
 private const val HOME_VIDEO_LANGUAGE = "video_language"
 private const val HOME_DEFAULT_VIDEO_QUALITY = "default_video_quality"
 private const val HOME_SHOW_PLAYED_INDICATOR = "show_played_indicator"
-private const val HOME_ALLOW_PIP_MODE = "allow_pip_mode"
 private const val HOME_UPDATE_POPUP_INTERVAL_DAYS = "update_popup_interval_days"
 private const val HOME_USE_CI_UPDATE_CHANNEL = "use_ci_update_channel"
 private const val HOME_USE_ANALYTICS = "use_analytics"
@@ -227,11 +226,11 @@ fun HomeSettingsRouteScreen(
             if (enabled && !isPipPermissionGranted(context)) {
                 context.showToast(R.string.request_pip_alert)
                 openPipPermissionSettings(context)
-                saveBoolean(HOME_ALLOW_PIP_MODE, false)
+                saveBoolean(SettingsPreferenceKeys.ALLOW_PIP_MODE, false)
                 refreshKey++
                 return@HomeSettingsScreen
             }
-            saveBoolean(HOME_ALLOW_PIP_MODE, enabled)
+            saveBoolean(SettingsPreferenceKeys.ALLOW_PIP_MODE, enabled)
             refreshKey++
         },
         onAllowResumePlaybackChange = {
@@ -572,7 +571,7 @@ private fun buildHomeSettingsUiState(
         darkModeLabel = darkModeLabel,
         appLanguage = appLanguageValue,
         appLanguageLabel = appLanguageLabel,
-        allowPipMode = Preferences.preferenceSp.getBoolean(HOME_ALLOW_PIP_MODE, false),
+        allowPipMode = Preferences.allowPipMode,
         allowResumePlayback = Preferences.allowResumePlayback,
         showPlayedIndicator = Preferences.showPlayedIndicator,
         searchArtistIgnoreVideoType = Preferences.searchArtistIgnoreVideoType,

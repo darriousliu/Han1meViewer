@@ -465,6 +465,7 @@ Recommendations are as follows:\n
     <string name="allow_pip_disc">Allow entering picture-in-picture mode when returning to the desktop \n(Picture-in-picture permission needs to be enabled)</string>
     <string name="allow_pip_title">Allow picture-in-picture mode</string>
     <string name="play_pause">Play/Pause</string>
+    <string name="mobile_data_playback_warning">Wi-Fi is not connected. Continuing playback may use mobile data.</string>
     <string name="request_pip_alert">If the picture-in-picture permission is not authorized, it will be automatically closed.</string>
     <string name="approximate_range">Approximate time</string>
     <string name="specific_y_m">Specific Y &amp; M</string>

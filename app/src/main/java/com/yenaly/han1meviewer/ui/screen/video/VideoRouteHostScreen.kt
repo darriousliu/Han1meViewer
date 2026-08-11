@@ -1,54 +1,49 @@
 package com.yenaly.han1meviewer.ui.screen.video
 
-import android.app.PendingIntent
-import android.app.PictureInPictureParams
-import android.app.RemoteAction
-import android.content.Context
-import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Rect
-import android.graphics.drawable.Icon
-import android.util.Log
-import android.util.Rational
-import android.view.ContextThemeWrapper
-import android.view.View
-import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.widget.FrameLayout
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.view.isVisible
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.boundsInWindow
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import cn.jzvd.JZMediaInterface
-import cn.jzvd.Jzvd
-import coil.load
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.firebase.Firebase
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
 import com.google.firebase.analytics.logEvent
 import com.yenaly.han1meviewer.FirebaseConstants
+import com.yenaly.han1meviewer.HanimeConstants
+import com.yenaly.han1meviewer.PermissionRequester
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.getHanimeVideoLink
@@ -59,30 +54,36 @@ import com.yenaly.han1meviewer.logic.entity.WatchHistoryEntity
 import com.yenaly.han1meviewer.logic.exception.ParseException
 import com.yenaly.han1meviewer.logic.model.SearchOption
 import com.yenaly.han1meviewer.logic.state.VideoLoadingState
+import com.yenaly.han1meviewer.playback.compose.PlaybackSurface
+import com.yenaly.han1meviewer.playback.compose.VideoKeyframeCountdownUiState
+import com.yenaly.han1meviewer.playback.compose.VideoKeyframeUiState
+import com.yenaly.han1meviewer.playback.compose.VideoPlayerActions
+import com.yenaly.han1meviewer.playback.compose.VideoPlayerUiState
+import com.yenaly.han1meviewer.playback.model.PlaybackDefaults
+import com.yenaly.han1meviewer.playback.model.PlaybackPhase
+import com.yenaly.han1meviewer.playback.model.PlaybackSource
+import com.yenaly.han1meviewer.playback.model.toPlaybackSource
+import com.yenaly.han1meviewer.playback.platform.PlaybackPlatformBridge
 import com.yenaly.han1meviewer.ui.activity.MainActivity
 import com.yenaly.han1meviewer.ui.bridge.VideoPageHost
 import com.yenaly.han1meviewer.ui.component.ConfirmDialog
-import com.yenaly.han1meviewer.PermissionRequester
+import com.yenaly.han1meviewer.ui.navigation.main.HomeRoute
 import com.yenaly.han1meviewer.ui.navigation.main.VideoRoute
-import com.yenaly.han1meviewer.ui.view.video.ExoMediaKernel
-import com.yenaly.han1meviewer.ui.view.video.HJzvdStd
-import com.yenaly.han1meviewer.ui.view.video.HMediaKernel
-import com.yenaly.han1meviewer.ui.view.video.HanimeDataSource
-import com.yenaly.han1meviewer.ui.view.video.VideoPlayerAppBarBehavior
 import com.yenaly.han1meviewer.ui.viewmodel.CommentViewModel
+import com.yenaly.han1meviewer.ui.viewmodel.VideoPlaybackViewModel
 import com.yenaly.han1meviewer.ui.viewmodel.VideoViewModel
 import com.yenaly.han1meviewer.util.checkBadGuy
 import com.yenaly.han1meviewer.util.loadAssetAs
 import com.yenaly.yenaly_libs.utils.OrientationManager
 import com.yenaly.yenaly_libs.utils.browse
 import com.yenaly.yenaly_libs.utils.copyToClipboard
-import com.yenaly.yenaly_libs.utils.dp
 import com.yenaly.yenaly_libs.utils.shareText
 import com.yenaly.yenaly_libs.utils.showShortToast
-import com.yenaly.yenaly_libs.utils.startActivity
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.math.roundToInt
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
@@ -93,51 +94,104 @@ fun VideoRouteHostScreen(
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val scope = rememberCoroutineScope()
-    val viewModel: VideoViewModel = viewModel()
+    val videoViewModel: VideoViewModel = viewModel()
     val commentViewModel: CommentViewModel = viewModel()
-    val kernel = remember { HMediaKernel.Type.fromString(Preferences.switchPlayerKernel) }
+    val playbackViewModel: VideoPlaybackViewModel = viewModel()
+    val platformBridge = remember(activity) { PlaybackPlatformBridge(activity) }
+
+    val videoState by videoViewModel.hanimeVideoStateFlow.collectAsStateWithLifecycle()
+    val hostUiState by videoViewModel.videoHostUiStateFlow.collectAsStateWithLifecycle()
+    val enginePlaybackState by playbackViewModel.state.collectAsStateWithLifecycle()
+    val relatedItems =
+        videoViewModel.hanimeVideoFlow.collectAsStateWithLifecycle().value?.relatedHanimes.orEmpty()
     val genres = remember(Preferences.baseUrl) {
         loadAssetAs<List<SearchOption>>(
-            if (Preferences.baseUrl == com.yenaly.han1meviewer.HanimeConstants.HANIME_URL[3]) {
+            if (Preferences.baseUrl == HanimeConstants.HANIME_URL[3]) {
                 "search_options/genre_av.json"
             } else {
                 "search_options/genre.json"
             }
         ).orEmpty()
     }
-    val player = remember(route.videoCode, route.localUri) {
-        createVideoPlayerView(activity)
-    }
-    val shell = remember(route.videoCode, route.localUri) {
-        VideoRouteShell(activity, player)
-    }
-    val hostUiState by viewModel.videoHostUiStateFlow.collectAsStateWithLifecycle()
-    val relatedItems =
-        viewModel.hanimeVideoFlow.collectAsStateWithLifecycle().value?.relatedHanimes.orEmpty()
     val stringLongPressShare = remember(activity) {
         activity.getString(R.string.long_press_share_to_copy)
     }
 
     commentViewModel.code = route.videoCode
-    player.videoCode = route.videoCode
-    viewModel.fromDownload = route.videoCode == "-1" || route.localUri != null
+    videoViewModel.fromDownload = route.videoCode == "-1" || route.localUri != null
 
-    var checkedQuality by remember(
-        route.videoCode,
-        route.localUri
-    ) { mutableStateOf<String?>(null) }
+    var checkedQuality by remember(route.videoCode, route.localUri) { mutableStateOf<String?>(null) }
     var pendingDownloadPrompt by remember(route.videoCode, route.localUri) {
         mutableStateOf<DownloadPromptState?>(null)
     }
+    var pendingSource by remember(route.videoCode, route.localUri) {
+        mutableStateOf<PlaybackSource?>(null)
+    }
+    var pendingQualityId by remember(route.videoCode, route.localUri) {
+        mutableStateOf<String?>(null)
+    }
     var videoTitle by remember(route.videoCode, route.localUri) { mutableStateOf<String?>(null) }
-    var isSideRelatedCollapsed by remember { mutableStateOf(false) }
+    var resumePositionMs by rememberSaveable(route.videoCode, route.localUri) {
+        mutableLongStateOf(0L)
+    }
+    var hasStartedPlayback by rememberSaveable(route.videoCode, route.localUri) {
+        mutableStateOf(false)
+    }
+    var controlsVisible by rememberSaveable { mutableStateOf(true) }
+    var isLocked by rememberSaveable { mutableStateOf(false) }
+    var isFullscreen by rememberSaveable { mutableStateOf(false) }
+    var keyframePanelVisible by rememberSaveable { mutableStateOf(false) }
+    var superResolutionIndex by rememberSaveable { mutableStateOf(0) }
+    var brightness by remember { mutableFloatStateOf(platformBridge.currentBrightness()) }
+    var volume by remember { mutableFloatStateOf(platformBridge.currentVolume()) }
+    var sourceRect by remember { mutableStateOf<Rect?>(null) }
+    var hKeyframes by remember(route.videoCode) { mutableStateOf<HKeyframeEntity?>(null) }
+    var isSideRelatedCollapsed by rememberSaveable { mutableStateOf(false) }
+    var showRestartFromBeginning by remember { mutableStateOf(false) }
     var showAddHKeyframeDialog by remember { mutableStateOf<Pair<Long, String>?>(null) }
+    var showMeteredNetworkDialog by remember { mutableStateOf(false) }
+    var meteredNetworkApproved by remember(route.videoCode, route.localUri) {
+        mutableStateOf(false)
+    }
 
-    val actions = remember(activity, scope, viewModel, genres) {
+    val displayedPlaybackState = pendingSource
+        ?.takeIf { enginePlaybackState.source == null }
+        ?.let { source ->
+            enginePlaybackState.copy(
+                source = source,
+                phase = PlaybackPhase.Idle,
+                positionMs = resumePositionMs,
+                selectedQualityId = pendingQualityId ?: source.resolveQuality().id,
+            )
+        } ?: enginePlaybackState
+
+    val keyframeItems = remember(hKeyframes) {
+        hKeyframes?.keyframes.orEmpty()
+            .sortedBy(HKeyframeEntity.Keyframe::position)
+            .map { VideoKeyframeUiState(it.position, it.prompt) }
+    }
+    val keyframeCountdown = remember(
+        keyframeItems,
+        enginePlaybackState.positionMs,
+        isFullscreen,
+    ) {
+        if (!Preferences.hKeyframesEnable || !isFullscreen) return@remember null
+        val next = keyframeItems.firstOrNull {
+            it.positionMs >= enginePlaybackState.positionMs &&
+                it.positionMs - enginePlaybackState.positionMs <= Preferences.whenCountdownRemind
+        } ?: return@remember null
+        val remainingMs = (next.positionMs - enginePlaybackState.positionMs).coerceAtLeast(0L)
+        VideoKeyframeCountdownUiState(
+            remainingMs = remainingMs,
+            prompt = next.prompt.takeIf { Preferences.showCommentWhenCountdown },
+        )
+    }
+
+    val routeActions = remember(activity, scope, videoViewModel, genres) {
         VideoRouteActions(
             context = activity,
             scope = scope,
-            viewModel = viewModel,
+            viewModel = videoViewModel,
             genres = genres,
             requestStoragePermission = { onGranted, onDenied, onPermanentlyDenied ->
                 (activity as PermissionRequester).requestStoragePermission(
@@ -154,400 +208,320 @@ fun VideoRouteHostScreen(
         )
     }
 
-    val jzBackCallback = remember(activity) {
-        object : OnBackPressedCallback(false) {
-            override fun handleOnBackPressed() {
-                if (!Jzvd.backPress()) {
-                    isEnabled = false
-                    activity.onBackPressedDispatcher.onBackPressed()
-                }
+    fun setFullscreen(enabled: Boolean) {
+        val playback = playbackViewModel.state.value
+        isFullscreen = enabled
+        controlsVisible = true
+        platformBridge.setFullscreen(
+            fullscreen = enabled,
+            videoWidth = playback.videoWidth,
+            videoHeight = playback.videoHeight,
+        )
+    }
+
+    fun beginPlayback() {
+        val source = pendingSource ?: enginePlaybackState.source
+        if (source == null) {
+            showShortToast(R.string.fail_to_get_video_link)
+            if (route.videoCode != "-1") activity.browse(getHanimeVideoLink(route.videoCode))
+            return
+        }
+        hasStartedPlayback = true
+        if (enginePlaybackState.source == null) {
+            playbackViewModel.load(
+                source = source,
+                qualityId = pendingQualityId,
+                startPositionMs = resumePositionMs,
+                playWhenReady = true,
+            )
+        } else {
+            playbackViewModel.play()
+        }
+    }
+
+    fun requestPlaybackStart() {
+        if (enginePlaybackState.source != null) {
+            beginPlayback()
+            return
+        }
+        val isRemote = pendingSource
+            ?.resolveQuality(pendingQualityId)
+            ?.isRemote
+            ?: false
+        if (isRemote && !Preferences.disableMobileDataWarning &&
+            !meteredNetworkApproved && platformBridge.isActiveNetworkMetered()
+        ) {
+            showMeteredNetworkDialog = true
+        } else {
+            beginPlayback()
+        }
+    }
+
+    val playerActions = object : VideoPlayerActions {
+        override fun onBack() {
+            if (isFullscreen) setFullscreen(false) else activity.navController.popBackStack()
+        }
+
+        override fun onHome() {
+            setFullscreen(false)
+            activity.navController.popBackStack(HomeRoute, false)
+        }
+
+        override fun onTogglePlayPause() {
+            if (enginePlaybackState.isPlaying || enginePlaybackState.playWhenReady) {
+                playbackViewModel.pause()
+            } else {
+                requestPlaybackStart()
             }
         }
-    }
 
-    fun setPlayerHeight(height: Int) {
-        shell.setPlayerHeight(height)
-    }
-
-    fun updatePipAction() {
-        if (!activity.isInPictureInPictureMode) return
-        val isPlaying = (Jzvd.CURRENT_JZVD?.mediaInterface as? ExoMediaKernel)?.isPlaying == true
-        val icon = if (isPlaying) {
-            Icon.createWithResource(activity, R.drawable.ic_pip_pause_24)
-        } else {
-            Icon.createWithResource(activity, R.drawable.ic_pip_play_arrow_24)
+        override fun onRetry() {
+            hasStartedPlayback = true
+            if (enginePlaybackState.source == null) requestPlaybackStart() else playbackViewModel.retry()
         }
-        val title = if (isPlaying) "Pause Video" else "Play Video"
-        val intent = PendingIntent.getBroadcast(
-            activity,
-            0,
-            Intent(MainActivity.ACTION_TOGGLE_PLAY).setPackage(activity.packageName),
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
-        )
-        val action = RemoteAction(icon, title, activity.getString(R.string.play_pause), intent)
-        val params = PictureInPictureParams.Builder()
-            .setAspectRatio(Rational(16, 9))
-            .setActions(listOf(action))
-            .build()
-        activity.setPictureInPictureParams(params)
-    }
 
-    fun changeScreenNormal() {
-        if (player.screen == Jzvd.SCREEN_FULLSCREEN) {
-            player.gotoNormalScreen()
+        override fun onReplay() {
+            hasStartedPlayback = true
+            resumePositionMs = 0L
+            playbackViewModel.replay()
+        }
+
+        override fun onSeekTo(positionMs: Long) = playbackViewModel.seekTo(positionMs)
+
+        override fun onSelectQuality(qualityId: String) {
+            pendingQualityId = qualityId
+            if (enginePlaybackState.source != null) playbackViewModel.selectQuality(qualityId)
+        }
+
+        override fun onSetSpeed(speed: Float) = playbackViewModel.setSpeed(speed)
+
+        override fun onSetSuperResolution(index: Int) {
+            superResolutionIndex = index
+            playbackViewModel.setSuperResolution(index)
+        }
+
+        override fun onOpenKeyframes() {
+            keyframePanelVisible = true
+        }
+
+        override fun onDismissKeyframes() {
+            keyframePanelVisible = false
+        }
+
+        override fun onSelectKeyframe(positionMs: Long) {
+            playbackViewModel.seekTo(positionMs)
+            keyframePanelVisible = false
+        }
+
+        override fun onAddKeyframe() {
+            if (enginePlaybackState.isPlaying || enginePlaybackState.playWhenReady) {
+                showShortToast(R.string.pause_then_long_press)
+            } else {
+                showAddHKeyframeDialog =
+                    enginePlaybackState.positionMs to (videoTitle ?: route.videoCode)
+            }
+        }
+
+        override fun onToggleFullscreen() = setFullscreen(!isFullscreen)
+
+        override fun onControlsVisibilityChanged(visible: Boolean) {
+            controlsVisible = visible
+        }
+
+        override fun onLockChanged(locked: Boolean) {
+            isLocked = locked
+            controlsVisible = true
+        }
+
+        override fun onBrightnessChanged(fraction: Float) {
+            brightness = platformBridge.setBrightness(fraction)
+        }
+
+        override fun onVolumeChanged(fraction: Float) {
+            volume = platformBridge.setVolume(fraction)
+        }
+
+        override fun onRestartFromBeginning() {
+            resumePositionMs = 0L
+            showRestartFromBeginning = false
+            playbackViewModel.seekTo(0L)
         }
     }
 
-    fun changeScreenFullLandscape(orientation: OrientationManager.ScreenOrientation) {
-        if (player.screen != Jzvd.SCREEN_FULLSCREEN &&
-            System.currentTimeMillis() - Jzvd.lastAutoFullscreenTime > 2000
-        ) {
-            player.autoFullscreen(orientation)
-            Jzvd.lastAutoFullscreenTime = System.currentTimeMillis()
-        }
-    }
-
-    val pageHost = remember(activity, player, shell, viewModel) {
+    val pageHost = remember(activity, platformBridge, playbackViewModel, videoViewModel) {
         object : VideoPageHost {
             override fun showCommentBadge(count: Int) {
-                viewModel.setCommentBadgeCount(count)
+                videoViewModel.setCommentBadgeCount(count)
             }
 
             override fun shouldEnterPip(): Boolean {
-                return player.state == Jzvd.STATE_PLAYING || player.state == Jzvd.STATE_PAUSE
+                val state = playbackViewModel.state.value
+                return hasStartedPlayback && state.source != null &&
+                    state.phase !in setOf(
+                        PlaybackPhase.Idle,
+                        PlaybackPhase.Ended,
+                        PlaybackPhase.Error,
+                    )
             }
 
             override fun enterPipMode() {
-                val intent = PendingIntent.getBroadcast(
-                    activity,
-                    0,
-                    Intent(MainActivity.ACTION_TOGGLE_PLAY).setPackage(activity.packageName),
-                    PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
+                val state = playbackViewModel.state.value
+                platformBridge.enterPictureInPicture(
+                    isPlaying = state.isPlaying || state.playWhenReady,
+                    sourceRect = sourceRect,
+                    videoWidth = state.videoWidth,
+                    videoHeight = state.videoHeight,
                 )
-                val icon =
-                    Icon.createWithResource(activity, R.drawable.ic_pip_pause_24)
-                val action = RemoteAction(
-                    icon,
-                    activity.getString(R.string.play_pause),
-                    activity.getString(R.string.play_pause),
-                    intent,
-                )
-                val sourceRect = Rect()
-                player.getGlobalVisibleRect(sourceRect)
-                val params = PictureInPictureParams.Builder()
-                    .setSourceRectHint(sourceRect)
-                    .setAspectRatio(Rational(16, 9))
-                    .setActions(listOf(action))
-                    .build()
-                activity.enterPictureInPictureMode(params)
             }
 
             override fun onPipModeChanged(isInPip: Boolean) {
-                viewModel.setPipMode(isInPip)
+                videoViewModel.setPipMode(isInPip)
+                controlsVisible = !isInPip
                 if (isInPip) {
-                    viewModel.setPlayerHeightDp(MATCH_PARENT)
-                } else if (Preferences.tabletMode &&
-                    activity.resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
-                ) {
-                    viewModel.setPlayerHeightDp(350.dp)
-                } else {
-                    viewModel.setPlayerHeightDp(250.dp)
+                    isFullscreen = false
+                    platformBridge.setFullscreen(false)
                 }
-                setPlayerHeight(viewModel.videoHostUiStateFlow.value.playerHeightDp)
-                shell.setTabsVisible(!isInPip)
-                player.setControlsVisible(!isInPip)
-                if (isInPip) {
-                    updatePipAction()
+                val height = when {
+                    isInPip -> Int.MAX_VALUE
+                    Preferences.tabletMode &&
+                        activity.resources.configuration.orientation !=
+                        Configuration.ORIENTATION_LANDSCAPE -> 350
+                    else -> 250
                 }
+                videoViewModel.setPlayerHeightDp(height)
             }
 
-            override fun togglePlayPause() {
-                val mediaInterface = player.mediaInterface
-                if (mediaInterface.isPlaying) {
-                    mediaInterface.pause()
-                } else {
-                    mediaInterface.start()
-                }
-                updatePipAction()
-            }
+            override fun togglePlayPause() = playbackViewModel.togglePlayPause()
         }
     }
 
-    DisposableEffect(
-        activity,
-        shell,
-        player,
-        pageHost,
-        stringLongPressShare,
-        route.videoCode,
-        route.localUri
-    ) {
+    BackHandler(enabled = isFullscreen) { setFullscreen(false) }
+
+    DisposableEffect(activity, pageHost, platformBridge) {
         activity.registerCurrentVideoHost(pageHost)
-        shell.setTabsHostContent {
-            val videoState by viewModel.hanimeVideoStateFlow.collectAsStateWithLifecycle()
-            VideoRouteContent(
-                videoCode = route.videoCode,
-                videoState = videoState,
-                videoViewModel = viewModel,
-                commentViewModel = commentViewModel,
-                fromDownload = viewModel.fromDownload,
-                pendingDownloadPrompt = pendingDownloadPrompt,
-                onPendingDownloadPromptChange = { pendingDownloadPrompt = it },
-                onRetry = { viewModel.getHanimeVideo(route.videoCode, route.localUri) },
-                onOpenVideo = { item -> activity.showVideoDetailFragment(item.videoCode) },
-                onOpenArtist = actions::openArtistSearch,
-                onNavigateToSearch = actions::openTagSearch,
-                onToggleSubscribe = actions::toggleArtistSubscription,
-                onToggleFavorite = actions::toggleFavorite,
-                onRateVideo = actions::rateVideo,
-                onManageMyList = actions::updateMyListSelection,
-                onQuickCheckIn = { record ->
-                    val normalizedRecord = if (record.sideDishes.contains("\u001E")) {
-                        record
-                    } else {
-                        record.copy(sideDishes = "${record.sideDishes}\u001E${route.videoCode}")
-                    }
-                    scope.launch(Dispatchers.IO) {
-                        CheckInRecordDatabase.getDatabase(activity).checkInDao()
-                            .insert(normalizedRecord)
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(activity, R.string.checkin, Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                },
-                onPrepareDownload = { quality, video ->
-                    checkedQuality = quality
-                    video?.let(actions::startDownloadFlow)
-                },
-                onConfirmDownloadPrompt = { video ->
-                    video?.let { actions.confirmPendingDownload(it, pendingDownloadPrompt) }
-                },
-                onRequestOpenOfficialDownloadPage = actions::openOfficialDownloadPage,
-                onRequestOpenDownloadPermissionSettings = actions::openDownloadPermissionSettings,
-                onOpenWebPage = actions::openVideoWebPage,
-                onOpenOriginalComic = actions::openOriginalComic,
-                onOpenShare = { content, title -> shareText(content, title) },
-                onCopyText = {
-                    it.copyToClipboard()
-                    showShortToast(R.string.copy_to_clipboard)
-                },
-                onIntroductionLinkClick = actions::openIntroductionLink,
-                stringLongPressShare = stringLongPressShare,
-                pageHost = pageHost,
-            )
-        }
         onDispose {
             activity.registerCurrentVideoHost(null)
-            player.onVideoStateChanged = null
-            player.fullscreenListener = null
-            player.onGoHomeClickListener = null
-            player.onKeyframeClickListener = null
-            player.onKeyframeLongClickListener = null
-            shell.clear()
-            Jzvd.releaseAllVideos()
+            platformBridge.release()
         }
     }
 
-    DisposableEffect(lifecycleOwner, activity, player, shell, route.videoCode) {
+    DisposableEffect(lifecycleOwner, activity, route.videoCode, platformBridge) {
+        fun persistProgress() {
+            val position = playbackViewModel.state.value.positionMs
+            activity.lifecycleScope.launch(Dispatchers.IO) {
+                DatabaseRepo.WatchHistory.updateProgress(route.videoCode, position)
+            }
+        }
+
         val orientationManager = OrientationManager(activity) { orientation ->
-            if (!Preferences.tabletMode &&
-                Jzvd.CURRENT_JZVD != null &&
-                (player.state == Jzvd.STATE_PLAYING || player.state == Jzvd.STATE_PAUSE) &&
-                player.screen != Jzvd.SCREEN_TINY &&
-                Jzvd.FULLSCREEN_ORIENTATION != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            val state = playbackViewModel.state.value
+            if (!Preferences.tabletMode && hasStartedPlayback &&
+                !videoViewModel.videoHostUiStateFlow.value.isInPipMode &&
+                state.videoWidth >= state.videoHeight &&
+                state.videoWidth > 0
             ) {
-                if (orientation.isLandscape && player.screen == Jzvd.SCREEN_NORMAL) {
-                    changeScreenFullLandscape(orientation)
-                } else if (orientation == OrientationManager.ScreenOrientation.PORTRAIT &&
-                    player.screen == Jzvd.SCREEN_FULLSCREEN
-                ) {
-                    changeScreenNormal()
+                when {
+                    orientation.isLandscape && !isFullscreen -> setFullscreen(true)
+                    orientation == OrientationManager.ScreenOrientation.PORTRAIT && isFullscreen ->
+                        setFullscreen(false)
                 }
             }
         }
         val lifecycleObserver = LifecycleEventObserver { _, event ->
             when (event) {
-                Lifecycle.Event.ON_PAUSE -> {
-                    val progress = player.currentPositionWhenPlaying
-                    scope.launch {
-                        DatabaseRepo.WatchHistory.updateProgress(route.videoCode, progress)
-                    }
-                }
-
-                Lifecycle.Event.ON_STOP -> {
-                    if (!activity.isInPictureInPictureMode) {
-                        changeScreenNormal()
-                    }
-                    Jzvd.goOnPlayOnPause()
+                Lifecycle.Event.ON_PAUSE -> persistProgress()
+                Lifecycle.Event.ON_STOP -> if (!activity.isInPictureInPictureMode) {
+                    setFullscreen(false)
+                    playbackViewModel.pause()
                 }
                 else -> Unit
             }
         }
-
         lifecycleOwner.lifecycle.addObserver(orientationManager)
         lifecycleOwner.lifecycle.addObserver(lifecycleObserver)
-        activity.onBackPressedDispatcher.addCallback(lifecycleOwner, jzBackCallback)
-        player.orientationManager = orientationManager
-        player.onGoHomeClickListener = {
-            if (activity.resources.getBoolean(R.bool.isTablet)) {
-                activity.navController.popBackStack()
-            }
-            activity.startActivity<MainActivity>()
-        }
-        player.onKeyframeClickListener = { view ->
-            player.clickHKeyframe(view)
-        }
-        player.onKeyframeLongClickListener = {
-            val mediaInterface: JZMediaInterface? = player.mediaInterface
-            if (mediaInterface != null && !mediaInterface.isPlaying) {
-                val currentPosition = player.currentPositionWhenPlaying
-                showAddHKeyframeDialog = Pair(currentPosition, videoTitle ?: "Untitled")
-            } else {
-                showShortToast(R.string.pause_then_long_press)
-            }
-        }
-        player.onVideoStateChanged = { state ->
-            when (state) {
-                Jzvd.STATE_PLAYING, Jzvd.STATE_PREPARING -> {
-                    viewModel.setScrollDisabled(true)
-                    shell.withBehavior { behavior ->
-                        behavior.disableScroll = true
-                    }
-                    shell.setExpanded(expanded = true, animate = true)
-                }
-
-                Jzvd.STATE_PAUSE, Jzvd.STATE_AUTO_COMPLETE -> {
-                    viewModel.setScrollDisabled(false)
-                    shell.withBehavior { behavior ->
-                        behavior.disableScroll = false
-                    }
-                }
-            }
-        }
-        player.fullscreenListener = object : HJzvdStd.FullscreenListener {
-            override fun onFullscreenChanged(isFullscreen: Boolean) {
-                jzBackCallback.isEnabled = isFullscreen
-                Log.i("JZVD screen state", isFullscreen.toString())
-            }
-        }
-        shell.setOnOffsetChanged { totalScrollRange, verticalOffset ->
-            viewModel.setAppBarBottomInsetPx(totalScrollRange + verticalOffset)
-            viewModel.setAppBarExpanded(route.videoCode, verticalOffset == 0)
-        }
-        shell.setExpanded(expanded = viewModel.isAppBarExpanded(route.videoCode), animate = false)
-        val initialHeight = if (Preferences.tabletMode) {
-            350.dp
-        } else {
-            250.dp
-        }
-        viewModel.setPlayerHeightDp(initialHeight)
-        setPlayerHeight(initialHeight)
-
         onDispose {
+            persistProgress()
             lifecycleOwner.lifecycle.removeObserver(orientationManager)
             lifecycleOwner.lifecycle.removeObserver(lifecycleObserver)
-        }
-    }
-
-    LaunchedEffect(
-        hostUiState.isInPipMode,
-        isSideRelatedCollapsed,
-    ) {
-        if (hostUiState.isInPipMode) return@LaunchedEffect
-        val height = if (Preferences.tabletMode) {
-            if (isSideRelatedCollapsed) 500.dp else 400.dp
-        } else {
-            250.dp
-        }
-        if (hostUiState.playerHeightDp != height) {
-            viewModel.setPlayerHeightDp(height)
-            setPlayerHeight(height)
         }
     }
 
     LaunchedEffect(route.videoCode, route.localUri) {
         checkedQuality = null
         pendingDownloadPrompt = null
+        pendingSource = null
+        pendingQualityId = null
         videoTitle = null
+        resumePositionMs = 0L
+        hasStartedPlayback = false
+        meteredNetworkApproved = false
         checkBadGuy(activity, R.raw.akarin)
-        viewModel.videoCode = route.videoCode
-        viewModel.getHanimeVideo(route.videoCode, route.localUri)
+        videoViewModel.videoCode = route.videoCode
+        videoViewModel.getHanimeVideo(route.videoCode, route.localUri)
     }
 
-    LaunchedEffect(route.videoCode, route.localUri, player, kernel, viewModel.fromDownload) {
-        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-            viewModel.hanimeVideoStateFlow.collect { state ->
-                when (state) {
-                    is VideoLoadingState.Error -> {
-                        state.throwable.localizedMessage?.let { showShortToast(it) }
-                        if (state.throwable is ParseException) {
-                            activity.browse(getHanimeVideoLink(route.videoCode))
-                        }
-                    }
-
-                    is VideoLoadingState.Loading -> Unit
-
-                    is VideoLoadingState.Success -> {
-                        videoTitle = state.info.title
-                        if (state.info.videoUrls.isEmpty()) {
-                            player.startButton.setOnClickListener {
-                                showShortToast(R.string.fail_to_get_video_link)
-                                activity.browse(getHanimeVideoLink(route.videoCode))
-                            }
-                        } else {
-                            player.setUp(
-                                HanimeDataSource(state.info.title, state.info.videoUrls),
-                                Jzvd.SCREEN_NORMAL,
-                                kernel,
-                            )
-                        }
-                        player.posterImageView.load(state.info.coverUrl) {
-                            crossfade(true)
-                        }
-                        if (!viewModel.fromDownload) {
-                            viewModel.insertWatchHistoryWithCover(
-                                WatchHistoryEntity(
-                                    state.info.coverUrl,
-                                    state.info.title,
-                                    state.info.uploadTimeMillis,
-                                    kotlin.time.Clock.System.now().toEpochMilliseconds(),
-                                    route.videoCode,
-                                )
-                            )
-                        }
-                        val history = DatabaseRepo.WatchHistory.findBy(route.videoCode)
-                        player.savedProgress = history?.progress ?: 0L
-                    }
-
-                    is VideoLoadingState.NoContent -> {
-                        showShortToast(R.string.video_might_not_exist)
-                    }
+    LaunchedEffect(videoState, route.videoCode, route.localUri) {
+        when (val state = videoState) {
+            is VideoLoadingState.Error -> {
+                state.throwable.localizedMessage?.let { showShortToast(it) }
+                if (state.throwable is ParseException) {
+                    activity.browse(getHanimeVideoLink(route.videoCode))
                 }
             }
+
+            is VideoLoadingState.Success -> {
+                videoTitle = state.info.title
+                if (state.info.videoUrls.isNotEmpty()) {
+                    pendingSource = state.info.videoUrls.toPlaybackSource(
+                        id = route.videoCode,
+                        title = state.info.title,
+                        coverUrl = state.info.coverUrl,
+                        preferredQualityId = Preferences.videoQuality,
+                    )
+                    pendingQualityId = pendingSource?.resolveQuality()?.id
+                }
+                if (!videoViewModel.fromDownload) {
+                    videoViewModel.insertWatchHistoryWithCover(
+                        WatchHistoryEntity(
+                            state.info.coverUrl,
+                            state.info.title,
+                            state.info.uploadTimeMillis,
+                            kotlin.time.Clock.System.now().toEpochMilliseconds(),
+                            route.videoCode,
+                        )
+                    )
+                }
+                val history = withContext(Dispatchers.IO) {
+                    DatabaseRepo.WatchHistory.findBy(route.videoCode)
+                }
+                resumePositionMs = history?.progress
+                    ?.takeIf { it > MIN_RESUME_POSITION_MS && Preferences.allowResumePlayback }
+                    ?: 0L
+            }
+
+            is VideoLoadingState.NoContent -> showShortToast(R.string.video_might_not_exist)
+            is VideoLoadingState.Loading -> Unit
         }
     }
 
-    @OptIn(ExperimentalTime::class)
-    LaunchedEffect(route.videoCode, player) {
+    LaunchedEffect(route.videoCode) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-            viewModel.observeKeyframe(route.videoCode).collect {
-                player.hKeyframe = it
-                viewModel.hKeyframes = it
+            videoViewModel.observeKeyframe(route.videoCode).collect {
+                hKeyframes = it
+                videoViewModel.hKeyframes = it
             }
         }
     }
 
-    LaunchedEffect(viewModel) {
+    LaunchedEffect(videoViewModel) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-            viewModel.modifyHKeyframeFlow.collect { (_, reason) ->
-                showShortToast(reason)
-            }
+            videoViewModel.modifyHKeyframeFlow.collect { (_, reason) -> showShortToast(reason) }
         }
     }
 
-    LaunchedEffect(viewModel, route.videoCode) {
+    LaunchedEffect(videoViewModel, route.videoCode) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-            viewModel.loadDownloadedFlow.collect { entity ->
+            videoViewModel.loadDownloadedFlow.collect { entity ->
                 val newQuality = checkedQuality ?: return@collect
                 pendingDownloadPrompt = DownloadPromptState(
                     newQuality = newQuality,
@@ -557,20 +531,197 @@ fun VideoRouteHostScreen(
         }
     }
 
+    LaunchedEffect(hasStartedPlayback, resumePositionMs) {
+        if (hasStartedPlayback && resumePositionMs > MIN_RESUME_POSITION_MS) {
+            showRestartFromBeginning = true
+            try {
+                delay(RESTART_ACTION_VISIBLE_MS)
+            } finally {
+                showRestartFromBeginning = false
+            }
+        }
+    }
+
+    LaunchedEffect(enginePlaybackState.isPlaying, enginePlaybackState.playWhenReady) {
+        platformBridge.setKeepScreenOn(
+            enginePlaybackState.isPlaying || enginePlaybackState.playWhenReady
+        )
+        videoViewModel.setScrollDisabled(
+            enginePlaybackState.isPlaying || enginePlaybackState.playWhenReady
+        )
+    }
+
+    LaunchedEffect(keyframeCountdown != null) {
+        playbackViewModel.setHighFrequencyProgressUpdates(keyframeCountdown != null)
+    }
+
+    LaunchedEffect(
+        hostUiState.isInPipMode,
+        enginePlaybackState.isPlaying,
+        enginePlaybackState.playWhenReady,
+        enginePlaybackState.videoWidth,
+        enginePlaybackState.videoHeight,
+        sourceRect,
+    ) {
+        platformBridge.updatePictureInPictureAction(
+            isPlaying = enginePlaybackState.isPlaying || enginePlaybackState.playWhenReady,
+            sourceRect = sourceRect,
+            videoWidth = enginePlaybackState.videoWidth,
+            videoHeight = enginePlaybackState.videoHeight,
+        )
+    }
+
+    val playerHeight = when {
+        Preferences.tabletMode && isSideRelatedCollapsed -> 500.dp
+        Preferences.tabletMode -> 400.dp
+        else -> 250.dp
+    }
+    val playerUiState = VideoPlayerUiState(
+        playback = displayedPlaybackState,
+        capabilities = playbackViewModel.capabilities,
+        longPressSpeedMultiplier = Preferences.longPressSpeedTime,
+        seekGestureSensitivity = PlaybackDefaults.progressSlideDivisor(
+            Preferences.slideSensitivity,
+        ),
+        controlsVisible = controlsVisible && !hostUiState.isInPipMode,
+        showBottomProgress = Preferences.showBottomProgress && !hostUiState.isInPipMode,
+        isLocked = isLocked,
+        isFullscreen = isFullscreen,
+        showPoster = !hasStartedPlayback,
+        brightness = brightness,
+        volume = volume,
+        showRestartFromBeginning = showRestartFromBeginning,
+        keyframesEnabled = Preferences.hKeyframesEnable,
+        keyframes = keyframeItems,
+        keyframePanelVisible = keyframePanelVisible,
+        keyframeCountdown = keyframeCountdown,
+        superResolutionIndex = superResolutionIndex,
+    )
+
     VideoShellContent(
         isTabletMode = Preferences.tabletMode,
         isInPipMode = hostUiState.isInPipMode,
         relatedItems = relatedItems,
-        onHideRelatedInIntroChange = { viewModel.hideRelatedInIntro = it },
+        onHideRelatedInIntroChange = { videoViewModel.hideRelatedInIntro = it },
         onSideRelatedCollapsedChange = { isSideRelatedCollapsed = it },
         onOpenVideo = { item -> activity.showVideoDetailFragment(item.videoCode) },
-        mainHostFactory = {
-            shell.mainHostView.also { view ->
-                (view.parent as? ViewGroup)?.removeView(view)
-            }
+        mainContent = {
+            VideoPlaybackLayout(
+                playerHeight = playerHeight,
+                isFullscreen = isFullscreen,
+                isInPipMode = hostUiState.isInPipMode,
+                collapseLocked = hostUiState.isScrollDisabled,
+                onExpandedChange = {
+                    videoViewModel.setAppBarExpanded(route.videoCode, it)
+                },
+                player = {
+                    VideoPlayerUi(
+                        state = playerUiState,
+                        actions = playerActions,
+                        surface = {
+                            PlaybackSurface(
+                                controller = playbackViewModel.controller,
+                                modifier = Modifier.matchParentSize(),
+                            )
+                        },
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .onGloballyPositioned { coordinates ->
+                                val bounds = coordinates.boundsInWindow()
+                                sourceRect = Rect(
+                                    bounds.left.roundToInt(),
+                                    bounds.top.roundToInt(),
+                                    bounds.right.roundToInt(),
+                                    bounds.bottom.roundToInt(),
+                                )
+                            },
+                    )
+                },
+                details = {
+                    VideoRouteContent(
+                        videoCode = route.videoCode,
+                        videoState = videoState,
+                        videoViewModel = videoViewModel,
+                        commentViewModel = commentViewModel,
+                        fromDownload = videoViewModel.fromDownload,
+                        pendingDownloadPrompt = pendingDownloadPrompt,
+                        onPendingDownloadPromptChange = { pendingDownloadPrompt = it },
+                        onRetry = {
+                            videoViewModel.getHanimeVideo(route.videoCode, route.localUri)
+                        },
+                        onOpenVideo = { item -> activity.showVideoDetailFragment(item.videoCode) },
+                        onOpenArtist = routeActions::openArtistSearch,
+                        onNavigateToSearch = routeActions::openTagSearch,
+                        onToggleSubscribe = routeActions::toggleArtistSubscription,
+                        onToggleFavorite = routeActions::toggleFavorite,
+                        onRateVideo = routeActions::rateVideo,
+                        onManageMyList = routeActions::updateMyListSelection,
+                        onQuickCheckIn = { record ->
+                            val normalizedRecord = if (record.sideDishes.contains("\u001E")) {
+                                record
+                            } else {
+                                record.copy(
+                                    sideDishes = "${record.sideDishes}\u001E${route.videoCode}"
+                                )
+                            }
+                            scope.launch(Dispatchers.IO) {
+                                CheckInRecordDatabase.getDatabase(activity).checkInDao()
+                                    .insert(normalizedRecord)
+                                withContext(Dispatchers.Main) {
+                                    Toast.makeText(
+                                        activity,
+                                        R.string.checkin,
+                                        Toast.LENGTH_SHORT,
+                                    ).show()
+                                }
+                            }
+                        },
+                        onPrepareDownload = { quality, video ->
+                            checkedQuality = quality
+                            video?.let(routeActions::startDownloadFlow)
+                        },
+                        onConfirmDownloadPrompt = { video ->
+                            video?.let {
+                                routeActions.confirmPendingDownload(it, pendingDownloadPrompt)
+                            }
+                        },
+                        onRequestOpenOfficialDownloadPage =
+                            routeActions::openOfficialDownloadPage,
+                        onRequestOpenDownloadPermissionSettings =
+                            routeActions::openDownloadPermissionSettings,
+                        onOpenWebPage = routeActions::openVideoWebPage,
+                        onOpenOriginalComic = routeActions::openOriginalComic,
+                        onOpenShare = { content, title -> shareText(content, title) },
+                        onCopyText = {
+                            it.copyToClipboard()
+                            showShortToast(R.string.copy_to_clipboard)
+                        },
+                        onIntroductionLinkClick = routeActions::openIntroductionLink,
+                        stringLongPressShare = stringLongPressShare,
+                        pageHost = pageHost,
+                    )
+                },
+                modifier = Modifier.fillMaxSize(),
+            )
         },
         modifier = Modifier.fillMaxSize(),
     )
+
+    if (showMeteredNetworkDialog) {
+        ConfirmDialog(
+            visible = true,
+            title = activity.getString(R.string.warning),
+            message = activity.getString(R.string.mobile_data_playback_warning),
+            confirmText = activity.getString(R.string.continues),
+            dismissText = activity.getString(R.string.cancel),
+            onConfirm = {
+                meteredNetworkApproved = true
+                showMeteredNetworkDialog = false
+                beginPlayback()
+            },
+            onDismiss = { showMeteredNetworkDialog = false },
+        )
+    }
 
     showAddHKeyframeDialog?.let { (currentPosition, title) ->
         ConfirmDialog(
@@ -583,7 +734,7 @@ fun VideoRouteHostScreen(
             confirmText = activity.getString(R.string.confirm),
             dismissText = activity.getString(R.string.cancel),
             onConfirm = {
-                viewModel.appendHKeyframe(
+                videoViewModel.appendHKeyframe(
                     route.videoCode,
                     title,
                     HKeyframeEntity.Keyframe(position = currentPosition, prompt = null),
@@ -599,116 +750,93 @@ fun VideoRouteHostScreen(
     }
 }
 
-private fun createVideoPlayerView(activity: MainActivity): HJzvdStd {
-    return HJzvdStd(ContextThemeWrapper(activity, activity.theme)).apply {
-        layoutParams = CollapsingToolbarLayout.LayoutParams(
-            MATCH_PARENT,
-            250.dp,
-        ).apply {
-            collapseMode = CollapsingToolbarLayout.LayoutParams.COLLAPSE_MODE_PARALLAX
-            parallaxMultiplier = 0.7f
-        }
-    }
-}
-
-private class VideoRouteShell(
-    context: Context,
-    private val playerView: HJzvdStd,
+/**
+ * Compose replacement for CoordinatorLayout/AppBarLayout. The player call remains at the same
+ * composition position for normal, fullscreen and PiP; only its constraints change.
+ */
+@Composable
+private fun VideoPlaybackLayout(
+    playerHeight: Dp,
+    isFullscreen: Boolean,
+    isInPipMode: Boolean,
+    collapseLocked: Boolean,
+    onExpandedChange: (Boolean) -> Unit,
+    player: @Composable () -> Unit,
+    details: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    private val rootView = CoordinatorLayout(context).apply {
-        fitsSystemWindows = true
-        layoutParams = ViewGroup.LayoutParams(
-            MATCH_PARENT,
-            MATCH_PARENT,
-        )
+    val density = LocalDensity.current
+    val maxPlayerHeightPx = with(density) { playerHeight.toPx() }
+    var playerOffsetPx by remember(playerHeight) { mutableFloatStateOf(0f) }
+
+    fun consumeOffset(delta: Float): Float {
+        val old = playerOffsetPx
+        playerOffsetPx = (old + delta).coerceIn(-maxPlayerHeightPx, 0f)
+        return playerOffsetPx - old
     }
 
-    private val appBarLayout = AppBarLayout(context).apply {
-        layoutParams = CoordinatorLayout.LayoutParams(
-            MATCH_PARENT,
-            WRAP_CONTENT,
-        ).apply {
-            behavior = VideoPlayerAppBarBehavior(context, null)
+    val nestedScrollConnection = remember(
+        maxPlayerHeightPx,
+        collapseLocked,
+        isFullscreen,
+        isInPipMode,
+    ) {
+        object : NestedScrollConnection {
+            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                if (collapseLocked || isFullscreen || isInPipMode || available.y >= 0f) {
+                    return Offset.Zero
+                }
+                return Offset(0f, consumeOffset(available.y))
+            }
+
+            override fun onPostScroll(
+                consumed: Offset,
+                available: Offset,
+                source: NestedScrollSource,
+            ): Offset {
+                if (collapseLocked || isFullscreen || isInPipMode || available.y <= 0f) {
+                    return Offset.Zero
+                }
+                return Offset(0f, consumeOffset(available.y))
+            }
         }
     }
 
-    private val collapsingToolbarLayout = CollapsingToolbarLayout(context).apply {
-        layoutParams = AppBarLayout.LayoutParams(
-            MATCH_PARENT,
-            WRAP_CONTENT,
-        ).apply {
-            scrollFlags = AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or
-                    AppBarLayout.LayoutParams.SCROLL_FLAG_EXIT_UNTIL_COLLAPSED
+    LaunchedEffect(collapseLocked, isFullscreen, isInPipMode) {
+        if (collapseLocked || isFullscreen || isInPipMode) playerOffsetPx = 0f
+    }
+    LaunchedEffect(playerOffsetPx) {
+        onExpandedChange(playerOffsetPx == 0f)
+    }
+
+    val visiblePlayerHeight = with(density) {
+        (maxPlayerHeightPx + playerOffsetPx).coerceAtLeast(0f).toDp()
+    }
+    Column(modifier = modifier.nestedScroll(nestedScrollConnection)) {
+        Box(
+            modifier = if (isFullscreen || isInPipMode) {
+                Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            } else {
+                Modifier
+                    .fillMaxWidth()
+                    .height(visiblePlayerHeight)
+            }
+        ) {
+            player()
         }
-    }
-
-    private val videoPlayerHost = FrameLayout(context).apply {
-        layoutParams = CollapsingToolbarLayout.LayoutParams(
-            MATCH_PARENT,
-            WRAP_CONTENT,
-        ).apply {
-            collapseMode = CollapsingToolbarLayout.LayoutParams.COLLAPSE_MODE_PARALLAX
-            parallaxMultiplier = 1f
+        if (!isFullscreen && !isInPipMode) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            ) {
+                details()
+            }
         }
-    }
-
-    private val videoTabsHost = ComposeView(context).apply {
-        layoutParams = CoordinatorLayout.LayoutParams(
-            MATCH_PARENT,
-            MATCH_PARENT,
-        ).apply {
-            behavior = AppBarLayout.ScrollingViewBehavior()
-        }
-    }
-
-    init {
-        videoPlayerHost.addView(playerView, ViewGroup.LayoutParams(MATCH_PARENT, 250.dp))
-        collapsingToolbarLayout.addView(videoPlayerHost)
-        appBarLayout.addView(collapsingToolbarLayout)
-        rootView.addView(videoTabsHost)
-        rootView.addView(appBarLayout)
-    }
-
-    val mainHostView: View
-        get() = rootView
-
-    fun setTabsHostContent(content: @Composable () -> Unit) {
-        videoTabsHost.setViewCompositionStrategy(
-            ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed,
-        )
-        videoTabsHost.setContent(content)
-    }
-
-    fun setTabsVisible(visible: Boolean) {
-        videoTabsHost.isVisible = visible
-    }
-
-    fun setExpanded(expanded: Boolean, animate: Boolean) {
-        appBarLayout.post {
-            appBarLayout.setExpanded(expanded, animate)
-        }
-    }
-
-    fun setOnOffsetChanged(onChanged: (totalScrollRange: Int, verticalOffset: Int) -> Unit) {
-        appBarLayout.addOnOffsetChangedListener { appBar, verticalOffset ->
-            onChanged(appBar.totalScrollRange, verticalOffset)
-        }
-    }
-
-    fun withBehavior(block: (VideoPlayerAppBarBehavior) -> Unit) {
-        val behavior = (appBarLayout.layoutParams as CoordinatorLayout.LayoutParams)
-            .behavior as? VideoPlayerAppBarBehavior ?: return
-        block(behavior)
-    }
-
-    fun setPlayerHeight(height: Int) {
-        val lp = playerView.layoutParams
-        lp.height = height
-        playerView.layoutParams = lp
-        playerView.requestLayout()
-    }
-
-    fun clear() {
-        videoTabsHost.disposeComposition()
     }
 }
+
+private const val MIN_RESUME_POSITION_MS = 5_000L
+private const val RESTART_ACTION_VISIBLE_MS = 5_000L

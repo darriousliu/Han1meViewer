@@ -29,9 +29,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import cn.jzvd.JZUtils
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.entity.HKeyframeEntity
+import com.yenaly.han1meviewer.playback.model.formatPlaybackTime
 import com.yenaly.han1meviewer.ui.component.ConfirmDialog
 import com.yenaly.han1meviewer.ui.component.content.EmptyContent
 import com.yenaly.han1meviewer.ui.component.lazy.LazyColumn
@@ -129,7 +129,7 @@ fun HKeyframesScreen(
             ConfirmDialog(
                 visible = true,
                 title = stringResource(R.string.sure_to_delete),
-                message = JZUtils.stringForTime(keyframe.position),
+                message = formatPlaybackTime(keyframe.position),
                 confirmText = stringResource(R.string.confirm),
                 dismissText = stringResource(R.string.cancel),
                 onDismiss = {
@@ -255,7 +255,7 @@ private fun HKeyframeRow(
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = JZUtils.stringForTime(keyframe.position),
+                text = formatPlaybackTime(keyframe.position),
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.SemiBold,
             )

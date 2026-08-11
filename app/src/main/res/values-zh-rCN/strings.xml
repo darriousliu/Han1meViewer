@@ -471,6 +471,7 @@
     <string name="allow_pip_disc">允许返回桌面时进入画中画模式 （需要开启画中画权限）</string>
     <string name="allow_pip_title">允许进入画中画模式</string>
     <string name="play_pause">播放/暂停</string>
+    <string name="mobile_data_playback_warning">当前未连接 Wi-Fi，继续播放可能会消耗移动数据。</string>
     <string name="request_pip_alert">未授权画中画权限，将自动关闭</string>
     <string name="specific_y_m">具体年月</string>
     <string name="approximate_range">大致范围</string>

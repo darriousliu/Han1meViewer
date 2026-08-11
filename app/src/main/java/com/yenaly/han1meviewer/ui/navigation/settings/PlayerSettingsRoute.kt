@@ -11,10 +11,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.core.content.edit
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.R
+import com.yenaly.han1meviewer.playback.model.PlaybackDefaults
+import com.yenaly.han1meviewer.playback.model.PlaybackEngineType
 import com.yenaly.han1meviewer.ui.screen.settings.PlayerSettingsScreen
 import com.yenaly.han1meviewer.ui.screen.settings.PlayerSettingsUiState
-import com.yenaly.han1meviewer.ui.view.video.HJzvdStd
-import com.yenaly.han1meviewer.ui.view.video.HMediaKernel
 
 private const val PLAYER_SWITCH_PLAYER_KERNEL = "switch_player_kernel"
 private const val PLAYER_SHOW_BOTTOM_PROGRESS = "show_bottom_progress"
@@ -29,27 +29,27 @@ fun PlayerSettingsRouteScreen(
     val context = LocalContext.current
     var refreshKey by remember { mutableIntStateOf(0) }
     val uiState = remember(refreshKey, context) { buildPlayerSettingsUiState(context) }
+    val defaultLongPressSpeed = PlaybackDefaults.DEFAULT_LONG_PRESS_SPEED_MULTIPLIER
+    val defaultLongPressSpeedLabel = "${stringResource(R.string.d_speed_times, defaultLongPressSpeed)} " +
+        "(${stringResource(R.string.default_)})"
 
     PlayerSettingsScreen(
         state = uiState,
-        kernelOptions = HMediaKernel.Type.entries.map { it.name to it.name },
-        speedOptions = HJzvdStd.speedStringArray.zip(HJzvdStd.speedArray.map { it.toString() }),
+        kernelOptions = PlaybackEngineType.entries.map { it.displayName to it.persistedValue },
+        speedOptions = PlaybackDefaults.SPEED_LABELS.zip(
+            PlaybackDefaults.SPEED_OPTIONS.map { it.toString() },
+        ),
         longPressSpeedOptions = listOf(
-            stringResource(R.string.d_speed_times, 1f) to "1",
+            stringResource(R.string.d_speed_times, 1f) to "1.0",
             stringResource(R.string.d_speed_times, 1.5f) to "1.5",
-            stringResource(R.string.d_speed_times, 2f) to "2",
-            "${
-                stringResource(
-                    R.string.d_speed_times,
-                    2.5f
-                )
-            } (${stringResource(R.string.default_)})" to "2.5",
+            stringResource(R.string.d_speed_times, 2f) to "2.0",
+            defaultLongPressSpeedLabel to defaultLongPressSpeed.toString(),
             stringResource(R.string.d_speed_times, 2.8f) to "2.8",
-            stringResource(R.string.d_speed_times, 3f) to "3",
+            stringResource(R.string.d_speed_times, 3f) to "3.0",
             stringResource(R.string.d_speed_times, 3.2f) to "3.2",
             stringResource(R.string.d_speed_times, 3.5f) to "3.5",
             stringResource(R.string.d_speed_times, 3.8f) to "3.8",
-            stringResource(R.string.d_speed_times, 4f) to "4",
+            stringResource(R.string.d_speed_times, 4f) to "4.0",
         ),
         onKernelChange = {
             saveString(PLAYER_SWITCH_PLAYER_KERNEL, it)
@@ -76,18 +76,18 @@ fun PlayerSettingsRouteScreen(
 }
 
 private fun buildPlayerSettingsUiState(context: Context): PlayerSettingsUiState {
-    val kernel = Preferences.switchPlayerKernel
-    val isMpvPlayer = kernel == HMediaKernel.Type.MpvPlayer.name
+    val engine = PlaybackEngineType.fromString(Preferences.switchPlayerKernel)
+    val isMpvPlayer = engine == PlaybackEngineType.Mpv
     val currentSpeed = Preferences.playerSpeed
     val currentLongPressSpeed = Preferences.longPressSpeedTime
-    val speedDisplay = HJzvdStd.speedStringArray.getOrElse(
-        HJzvdStd.speedArray.indexOfFirst { it == currentSpeed }.takeIf { it >= 0 }
-            ?: HJzvdStd.DEF_SPEED_INDEX
-    ) { HJzvdStd.speedStringArray[HJzvdStd.DEF_SPEED_INDEX] }
+    val speedDisplay = PlaybackDefaults.SPEED_LABELS.getOrElse(
+        PlaybackDefaults.SPEED_OPTIONS.indexOfFirst { it == currentSpeed }.takeIf { it >= 0 }
+            ?: PlaybackDefaults.DEFAULT_SPEED_INDEX,
+    ) { PlaybackDefaults.SPEED_LABELS[PlaybackDefaults.DEFAULT_SPEED_INDEX] }
     val longPressDisplay = context.getString(R.string.d_speed_times, currentLongPressSpeed)
     return PlayerSettingsUiState(
-        kernel = kernel,
-        kernelDisplay = kernel,
+        kernel = engine.persistedValue,
+        kernelDisplay = engine.displayName,
         mpvSettingsEnabled = isMpvPlayer,
         mpvSettingsSummary = if (isMpvPlayer) {
             context.getString(R.string.mpv_advanced_settings_summary)
@@ -103,3 +103,9 @@ private fun buildPlayerSettingsUiState(context: Context): PlayerSettingsUiState 
         slideSensitivitySummary = toPrettySensitivityString(context, Preferences.slideSensitivity),
     )
 }
+
+private val PlaybackEngineType.displayName: String
+    get() = when (this) {
+        PlaybackEngineType.Media3 -> "Media3"
+        PlaybackEngineType.Mpv -> "MPV"
+    }

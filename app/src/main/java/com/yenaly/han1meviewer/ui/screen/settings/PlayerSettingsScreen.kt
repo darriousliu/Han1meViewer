@@ -162,8 +162,8 @@ private fun PlayerSettingsScreenPreview() {
     ComponentPreview {
         PlayerSettingsScreen(
             state = PlayerSettingsUiState(
-                kernel = "ExoPlayer",
-                kernelDisplay = "ExoPlayer",
+                kernel = "Media3",
+                kernelDisplay = "Media3",
                 mpvSettingsEnabled = false,
                 mpvSettingsSummary = stringResource(R.string.mpv_settings_disabled_summary),
                 showBottomProgress = true,
@@ -178,12 +178,15 @@ private fun PlayerSettingsScreenPreview() {
                 ),
             ),
             kernelOptions = listOf(
-                "MediaPlayer" to "MediaPlayer",
-                "ExoPlayer" to "ExoPlayer",
-                "MpvPlayer" to "MpvPlayer"
+                "Media3" to "Media3",
+                "MPV" to "Mpv",
             ),
             speedOptions = listOf("1.0x" to "1.0", "1.25x" to "1.25", "1.5x" to "1.5"),
-            longPressSpeedOptions = listOf("2.0倍" to "2", "2.5倍" to "2.5", "3.0倍" to "3"),
+            longPressSpeedOptions = listOf(
+                "2.0倍" to "2.0",
+                "2.5倍" to "2.5",
+                "3.0倍" to "3.0",
+            ),
             onKernelChange = {},
             onShowBottomProgressChange = {},
             onPlayerSpeedChange = {},

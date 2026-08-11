@@ -19,7 +19,6 @@ import com.yenaly.han1meviewer.util.AnimeShaders
 import com.yenaly.han1meviewer.util.ThemeUtils
 import com.yenaly.yenaly_libs.base.YenalyApplication
 import com.yenaly.yenaly_libs.utils.LanguageHelper
-import `is`.xyz.mpv.MPVLib
 import java.net.ProxySelector
 
 /**
@@ -48,9 +47,6 @@ class HanimeApplication : YenalyApplication() {
         HProxySelector.rebuildNetwork()
         initFirebase()
         initNotificationChannel()
-        MPVLib.create(applicationContext)
-        MPVLib.init()
-
         if (AnimeShaders.copyShaderAssets(applicationContext) <= 0) {
             Log.w(TAG, "Shader 复制失败")
         }

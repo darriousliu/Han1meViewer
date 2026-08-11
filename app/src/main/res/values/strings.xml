@@ -497,6 +497,7 @@
     <string name="allow_pip_disc">允許返回桌面時進入畫中畫模式  （需要開啟畫中畫權限）</string>
     <string name="allow_pip_title">允許進入畫中畫模式</string>
     <string name="play_pause">播放/暫停</string>
+    <string name="mobile_data_playback_warning">目前未連接 Wi-Fi，繼續播放可能會消耗行動數據。</string>
     <string name="request_pip_alert">未授權畫中畫權限，自動關閉</string>
     <string name="approximate_range">大致範圍</string>
     <string name="specific_y_m">具體年月</string>

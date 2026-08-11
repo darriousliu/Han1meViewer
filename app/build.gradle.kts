@@ -154,7 +154,9 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.compose.ui.ui.tooling.preview)
     implementation(libs.androidx.ui)
+    androidTestImplementation(platform(libs.compose.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(platform(libs.compose.compose.bom))
     debugImplementation(libs.compose.ui.ui.tooling)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material.icons.core)
@@ -185,9 +187,9 @@ dependencies {
 
     // video
 
-    implementation(libs.jiaozi.video.player)
     implementation(libs.media3.exoplayer)
     implementation(libs.media3.exoplayer.hls)
+    implementation(libs.media3.ui.compose)
     implementation(libs.mpv.lib)
 
     // view
