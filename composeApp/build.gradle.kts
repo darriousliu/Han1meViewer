@@ -27,6 +27,10 @@ room {
     schemaDirectory("$projectDir/schemas")
 }
 
+compose.resources {
+    packageOfResClass = "com.yenaly.han1meviewer.generated.resources"
+}
+
 // Lifecycle 2.11 moved its multiplatform artifacts to androidx.lifecycle. The old
 // org.jetbrains coordinates are compatibility shims whose empty JARs share the
 // same filenames as the real artifacts and break Gradle's JVM distribution task.

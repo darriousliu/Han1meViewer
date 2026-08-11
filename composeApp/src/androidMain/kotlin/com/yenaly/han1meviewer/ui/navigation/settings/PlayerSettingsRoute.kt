@@ -10,6 +10,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.R
+import com.yenaly.han1meviewer.platform.NumberFormatter
 import com.yenaly.han1meviewer.playback.model.PlaybackDefaults
 import com.yenaly.han1meviewer.playback.model.PlaybackEngineType
 import com.yenaly.han1meviewer.ui.screen.settings.PlayerSettingsScreen
@@ -29,7 +30,7 @@ fun PlayerSettingsRouteScreen(
     var refreshKey by remember { mutableIntStateOf(0) }
     val uiState = remember(refreshKey, context) { buildPlayerSettingsUiState(context) }
     val defaultLongPressSpeed = PlaybackDefaults.DEFAULT_LONG_PRESS_SPEED_MULTIPLIER
-    val defaultLongPressSpeedLabel = "${stringResource(R.string.d_speed_times, defaultLongPressSpeed)} " +
+    val defaultLongPressSpeedLabel = "${stringResource(R.string.d_speed_times, formatSpeedMultiplier(defaultLongPressSpeed))} " +
         "(${stringResource(R.string.default_)})"
 
     PlayerSettingsScreen(
@@ -39,16 +40,16 @@ fun PlayerSettingsRouteScreen(
             PlaybackDefaults.SPEED_OPTIONS.map { it.toString() },
         ),
         longPressSpeedOptions = listOf(
-            stringResource(R.string.d_speed_times, 1f) to "1.0",
-            stringResource(R.string.d_speed_times, 1.5f) to "1.5",
-            stringResource(R.string.d_speed_times, 2f) to "2.0",
+            stringResource(R.string.d_speed_times, formatSpeedMultiplier(1f)) to "1.0",
+            stringResource(R.string.d_speed_times, formatSpeedMultiplier(1.5f)) to "1.5",
+            stringResource(R.string.d_speed_times, formatSpeedMultiplier(2f)) to "2.0",
             defaultLongPressSpeedLabel to defaultLongPressSpeed.toString(),
-            stringResource(R.string.d_speed_times, 2.8f) to "2.8",
-            stringResource(R.string.d_speed_times, 3f) to "3.0",
-            stringResource(R.string.d_speed_times, 3.2f) to "3.2",
-            stringResource(R.string.d_speed_times, 3.5f) to "3.5",
-            stringResource(R.string.d_speed_times, 3.8f) to "3.8",
-            stringResource(R.string.d_speed_times, 4f) to "4.0",
+            stringResource(R.string.d_speed_times, formatSpeedMultiplier(2.8f)) to "2.8",
+            stringResource(R.string.d_speed_times, formatSpeedMultiplier(3f)) to "3.0",
+            stringResource(R.string.d_speed_times, formatSpeedMultiplier(3.2f)) to "3.2",
+            stringResource(R.string.d_speed_times, formatSpeedMultiplier(3.5f)) to "3.5",
+            stringResource(R.string.d_speed_times, formatSpeedMultiplier(3.8f)) to "3.8",
+            stringResource(R.string.d_speed_times, formatSpeedMultiplier(4f)) to "4.0",
         ),
         onKernelChange = {
             saveString(PLAYER_SWITCH_PLAYER_KERNEL, it)
@@ -83,7 +84,10 @@ private fun buildPlayerSettingsUiState(context: Context): PlayerSettingsUiState 
         PlaybackDefaults.SPEED_OPTIONS.indexOfFirst { it == currentSpeed }.takeIf { it >= 0 }
             ?: PlaybackDefaults.DEFAULT_SPEED_INDEX,
     ) { PlaybackDefaults.SPEED_LABELS[PlaybackDefaults.DEFAULT_SPEED_INDEX] }
-    val longPressDisplay = context.getString(R.string.d_speed_times, currentLongPressSpeed)
+    val longPressDisplay = context.getString(
+        R.string.d_speed_times,
+        formatSpeedMultiplier(currentLongPressSpeed),
+    )
     return PlayerSettingsUiState(
         kernel = engine.persistedValue,
         kernelDisplay = engine.displayName,
@@ -102,6 +106,9 @@ private fun buildPlayerSettingsUiState(context: Context): PlayerSettingsUiState 
         slideSensitivitySummary = toPrettySensitivityString(context, Preferences.slideSensitivity),
     )
 }
+
+private fun formatSpeedMultiplier(value: Float): String =
+    NumberFormatter.formatFixedLocalized(value.toDouble(), fractionDigits = 1)
 
 private val PlaybackEngineType.displayName: String
     get() = when (this) {

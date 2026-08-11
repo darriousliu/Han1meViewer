@@ -126,7 +126,7 @@ object Preferences {
         get() = settingsStore.value(StorageSchema.Settings.slideSensitivity)
 
     val longPressSpeedTime: Float
-        get() = settingsStore.value(StorageSchema.Settings.longPressSpeedTimes).toFloatOrNull()
+        get() = settingsStore.value(StorageSchema.Settings.longPressSpeedTimes).toFiniteFloatOrNull()
             ?: PlaybackDefaults.DEFAULT_LONG_PRESS_SPEED_MULTIPLIER
 
     val videoLanguage: String
@@ -152,13 +152,13 @@ object Preferences {
     val horizontalCardCountConfig: HorizontalCardCountConfig
         get() = HorizontalCardCountConfig(
             narrowCount = settingsStore.value(StorageSchema.Settings.horizontalCardCountNarrow)
-                .toFloatOrNull() ?: HorizontalCardCountConfig.DEFAULT_NARROW_COUNT,
+                .toFiniteFloatOrNull() ?: HorizontalCardCountConfig.DEFAULT_NARROW_COUNT,
             compactCount = settingsStore.value(StorageSchema.Settings.horizontalCardCountCompact)
-                .toFloatOrNull() ?: HorizontalCardCountConfig.DEFAULT_COMPACT_COUNT,
+                .toFiniteFloatOrNull() ?: HorizontalCardCountConfig.DEFAULT_COMPACT_COUNT,
             mediumCount = settingsStore.value(StorageSchema.Settings.horizontalCardCountMedium)
-                .toFloatOrNull() ?: HorizontalCardCountConfig.DEFAULT_MEDIUM_COUNT,
+                .toFiniteFloatOrNull() ?: HorizontalCardCountConfig.DEFAULT_MEDIUM_COUNT,
             expandedCount = settingsStore.value(StorageSchema.Settings.horizontalCardCountExpanded)
-                .toFloatOrNull() ?: HorizontalCardCountConfig.DEFAULT_EXPANDED_COUNT,
+                .toFiniteFloatOrNull() ?: HorizontalCardCountConfig.DEFAULT_EXPANDED_COUNT,
         )
 
     val fakeLauncherIcon: String
@@ -383,3 +383,6 @@ object Preferences {
             }
         } as StorageKey<String>
 }
+
+private fun String.toFiniteFloatOrNull(): Float? =
+    toFloatOrNull()?.takeIf(Float::isFinite)

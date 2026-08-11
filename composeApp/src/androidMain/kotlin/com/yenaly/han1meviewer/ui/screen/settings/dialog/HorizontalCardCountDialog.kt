@@ -12,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.yenaly.han1meviewer.HorizontalCardCountConfig
 import com.yenaly.han1meviewer.R
+import com.yenaly.han1meviewer.platform.NumberFormatter
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
 import com.yenaly.han1meviewer.ui.screen.settings.model.GridRangeOption
 
@@ -97,7 +98,10 @@ fun HorizontalCardCountDialog(
         bucketHintText = stringResource(
             R.string.horizontal_card_count_current_bucket_hint,
             horizontalCardCountBucketLabel(currentWidthDp),
-            currentConfig.countForWidthDp(currentWidthDp)
+            NumberFormatter.formatFixedLocalized(
+                currentConfig.countForWidthDp(currentWidthDp).toDouble(),
+                fractionDigits = 1,
+            ),
         ),
         options = options,
         isDecimal = true,
