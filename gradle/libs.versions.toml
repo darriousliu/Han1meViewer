@@ -7,7 +7,7 @@ biometric = "1.1.0"
 coilCompose = "3.5.0"
 composeAvatarCropper = "1.0.0"
 coreSplashscreen = "1.2.0"
-kotlin = "2.4.10"
+kotlin = "2.4.20-Beta2"
 materialIconsCore = "1.7.8"
 ksp = "2.3.11"
 drawerlayout = "1.2.0"
@@ -27,6 +27,7 @@ multiType = "4.3.0"
 lifecycle = "2.11.0"
 room = "2.8.4"
 navigation = "2.9.8"
+navigationMultiplatform = "2.9.2"
 preferenceKtx = "1.2.1"
 swiperefreshlayout = "1.2.0"
 window = "1.5.1"
@@ -36,6 +37,9 @@ palette = "1.0.0"
 spannableX = "1.0.4"
 datetime = "0.8.0"
 serialization = "1.11.0"
+ktor = "3.5.2"
+ksoup = "0.2.6"
+sqlite = "2.7.0"
 gson = "2.14.0"
 jsoup = "1.23.1"
 retrofit = "3.0.0"
@@ -51,9 +55,15 @@ circularRevealSwitch = "0.4.6"
 desugarJdkLibs = "2.1.5"
 firebaseBom = "34.17.0"
 composeBom = "2026.06.01"
-composeMultiplatform = "1.11.0"
+composeMultiplatform = "1.11.1"
+composeMultiplatformMaterial3 = "1.9.0"
 compose-material3 = "1.5.0-alpha25"
 mpv = "v0.1.7"
+mmkvKotlin = "1.5.1"
+composeSonner = "0.4.0"
+composeWebview = "1.0.0-beta-02"
+biometrik = "1.0.2"
+firebaseApple = "12.16.0"
 
 [libraries]
 # Android
@@ -74,6 +84,8 @@ appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "a
 firebase-database = { module = "com.google.firebase:firebase-database" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutinesAndroid" }
+coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutinesAndroid" }
+coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "coroutinesAndroid" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintLayout" }
 recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerView" }
 drawerlayout = { module = "androidx.drawerlayout:drawerlayout", version.ref = "drawerlayout" }
@@ -88,6 +100,7 @@ fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+sqlite-bundled = { group = "androidx.sqlite", name = "sqlite-bundled", version.ref = "sqlite" }
 navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation" }
 navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigation" }
 preference-ktx = { group = "androidx.preference", name = "preference-ktx", version.ref = "preferenceKtx" }
@@ -104,20 +117,35 @@ compose-material3 = { group = "androidx.compose.material3", name = "material3",v
 compose-ui-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 compose-ui-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-runtime-multiplatform = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "composeMultiplatform" }
+compose-foundation-multiplatform = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "composeMultiplatform" }
+compose-material3-multiplatform = { module = "org.jetbrains.compose.material3:material3", version.ref = "composeMultiplatformMaterial3" }
+compose-ui-multiplatform = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMultiplatform" }
+compose-resources-multiplatform = { module = "org.jetbrains.compose.components:components-resources", version.ref = "composeMultiplatform" }
+lifecycle-runtime-compose-multiplatform = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
+lifecycle-viewmodel-compose-multiplatform = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+navigation-compose-multiplatform = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationMultiplatform" }
 
 # Parse
 serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 jsoup = { group = "org.jsoup", name = "jsoup", version.ref = "jsoup" }
+ksoup = { module = "com.fleeksoft.ksoup:ksoup", version.ref = "ksoup" }
 
 # Network
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 converter-serialization = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "converterSerialization" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 okhttp-dns-over-https = { group = "com.squareup.okhttp3", name = "okhttp-dnsoverhttps", version.ref = "okhttp" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
 # Pic
 coil = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
+coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coilCompose" }
 # Test
 junit = { group = "junit", name = "junit", version.ref = "junit" } # testImplementation
 test-junit = { group = "androidx.test.ext", name = "junit", version.ref = "testJunit" } # androidTestImplementation
@@ -139,6 +167,13 @@ datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version
 circular-reveal-switch = { group = "com.github.YenalyLiew", name = "CircularRevealSwitch", version.ref = "circularRevealSwitch" }
 desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugarJdkLibs" }
 aboutlibraries-compose-m3 = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "aboutlibraries" }
+mmkv-kotlin = { module = "io.github.darriousliu:mmkv-kotlin", version.ref = "mmkvKotlin" }
+mmkv-kotlin-nativelib-macos = { module = "io.github.darriousliu:mmkv-kotlin-nativelib-macos", version.ref = "mmkvKotlin" }
+mmkv-kotlin-nativelib-linux = { module = "io.github.darriousliu:mmkv-kotlin-nativelib-linux", version.ref = "mmkvKotlin" }
+mmkv-kotlin-nativelib-windows = { module = "io.github.darriousliu:mmkv-kotlin-nativelib-windows", version.ref = "mmkvKotlin" }
+compose-sonner = { module = "io.github.brdominguez:compose-sonner", version.ref = "composeSonner" }
+composewebview-jvm = { module = "io.github.kdroidfilter:composewebview-jvm", version.ref = "composeWebview" }
+biometrik = { module = "io.github.n7ghtm4r3:biometrik", version.ref = "biometrik" }
 
 # firebase
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }

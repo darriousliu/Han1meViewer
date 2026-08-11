@@ -1,5 +1,8 @@
+@file:OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 @file:Suppress("UnstableApiUsage")
 
+import org.gradle.jvm.toolchain.JavaLanguageVersion
+import org.gradle.jvm.toolchain.JavaToolchainService
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -12,6 +15,29 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.aboutlibraries)
 }
+
+group = "com.yenaly.han1meviewer"
+
+// Lifecycle 2.11 moved its multiplatform artifacts to androidx.lifecycle. The old
+// org.jetbrains coordinates are compatibility shims whose empty JARs share the
+// same filenames as the real artifacts and break Gradle's JVM distribution task.
+configurations.configureEach {
+    exclude(group = "org.jetbrains.androidx.lifecycle")
+}
+
+val mmkvDesktopNative = when {
+    System.getProperty("os.name") == "Mac OS X" -> libs.mmkv.kotlin.nativelib.macos
+    System.getProperty("os.name").startsWith("Windows") -> libs.mmkv.kotlin.nativelib.windows
+    System.getProperty("os.name").startsWith("Linux") -> libs.mmkv.kotlin.nativelib.linux
+    else -> error("Unsupported Desktop OS for MMKV: ${System.getProperty("os.name")}")
+}
+
+val desktopJavaHome = extensions
+    .getByType<JavaToolchainService>()
+    .launcherFor {
+        languageVersion.set(JavaLanguageVersion.of(22))
+    }
+    .map { launcher -> launcher.metadata.installationPath.asFile.absolutePath }
 
 kotlin {
     android {
@@ -45,7 +71,7 @@ kotlin {
 
     jvm {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_21)
+            jvmTarget.set(JvmTarget.JVM_22)
             freeCompilerArgs.addAll(
                 "-opt-in=kotlin.RequiresOptIn",
                 "-jvm-default=enable",
@@ -69,12 +95,53 @@ kotlin {
         }
     }
 
-    jvmToolchain(21)
+    swiftPMDependencies {
+        iosMinimumDeploymentTarget.set("15.0")
+        swiftPackage(
+            url = url("https://github.com/firebase/firebase-ios-sdk.git"),
+            version = exact(libs.versions.firebaseApple.get()),
+            products = listOf(
+                product("FirebaseAnalytics"),
+                product("FirebaseCrashlytics"),
+                product("FirebaseRemoteConfig"),
+                product("FirebaseDatabase"),
+            ),
+        )
+    }
+
+    jvmToolchain(22)
 
     sourceSets {
         commonMain {
             dependencies {
                 implementation(libs.compose.runtime.multiplatform)
+                implementation(libs.compose.foundation.multiplatform)
+                implementation(libs.compose.material3.multiplatform)
+                implementation(libs.compose.ui.multiplatform)
+                implementation(libs.compose.resources.multiplatform)
+
+                implementation(libs.coroutines.core)
+                implementation(libs.serialization.json)
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.client.content.negotiation)
+                implementation(libs.ktor.client.logging)
+                implementation(libs.ktor.serialization.kotlinx.json)
+                implementation(libs.ksoup)
+                implementation(libs.room.runtime)
+                implementation(libs.sqlite.bundled)
+                implementation(libs.coil.compose)
+                implementation(libs.coil.network.ktor3)
+                implementation(libs.lifecycle.runtime.compose.multiplatform)
+                implementation(libs.lifecycle.viewmodel.compose.multiplatform)
+                implementation(libs.navigation.compose.multiplatform)
+                implementation(libs.mmkv.kotlin)
+                implementation(libs.compose.sonner)
+                implementation("io.github.n7ghtm4r3:biometrik:${libs.versions.biometrik.get()}") {
+                    exclude(
+                        group = "org.jetbrains.compose.desktop",
+                        module = "desktop-jvm-windows-x64",
+                    )
+                }
             }
         }
 
@@ -117,6 +184,7 @@ kotlin {
                 implementation(libs.converter.serialization)
                 implementation(libs.okhttp)
                 implementation(libs.okhttp.dns.over.https)
+                implementation(libs.ktor.client.okhttp)
 
                 implementation(libs.coil)
 
@@ -142,6 +210,22 @@ kotlin {
             }
         }
 
+        iosMain {
+            dependencies {
+                implementation(libs.ktor.client.darwin)
+            }
+        }
+
+        jvmMain {
+            dependencies {
+                implementation(compose.desktop.currentOs)
+                implementation(libs.coroutines.swing)
+                implementation(libs.ktor.client.okhttp)
+                implementation(libs.composewebview.jvm)
+                runtimeOnly(mmkvDesktopNative)
+            }
+        }
+
         getByName("androidHostTest") {
             dependencies {
                 implementation(libs.junit)
@@ -157,6 +241,22 @@ kotlin {
             }
         }
     }
+}
+
+compose.desktop {
+    application {
+        mainClass = "com.yenaly.han1meviewer.desktop.DesktopMainKt"
+        javaHome = desktopJavaHome.get()
+        jvmArgs("--enable-native-access=ALL-UNNAMED")
+    }
+}
+
+tasks.withType<JavaExec>().configureEach {
+    jvmArgs("--enable-native-access=ALL-UNNAMED")
+}
+
+tasks.withType<Test>().configureEach {
+    jvmArgs("--enable-native-access=ALL-UNNAMED")
 }
 
 dependencies {

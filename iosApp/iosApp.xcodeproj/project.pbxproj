@@ -6,30 +6,47 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		A10000000000000000000013 = {
+			isa = PBXBuildFile;
+			productRef = A10000000000000000000015;
+		};
+		CFA47327D4B0CD4DFF29051A = {
+			isa = PBXBuildFile;
+			productRef = 9841F35437A4034768A4042D;
+		};
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
-		A10000000000000000000001 /* Han1meViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Han1meViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A10000000000000000000001 = {
+			isa = PBXFileReference;
+			explicitFileType = wrapper.application;
+			includeInIndex = 0;
+			path = Han1meViewer.app;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		A10000000000000000000002 /* Exceptions for "iosApp" folder in "iosApp" target */ = {
+		A10000000000000000000002 = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = A10000000000000000000003 /* iosApp */;
+			target = A10000000000000000000003;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		A10000000000000000000004 /* iosApp */ = {
+		A10000000000000000000004 = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				A10000000000000000000002 /* Exceptions for "iosApp" folder in "iosApp" target */,
+				A10000000000000000000002,
 			);
 			path = iosApp;
 			sourceTree = "<group>";
 		};
-		A10000000000000000000005 /* Configuration */ = {
+		A10000000000000000000005 = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Configuration;
 			sourceTree = "<group>";
@@ -37,10 +54,12 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		A10000000000000000000006 /* Frameworks */ = {
+		A10000000000000000000006 = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A10000000000000000000013,
+				CFA47327D4B0CD4DFF29051A,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -50,16 +69,16 @@
 		A10000000000000000000007 = {
 			isa = PBXGroup;
 			children = (
-				A10000000000000000000005 /* Configuration */,
-				A10000000000000000000004 /* iosApp */,
-				A10000000000000000000008 /* Products */,
+				A10000000000000000000005,
+				A10000000000000000000004,
+				A10000000000000000000008,
 			);
 			sourceTree = "<group>";
 		};
-		A10000000000000000000008 /* Products */ = {
+		A10000000000000000000008 = {
 			isa = PBXGroup;
 			children = (
-				A10000000000000000000001 /* Han1meViewer.app */,
+				A10000000000000000000001,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -67,33 +86,35 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		A10000000000000000000003 /* iosApp */ = {
+		A10000000000000000000003 = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A10000000000000000000009 /* Build configuration list for PBXNativeTarget "iosApp" */;
+			buildConfigurationList = A10000000000000000000009;
 			buildPhases = (
-				A1000000000000000000000A /* Compile Kotlin Framework */,
-				A1000000000000000000000B /* Sources */,
-				A10000000000000000000006 /* Frameworks */,
-				A1000000000000000000000C /* Resources */,
+				A1000000000000000000000A,
+				A1000000000000000000000B,
+				A10000000000000000000006,
+				A1000000000000000000000C,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				A10000000000000000000004 /* iosApp */,
+				A10000000000000000000004,
 			);
 			name = iosApp;
 			packageProductDependencies = (
+				A10000000000000000000015,
+				9841F35437A4034768A4042D,
 			);
 			productName = iosApp;
-			productReference = A10000000000000000000001 /* Han1meViewer.app */;
+			productReference = A10000000000000000000001;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		A1000000000000000000000D /* Project object */ = {
+		A1000000000000000000000D = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
@@ -105,7 +126,7 @@
 					};
 				};
 			};
-			buildConfigurationList = A1000000000000000000000E /* Build configuration list for PBXProject "iosApp" */;
+			buildConfigurationList = A1000000000000000000000E;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -114,18 +135,22 @@
 			);
 			mainGroup = A10000000000000000000007;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A10000000000000000000014,
+				D3123255EAC9893AA46B0ADE,
+			);
 			preferredProjectObjectVersion = 77;
-			productRefGroup = A10000000000000000000008 /* Products */;
+			productRefGroup = A10000000000000000000008;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A10000000000000000000003 /* iosApp */,
+				A10000000000000000000003,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		A1000000000000000000000C /* Resources */ = {
+		A1000000000000000000000C = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -135,7 +160,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		A1000000000000000000000A /* Compile Kotlin Framework */ = {
+		A1000000000000000000000A = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -157,7 +182,7 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		A1000000000000000000000B /* Sources */ = {
+		A1000000000000000000000B = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -167,7 +192,7 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		A1000000000000000000000F /* Debug */ = {
+		A1000000000000000000000F = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -191,7 +216,7 @@
 			};
 			name = Debug;
 		};
-		A10000000000000000000010 /* Release */ = {
+		A10000000000000000000010 = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -209,9 +234,9 @@
 			};
 			name = Release;
 		};
-		A10000000000000000000011 /* Debug */ = {
+		A10000000000000000000011 = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = A10000000000000000000005 /* Configuration */;
+			baseConfigurationReferenceAnchor = A10000000000000000000005;
 			baseConfigurationReferenceRelativePath = Config.xcconfig;
 			buildSettings = {
 				ARCHS = arm64;
@@ -235,9 +260,9 @@
 			};
 			name = Debug;
 		};
-		A10000000000000000000012 /* Release */ = {
+		A10000000000000000000012 = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = A10000000000000000000005 /* Configuration */;
+			baseConfigurationReferenceAnchor = A10000000000000000000005;
 			baseConfigurationReferenceRelativePath = Config.xcconfig;
 			buildSettings = {
 				ARCHS = arm64;
@@ -264,25 +289,55 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		A1000000000000000000000E /* Build configuration list for PBXProject "iosApp" */ = {
+		A10000000000000000000009 = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A1000000000000000000000F /* Debug */,
-				A10000000000000000000010 /* Release */,
+				A10000000000000000000011,
+				A10000000000000000000012,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A10000000000000000000009 /* Build configuration list for PBXNativeTarget "iosApp" */ = {
+		A1000000000000000000000E = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A10000000000000000000011 /* Debug */,
-				A10000000000000000000012 /* Release */,
+				A1000000000000000000000F,
+				A10000000000000000000010,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		D3123255EAC9893AA46B0ADE = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = KotlinMultiplatformLinkedPackage;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A10000000000000000000014 = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Tencent/MMKV.git";
+			requirement = {
+				kind = exactVersion;
+				version = 2.4.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9841F35437A4034768A4042D = {
+			isa = XCSwiftPackageProductDependency;
+			productName = KotlinMultiplatformLinkedPackage;
+		};
+		A10000000000000000000015 = {
+			isa = XCSwiftPackageProductDependency;
+			package = A10000000000000000000014;
+			productName = MMKV;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
-	rootObject = A1000000000000000000000D /* Project object */;
+	rootObject = A1000000000000000000000D;
 }
