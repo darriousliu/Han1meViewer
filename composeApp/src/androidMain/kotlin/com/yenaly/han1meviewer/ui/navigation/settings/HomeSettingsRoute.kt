@@ -40,8 +40,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.core.text.parseAsHtml
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.google.firebase.Firebase
-import com.google.firebase.analytics.analytics
 import com.yenaly.han1meviewer.AndroidHanimeApplication
 import com.yenaly.han1meviewer.HA1_GITHUB_FORUM_URL
 import com.yenaly.han1meviewer.HA1_GITHUB_ISSUE_URL
@@ -53,6 +51,7 @@ import com.yenaly.han1meviewer.logic.state.WebsiteState
 import com.yenaly.han1meviewer.platform.AppBuildInfoProvider
 import com.yenaly.han1meviewer.platform.getOrThrow
 import com.yenaly.han1meviewer.platform.platformServices
+import com.yenaly.han1meviewer.platform.firebasePlatform
 import com.yenaly.han1meviewer.ui.activity.AndroidMainActivity
 import com.yenaly.han1meviewer.ui.component.ConfirmDialog
 import com.yenaly.han1meviewer.ui.screen.home.homepage.defaultHomeCategoryPreferenceItems
@@ -303,7 +302,7 @@ fun HomeSettingsRouteScreen(
             }
             saveBoolean(HOME_USE_ANALYTICS, true)
             refreshKey++
-            Firebase.analytics.setAnalyticsCollectionEnabled(true)
+            firebasePlatform().setAnalyticsCollectionEnabled(true)
         },
         onUseLockScreenChange = { value ->
             if (!value) {
@@ -507,7 +506,7 @@ fun HomeSettingsRouteScreen(
                 TextButton(onClick = {
                     saveBoolean(HOME_USE_ANALYTICS, false)
                     refreshKey++
-                    Firebase.analytics.setAnalyticsCollectionEnabled(false)
+                    firebasePlatform().setAnalyticsCollectionEnabled(false)
                     showAnalyticsDialog = false
                 }) {
                     Text(stringResource(R.string.deny))

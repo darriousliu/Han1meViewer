@@ -3,22 +3,24 @@ package com.yenaly.han1meviewer.util
 import android.app.Activity
 import android.util.Log
 import androidx.fragment.app.Fragment
-import com.google.firebase.Firebase
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.analytics
-import com.google.firebase.analytics.logEvent
+import com.yenaly.han1meviewer.platform.FirebaseEventName
+import com.yenaly.han1meviewer.platform.FirebaseParameterName
+import com.yenaly.han1meviewer.platform.firebasePlatform
 
 fun Activity.logScreenViewEvent(fragment: Fragment) {
     logScreenViewEvent(fragment.javaClass.simpleName)
 }
 
 fun Activity.logScreenViewEvent(screenClassName: String) {
-    Firebase.analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
-        // example: AndroidMainActivity-HomeRouteScreen
-        val screenName = this@logScreenViewEvent.javaClass.simpleName +
-            "-" + screenClassName
-        Log.d("logScreenViewEvent", "screenName: $screenName")
-        param(FirebaseAnalytics.Param.SCREEN_NAME, screenName)
-        param(FirebaseAnalytics.Param.SCREEN_CLASS, screenClassName)
-    }
+    // example: AndroidMainActivity-HomeRouteScreen
+    val screenName = this@logScreenViewEvent.javaClass.simpleName +
+        "-" + screenClassName
+    Log.d("logScreenViewEvent", "screenName: $screenName")
+    firebasePlatform().logEvent(
+        FirebaseEventName.ScreenView,
+        mapOf(
+            FirebaseParameterName.ScreenName to screenName,
+            FirebaseParameterName.ScreenClass to screenClassName,
+        ),
+    )
 }

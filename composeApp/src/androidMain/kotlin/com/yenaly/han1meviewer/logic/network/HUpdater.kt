@@ -1,13 +1,12 @@
 package com.yenaly.han1meviewer.logic.network
 
 import android.util.Log
-import com.google.firebase.Firebase
-import com.google.firebase.remoteconfig.remoteConfig
 import com.yenaly.han1meviewer.FirebaseConstants
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.logic.model.github.CommitComparison
 import com.yenaly.han1meviewer.logic.model.github.Latest
 import com.yenaly.han1meviewer.platform.AppBuildInfoProvider
+import com.yenaly.han1meviewer.platform.firebasePlatform
 import com.yenaly.han1meviewer.util.checkNeedUpdate
 import com.yenaly.han1meviewer.util.copyTo
 import com.yenaly.han1meviewer.util.runSuspendCatching
@@ -38,7 +37,13 @@ object HUpdater {
      */
     suspend fun checkForUpdate(forceCheck: Boolean = false): Latest? {
         if (forceCheck || Preferences.isUpdateDialogVisible) {
-            if (Preferences.useCIUpdateChannel && Firebase.remoteConfig.getBoolean(FirebaseConstants.ENABLE_CI_UPDATE)) {
+            if (
+                Preferences.useCIUpdateChannel &&
+                firebasePlatform().remoteConfigBoolean(
+                    FirebaseConstants.ENABLE_CI_UPDATE,
+                    fallback = true,
+                )
+            ) {
                 val curSha = AppBuildInfoProvider.current.commitSha
                 // 默认分支固定，避免额外请求消耗 API Token。若需恢复动态查询，应通过统一的
                 // kotlinx.serialization JSON 解析入口读取 default_branch。

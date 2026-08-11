@@ -6,15 +6,10 @@ import android.util.Log
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationManagerCompat
 import com.google.android.material.color.DynamicColors
-import com.google.firebase.Firebase
-import com.google.firebase.analytics.analytics
-import com.google.firebase.crashlytics.crashlytics
-import com.google.firebase.crashlytics.setCustomKeys
-import com.google.firebase.database.database
-import com.google.firebase.remoteconfig.remoteConfig
-import com.google.firebase.remoteconfig.remoteConfigSettings
 import com.yenaly.han1meviewer.logic.network.HProxySelector
 import com.yenaly.han1meviewer.platform.AppBuildInfoProvider
+import com.yenaly.han1meviewer.platform.FirebaseRuntimeConfiguration
+import com.yenaly.han1meviewer.platform.firebasePlatform
 import com.yenaly.han1meviewer.platform.platformServices
 import com.yenaly.han1meviewer.storage.AndroidStorageBootstrap
 import com.yenaly.han1meviewer.ui.viewmodel.AppViewModel
@@ -61,35 +56,26 @@ open class AndroidHanimeApplication : YenalyApplication() {
     }
 
     private fun initFirebase() {
-        // 用于处理 Firebase Analytics 初始化
-        Firebase.analytics.setAnalyticsCollectionEnabled(Preferences.isAnalyticsEnabled)
-        // 用于处理 Firebase Crashlytics 初始化
-        Firebase.crashlytics.apply {
-            isCrashlyticsCollectionEnabled = !AppBuildInfoProvider.current.debug
-            setCustomKeys {
-                key(
-                    FirebaseConstants.APP_LANGUAGE,
-                    platformServices().language.preferredLanguage().tag
-                )
-                key(
-                    FirebaseConstants.VERSION_SOURCE,
-                    AppBuildInfoProvider.current.versionSource
-                )
-            }
-        }
-        // 用于处理 Firebase Remote Config 初始化
-        Firebase.remoteConfig.apply {
-            setConfigSettingsAsync(remoteConfigSettings {
-                minimumFetchIntervalInSeconds =
-                    if (AppBuildInfoProvider.current.debug) 0 else 3 * 60 * 60
-                fetchTimeoutInSeconds = 10
-            })
-            setDefaultsAsync(FirebaseConstants.remoteConfigDefaults)
-            fetchAndActivate().addOnCompleteListener {
+        firebasePlatform().initialize(
+            configuration = FirebaseRuntimeConfiguration(
+                analyticsCollectionEnabled = Preferences.isAnalyticsEnabled,
+                crashlyticsCollectionEnabled = !AppBuildInfoProvider.current.debug,
+                crashlyticsStringKeys = mapOf(
+                    FirebaseConstants.APP_LANGUAGE to
+                        platformServices().language.preferredLanguage().tag,
+                    FirebaseConstants.VERSION_SOURCE to
+                        AppBuildInfoProvider.current.versionSource,
+                ),
+                remoteConfigMinimumFetchIntervalSeconds =
+                    if (AppBuildInfoProvider.current.debug) 0 else 3 * 60 * 60,
+                remoteConfigFetchTimeoutSeconds = 10,
+                remoteConfigDefaults = FirebaseConstants.remoteConfigDefaults,
+                realtimeDatabasePersistenceEnabled = true,
+            ),
+            onRemoteConfigActivated = {
                 AppViewModel.getLatestVersion(delayMillis = 200)
-            }
-        }
-        Firebase.database.setPersistenceEnabled(true)
+            },
+        )
     }
 
     private fun initNotificationChannel() {

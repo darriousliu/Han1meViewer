@@ -37,10 +37,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.google.firebase.Firebase
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.analytics
-import com.google.firebase.analytics.logEvent
 import com.yenaly.han1meviewer.FirebaseConstants
 import com.yenaly.han1meviewer.HanimeConstants
 import com.yenaly.han1meviewer.PermissionRequester
@@ -66,6 +62,9 @@ import com.yenaly.han1meviewer.playback.model.toPlaybackSource
 import com.yenaly.han1meviewer.playback.platform.PlaybackPlatformBridge
 import com.yenaly.han1meviewer.platform.getOrThrow
 import com.yenaly.han1meviewer.platform.platformServices
+import com.yenaly.han1meviewer.platform.FirebaseEventName
+import com.yenaly.han1meviewer.platform.FirebaseParameterName
+import com.yenaly.han1meviewer.platform.firebasePlatform
 import com.yenaly.han1meviewer.ui.activity.AndroidMainActivity
 import com.yenaly.han1meviewer.ui.bridge.VideoPageHost
 import com.yenaly.han1meviewer.ui.component.ConfirmDialog
@@ -744,10 +743,13 @@ fun VideoRouteHostScreen(
                     title,
                     HKeyframeEntity.Keyframe(position = currentPosition, prompt = null),
                 )
-                Firebase.analytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT) {
-                    param(FirebaseAnalytics.Param.ITEM_ID, FirebaseConstants.H_KEYFRAMES)
-                    param(FirebaseAnalytics.Param.CONTENT_TYPE, FirebaseConstants.H_KEYFRAMES)
-                }
+                firebasePlatform().logEvent(
+                    FirebaseEventName.SelectContent,
+                    mapOf(
+                        FirebaseParameterName.ItemId to FirebaseConstants.H_KEYFRAMES,
+                        FirebaseParameterName.ContentType to FirebaseConstants.H_KEYFRAMES,
+                    ),
+                )
                 showAddHKeyframeDialog = null
             },
             onDismiss = { showAddHKeyframeDialog = null },
