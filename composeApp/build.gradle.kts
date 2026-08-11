@@ -203,7 +203,6 @@ kotlin {
                 implementation(libs.androidx.activity.compose)
                 implementation(libs.compose.ui.ui.tooling.preview)
                 implementation(libs.androidx.ui)
-                implementation(libs.androidx.navigation.compose)
                 implementation(libs.androidx.material.icons.core)
                 implementation(libs.aboutlibraries.compose.m3)
                 implementation(libs.compose.avatar.cropper)
