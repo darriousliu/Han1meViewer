@@ -2,6 +2,7 @@ package com.yenaly.han1meviewer.logic.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlin.time.Clock
 
 /**
  * @project Hanime1
@@ -26,5 +27,5 @@ data class HanimeAdvancedSearchHistoryEntity(
     val duration: String? = null,
     val tags: String? = null,
     val brands: String? = null,
-    val createdAt: Long = System.currentTimeMillis()
+    val createdAt: Long = Clock.System.now().toEpochMilliseconds()
 )

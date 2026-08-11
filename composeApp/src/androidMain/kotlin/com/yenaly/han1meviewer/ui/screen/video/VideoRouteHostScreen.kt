@@ -665,7 +665,7 @@ fun VideoRouteHostScreen(
                                 )
                             }
                             scope.launch(Dispatchers.IO) {
-                                CheckInRecordDatabase.getDatabase(activity).checkInDao()
+                                CheckInRecordDatabase.instance.checkInDao()
                                     .insert(normalizedRecord)
                                 withContext(Dispatchers.Main) {
                                     Toast.makeText(

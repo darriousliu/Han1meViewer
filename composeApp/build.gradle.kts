@@ -17,10 +17,15 @@ plugins {
     alias(libs.plugins.com.google.devtools.ksp)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.androidx.room)
     alias(libs.plugins.aboutlibraries)
 }
 
 group = "com.yenaly.han1meviewer"
+
+room {
+    schemaDirectory("$projectDir/schemas")
+}
 
 // Lifecycle 2.11 moved its multiplatform artifacts to androidx.lifecycle. The old
 // org.jetbrains coordinates are compatibility shims whose empty JARs share the
@@ -284,5 +289,8 @@ tasks.withType<Test>().configureEach {
 
 dependencies {
     add("kspAndroid", libs.room.compiler)
+    add("kspJvm", libs.room.compiler)
+    add("kspIosArm64", libs.room.compiler)
+    add("kspIosSimulatorArm64", libs.room.compiler)
     add("coreLibraryDesugaring", libs.desugar.jdk.libs)
 }

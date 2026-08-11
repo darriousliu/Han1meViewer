@@ -10,7 +10,6 @@ import com.yenaly.han1meviewer.logic.entity.CheckInRecordEntity
 import com.yenaly.han1meviewer.logic.entity.SideDishEntity
 import com.yenaly.han1meviewer.logic.entity.WatchHistoryEntity
 import com.yenaly.han1meviewer.ui.screen.home.dailycheckin.DailyCheckInUiState
-import com.yenaly.yenaly_libs.utils.application
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -71,7 +70,7 @@ class CheckInCalendarViewModel : ViewModel() {
     val yearRecords: StateFlow<Map<LocalDate, Int>> = _yearRecords.asStateFlow()
     val yearStats: StateFlow<MonthlyStats> = _yearStats.asStateFlow()
 
-    private val database = CheckInRecordDatabase.getDatabase(application)
+    private val database = CheckInRecordDatabase.instance
     private val dao = database.checkInDao()
     private val sideDishDao = database.sideDishDao()
 

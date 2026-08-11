@@ -1,0 +1,60 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "2f320ce570b25cf3d9d64e5764ce2366",
+    "entities": [
+      {
+        "tableName": "HKeyframeEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`videoCode` TEXT NOT NULL, `title` TEXT NOT NULL, `keyframes` TEXT NOT NULL, `lastModifiedTime` INTEGER NOT NULL, `createdTime` INTEGER NOT NULL, `author` TEXT, PRIMARY KEY(`videoCode`))",
+        "fields": [
+          {
+            "fieldPath": "videoCode",
+            "columnName": "videoCode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "keyframes",
+            "columnName": "keyframes",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastModifiedTime",
+            "columnName": "lastModifiedTime",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdTime",
+            "columnName": "createdTime",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "author",
+            "columnName": "author",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "videoCode"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2f320ce570b25cf3d9d64e5764ce2366')"
+    ]
+  }
+}

@@ -106,14 +106,14 @@ object BackupManager {
         }
 
         backup.checkInRecords?.let { checkInRecords ->
-            CheckInRecordDatabase.getDatabase(context).checkInDao().apply {
+            CheckInRecordDatabase.instance.checkInDao().apply {
                 deleteAll()
                 insertAll(checkInRecords.map { it.normalizeSideDishes() })
             }
         }
 
         backup.sideDishes?.let { sideDishes ->
-            CheckInRecordDatabase.getDatabase(context).sideDishDao().apply {
+            CheckInRecordDatabase.instance.sideDishDao().apply {
                 deleteAll()
                 insertAll(sideDishes)
             }
@@ -193,8 +193,8 @@ object BackupManager {
                 value.toPreferenceValue()
             },
             hKeyframes = MiscellanyDatabase.instance.hKeyframeDao.getAll(),
-            checkInRecords = CheckInRecordDatabase.getDatabase(context).checkInDao().getAllRecords(),
-            sideDishes = CheckInRecordDatabase.getDatabase(context).sideDishDao().getAll(),
+            checkInRecords = CheckInRecordDatabase.instance.checkInDao().getAllRecords(),
+            sideDishes = CheckInRecordDatabase.instance.sideDishDao().getAll(),
             watchHistories = HistoryDatabase.instance.watchHistory.getAll(),
             downloadGroups = DownloadDatabase.instance.downloadGroupDao.getAllGroupsOnce(),
             downloads = DownloadDatabase.instance.hanimeDownloadDao.getAll(),

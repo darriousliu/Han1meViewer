@@ -7,9 +7,10 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
-import com.yenaly.han1meviewer.HFileManager
 import com.yenaly.han1meviewer.logic.state.DownloadState
 import kotlinx.serialization.Serializable
+
+private const val DEFAULT_VIDEO_TYPE = "mp4"
 
 /**
  * @project Han1meViewer
@@ -102,7 +103,7 @@ data class HanimeDownloadEntity(
 
     val isDownloading get() = state == DownloadState.Downloading
 
-    val suffix get() = videoUri.substringAfterLast(".", HFileManager.DEF_VIDEO_TYPE)
+    val suffix get() = videoUri.substringAfterLast(".", DEFAULT_VIDEO_TYPE)
 
     /**
      * 排序方式

@@ -96,7 +96,6 @@ activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref
 fragment = { group = "androidx.fragment", name = "fragment", version.ref = "fragment" }
 fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragment" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 sqlite-bundled = { group = "androidx.sqlite", name = "sqlite-bundled", version.ref = "sqlite" }
 navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation" }
@@ -193,7 +192,6 @@ android-base = [
 android-jetpack = [
     "lifecycle-viewmodel-ktx", "lifecycle-runtime-ktx", "lifecycle-livedata-ktx",
     "activity", "activity-ktx", "fragment", "fragment-ktx",
-    "room-runtime", "room-ktx",
     "navigation-fragment-ktx", "navigation-ui-ktx",
     "preference-ktx",
     "work-runtime", "work-runtime-ktx", "guava"
@@ -214,3 +212,4 @@ com-google-firebase-crashlytics = { id = "com.google.firebase.crashlytics", vers
 com-google-firebase-firebase-pref = { id = "com.google.firebase.firebase-perf", version = "2.0.2" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
+androidx-room = { id = "androidx.room", version.ref = "room" }

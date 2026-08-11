@@ -39,7 +39,7 @@ class CheckInWidgetProvider : AppWidgetProvider() {
             val id = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
             if (id != -1) scope.launch {
                 withContext(Dispatchers.IO) {
-                    val dao = CheckInRecordDatabase.getDatabase(context).checkInDao()
+                    val dao = CheckInRecordDatabase.instance.checkInDao()
                     val now = currentLocalDateTime()
                     val t = now.date.toString()
                     val curCount = dao.getCountByDate(t)
@@ -62,7 +62,7 @@ class CheckInWidgetProvider : AppWidgetProvider() {
 
     private suspend fun refresh(c: Context, mgr: AppWidgetManager, id: Int) {
         val (today, days, total, best) = withContext(Dispatchers.IO) {
-            val dao = CheckInRecordDatabase.getDatabase(c).checkInDao()
+            val dao = CheckInRecordDatabase.instance.checkInDao()
             val todayDate = currentLocalDate()
             val month = YearMonth(todayDate.year, todayDate.month)
             val m = month.toString()

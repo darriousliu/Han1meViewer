@@ -12,6 +12,7 @@ plugins {
     alias(libs.plugins.com.google.firebase.firebase.pref) apply false
     alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.compose.multiplatform) apply false
+    alias(libs.plugins.androidx.room) apply false
     alias(libs.plugins.aboutlibraries) apply false
 }
 

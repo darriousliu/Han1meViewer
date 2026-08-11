@@ -8,6 +8,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.yenaly.han1meviewer.logic.entity.HKeyframeEntity
 import kotlinx.coroutines.flow.Flow
+import kotlin.time.Clock
 
 /**
  * @project Han1meViewer
@@ -71,15 +72,17 @@ abstract class HKeyframeDao {
                     videoCode,
                     title,
                     mutableListOf(keyframe),
-                    lastModifiedTime = System.currentTimeMillis(),
-                    createdTime = System.currentTimeMillis(),
-                    author = null
+                    lastModifiedTime = Clock.System.now().toEpochMilliseconds(),
+                    createdTime = Clock.System.now().toEpochMilliseconds(),
+                    author = null,
                 )
             )
         } else {
             entity.keyframes += keyframe
             entity.keyframes.sortBy { it.position }
-            update(entity.copy(lastModifiedTime = System.currentTimeMillis()))
+            update(
+                entity.copy(lastModifiedTime = Clock.System.now().toEpochMilliseconds())
+            )
         }
     }
 
@@ -94,7 +97,9 @@ abstract class HKeyframeDao {
                 delete(entity)
                 return
             }
-            update(entity.copy(lastModifiedTime = System.currentTimeMillis()))
+            update(
+                entity.copy(lastModifiedTime = Clock.System.now().toEpochMilliseconds())
+            )
         }
     }
 }
