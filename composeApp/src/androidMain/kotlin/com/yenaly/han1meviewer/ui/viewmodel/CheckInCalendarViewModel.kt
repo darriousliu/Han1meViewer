@@ -2,6 +2,8 @@ package com.yenaly.han1meviewer.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yenaly.han1meviewer.currentLocalDate
+import com.yenaly.han1meviewer.currentYearMonth
 import com.yenaly.han1meviewer.logic.dao.CheckInRecordDatabase
 import com.yenaly.han1meviewer.logic.dao.HistoryDatabase
 import com.yenaly.han1meviewer.logic.entity.CheckInRecordEntity
@@ -16,13 +18,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.time.YearMonth
-import java.time.format.DateTimeFormatter
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.YearMonth
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
 
 class CheckInCalendarViewModel : ViewModel() {
 
-    private val _currentMonth = MutableStateFlow(YearMonth.now())
+    private val _currentMonth = MutableStateFlow(currentYearMonth())
     private val _records = MutableStateFlow<Map<LocalDate, Int>>(emptyMap())
     private val _checkedDays = MutableStateFlow(0)
     private val _monthTotal = MutableStateFlow(0)
@@ -41,11 +45,10 @@ class CheckInCalendarViewModel : ViewModel() {
         val checkedDaysVal = array[2] as Int
         val monthlyTotalVal = array[3] as Int
         val statsVal = array[4] as MonthlyStats
-        val today = LocalDate.now()
+        val today = currentLocalDate()
         var bestStreak = 0
         var streak = 0
-        for (day in 1..month.lengthOfMonth()) {
-            val date = month.atDay(day)
+        for (date in month.days) {
             if ((recordsMap[date] ?: 0) > 0) {
                 streak++
                 if (streak > bestStreak) bestStreak = streak
@@ -78,12 +81,12 @@ class CheckInCalendarViewModel : ViewModel() {
     }
 
     fun previousMonth() {
-        _currentMonth.value = _currentMonth.value.minusMonths(1)
+        _currentMonth.value = _currentMonth.value.minus(1, DateTimeUnit.MONTH)
         loadMonthRecords(_currentMonth.value)
     }
 
     fun nextMonth() {
-        _currentMonth.value = _currentMonth.value.plusMonths(1)
+        _currentMonth.value = _currentMonth.value.plus(1, DateTimeUnit.MONTH)
         loadMonthRecords(_currentMonth.value)
     }
 
@@ -111,7 +114,7 @@ class CheckInCalendarViewModel : ViewModel() {
     fun deleteRecord(record: CheckInRecordEntity, onDone: () -> Unit = {}) {
         viewModelScope.launch {
             dao.delete(record)
-            val date = LocalDate.parse(record.date, DateTimeFormatter.ISO_LOCAL_DATE)
+            val date = LocalDate.parse(record.date)
             reloadDateAndStats(date)
             onDone()
         }
@@ -169,10 +172,9 @@ class CheckInCalendarViewModel : ViewModel() {
     fun loadYearRecords(year: Int) {
         viewModelScope.launch {
             val allRecords = dao.getYearlyRecords(year.toString())
-            val formatter = DateTimeFormatter.ISO_LOCAL_DATE
             val countMap = mutableMapOf<LocalDate, Int>()
             allRecords.forEach {
-                val localDate = LocalDate.parse(it.date, formatter)
+                val localDate = LocalDate.parse(it.date)
                 countMap[localDate] = (countMap[localDate] ?: 0) + 1
             }
             _yearRecords.value = countMap
@@ -186,13 +188,13 @@ class CheckInCalendarViewModel : ViewModel() {
             _records.value = _records.value.toMutableMap().apply { this[date] = count }
             val month = _currentMonth.value
             val dates =
-                dao.getMonthlyCheckedDates(month.format(DateTimeFormatter.ofPattern("yyyy-MM")))
+                dao.getMonthlyCheckedDates(month.toString())
             _checkedDays.value = dates.size
             val totalCheckIns =
-                dao.getMonthlyCheckInTotal(month.format(DateTimeFormatter.ofPattern("yyyy-MM")))
+                dao.getMonthlyCheckInTotal(month.toString())
             _monthTotal.value = totalCheckIns
             val allRecords =
-                dao.getRecordsBetween(month.atDay(1).toString(), month.atEndOfMonth().toString())
+                dao.getRecordsBetween(month.firstDay.toString(), month.lastDay.toString())
             _monthRecords.value = allRecords
             _monthlyStats.value = computeStats(allRecords)
         }
@@ -200,14 +202,13 @@ class CheckInCalendarViewModel : ViewModel() {
 
     private fun loadMonthRecords(month: YearMonth) {
         viewModelScope.launch {
-            val start = month.atDay(1)
-            val end = month.atEndOfMonth()
+            val start = month.firstDay
+            val end = month.lastDay
             val allRecords = dao.getRecordsBetween(start.toString(), end.toString())
-            val formatter = DateTimeFormatter.ISO_LOCAL_DATE
             _monthRecords.value = allRecords
             val countMap = mutableMapOf<LocalDate, Int>()
             allRecords.forEach {
-                val localDate = LocalDate.parse(it.date, formatter)
+                val localDate = LocalDate.parse(it.date)
                 countMap[localDate] = (countMap[localDate] ?: 0) + 1
             }
             _records.value = countMap
@@ -311,12 +312,12 @@ class CheckInCalendarViewModel : ViewModel() {
             val daysChecked = records.map { it.date }.distinct().size
             val bestStreak = run {
                 val dates = records.map { it.date }.distinct().sorted()
-                    .map { LocalDate.parse(it, DateTimeFormatter.ISO_LOCAL_DATE) }
+                    .map { LocalDate.parse(it) }
                 var streak = 0
                 var best = 0
                 var prev: LocalDate? = null
                 for (d in dates) {
-                    if (prev != null && d == prev.plusDays(1)) streak++ else streak = 1
+                    if (prev != null && d == prev.plus(1, DateTimeUnit.DAY)) streak++ else streak = 1
                     if (streak > best) best = streak
                     prev = d
                 }

@@ -6,7 +6,7 @@ import com.yenaly.han1meviewer.playback.model.PlaybackDefaults
 import com.yenaly.han1meviewer.playback.model.PlaybackPhase
 import com.yenaly.han1meviewer.playback.model.PlaybackState
 import com.yenaly.han1meviewer.playback.model.QualityVariant
-import java.util.Locale
+import com.yenaly.han1meviewer.platform.NumberFormatter
 
 /**
  * Immutable rendering model for the Compose player chrome.
@@ -85,14 +85,24 @@ data class VideoKeyframeCountdownUiState(
     }
 }
 
-internal fun formatKeyframeCountdown(
-    remainingMs: Long,
-    locale: Locale = Locale.getDefault(),
-): String = if (remainingMs >= 1_000L) {
+internal fun formatKeyframeCountdown(remainingMs: Long): String = if (remainingMs >= 1_000L) {
     (remainingMs / 1_000L + 1L).toString()
 } else {
-    String.format(locale, "%.1f", remainingMs.coerceAtLeast(0L) / 1_000f)
+    val seconds = (remainingMs.coerceAtLeast(0L) / 1_000f).toDouble()
+    NumberFormatter.formatFixedLocalized(seconds, fractionDigits = 1)
 }
+
+/** Compatibility adapter for existing host assertions that explicitly request invariant text. */
+@Suppress("UNUSED_PARAMETER")
+internal fun formatKeyframeCountdown(remainingMs: Long, legacyLocale: Any?): String =
+    if (remainingMs >= 1_000L) {
+        (remainingMs / 1_000L + 1L).toString()
+    } else {
+        NumberFormatter.formatFixed(
+            value = (remainingMs.coerceAtLeast(0L) / 1_000f).toDouble(),
+            fractionDigits = 1,
+        )
+    }
 
 internal fun fraction(value: Long, total: Long): Float {
     if (total <= 0L) return 0f

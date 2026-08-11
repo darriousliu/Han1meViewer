@@ -34,9 +34,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.yenaly.han1meviewer.MONTH_DAY_FORMAT
 import com.yenaly.han1meviewer.R
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import com.yenaly.han1meviewer.currentLocalDate
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.format
+import kotlinx.datetime.isoDayNumber
+import java.text.DateFormatSymbols
 
 /**
  * 今日打卡卡片。
@@ -82,7 +86,7 @@ fun TodayCheckInCard(
             Spacer(modifier = Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = today.format(DateTimeFormatter.ofPattern("MM月dd日 EEEE")),
+                    text = "${today.format(MONTH_DAY_FORMAT)} ${today.localizedWeekdayName()}",
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
@@ -219,11 +223,16 @@ fun RowScope.StatItem(
 @Composable
 private fun PreviewTodayCheckInCard() {
     TodayCheckInCard(
-        today = LocalDate.now(),
+        today = currentLocalDate(),
         count = 3,
         onCheckIn = {},
         onClear = {},
     )
+}
+
+private fun LocalDate.localizedWeekdayName(): String {
+    val calendarDay = dayOfWeek.isoDayNumber % 7 + 1
+    return DateFormatSymbols.getInstance().weekdays[calendarDay]
 }
 
 @Preview

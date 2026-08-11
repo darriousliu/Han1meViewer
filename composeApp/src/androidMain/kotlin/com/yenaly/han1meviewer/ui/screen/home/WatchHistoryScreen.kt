@@ -60,6 +60,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import com.yenaly.han1meviewer.LOCAL_DATE_TIME_FORMAT
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.entity.WatchHistoryEntity
 import com.yenaly.han1meviewer.logic.model.HanimeInfo
@@ -84,9 +85,19 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
+
+@OptIn(ExperimentalTime::class)
+internal fun formatWatchHistoryTimestamp(timestamp: Long, timeZone: TimeZone): String {
+    val milliseconds = if (timestamp < 9_999_999_999L) timestamp * 1_000 else timestamp
+    return Instant.fromEpochMilliseconds(milliseconds)
+        .toLocalDateTime(timeZone)
+        .format(LOCAL_DATE_TIME_FORMAT)
+}
 
 @Composable
 fun WatchHistoryTabScreen(
@@ -622,12 +633,11 @@ private fun WatchHistoryCard(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
 ) {
-    val fixTimestamp = { ts: Long -> if (ts < 9999999999L) ts * 1000 else ts }
-    val dateFormatter = remember { SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()) }
+    val timeZone = remember { TimeZone.currentSystemDefault() }
     val watchDate =
-        remember(history.watchDate) { dateFormatter.format(Date(fixTimestamp(history.watchDate))) }
+        remember(history.watchDate) { formatWatchHistoryTimestamp(history.watchDate, timeZone) }
     val releaseDate =
-        remember(history.releaseDate) { dateFormatter.format(Date(fixTimestamp(history.releaseDate))) }
+        remember(history.releaseDate) { formatWatchHistoryTimestamp(history.releaseDate, timeZone) }
     val progressMinutes = remember(history.progress) { history.progress / 60_000 }
 
     ElevatedCard(

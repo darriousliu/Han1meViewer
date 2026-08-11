@@ -55,13 +55,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil3.compose.AsyncImage
+import com.yenaly.han1meviewer.FULL_DATE_FORMAT
+import com.yenaly.han1meviewer.LOCAL_TIME_FORMAT
 import com.yenaly.han1meviewer.R
+import com.yenaly.han1meviewer.currentLocalDateTime
 import com.yenaly.han1meviewer.logic.entity.CheckInRecordEntity
 import com.yenaly.han1meviewer.logic.entity.CheckInType
 import com.yenaly.han1meviewer.logic.entity.WatchHistoryEntity
-import java.time.LocalDate
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.format
 
 /**
  * 打卡弹窗。展示历史记录、添加新记录的表单。
@@ -134,7 +136,7 @@ fun CheckInDialog(
                 ) {
                     Column {
                         Text(
-                            text = date.format(DateTimeFormatter.ofPattern("yyyy\u5E74MM\u6708dd\u65E5")),
+                            text = date.format(FULL_DATE_FORMAT),
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold
                         )
@@ -373,9 +375,9 @@ fun AddCheckInForm(
             Button(
                 onClick = {
                     val dishes = sideDishes.joinToString(",")
-                    val now = LocalTime.now()
+                    val now = currentLocalDateTime().time
                     onAddRecord(
-                        now.format(DateTimeFormatter.ofPattern("HH:mm")),
+                        now.format(LOCAL_TIME_FORMAT),
                         selectedType.storeName,
                         dishes,
                         feeling

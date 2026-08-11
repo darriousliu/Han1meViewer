@@ -36,8 +36,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yenaly.han1meviewer.R
-import java.time.YearMonth
-import java.time.format.DateTimeFormatter
+import com.yenaly.han1meviewer.currentYearMonth
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.YearMonth
+import kotlinx.datetime.plus
 
 /**
  * 打卡日历页面的纯 UI Content 层。
@@ -118,7 +120,7 @@ fun DailyCheckInContent(
                     Icon(painterResource(R.drawable.previous_double_arrow_24), "previous")
                 }
                 Text(
-                    text = uiState.currentMonth.format(DateTimeFormatter.ofPattern("yyyy-MM")),
+                    text = uiState.currentMonth.toString(),
                     style = MaterialTheme.typography.titleMedium
                 )
                 IconButton(onClick = { onEvent(DailyCheckInEvent.OnNextMonth) }) {
@@ -138,7 +140,10 @@ fun DailyCheckInContent(
             beyondViewportPageCount = 1,
             key = { page -> page }
         ) { page ->
-            val monthForPage = anchorMonth.plusMonths((page - initialPage).toLong())
+            val monthForPage = anchorMonth.plus(
+                page - initialPage,
+                DateTimeUnit.MONTH,
+            )
             CalendarGrid(
                 yearMonth = monthForPage,
                 records = uiState.records,
@@ -208,7 +213,7 @@ private fun PreviewDailyCheckInContent() {
         uiState = DailyCheckInUiState(),
         onEvent = {},
         pagerState = androidx.compose.foundation.pager.rememberPagerState { 1 },
-        anchorMonth = YearMonth.now(),
+        anchorMonth = currentYearMonth(),
         initialPage = 0,
     )
 }

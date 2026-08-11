@@ -76,8 +76,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.yenaly.han1meviewer.LOCAL_DATE_FORMAT
+import com.yenaly.han1meviewer.LOCAL_TIME_FORMAT
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.ResolutionLinkMap
+import com.yenaly.han1meviewer.currentLocalDateTime
 import com.yenaly.han1meviewer.logic.entity.CheckInRecordEntity
 import com.yenaly.han1meviewer.logic.model.HanimeInfo
 import com.yenaly.han1meviewer.logic.model.HanimeVideo
@@ -100,10 +103,7 @@ import com.yenaly.han1meviewer.ui.theme.VideoNormalCardMinWidth
 import com.yenaly.han1meviewer.ui.theme.VideoSimplifiedCardMinWidth
 import com.yenaly.han1meviewer.util.DisplayTextLocalizer
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.format
-
-private val previewSafeDateFormat = LocalDate.Formats.ISO
 
 data class DownloadPromptState(
     val newQuality: String,
@@ -590,12 +590,11 @@ private fun QuickCheckInDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    val time = java.time.LocalTime.now()
-                        .format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"))
+                    val now = currentLocalDateTime()
                     val sep = "\u001E"
                     val record = CheckInRecordEntity(
-                        date = java.time.LocalDate.now().toString(),
-                        time = time,
+                        date = now.date.format(LOCAL_DATE_FORMAT),
+                        time = now.time.format(LOCAL_TIME_FORMAT),
                         type = com.yenaly.han1meviewer.logic.entity.CheckInType.MASTURBATION.storeName,
                         sideDishes = "${video.title}$sep${video.playlist?.video?.firstOrNull { it.isPlaying }?.videoCode ?: ""}".removeSuffix(
                             sep
@@ -952,7 +951,7 @@ private fun MetaSection(
     } else {
         DisplayTextLocalizer.localizeViews(video.views.toString())
     }
-    val uploadTime = video.uploadTime?.format(previewSafeDateFormat).orEmpty()
+    val uploadTime = video.uploadTime?.format(LOCAL_DATE_FORMAT).orEmpty()
 
     FlowRow(
         modifier = Modifier

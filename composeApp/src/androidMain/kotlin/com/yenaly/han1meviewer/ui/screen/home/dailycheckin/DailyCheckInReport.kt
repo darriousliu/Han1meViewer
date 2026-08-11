@@ -49,10 +49,14 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.yenaly.han1meviewer.R
+import com.yenaly.han1meviewer.currentLocalDate
+import com.yenaly.han1meviewer.currentYearMonth
 import com.yenaly.han1meviewer.ui.component.appbar.HanimeScaffold
 import com.yenaly.han1meviewer.ui.viewmodel.MonthlyStats
-import java.time.LocalDate
-import java.time.YearMonth
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.YearMonth
+import kotlinx.datetime.isoDayNumber
+import kotlinx.datetime.number
 
 /**
  * 贡献报表弹窗。以日历热力图形式展示年/月打卡分布。
@@ -85,7 +89,7 @@ fun ContributionReportDialog(
     onToggleFullscreen: () -> Unit = {},
     onLoadYearRecords: (Int) -> Unit,
 ) {
-    val today = LocalDate.now()
+    val today = currentLocalDate()
 
     LaunchedEffect(selectedYear) {
         onLoadYearRecords(selectedYear)
@@ -159,7 +163,7 @@ fun ContributionReportDialog(
                     yearRecords.filterKeys { it.year == selectedYear }
                 } else {
                     yearRecords.filterKeys {
-                        it.year == selectedYear && it.monthValue == selectedMonth
+                        it.year == selectedYear && it.month.number == selectedMonth
                     }
                 }
                 val totalCount = filteredRecords.values.sum()
@@ -394,9 +398,10 @@ fun MonthContributionView(
     onYearChange: (Int) -> Unit,
     onMonthChange: (Int) -> Unit,
 ) {
-    val yearMonth = YearMonth.of(year, month)
-    val daysInMonth = yearMonth.lengthOfMonth()
-    val firstDayOfWeek = yearMonth.atDay(1).dayOfWeek.value
+    val yearMonth = YearMonth(year, month)
+    val currentMonth = currentYearMonth()
+    val daysInMonth = yearMonth.numberOfDays
+    val firstDayOfWeek = yearMonth.firstDay.dayOfWeek.isoDayNumber
     val dayLabels = listOf(
         stringResource(R.string.mon), stringResource(R.string.tue),
         stringResource(R.string.wed), stringResource(R.string.thu),
@@ -430,9 +435,8 @@ fun MonthContributionView(
             )
             IconButton(
                 onClick = {
-                    val now = YearMonth.now()
-                    val current = YearMonth.of(year, month)
-                    if (current.isBefore(now)) {
+                    val current = YearMonth(year, month)
+                    if (current < currentMonth) {
                         if (month == 12) {
                             onYearChange(year + 1)
                             onMonthChange(1)
@@ -441,7 +445,7 @@ fun MonthContributionView(
                         }
                     }
                 },
-                enabled = YearMonth.of(year, month).isBefore(YearMonth.now())
+                enabled = YearMonth(year, month) < currentMonth
             ) {
                 Icon(
                     painterResource(R.drawable.next_double_arrow_24),
@@ -477,7 +481,7 @@ fun MonthContributionView(
                 Spacer(modifier = Modifier.size(48.dp))
             }
             items(daysInMonth) { day ->
-                val date = yearMonth.atDay(day + 1)
+                val date = LocalDate(yearMonth.year, yearMonth.month, day + 1)
                 val count = records[date] ?: 0
                 val level = getContributionLevel(count)
                 val isToday = date == today

@@ -1,6 +1,6 @@
 package com.yenaly.han1meviewer.playback.model
 
-import java.util.Locale
+import com.yenaly.han1meviewer.platform.NumberFormatter
 
 fun formatPlaybackTime(positionMs: Long): String {
     val totalSeconds = positionMs.coerceAtLeast(0L) / 1_000L
@@ -8,8 +8,11 @@ fun formatPlaybackTime(positionMs: Long): String {
     val minutes = totalSeconds / 60L % 60L
     val hours = totalSeconds / 3_600L
     return if (hours > 0L) {
-        String.format(Locale.ROOT, "%02d:%02d:%02d", hours, minutes, seconds)
+        "${NumberFormatter.formatInteger(hours, 2)}:" +
+            "${NumberFormatter.formatInteger(minutes, 2)}:" +
+            NumberFormatter.formatInteger(seconds, 2)
     } else {
-        String.format(Locale.ROOT, "%02d:%02d", minutes, seconds)
+        "${NumberFormatter.formatInteger(minutes, 2)}:" +
+            NumberFormatter.formatInteger(seconds, 2)
     }
 }

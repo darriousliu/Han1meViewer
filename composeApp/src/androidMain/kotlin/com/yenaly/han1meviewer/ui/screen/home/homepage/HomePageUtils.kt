@@ -11,14 +11,17 @@ import coil3.SingletonImageLoader
 import coil3.request.ImageRequest
 import coil3.request.SuccessResult
 import coil3.toBitmap
+import com.yenaly.han1meviewer.LOCAL_DATE_TIME_SECONDS_FORMAT
 import com.yenaly.han1meviewer.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format
+import kotlinx.datetime.toLocalDateTime
 import java.io.File
 import java.io.FileOutputStream
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 /**
  * 将首页分类转换为高级搜索请求参数。
@@ -81,9 +84,8 @@ internal suspend fun saveImageToGallery(context: Context, imageUrl: String) {
  * @param timestamp 秒级 Unix 时间戳。
  * @return 本地日期时间字符串。
  */
-fun formatTimestamp(timestamp: Long): String {
-    val instant = Instant.ofEpochSecond(timestamp)
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-        .withZone(ZoneId.systemDefault())
-    return formatter.format(instant)
-}
+@OptIn(ExperimentalTime::class)
+fun formatTimestamp(timestamp: Long): String =
+    Instant.fromEpochSeconds(timestamp)
+        .toLocalDateTime(TimeZone.currentSystemDefault())
+        .format(LOCAL_DATE_TIME_SECONDS_FORMAT)

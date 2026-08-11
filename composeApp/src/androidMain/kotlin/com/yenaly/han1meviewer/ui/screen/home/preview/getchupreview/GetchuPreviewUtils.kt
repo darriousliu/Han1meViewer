@@ -7,29 +7,22 @@ import coil3.ImageLoader
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.ImageRequest
 import com.yenaly.han1meviewer.DESKTOP_USER_AGENT
+import com.yenaly.han1meviewer.currentLocalDate
+import com.yenaly.han1meviewer.datetime.shiftYearMonthCode
+import com.yenaly.han1meviewer.datetime.yearMonthCode
 import com.yenaly.han1meviewer.logic.network.HDns
 import com.yenaly.han1meviewer.logic.network.HProxySelector
+import kotlinx.datetime.number
 import okhttp3.OkHttpClient
-import java.time.LocalDate
 import java.util.concurrent.TimeUnit
 
 internal fun currentGetchuDateCode(): String {
-    val now = LocalDate.now()
-    return "%04d%02d".format(now.year, now.monthValue)
+    val now = currentLocalDate()
+    return yearMonthCode(now.year, now.month.number)
 }
 
 internal fun shiftGetchuMonthCode(code: String, delta: Int): String {
-    var year = code.substring(0, 4).toInt()
-    var month = code.substring(4, 6).toInt() + delta
-    while (month < 1) {
-        month += 12
-        year -= 1
-    }
-    while (month > 12) {
-        month -= 12
-        year += 1
-    }
-    return "%04d%02d".format(year, month)
+    return shiftYearMonthCode(code, delta)
 }
 
 internal fun getchuDateLabel(code: String): String {

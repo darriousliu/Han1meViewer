@@ -8,7 +8,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.yenaly.han1meviewer.LOCAL_TIME_FORMAT
 import com.yenaly.han1meviewer.R
+import com.yenaly.han1meviewer.currentLocalDateTime
 import com.yenaly.han1meviewer.getHanimeShareText
 import com.yenaly.han1meviewer.logic.DatabaseRepo
 import com.yenaly.han1meviewer.logic.entity.CheckInType
@@ -23,9 +25,7 @@ import com.yenaly.han1meviewer.ui.viewmodel.CheckInCalendarViewModel
 import com.yenaly.yenaly_libs.utils.copyTextToClipboard
 import com.yenaly.yenaly_libs.utils.showShortToast
 import kotlinx.coroutines.flow.first
-import java.time.LocalDate
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
+import kotlinx.datetime.format
 
 @Composable
 fun HomeRouteScreen(
@@ -82,9 +82,10 @@ fun HomeRouteScreen(
             positiveText = exit,
             onNegative = { showExitDialog = false },
             onNeutral = {
+                val now = currentLocalDateTime()
                 checkInViewModel.addRecord(
-                    LocalDate.now(),
-                    LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")),
+                    now.date,
+                    now.time.format(LOCAL_TIME_FORMAT),
                     CheckInType.MASTURBATION.storeName, "", "",
                 )
                 activity.finish()

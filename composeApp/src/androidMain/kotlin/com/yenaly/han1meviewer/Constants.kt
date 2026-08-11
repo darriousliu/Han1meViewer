@@ -1,8 +1,5 @@
 package com.yenaly.han1meviewer
 
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.format.char
 import com.yenaly.han1meviewer.platform.AppBuildInfoProvider
 
 /**
@@ -11,19 +8,6 @@ import com.yenaly.han1meviewer.platform.AppBuildInfoProvider
 const val EMPTY_STRING = ""
 
 const val APP_NAME = "Han1meViewer"
-
-// 标准时间格式
-
-/* yyyy-MM-dd */
-@JvmField
-val LOCAL_DATE_FORMAT = LocalDate.Formats.ISO
-
-/* yyyy-MM-dd HH:mm */
-@JvmField
-val LOCAL_DATE_TIME_FORMAT = LocalDateTime.Format {
-    date(LocalDate.Formats.ISO); char(' ')
-    hour(); char(':'); minute()
-}
 
 // 网络基本设置
 

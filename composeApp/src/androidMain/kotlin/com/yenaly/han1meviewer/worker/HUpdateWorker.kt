@@ -29,12 +29,12 @@ import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.UPDATE_NOTIFICATION_CHANNEL
 import com.yenaly.han1meviewer.logic.model.github.Latest
 import com.yenaly.han1meviewer.logic.network.HUpdater
+import com.yenaly.han1meviewer.platform.NumberFormatter
 import com.yenaly.han1meviewer.util.installApkPackage
 import com.yenaly.han1meviewer.util.runSuspendCatching
 import com.yenaly.han1meviewer.util.updateFile
 import com.yenaly.yenaly_libs.utils.showShortToast
 import java.io.File
-import java.util.Locale
 import kotlin.random.Random
 
 /**
@@ -161,8 +161,8 @@ class HUpdateWorker(
         val now = System.currentTimeMillis()
         if (progress == 100 || now - lastNotifyTime > 1000) {
             lastNotifyTime = now
-            val fileSizeMB = String.format(Locale.US, "%.2f", fileSize.toDouble() / (1024 * 1024))
-            val downloadedSizeMB = String.format(Locale.US, "%.2f", downloadedSize.toDouble() / (1024 * 1024))
+            val fileSizeMB = NumberFormatter.formatFixed(fileSize.toDouble() / (1024 * 1024), 2)
+            val downloadedSizeMB = NumberFormatter.formatFixed(downloadedSize.toDouble() / (1024 * 1024), 2)
             notificationManager.notify(
                 downloadId,
                 createNotification(

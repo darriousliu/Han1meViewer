@@ -143,6 +143,7 @@ kotlin {
                 implementation(libs.compose.resources.multiplatform)
 
                 implementation(libs.coroutines.core)
+                implementation(libs.datetime)
                 implementation(libs.serialization.json)
                 implementation(libs.ktor.client.core)
                 implementation(libs.ktor.client.content.negotiation)
@@ -198,7 +199,6 @@ kotlin {
                 implementation(libs.aboutlibraries.compose.m3)
                 implementation(libs.compose.avatar.cropper)
 
-                implementation(libs.datetime)
                 implementation(libs.serialization.json)
                 implementation(libs.jsoup)
 
