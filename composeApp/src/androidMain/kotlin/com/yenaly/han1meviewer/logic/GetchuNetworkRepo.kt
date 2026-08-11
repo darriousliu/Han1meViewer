@@ -5,13 +5,12 @@ import com.yenaly.han1meviewer.EMPTY_STRING
 import com.yenaly.han1meviewer.logic.NetworkRepo.handleException
 import com.yenaly.han1meviewer.logic.NetworkRepo.throwRequestException
 import com.yenaly.han1meviewer.logic.network.HanimeNetwork
+import com.yenaly.han1meviewer.logic.network.RawNetworkResponse
 import com.yenaly.han1meviewer.logic.state.WebsiteState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import okhttp3.ResponseBody
-import retrofit2.Response
 import java.nio.charset.Charset
 import kotlin.runCatching
 
@@ -38,7 +37,7 @@ object GetchuNetworkRepo {
         runCatching {
             val response = HanimeNetwork.getchuService.getSeriesItems(parentIdArray = parentId)
             if (!response.isSuccessful) return@runCatching emptyList()
-            response.body()?.getchuString()?.let(GetchuParser::getchuSeriesItems).orEmpty()
+            response.successBody?.getchuString()?.let(GetchuParser::getchuSeriesItems).orEmpty()
         }.getOrDefault(emptyList()).let { seriesItems ->
             Log.d(
                 "GetchuPreviewParser",
@@ -61,14 +60,14 @@ object GetchuNetworkRepo {
         }
     }
     private fun <T> websiteIOFlow(
-        request: suspend () -> Response<ResponseBody>,
+        request: suspend () -> RawNetworkResponse,
         permittedSuccessCode: IntArray? = null,
-        bodyToString: (ResponseBody) -> String = ResponseBody::string,
+        bodyToString: (ByteArray) -> String = { bytes -> bytes.toString(Charsets.UTF_8) },
         action: suspend (String) -> WebsiteState<T>,
     ) = flow {
         val requestResult = request.invoke()
-        val resultBody = requestResult.body()?.let(bodyToString)
-        val permitted = permittedSuccessCode?.contains(requestResult.code()) == true
+        val resultBody = requestResult.successBody?.let(bodyToString)
+        val permitted = permittedSuccessCode?.contains(requestResult.statusCode) == true
         if ((permitted || requestResult.isSuccessful)) {
             emit(action.invoke(resultBody ?: EMPTY_STRING))
         } else {
@@ -78,8 +77,8 @@ object GetchuNetworkRepo {
         emit(WebsiteState.Error(handleException(e)))
     }.flowOn(Dispatchers.IO)
 
-    private fun ResponseBody.getchuString(): String {
-        return bytes().toString(GETCHU_CHARSET)
+    private fun ByteArray.getchuString(): String {
+        return toString(GETCHU_CHARSET)
     }
 
     private fun String.extractGetchuSeriesParentId(): String? {

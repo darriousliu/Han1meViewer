@@ -1,13 +1,15 @@
 package com.yenaly.han1meviewer.logic.network
 
 import com.yenaly.han1meviewer.GETCHU_BASE_URL
+import com.yenaly.han1meviewer.HA1_GITHUB_API_URL
 import com.yenaly.han1meviewer.HANIME_BASE_URL
-import com.yenaly.han1meviewer.logic.network.service.HGitHubService
 import com.yenaly.han1meviewer.logic.network.service.GetchuService
+import com.yenaly.han1meviewer.logic.network.service.HGitHubService
 import com.yenaly.han1meviewer.logic.network.service.HanimeBaseService
 import com.yenaly.han1meviewer.logic.network.service.HanimeCommentService
 import com.yenaly.han1meviewer.logic.network.service.HanimeMyListService
 import com.yenaly.han1meviewer.logic.network.service.HanimeSubscriptionService
+import io.ktor.client.HttpClient
 
 /**
  * @project Hanime1
@@ -15,42 +17,70 @@ import com.yenaly.han1meviewer.logic.network.service.HanimeSubscriptionService
  * @time 2022/06/08 008 22:35
  */
 object HanimeNetwork {
-    var hanimeService = _hanimeService
-        private set
-    var githubService = _githubService
-        private set
-    var getchuService = _getchuService
-        private set
-    var commentService = _commentService
-        private set
-    var myListService = _myListService
-        private set
-    var subscriptionService = _subscriptionService
+    private val initialSiteClient = ServiceCreator.createKtorClient(NetworkClientProfile.Site)
+    private var replaceableSiteClient: HttpClient? = null
+    private var getchuClient = ServiceCreator.createKtorClient(NetworkClientProfile.Getchu)
+    private val githubClient = ServiceCreator.createKtorClient(NetworkClientProfile.GitHub)
+
+    @Volatile
+    var hanimeService = HanimeBaseService(initialSiteClient, HANIME_BASE_URL)
         private set
 
-    private val _hanimeService
-        get() = ServiceCreator.create<HanimeBaseService>(HANIME_BASE_URL)
+    @Volatile
+    var githubService = HGitHubService(githubClient, HA1_GITHUB_API_URL)
+        private set
 
-    private val _githubService
-        get() = ServiceCreator.createGitHubApi<HGitHubService>()
+    @Volatile
+    var getchuService = GetchuService(getchuClient, GETCHU_BASE_URL)
+        private set
 
-    private val _getchuService
-        get() = ServiceCreator.createGetchu<GetchuService>(GETCHU_BASE_URL)
+    @Volatile
+    var commentService = HanimeCommentService(initialSiteClient, HANIME_BASE_URL)
+        private set
 
-    private val _commentService
-        get() = ServiceCreator.create<HanimeCommentService>(HANIME_BASE_URL)
+    @Volatile
+    var myListService = HanimeMyListService(initialSiteClient, HANIME_BASE_URL)
+        private set
 
-    private val _myListService
-        get() = ServiceCreator.create<HanimeMyListService>(HANIME_BASE_URL)
+    @Volatile
+    var subscriptionService = HanimeSubscriptionService(initialSiteClient, HANIME_BASE_URL)
+        private set
 
-    private val _subscriptionService
-        get() = ServiceCreator.create<HanimeSubscriptionService>(HANIME_BASE_URL)
-
+    /**
+     * Rebuilds exactly the four services rebuilt by the Retrofit implementation.
+     * Subscription and GitHub deliberately retain their initial clients.
+     */
+    @Synchronized
     fun rebuildNetwork() {
-        ServiceCreator.rebuildOkHttpClient()
-        hanimeService = _hanimeService
-        getchuService = _getchuService
-        commentService = _commentService
-        myListService = _myListService
+        val newSiteClient = ServiceCreator.createKtorClient(NetworkClientProfile.Site)
+        val newGetchuClient = ServiceCreator.createKtorClient(NetworkClientProfile.Getchu)
+
+        try {
+            val newHanimeService = HanimeBaseService(newSiteClient, HANIME_BASE_URL)
+            val newGetchuService = GetchuService(newGetchuClient, GETCHU_BASE_URL)
+            val newCommentService = HanimeCommentService(newSiteClient, HANIME_BASE_URL)
+            val newMyListService = HanimeMyListService(newSiteClient, HANIME_BASE_URL)
+
+            ServiceCreator.rebuildOkHttpClient()
+
+            val oldReplaceableSiteClient = replaceableSiteClient
+            val oldGetchuClient = getchuClient
+
+            hanimeService = newHanimeService
+            getchuService = newGetchuService
+            commentService = newCommentService
+            myListService = newMyListService
+            replaceableSiteClient = newSiteClient
+            getchuClient = newGetchuClient
+
+            // The initial site client remains owned by subscriptionService. Only clients from
+            // later rebuilds become replaceable and can be closed here.
+            oldReplaceableSiteClient?.let { oldClient -> runCatching(oldClient::close) }
+            runCatching(oldGetchuClient::close)
+        } catch (throwable: Throwable) {
+            runCatching(newSiteClient::close)
+            runCatching(newGetchuClient::close)
+            throw throwable
+        }
     }
 }

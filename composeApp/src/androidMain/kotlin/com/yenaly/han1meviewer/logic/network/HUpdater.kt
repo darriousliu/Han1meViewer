@@ -11,7 +11,7 @@ import com.yenaly.han1meviewer.platform.AppBuildInfoProvider
 import com.yenaly.han1meviewer.util.checkNeedUpdate
 import com.yenaly.han1meviewer.util.copyTo
 import com.yenaly.han1meviewer.util.runSuspendCatching
-import okio.use
+import io.ktor.utils.io.jvm.javaio.toInputStream
 import java.io.File
 import java.util.zip.ZipInputStream
 
@@ -79,27 +79,30 @@ object HUpdater {
      * @param url update url
      */
     suspend fun File.injectUpdate(url: String, progress: (suspend (Int, Long, Long) -> Unit)? = null) {
-        val res = HanimeNetwork.githubService.request(url)
-        if (url.endsWith("zip")) {
-            Log.d(TAG, "Injecting update from zip ($url)")
-            res.body()?.use { body ->
-                body.byteStream().use { stream ->
+        HanimeNetwork.githubService.request(url) { response ->
+            val contentLength = response.headerValues("Content-Length")
+                .firstOrNull()
+                ?.toLongOrNull()
+                ?: -1L
+            if (url.endsWith("zip")) {
+                Log.d(TAG, "Injecting update from zip ($url)")
+                response.successBody?.toInputStream()?.use { stream ->
                     ZipInputStream(stream).use { zip ->
                         zip.nextEntry
                         this.outputStream().use {
-                            Log.i(TAG, "content length: ${body.contentLength()}")
+                            Log.i(TAG, "content length: $contentLength")
                             // 估摸着压缩率为0.56左右，稍微估算解压后大小，防止进度卡在100%时间过长
-                            zip.copyTo(it, (body.contentLength() * 1.79).toLong(), progress = progress)
+                            zip.copyTo(it, (contentLength * 1.79).toLong(), progress = progress)
                         }
                     }
                 }
-            }
-        } else {
-            Log.d(TAG, "Injecting update from release ($url)")
-            this.outputStream().use {
-                res.body()?.use { body ->
-                    Log.i(TAG, "content length: ${body.contentLength()}")
-                    body.byteStream().copyTo(it, body.contentLength(), progress = progress)
+            } else {
+                Log.d(TAG, "Injecting update from release ($url)")
+                this.outputStream().use {
+                    response.successBody?.toInputStream()?.use { body ->
+                        Log.i(TAG, "content length: $contentLength")
+                        body.copyTo(it, contentLength, progress = progress)
+                    }
                 }
             }
         }

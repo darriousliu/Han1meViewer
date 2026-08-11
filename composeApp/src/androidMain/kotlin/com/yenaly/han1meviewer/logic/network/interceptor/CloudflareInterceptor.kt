@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
+import com.yenaly.han1meviewer.logic.network.cookie.MainSiteCookieRepository
 import com.yenaly.han1meviewer.ui.activity.CloudflareActivity
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -48,10 +49,16 @@ class CloudflareInterceptor(
 
             // 等待 WebView 验证完成
             latch.await()
-            return chain.proceed(request)
+            val refreshedCookieHeader = MainSiteCookieRepository.cookieHeaderFor(request.url.host)
+            val retryRequest = request.newBuilder().apply {
+                if (refreshedCookieHeader == null) {
+                    removeHeader("Cookie")
+                } else {
+                    header("Cookie", refreshedCookieHeader)
+                }
+            }.build()
+            return chain.proceed(retryRequest)
         }
         return response
     }
 }
-
-

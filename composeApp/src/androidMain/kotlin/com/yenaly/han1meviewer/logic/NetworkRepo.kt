@@ -18,6 +18,10 @@ import com.yenaly.han1meviewer.logic.model.VideoCommentArgs
 import com.yenaly.han1meviewer.logic.model.VideoComments
 import com.yenaly.han1meviewer.logic.network.HUpdater
 import com.yenaly.han1meviewer.logic.network.HanimeNetwork
+import com.yenaly.han1meviewer.logic.network.RawNetworkResponse
+import com.yenaly.han1meviewer.logic.network.asNetworkUpload
+import com.yenaly.han1meviewer.logic.network.errorBodyString
+import com.yenaly.han1meviewer.logic.network.successBodyString
 import com.yenaly.han1meviewer.logic.state.PageLoadingState
 import com.yenaly.han1meviewer.logic.state.VideoLoadingState
 import com.yenaly.han1meviewer.logic.state.WebsiteState
@@ -30,12 +34,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.ResponseBody
-import retrofit2.Response
 import java.io.File
 import javax.net.ssl.SSLHandshakeException
 
@@ -208,18 +206,12 @@ object NetworkRepo {
         avatarFile: File,
     ) = websiteIOFlow(
         request = {
-            val imageRequestBody = avatarFile.asRequestBody("image/jpeg".toMediaType())
-            val imagePart = MultipartBody.Part.createFormData(
-                "photo",
-                avatarFile.name,
-                imageRequestBody,
-            )
             HanimeNetwork.myListService.updateUserAccountAvatar(
                 userId = userId,
-                csrfToken = (csrfToken ?: EMPTY_STRING).toRequestBody("text/plain".toMediaType()),
-                method = "patch".toRequestBody("text/plain".toMediaType()),
-                type = "photo".toRequestBody("text/plain".toMediaType()),
-                photo = imagePart,
+                csrfToken = csrfToken ?: EMPTY_STRING,
+                method = "patch",
+                type = "photo",
+                photo = avatarFile.asNetworkUpload("image/jpeg"),
             )
         },
         permittedSuccessCode = intArrayOf(302),
@@ -536,17 +528,17 @@ object NetworkRepo {
         emit(WebsiteState.Loading)
         // 首先获取token
         val loginPage = HanimeNetwork.hanimeService.getLoginPage()
-        val token = loginPage.body()?.string()?.let(Parser::extractTokenFromLoginPage)
+        val token = loginPage.successBodyString()?.let(Parser::extractTokenFromLoginPage)
         val req = HanimeNetwork.hanimeService.login(token, email, password)
         if (req.isSuccessful) {
             // 再次获取登录页面，如果失败则返回 cookie
             // 因为登录成功再次访问 login 会 404，这是判断是否登录成功的方法
             val loginPageAgain = HanimeNetwork.hanimeService.getLoginPage()
-            if (loginPageAgain.code() == 404) {
+            if (loginPageAgain.statusCode == 404) {
                 // Cookie 會返回 XSRF-TOKEN 和 hanime1_session，我們只需要後者
                 // 错误的，还需要 remember_web 字段！但我没找到！
-                Log.d("login_headers", req.headers().toMultimap().toString())
-                emit(WebsiteState.Success(req.headers().values("Set-Cookie")))
+                Log.d("login_headers", req.headers.toString())
+                emit(WebsiteState.Success(req.headerValues("Set-Cookie")))
             } else {
                 emit(WebsiteState.Error(IllegalStateException(getString(R.string.account_or_password_wrong))))
             }
@@ -564,13 +556,13 @@ object NetworkRepo {
      * @param permittedSuccessCode 用于处理特殊情况，比如[NetworkRepo.modifyPlaylist]需要302成功
      */
     private fun <T> websiteIOFlow(
-        request: suspend () -> Response<ResponseBody>,
+        request: suspend () -> RawNetworkResponse,
         permittedSuccessCode: IntArray? = null,
         action: (String) -> WebsiteState<T>,
     ) = flow {
         val requestResult = request.invoke()
-        val resultBody = requestResult.body()?.string()
-        val permitted = permittedSuccessCode?.contains(requestResult.code()) == true
+        val resultBody = requestResult.successBodyString()
+        val permitted = permittedSuccessCode?.contains(requestResult.statusCode) == true
         if ((permitted || requestResult.isSuccessful)) {
             emit(action.invoke(resultBody ?: EMPTY_STRING))
         } else {
@@ -584,11 +576,11 @@ object NetworkRepo {
      * 用于有page分页的情况
      */
     private fun <T> pageIOFlow(
-        request: suspend () -> Response<ResponseBody>,
+        request: suspend () -> RawNetworkResponse,
         action: (String) -> PageLoadingState<T>,
     ) = flow {
         val requestResult = request.invoke()
-        val resultBody = requestResult.body()?.string()
+        val resultBody = requestResult.successBodyString()
         if (requestResult.isSuccessful && resultBody != null) {
             emit(action.invoke(resultBody))
         } else {
@@ -602,11 +594,11 @@ object NetworkRepo {
      * 用于影片界面
      */
     private fun <T> videoIOFlow(
-        request: suspend () -> Response<ResponseBody>,
+        request: suspend () -> RawNetworkResponse,
         action: (String) -> VideoLoadingState<T>,
     ) = flow {
         val requestResult = request.invoke()
-        val resultBody = requestResult.body()?.string()
+        val resultBody = requestResult.successBodyString()
         if (requestResult.isSuccessful && resultBody != null) {
             emit(action.invoke(resultBody))
         } else {
@@ -616,9 +608,9 @@ object NetworkRepo {
         emit(VideoLoadingState.Error(handleException(e)))
     }.flowOn(Dispatchers.IO)
 
-    internal fun Response<ResponseBody>.throwRequestException(): Nothing {
-        val body = errorBody()?.string()
-        when (val code = code()) {
+    internal fun RawNetworkResponse.throwRequestException(): Nothing {
+        val body = errorBodyString()
+        when (val code = statusCode) {
             403 -> if (!body.isNullOrBlank()) {
                 when {
                     "you have been blocked" in body ->
@@ -630,17 +622,17 @@ object NetworkRepo {
                     else ->
                         throw HanimeNotFoundException(getString(R.string.video_might_not_exist)) // 主要出現在影片界面，當你v數不大時會報403
                 }
-            } else throw IllegalStateException("$code ${message()}")
+            } else throw IllegalStateException("$code $reason")
 
             500 -> throw HanimeNotFoundException(getString(R.string.video_might_not_exist)) // 主要出現在影片界面，當你v數很大時會報500
 
             404 -> if (!isAlreadyLogin) {
                 throw IllegalStateException(getString(R.string.not_logged_in_currently))
             } else {
-                throw IllegalStateException("$code ${message()}")
+                throw IllegalStateException("$code $reason")
             }
 
-            else -> throw IllegalStateException("$code ${message()}")
+            else -> throw IllegalStateException("$code $reason")
         }
     }
 

@@ -202,8 +202,6 @@ kotlin {
 
                 implementation(libs.serialization.json)
 
-                implementation(libs.retrofit)
-                implementation(libs.converter.serialization)
                 implementation(libs.okhttp)
                 implementation(libs.okhttp.dns.over.https)
                 implementation(libs.ktor.client.okhttp)

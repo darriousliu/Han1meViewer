@@ -41,8 +41,6 @@ serialization = "1.11.0"
 ktor = "3.5.2"
 ksoup = "0.2.6"
 sqlite = "2.7.0"
-retrofit = "3.0.0"
-converterSerialization = "1.0.0"
 coil = "2.7.0"
 okhttp = "5.4.0"
 junit = "4.13.2"
@@ -130,8 +128,6 @@ serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serializ
 ksoup = { module = "com.fleeksoft.ksoup:ksoup", version.ref = "ksoup" }
 
 # Network
-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
-converter-serialization = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "converterSerialization" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 okhttp-dns-over-https = { group = "com.squareup.okhttp3", name = "okhttp-dnsoverhttps", version.ref = "okhttp" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }

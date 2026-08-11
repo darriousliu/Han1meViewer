@@ -5,6 +5,7 @@ import androidx.core.text.parseAsHtml
 import com.yenaly.han1meviewer.Preferences.isAlreadyLogin
 import com.yenaly.han1meviewer.Preferences.loginCookie
 import com.yenaly.han1meviewer.logic.network.HCookieJar
+import com.yenaly.han1meviewer.logic.network.cookie.MainSiteCookieRepository
 import com.yenaly.han1meviewer.util.CookieString
 import kotlinx.serialization.json.Json
 
@@ -72,6 +73,7 @@ fun logout() {
     isAlreadyLogin = false
     loginCookie = CookieString(EMPTY_STRING)
     HCookieJar.cookieMap.clear()
+    MainSiteCookieRepository.clearEphemeral()
     CookieManager.getInstance().removeAllCookies(null)
 }
 

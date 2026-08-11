@@ -136,5 +136,3 @@ data class Release(
         val siteAdmin: Boolean,
     )
 }
-
-
