@@ -1,7 +1,5 @@
 package com.yenaly.han1meviewer.logic.model
 
-import com.yenaly.han1meviewer.EMPTY_STRING
-
 enum class MyListType(val value: String) {
     FAV_VIDEO("likes"), // 喜欢的视频
     WATCH_LATER("saves"), // 稍后再看
@@ -9,7 +7,7 @@ enum class MyListType(val value: String) {
 }
 
 enum class FavStatus(val value: String) {
-    ADD_FAV(EMPTY_STRING),
+    ADD_FAV(""),
     CANCEL_FAV("1")
 }
 
