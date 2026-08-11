@@ -20,11 +20,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -39,8 +36,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -48,15 +43,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.currentLocalDate
 import com.yenaly.han1meviewer.currentYearMonth
+import com.yenaly.han1meviewer.generated.resources.*
 import com.yenaly.han1meviewer.ui.component.appbar.HanimeScaffold
 import com.yenaly.han1meviewer.ui.viewmodel.MonthlyStats
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
 import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.number
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * 贡献报表弹窗。以日历热力图形式展示年/月打卡分布。
@@ -74,6 +71,7 @@ import kotlinx.datetime.number
  * @param onToggleFullscreen 全屏切换回调
  * @param onLoadYearRecords 加载指定年份记录的回调
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContributionReportDialog(
     selectedYear: Int,
@@ -101,12 +99,12 @@ fun ContributionReportDialog(
     ) {
         HanimeScaffold(
             modifier = Modifier.fillMaxSize(),
-            title = stringResource(R.string.checkin_report),
+            title = stringResource(Res.string.checkin_report),
             onBack = onDismiss,
             actions = {
                 TextButton(onClick = { onViewModeChange("year") }) {
                     Text(
-                        stringResource(R.string.report_year),
+                        stringResource(Res.string.report_year),
                         fontWeight = if (viewMode == "year") FontWeight.Bold else FontWeight.Normal,
                         color = if (viewMode == "year") MaterialTheme.colorScheme.primary
                         else MaterialTheme.colorScheme.onSurface
@@ -114,7 +112,7 @@ fun ContributionReportDialog(
                 }
                 TextButton(onClick = { onViewModeChange("month") }) {
                     Text(
-                        stringResource(R.string.report_month),
+                        stringResource(Res.string.report_month),
                         fontWeight = if (viewMode == "month") FontWeight.Bold else FontWeight.Normal,
                         color = if (viewMode == "month") MaterialTheme.colorScheme.primary
                         else MaterialTheme.colorScheme.onSurface
@@ -122,11 +120,11 @@ fun ContributionReportDialog(
                 }
                 FilledIconButton(onClick = onToggleFullscreen) {
                     Icon(
-                        painter = painterResource(R.drawable.baseline_screen_rotation_24),
+                        painter = painterResource(Res.drawable.baseline_screen_rotation_24),
                         contentDescription = if (isFullscreen)
-                            stringResource(R.string.report_portrait)
+                            stringResource(Res.string.report_portrait)
                         else
-                            stringResource(R.string.report_landscape),
+                            stringResource(Res.string.report_landscape),
                         modifier = Modifier.size(24.dp)
                     )
                 }
@@ -179,8 +177,8 @@ fun ContributionReportDialog(
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
                             StatItem(
-                                icon = Icons.Filled.DateRange,
-                                label = stringResource(R.string.report_total),
+                                icon = DailyCheckInIcons.DateRange,
+                                label = stringResource(Res.string.report_total),
                                 value = totalCount.toString()
                             )
                             HorizontalDivider(
@@ -189,8 +187,8 @@ fun ContributionReportDialog(
                                     .width(1.dp)
                             )
                             StatItem(
-                                icon = Icons.Filled.Star,
-                                label = stringResource(R.string.report_days),
+                                icon = DailyCheckInIcons.Star,
+                                label = stringResource(Res.string.report_days),
                                 value = totalDays.toString()
                             )
                             HorizontalDivider(
@@ -199,8 +197,8 @@ fun ContributionReportDialog(
                                     .width(1.dp)
                             )
                             StatItem(
-                                icon = Icons.Filled.Favorite,
-                                label = stringResource(R.string.report_max_day),
+                                icon = DailyCheckInIcons.Favorite,
+                                label = stringResource(Res.string.report_max_day),
                                 value = maxDay.toString()
                             )
                         }
@@ -208,7 +206,7 @@ fun ContributionReportDialog(
                 } else {
                     Spacer(modifier = Modifier.height(24.dp))
                     Text(
-                        text = stringResource(R.string.report_no_data),
+                        text = stringResource(Res.string.report_no_data),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.fillMaxWidth(),
@@ -275,13 +273,12 @@ fun YearContributionView(
     onYearChange: (Int) -> Unit,
 ) {
     val weeks = remember(year) { buildYearWeeks(year) }
-    val monthFormat = stringResource(R.string.report_month_format)
-    val monthLabels = remember(year) { buildMonthLabels(year, weeks, monthFormat) }
+    val monthLabels = remember(year) { buildMonthLabels(year, weeks) }
     val dayLabels = listOf(
-        stringResource(R.string.mon), stringResource(R.string.tue),
-        stringResource(R.string.wed), stringResource(R.string.thu),
-        stringResource(R.string.fri), stringResource(R.string.sat),
-        stringResource(R.string.sun)
+        stringResource(Res.string.mon), stringResource(Res.string.tue),
+        stringResource(Res.string.wed), stringResource(Res.string.thu),
+        stringResource(Res.string.fri), stringResource(Res.string.sat),
+        stringResource(Res.string.sun)
     )
     val cellSize = 14.dp
     val cellPadding = 1.dp
@@ -297,12 +294,12 @@ fun YearContributionView(
         ) {
             IconButton(onClick = { onYearChange(year - 1) }) {
                 Icon(
-                    painterResource(R.drawable.previous_double_arrow_24),
-                    stringResource(R.string.previous_year)
+                    painterResource(Res.drawable.previous_double_arrow_24),
+                    stringResource(Res.string.previous_year)
                 )
             }
             Text(
-                text = stringResource(R.string.report_year_format, year),
+                text = stringResource(Res.string.report_year_format, year),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
@@ -311,8 +308,8 @@ fun YearContributionView(
                 enabled = year < today.year
             ) {
                 Icon(
-                    painterResource(R.drawable.next_double_arrow_24),
-                    stringResource(R.string.next_year)
+                    painterResource(Res.drawable.next_double_arrow_24),
+                    stringResource(Res.string.next_year)
                 )
             }
         }
@@ -326,9 +323,9 @@ fun YearContributionView(
             ) {
                 Spacer(modifier = Modifier.width(labelColWidth))
                 Box(modifier = Modifier.width(columnWidth * weeks.size)) {
-                    monthLabels.forEach { (label, weekIdx) ->
+                    monthLabels.forEach { (month, weekIdx) ->
                         Text(
-                            text = label,
+                            text = stringResource(Res.string.report_month_format, month),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier
@@ -403,10 +400,10 @@ fun MonthContributionView(
     val daysInMonth = yearMonth.numberOfDays
     val firstDayOfWeek = yearMonth.firstDay.dayOfWeek.isoDayNumber
     val dayLabels = listOf(
-        stringResource(R.string.mon), stringResource(R.string.tue),
-        stringResource(R.string.wed), stringResource(R.string.thu),
-        stringResource(R.string.fri), stringResource(R.string.sat),
-        stringResource(R.string.sun)
+        stringResource(Res.string.mon), stringResource(Res.string.tue),
+        stringResource(Res.string.wed), stringResource(Res.string.thu),
+        stringResource(Res.string.fri), stringResource(Res.string.sat),
+        stringResource(Res.string.sun)
     )
 
     Column {
@@ -424,12 +421,12 @@ fun MonthContributionView(
                 }
             }) {
                 Icon(
-                    painterResource(R.drawable.previous_double_arrow_24),
-                    stringResource(R.string.previous_month)
+                    painterResource(Res.drawable.previous_double_arrow_24),
+                    stringResource(Res.string.previous_month)
                 )
             }
             Text(
-                text = stringResource(R.string.report_year_month_format, year, month),
+                text = stringResource(Res.string.report_year_month_format, year, month),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
@@ -448,8 +445,8 @@ fun MonthContributionView(
                 enabled = YearMonth(year, month) < currentMonth
             ) {
                 Icon(
-                    painterResource(R.drawable.next_double_arrow_24),
-                    stringResource(R.string.next_month)
+                    painterResource(Res.drawable.next_double_arrow_24),
+                    stringResource(Res.string.next_month)
                 )
             }
         }
@@ -515,7 +512,7 @@ fun MonthContributionView(
                         )
                         if (count > 0) {
                             Text(
-                                text = stringResource(R.string.checkin_count_format, count),
+                                text = stringResource(Res.string.checkin_count_format, count),
                                 fontSize = 10.sp,
                                 color = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f)
                             )
@@ -538,7 +535,7 @@ fun ContributionLegend() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = stringResource(R.string.report_legend_less),
+            text = stringResource(Res.string.report_legend_less),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -558,7 +555,7 @@ fun ContributionLegend() {
         }
         Spacer(modifier = Modifier.width(4.dp))
         Text(
-            text = stringResource(R.string.report_legend_more),
+            text = stringResource(Res.string.report_legend_more),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
