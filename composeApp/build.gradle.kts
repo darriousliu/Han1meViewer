@@ -1,6 +1,10 @@
 @file:OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
 @file:Suppress("UnstableApiUsage")
 
+import Config.Version.RELEASE
+import Config.Version.createVersion
+import Config.Version.source
+import Config.lastCommitSha
 import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.jvm.toolchain.JavaToolchainService
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -38,6 +42,24 @@ val desktopJavaHome = extensions
         languageVersion.set(JavaLanguageVersion.of(22))
     }
     .map { launcher -> launcher.metadata.installationPath.asFile.absolutePath }
+
+val (desktopVersionCode, desktopVersionName) = createVersion(major = 1, minor = 0, patch = 1)
+val desktopVersionSource = source
+val desktopCommitSha = if (desktopVersionSource == RELEASE) {
+    runCatching { lastCommitSha }.getOrDefault("unknown")
+} else {
+    "unknown"
+}
+val desktopJvmArgs = listOf(
+    "--enable-native-access=ALL-UNNAMED",
+    "-Dhanime.build.debug=${desktopVersionSource != RELEASE}",
+    "-Dhanime.build.applicationId=com.yenaly.han1meviewer.desktop",
+    "-Dhanime.build.versionCode=$desktopVersionCode",
+    "-Dhanime.build.versionName=$desktopVersionName",
+    "-Dhanime.build.commitSha=$desktopCommitSha",
+    "-Dhanime.build.versionSource=$desktopVersionSource",
+    "-Dhanime.build.searchYearRangeEnd=${Config.thisYear}",
+)
 
 kotlin {
     android {
@@ -247,12 +269,15 @@ compose.desktop {
     application {
         mainClass = "com.yenaly.han1meviewer.desktop.DesktopMainKt"
         javaHome = desktopJavaHome.get()
-        jvmArgs("--enable-native-access=ALL-UNNAMED")
+        jvmArgs(*desktopJvmArgs.toTypedArray())
+        nativeDistributions {
+            packageVersion = "1.0.1"
+        }
     }
 }
 
 tasks.withType<JavaExec>().configureEach {
-    jvmArgs("--enable-native-access=ALL-UNNAMED")
+    jvmArgs(desktopJvmArgs)
 }
 
 tasks.withType<Test>().configureEach {
