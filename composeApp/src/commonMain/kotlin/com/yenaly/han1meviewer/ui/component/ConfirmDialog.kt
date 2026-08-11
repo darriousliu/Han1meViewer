@@ -4,8 +4,6 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
-import com.yenaly.han1meviewer.ui.preview.ComponentPreview
 
 /**
  * 确认对话框组件。
@@ -19,7 +17,6 @@ import com.yenaly.han1meviewer.ui.preview.ComponentPreview
  * @param dismissText 取消按钮文本
  * @param onConfirm 确认回调
  * @param onDismiss 取消回调
- * @sample ConfirmDialogPreview
  */
 @Composable
 fun ConfirmDialog(
@@ -49,20 +46,4 @@ fun ConfirmDialog(
             }
         },
     )
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-private fun ConfirmDialogPreview() {
-    ComponentPreview {
-        ConfirmDialog(
-            visible = true,
-            title = "删除历史记录",
-            message = "确定要删除这条记录吗？",
-            confirmText = "删除",
-            dismissText = "取消",
-            onConfirm = {},
-            onDismiss = {},
-        )
-    }
 }
