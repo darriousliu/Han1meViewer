@@ -8,6 +8,9 @@ import com.yenaly.han1meviewer.platform.getOrThrow
 import com.yenaly.han1meviewer.platform.platformServices
 import com.yenaly.han1meviewer.ui.activity.AndroidMainActivity
 import com.yenaly.han1meviewer.ui.screen.home.DailyCheckInScreen
+import com.yenaly.han1meviewer.ui.screen.home.dailycheckin.createCalendarEvent
+import com.yenaly.han1meviewer.ui.screen.home.dailycheckin.localizedWeekdayName
+import com.yenaly.han1meviewer.ui.screen.home.dailycheckin.updateReportWindowMode
 
 @Composable
 fun DailyCheckInRouteScreen(
@@ -16,7 +19,6 @@ fun DailyCheckInRouteScreen(
     onNavigateToVideo: (String) -> Unit,
 ) {
     DailyCheckInScreen(
-        activity = activity,
         onBack = onBack,
         onAddWidget = {
             Toast.makeText(
@@ -35,5 +37,11 @@ fun DailyCheckInRouteScreen(
             }
         },
         onNavigateToVideo = onNavigateToVideo,
+        weekdayLabel = { it.localizedWeekdayName() },
+        onScheduleCalendar = { createCalendarEvent(activity, it) },
+        onSuckBackDone = {
+            Toast.makeText(activity, R.string.suck_back_done, Toast.LENGTH_SHORT).show()
+        },
+        onReportFullscreenChanged = { activity.updateReportWindowMode(it) },
     )
 }

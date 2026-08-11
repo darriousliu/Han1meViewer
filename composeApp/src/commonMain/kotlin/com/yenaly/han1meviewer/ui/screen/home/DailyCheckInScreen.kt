@@ -1,11 +1,7 @@
 package com.yenaly.han1meviewer.ui.screen.home
 
-import android.app.Activity
-import android.widget.Toast
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.TopAppBarDefaults.pinnedScrollBehavior
@@ -22,24 +18,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yenaly.han1meviewer.MONTH_DAY_FORMAT
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.currentLocalDate
 import com.yenaly.han1meviewer.currentYearMonth
+import com.yenaly.han1meviewer.generated.resources.*
 import com.yenaly.han1meviewer.ui.component.ConfirmDialog
 import com.yenaly.han1meviewer.ui.component.appbar.HanimeScaffold
 import com.yenaly.han1meviewer.ui.screen.home.dailycheckin.CheckInDialog
 import com.yenaly.han1meviewer.ui.screen.home.dailycheckin.ContributionReportDialog
 import com.yenaly.han1meviewer.ui.screen.home.dailycheckin.DailyCheckInContent
 import com.yenaly.han1meviewer.ui.screen.home.dailycheckin.DailyCheckInEvent
+import com.yenaly.han1meviewer.ui.screen.home.dailycheckin.DailyCheckInIcons
 import com.yenaly.han1meviewer.ui.screen.home.dailycheckin.DailyCheckInUiState
-import com.yenaly.han1meviewer.ui.screen.home.dailycheckin.createCalendarEvent
-import com.yenaly.han1meviewer.ui.screen.home.dailycheckin.localizedWeekdayName
-import com.yenaly.han1meviewer.ui.screen.home.dailycheckin.updateReportWindowMode
 import com.yenaly.han1meviewer.ui.viewmodel.CheckInCalendarViewModel
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.datetime.DateTimeUnit
@@ -49,6 +41,7 @@ import kotlinx.datetime.format
 import kotlinx.datetime.monthsUntil
 import kotlinx.datetime.number
 import kotlinx.datetime.plus
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * 打卡日历页面 Screen 层。
@@ -56,30 +49,37 @@ import kotlinx.datetime.plus
  * 作为 V-S-C 架构的胶水层：订阅 ViewModel 状态生成 [DailyCheckInUiState]，
  * 将 [DailyCheckInEvent] 映射到 ViewModel 操作和导航。
  *
- * @param activity 宿主 Activity，用于全屏/方向控制
  * @param onBack 返回回调
  * @param onAddWidget 添加桌面小组件回调
  * @param onNavigateToVideo 跳转到视频详情回调
+ * @param weekdayLabel 日期对应的本地化星期名称
+ * @param onScheduleCalendar 创建系统日历提醒回调
+ * @param onSuckBackDone 吸回操作完成回调
+ * @param onReportFullscreenChanged 报表全屏状态变化回调
  * @param viewModel 打卡日历 ViewModel
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DailyCheckInScreen(
-    activity: Activity,
     onBack: () -> Unit,
     onAddWidget: () -> Unit,
     onNavigateToVideo: (String) -> Unit,
+    weekdayLabel: (LocalDate) -> String,
+    onScheduleCalendar: (LocalDate) -> Unit,
+    onSuckBackDone: () -> Unit,
+    onReportFullscreenChanged: (Boolean) -> Unit,
     viewModel: CheckInCalendarViewModel = viewModel { CheckInCalendarViewModel() },
 ) {
     var showReport by rememberSaveable { mutableStateOf(false) }
     var isReportFullscreen by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(activity, isReportFullscreen) {
-        activity.updateReportWindowMode(isReportFullscreen)
+    LaunchedEffect(isReportFullscreen) {
+        onReportFullscreenChanged(isReportFullscreen)
     }
 
-    DisposableEffect(activity) {
+    DisposableEffect(Unit) {
         onDispose {
-            activity.updateReportWindowMode(false)
+            onReportFullscreenChanged(false)
         }
     }
 
@@ -132,8 +132,6 @@ fun DailyCheckInScreen(
         }
     }
 
-    val context = LocalContext.current
-
     val handleEvent: (DailyCheckInEvent) -> Unit = { event ->
         when (event) {
             is DailyCheckInEvent.OnDateClick -> {
@@ -177,20 +175,20 @@ fun DailyCheckInScreen(
     val scrollBehavior = pinnedScrollBehavior(rememberTopAppBarState())
     HanimeScaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        title = stringResource(R.string.has_cum),
+        title = stringResource(Res.string.has_cum),
         onBack = onBack,
         scrollBehavior = scrollBehavior,
         actions = {
             FilledIconButton(onClick = { showReport = true }) {
                 Icon(
-                    imageVector = Icons.Filled.DateRange,
-                    contentDescription = stringResource(R.string.checkin_report)
+                    imageVector = DailyCheckInIcons.DateRange,
+                    contentDescription = stringResource(Res.string.checkin_report)
                 )
             }
             FilledIconButton(onClick = onAddWidget) {
                 Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = stringResource(R.string.add_widget)
+                    imageVector = DailyCheckInIcons.Add,
+                    contentDescription = stringResource(Res.string.add_widget)
                 )
             }
         },
@@ -198,7 +196,7 @@ fun DailyCheckInScreen(
         DailyCheckInContent(
             paddingValues = innerPadding,
             uiState = uiState,
-            weekdayLabel = uiState.today.localizedWeekdayName(),
+            weekdayLabel = weekdayLabel(uiState.today),
             onEvent = handleEvent,
             onNavigateToVideo = onNavigateToVideo,
             showEasterEgg = showEasterEgg,
@@ -211,15 +209,15 @@ fun DailyCheckInScreen(
 
     ConfirmDialog(
         visible = forgotDialogDate != null,
-        title = stringResource(R.string.forgot_title),
+        title = stringResource(Res.string.forgot_title),
         message = forgotDialogDate?.let {
             stringResource(
-                R.string.forgot_message,
+                Res.string.forgot_message,
                 it.format(MONTH_DAY_FORMAT)
             )
         } ?: "",
-        confirmText = stringResource(R.string.forgot_confirm),
-        dismissText = stringResource(R.string.forgot_dismiss),
+        confirmText = stringResource(Res.string.forgot_confirm),
+        dismissText = stringResource(Res.string.forgot_dismiss),
         onConfirm = {
             forgotDialogDate?.let { checkInDialogDate = it }
             forgotDialogDate = null
@@ -229,17 +227,17 @@ fun DailyCheckInScreen(
 
     ConfirmDialog(
         visible = calendarDialogDate != null,
-        title = stringResource(R.string.calendar_dialog_title),
+        title = stringResource(Res.string.calendar_dialog_title),
         message = calendarDialogDate?.let {
             stringResource(
-                R.string.calendar_dialog_message,
+                Res.string.calendar_dialog_message,
                 it.format(MONTH_DAY_FORMAT)
             )
         } ?: "",
-        confirmText = stringResource(R.string.calendar_dialog_confirm),
-        dismissText = stringResource(R.string.cancel),
+        confirmText = stringResource(Res.string.calendar_dialog_confirm),
+        dismissText = stringResource(Res.string.cancel),
         onConfirm = {
-            calendarDialogDate?.let { createCalendarEvent(context, it) }
+            calendarDialogDate?.let(onScheduleCalendar)
             calendarDialogDate = null
         },
         onDismiss = { calendarDialogDate = null },
@@ -247,24 +245,20 @@ fun DailyCheckInScreen(
 
     ConfirmDialog(
         visible = suckBackDialogDate != null,
-        title = stringResource(R.string.suck_back_title),
+        title = stringResource(Res.string.suck_back_title),
         message = suckBackDialogDate?.let {
             stringResource(
-                R.string.suck_back_message,
+                Res.string.suck_back_message,
                 it.format(MONTH_DAY_FORMAT),
                 uiState.records[it] ?: 0
             )
         } ?: "",
-        confirmText = stringResource(R.string.suck_back_confirm),
-        dismissText = stringResource(R.string.suck_back_dismiss),
+        confirmText = stringResource(Res.string.suck_back_confirm),
+        dismissText = stringResource(Res.string.suck_back_dismiss),
         onConfirm = {
             suckBackDialogDate?.let {
                 viewModel.clearCheckIn(it)
-                Toast.makeText(
-                    context,
-                    R.string.suck_back_done,
-                    Toast.LENGTH_SHORT
-                ).show()
+                onSuckBackDone()
             }
             suckBackDialogDate = null
         },

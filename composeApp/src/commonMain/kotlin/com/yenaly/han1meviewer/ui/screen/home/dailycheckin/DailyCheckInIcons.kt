@@ -13,6 +13,24 @@ import androidx.compose.ui.unit.dp
  * Compose Material Icons Extended 组件。
  */
 internal object DailyCheckInIcons {
+    val Add: ImageVector by lazy {
+        materialIcon("Add") {
+            moveTo(19.0f, 13.0f)
+            horizontalLineTo(13.0f)
+            verticalLineTo(19.0f)
+            horizontalLineTo(11.0f)
+            verticalLineTo(13.0f)
+            horizontalLineTo(5.0f)
+            verticalLineTo(11.0f)
+            horizontalLineTo(11.0f)
+            verticalLineTo(5.0f)
+            horizontalLineTo(13.0f)
+            verticalLineTo(11.0f)
+            horizontalLineTo(19.0f)
+            close()
+        }
+    }
+
     val ArrowBack: ImageVector by lazy {
         materialIcon("ArrowBack", autoMirror = true) {
             moveTo(20.0f, 11.0f)
