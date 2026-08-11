@@ -6,8 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.net.toUri
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.yenaly.han1meviewer.EMPTY_STRING
 import com.yenaly.han1meviewer.HCacheManager
@@ -24,7 +23,6 @@ import com.yenaly.han1meviewer.logic.state.VideoLoadingState
 import com.yenaly.han1meviewer.logic.state.WebsiteState
 import com.yenaly.han1meviewer.ui.viewmodel.AppViewModel.csrfToken
 import com.yenaly.han1meviewer.util.TagLocalizer
-import com.yenaly.yenaly_libs.base.YenalyViewModel
 import com.yenaly.yenaly_libs.utils.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -46,7 +44,9 @@ import kotlin.math.abs
  * @author Yenaly Liew
  * @time 2022/06/17 017 19:01
  */
-class VideoViewModel(application: Application) : YenalyViewModel(application) {
+class VideoViewModel(
+    @JvmField protected val application: Application,
+) : AndroidViewModel(application) {
 
     data class IntroScrollState(
         val firstVisibleItemIndex: Int = 0,
@@ -89,8 +89,8 @@ class VideoViewModel(application: Application) : YenalyViewModel(application) {
     // 平板横屏模式下，左栏不显示相关视频（右栏已显示）
     var hideRelatedInIntro by mutableStateOf(false)
     var hKeyframes: HKeyframeEntity? = null
-    private val _videoList = MutableLiveData<List<HanimeInfo>>()
-    val videoList: LiveData<List<HanimeInfo>> = _videoList
+    private val _videoList = MutableStateFlow<List<HanimeInfo>?>(null)
+    val videoList = _videoList.asStateFlow()
     private val _hanimeVideoStateFlow =
         MutableStateFlow<VideoLoadingState<HanimeVideo>>(VideoLoadingState.Loading)
     val hanimeVideoStateFlow = _hanimeVideoStateFlow.asStateFlow()

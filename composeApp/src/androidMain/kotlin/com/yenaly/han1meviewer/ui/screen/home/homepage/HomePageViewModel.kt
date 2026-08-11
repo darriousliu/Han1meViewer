@@ -2,7 +2,6 @@ package com.yenaly.han1meviewer.ui.screen.home.homepage
 
 import android.util.Log
 import androidx.annotation.StringRes
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.database.FirebaseDatabase

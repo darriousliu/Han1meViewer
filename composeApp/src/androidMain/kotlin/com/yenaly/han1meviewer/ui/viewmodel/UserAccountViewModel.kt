@@ -1,6 +1,7 @@
 package com.yenaly.han1meviewer.ui.viewmodel
 
 import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.logic.NetworkRepo
@@ -9,7 +10,6 @@ import com.yenaly.han1meviewer.logic.model.UserAccountAction
 import com.yenaly.han1meviewer.logic.model.UserAccountActionEvent
 import com.yenaly.han1meviewer.logic.model.UserAccountSubmittingState
 import com.yenaly.han1meviewer.logic.state.WebsiteState
-import com.yenaly.yenaly_libs.base.YenalyViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -17,7 +17,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.io.File
 
-class UserAccountViewModel(application: Application) : YenalyViewModel(application) {
+class UserAccountViewModel(
+    @JvmField protected val application: Application,
+) : AndroidViewModel(application) {
 
     private val _accountState = MutableStateFlow<WebsiteState<UserAccount>>(WebsiteState.Loading)
     val accountState = _accountState.asStateFlow()

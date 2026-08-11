@@ -1,6 +1,7 @@
 package com.yenaly.han1meviewer.ui.viewmodel
 
 import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.R
@@ -12,7 +13,6 @@ import com.yenaly.han1meviewer.logic.model.HanimeInfo
 import com.yenaly.han1meviewer.logic.model.MyListItems
 import com.yenaly.han1meviewer.logic.state.PageLoadingState
 import com.yenaly.han1meviewer.ui.screen.home.creatorcenter.CreatorCenterUiState
-import com.yenaly.yenaly_libs.base.YenalyViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +21,9 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class CreatorCenterViewModel(application: Application) : YenalyViewModel(application) {
+class CreatorCenterViewModel(
+    @JvmField protected val application: Application,
+) : AndroidViewModel(application) {
 
     private val _selectedTab = MutableStateFlow(CreatorTab.Uploaded)
 

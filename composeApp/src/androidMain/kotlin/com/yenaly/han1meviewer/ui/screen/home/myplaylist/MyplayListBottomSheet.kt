@@ -36,7 +36,6 @@ import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,6 +50,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.model.HanimeInfo
 import com.yenaly.han1meviewer.logic.state.PageLoadingState
@@ -89,8 +89,8 @@ fun PlaylistBottomSheet(
     vm: MyPlayListViewModelV2,
     context: Context,
 ) {
-    val playlistState by vm.playlistStateFlow.collectAsState()
-    val playlist by vm.playlistFlow.collectAsState()
+    val playlistState by vm.playlistStateFlow.collectAsStateWithLifecycle()
+    val playlist by vm.playlistFlow.collectAsStateWithLifecycle()
     val sheetState = rememberBottomSheetState(
         initialValue = SheetValue.Hidden,
         enabledValues = setOf(SheetValue.Hidden, SheetValue.Expanded),
@@ -99,7 +99,7 @@ fun PlaylistBottomSheet(
         vm.setListInfo(listCode, playListTitle)
     }
 
-    val listInfo by vm.currentListInfo.collectAsState()
+    val listInfo by vm.currentListInfo.collectAsStateWithLifecycle()
     val currentCode = listInfo?.first ?: ""
     val currentTitle = listInfo?.second ?: ""
     val savedScrollState = remember(currentCode, vm) {
@@ -216,7 +216,7 @@ private fun PlaylistSheetContent(
 ) {
     var showDeletePlaylistConfirm by remember { mutableStateOf(false) }
     var showDeleteItemConfirm by remember { mutableStateOf<Triple<String, String, Int>?>(null) }
-    val desc by playlistDesc.collectAsState()
+    val desc by playlistDesc.collectAsStateWithLifecycle()
 
     Column(modifier = Modifier.fillMaxSize()) {
         Box(Modifier

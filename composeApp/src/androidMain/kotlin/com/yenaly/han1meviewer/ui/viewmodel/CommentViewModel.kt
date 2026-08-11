@@ -1,8 +1,8 @@
 package com.yenaly.han1meviewer.ui.viewmodel
 
-import android.app.Application
 import android.util.Log
 import androidx.annotation.StringRes
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.NetworkRepo
@@ -14,7 +14,6 @@ import com.yenaly.han1meviewer.logic.state.WebsiteState
 import com.yenaly.han1meviewer.ui.screen.video.CommentSortType
 import com.yenaly.han1meviewer.ui.viewmodel.AppViewModel.csrfToken
 import com.yenaly.han1meviewer.util.loadAssetAs
-import com.yenaly.yenaly_libs.base.YenalyViewModel
 import com.yenaly.yenaly_libs.utils.showShortToast
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,7 +27,7 @@ import kotlinx.coroutines.launch
  * @author Yenaly Liew
  * @time 2022/06/28 028 14:18
  */
-class CommentViewModel(application: Application) : YenalyViewModel(application) {
+class CommentViewModel : ViewModel() {
 
     data class CommentUiState(
         val firstVisibleItemIndex: Int = 0,

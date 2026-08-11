@@ -1,6 +1,5 @@
 package com.yenaly.han1meviewer.ui.viewmodel.mylist
 
-import android.app.Application
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.logic.NetworkRepo
 import com.yenaly.han1meviewer.logic.model.HanimeInfo
@@ -14,7 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class WatchLaterSubViewModel(application: Application) : MyListSubViewModel(application) {
+class WatchLaterSubViewModel : MyListSubViewModel() {
 
     var watchLaterPage = 1
 

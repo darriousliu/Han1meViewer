@@ -1,6 +1,7 @@
 package com.yenaly.han1meviewer.ui.viewmodel
 
 import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.logic.NetworkRepo
@@ -10,7 +11,6 @@ import com.yenaly.han1meviewer.logic.model.OnlineWatchHistorySort
 import com.yenaly.han1meviewer.logic.state.PageLoadingState
 import com.yenaly.han1meviewer.logic.state.WebsiteState
 import com.yenaly.han1meviewer.ui.viewmodel.AppViewModel.csrfToken
-import com.yenaly.yenaly_libs.base.YenalyViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -18,7 +18,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class OnlineWatchHistoryViewModel(application: Application) : YenalyViewModel(application) {
+class OnlineWatchHistoryViewModel(
+    @JvmField protected val application: Application,
+) : AndroidViewModel(application) {
 
     private val _state = MutableStateFlow<PageLoadingState<MyListItems<HanimeInfo>>>(PageLoadingState.Loading)
     val state = _state.asStateFlow()

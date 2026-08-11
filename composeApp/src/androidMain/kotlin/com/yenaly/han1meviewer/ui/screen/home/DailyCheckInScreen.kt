@@ -67,7 +67,7 @@ fun DailyCheckInScreen(
     onBack: () -> Unit,
     onAddWidget: () -> Unit,
     onNavigateToVideo: (String) -> Unit,
-    viewModel: CheckInCalendarViewModel = viewModel(),
+    viewModel: CheckInCalendarViewModel = viewModel { CheckInCalendarViewModel() },
 ) {
     var showReport by rememberSaveable { mutableStateOf(false) }
     var isReportFullscreen by rememberSaveable { mutableStateOf(false) }

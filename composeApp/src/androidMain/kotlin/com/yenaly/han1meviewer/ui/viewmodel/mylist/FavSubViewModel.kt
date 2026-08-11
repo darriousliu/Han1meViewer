@@ -1,6 +1,5 @@
 package com.yenaly.han1meviewer.ui.viewmodel.mylist
 
-import android.app.Application
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.logic.NetworkRepo
 import com.yenaly.han1meviewer.logic.model.HanimeInfo
@@ -13,7 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class FavSubViewModel(application: Application) : MyListSubViewModel(application) {
+class FavSubViewModel : MyListSubViewModel() {
 
     var favVideoPage = 1
     private var csrfToken: String? = null

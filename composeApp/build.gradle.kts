@@ -165,6 +165,7 @@ kotlin {
                 implementation(libs.coil.compose)
                 implementation(libs.coil.network.ktor3)
                 implementation(libs.lifecycle.runtime.compose.multiplatform)
+                implementation(libs.lifecycle.viewmodel.multiplatform)
                 implementation(libs.lifecycle.viewmodel.compose.multiplatform)
                 implementation(libs.navigation.compose.multiplatform)
                 implementation(libs.mmkv.kotlin)

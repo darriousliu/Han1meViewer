@@ -1,8 +1,8 @@
 package com.yenaly.han1meviewer.ui.viewmodel
 
-import android.app.Application
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yenaly.han1meviewer.HanimeConstants.HANIME_URL
 import com.yenaly.han1meviewer.Preferences
@@ -15,7 +15,6 @@ import com.yenaly.han1meviewer.logic.model.HanimeInfo
 import com.yenaly.han1meviewer.logic.model.SearchOption
 import com.yenaly.han1meviewer.logic.state.PageLoadingState
 import com.yenaly.han1meviewer.util.loadAssetAs
-import com.yenaly.yenaly_libs.base.YenalyViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,9 +32,8 @@ import kotlinx.coroutines.withContext
  * @time 2022/06/13 013 22:29
  */
 class SearchViewModel(
-    application: Application,
     private val state: SavedStateHandle
-) : YenalyViewModel(application) {
+) : ViewModel() {
 
     var page: Int = 1
     var query: String?
