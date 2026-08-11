@@ -1,5 +1,7 @@
 package com.yenaly.han1meviewer.logic.model
 
+import kotlin.time.Clock
+
 /**
  * @project Hanime1
  * @author Yenaly Liew
@@ -23,7 +25,7 @@ data class HomePage(
     val cosplay: MutableList<HanimeInfo>,
     val watchingNow: MutableList<HanimeInfo>,
     val newAnimeTrailer: MutableList<HanimeInfo>,
-    val timestamp: Long = System.currentTimeMillis(),
+    val timestamp: Long = Clock.System.now().toEpochMilliseconds(),
     val userId: String
 ) {
     data class Banner(
