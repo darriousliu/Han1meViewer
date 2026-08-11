@@ -200,7 +200,6 @@ kotlin {
                 implementation(libs.compose.avatar.cropper)
 
                 implementation(libs.serialization.json)
-                implementation(libs.jsoup)
 
                 implementation(libs.retrofit)
                 implementation(libs.converter.serialization)

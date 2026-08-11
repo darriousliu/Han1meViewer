@@ -14,7 +14,7 @@ Han1meViewer 当前是以 Kotlin + Jetpack Compose 为主的 Android 应用，�
 - Navigation Compose typed routes。
 - ViewModel + StateFlow + SharedFlow。
 - Retrofit 3 + OkHttp + kotlinx.serialization converter。
-- Jsoup 解析 HTML DOM。
+- Ksoup 解析 HTML DOM。
 - Room + KSP。
 - WorkManager 后台下载和更新任务。
 - Coil 3 Compose 图片加载。

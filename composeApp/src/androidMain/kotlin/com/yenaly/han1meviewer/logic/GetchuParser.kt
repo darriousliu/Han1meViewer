@@ -8,16 +8,16 @@ import com.yenaly.han1meviewer.logic.model.GetchuPreviewDetail
 import com.yenaly.han1meviewer.logic.state.WebsiteState
 import com.yenaly.han1meviewer.serialization.asLegacyOptionalString
 import com.yenaly.han1meviewer.serialization.parseLegacyJsonObjectOrNull
+import com.fleeksoft.ksoup.Ksoup
+import com.fleeksoft.ksoup.nodes.Element
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
 import java.util.regex.Pattern
 import kotlin.runCatching
 
 object GetchuParser {
     fun getchuPreview(body: String, dateCode: String): WebsiteState<GetchuPreview> {
-        val parseBody = Jsoup.parse(body, GETCHU_BASE_URL).body()
+        val parseBody = Ksoup.parse(body, baseUri = GETCHU_BASE_URL).body()
         Log.d(
             "GetchuPreviewParser",
             "parse list date=$dateCode bodyLength=${body.length} title=${
@@ -78,7 +78,7 @@ object GetchuParser {
     }
 
     fun getchuPreviewDetail(body: String, id: String): WebsiteState<GetchuPreviewDetail> {
-        val parseBody = Jsoup.parse(body, GETCHU_BASE_URL).body()
+        val parseBody = Ksoup.parse(body, baseUri = GETCHU_BASE_URL).body()
         Log.d(
             "GetchuPreviewParser",
             "parse detail id=$id bodyLength=${body.length} title=${
@@ -253,7 +253,7 @@ object GetchuParser {
     }
 
     fun getchuSeriesItems(body: String): List<GetchuPreview.Item> {
-        val parseBody = Jsoup.parse(body, GETCHU_BASE_URL).body()
+        val parseBody = Ksoup.parse(body, baseUri = GETCHU_BASE_URL).body()
         return parseBody.select("div.item-series-content, div[class*=item-series]")
             .mapNotNull { it.toGetchuRelatedItem() }
             .distinctBy { it.id }
@@ -296,7 +296,7 @@ object GetchuParser {
             ),
         ).mapNotNull { (key, regex) ->
             val rawValue = regex.find(this)?.groupValues?.getOrNull(1) ?: return@mapNotNull null
-            val value = Jsoup.parse(rawValue).text().cleanGetchuText()
+            val value = Ksoup.parse(rawValue).text().cleanGetchuText()
             if (value.isBlank()) null else key to value
         }.toMap()
     }
@@ -384,10 +384,10 @@ object GetchuParser {
             "<h3[^>]*class=[\"'][^\"']*tabletitle[^\"']*[\"'][^>]*>([\\s\\S]*?)</h3>\\s*<div[^>]*class=[\"'][^\"']*tablebody[^\"']*[\"'][^>]*>([\\s\\S]*?)</div>",
             RegexOption.IGNORE_CASE,
         ).findAll(this).mapNotNull { match ->
-            val title = Jsoup.parse(match.groupValues[1]).text()
+            val title = Ksoup.parse(match.groupValues[1]).text()
                 .replace("&nbsp;", EMPTY_STRING)
                 .cleanGetchuText()
-            val body = Jsoup.parse(match.groupValues[2].replace("<br>", "\n", ignoreCase = true))
+            val body = Ksoup.parse(match.groupValues[2].replace("<br>", "\n", ignoreCase = true))
                 .text()
                 .cleanGetchuText()
             if (title.isBlank() || body.isBlank()) return@mapNotNull null
@@ -413,7 +413,7 @@ object GetchuParser {
             RegexOption.IGNORE_CASE,
         ).findAll(this).toList()
         return titleMatches.mapIndexedNotNull { index, match ->
-            val title = Jsoup.parse(match.groupValues[1]).text()
+            val title = Ksoup.parse(match.groupValues[1]).text()
                 .replace("&nbsp;", EMPTY_STRING)
                 .cleanGetchuText()
             if (!title.contains("商品紹介") && !title.contains("ストーリー") && !title.contains("スタッフ")) {
@@ -426,7 +426,7 @@ object GetchuParser {
                 RegexOption.IGNORE_CASE,
             ).find(block)?.groupValues?.getOrNull(1) ?: block
             val body =
-                Jsoup.parse(tableBody.replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), "\n"))
+                Ksoup.parse(tableBody.replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), "\n"))
                     .text()
                     .cleanGetchuText()
             if (body.isBlank()) return@mapIndexedNotNull null
@@ -462,7 +462,7 @@ object GetchuParser {
                 RegexOption.IGNORE_CASE,
             ).find(block)?.groupValues?.getOrNull(1) ?: return@mapIndexedNotNull null
             val body =
-                Jsoup.parse(bodyHtml.replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), "\n"))
+                Ksoup.parse(bodyHtml.replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), "\n"))
                     .text()
                     .cleanGetchuText()
             if (body.length < 20) return@mapIndexedNotNull null
@@ -501,7 +501,7 @@ object GetchuParser {
         )
 
         return titleMatches.mapIndexedNotNull { index, match ->
-            val title = Jsoup.parse(match.groupValues[1])
+            val title = Ksoup.parse(match.groupValues[1])
                 .text()
                 .replace("&nbsp;", EMPTY_STRING)
                 .cleanGetchuText()
@@ -517,7 +517,7 @@ object GetchuParser {
                 }) return@mapIndexedNotNull null
 
             val body =
-                Jsoup.parse(block.replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), "\n"))
+                Ksoup.parse(block.replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), "\n"))
                     .text()
                     .cleanGetchuText()
             if (body.length < 20) return@mapIndexedNotNull null
