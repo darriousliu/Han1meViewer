@@ -25,6 +25,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yenaly.han1meviewer.R
+import com.yenaly.han1meviewer.generated.resources.*
 import com.yenaly.han1meviewer.logic.model.SubscriptionItem
 import com.yenaly.han1meviewer.logic.model.SubscriptionVideosItem
 import com.yenaly.han1meviewer.logic.state.WebsiteState
@@ -186,7 +187,7 @@ fun SubscriptionScreen(
                                 R.string.load_failed_with_reason,
                                 (state as WebsiteState.Error).throwable.message.orEmpty()
                             ),
-                            picRes = R.drawable.h_chan_sad
+                            picRes = Res.drawable.h_chan_sad
                         )
                     } else {
                         SubscriptionContent(

@@ -81,6 +81,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.R
+import com.yenaly.han1meviewer.generated.resources.*
 import com.yenaly.han1meviewer.logic.entity.SearchHistoryEntity
 import com.yenaly.han1meviewer.logic.model.HanimeInfo
 import com.yenaly.han1meviewer.logic.model.HanimeInfo.Companion.NORMAL
@@ -682,7 +683,7 @@ fun SearchStateIndicator(
 
         is PageLoadingState.NoMoreData -> if (resultCount == 0) EmptyContent(
             hint = stringResource(R.string.search_no_results),
-            picRes = R.drawable.h_chan_speechless
+            picRes = Res.drawable.h_chan_speechless
         )
 
         is PageLoadingState.Error -> EmptyContent(
@@ -690,12 +691,12 @@ fun SearchStateIndicator(
                 R.string.search_load_failed_with_reason,
                 state.throwable.message.orEmpty()
             ),
-            picRes = R.drawable.h_chan_sad
+            picRes = Res.drawable.h_chan_sad
         )
 
         is PageLoadingState.Success -> if (resultCount == 0) EmptyContent(
             hint = stringResource(R.string.search_no_results),
-            picRes = R.drawable.h_chan_speechless
+            picRes = Res.drawable.h_chan_speechless
         )
     }
 }
