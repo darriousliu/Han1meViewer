@@ -21,6 +21,7 @@ import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.minus
 import kotlinx.datetime.number
 import kotlinx.datetime.plus
+import java.text.DateFormatSymbols
 
 /**
  * 热力图颜色梯度（0 → 4+ 次）。
@@ -45,6 +46,14 @@ internal fun getContributionLevel(count: Int): Int = when {
     count == 2 -> 2
     count in 3..4 -> 3
     else -> 4
+}
+
+/**
+ * 使用 Android 当前语言环境格式化星期名称。
+ */
+internal fun LocalDate.localizedWeekdayName(): String {
+    val calendarDay = dayOfWeek.isoDayNumber % 7 + 1
+    return DateFormatSymbols.getInstance().weekdays[calendarDay]
 }
 
 /**

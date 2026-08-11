@@ -10,11 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -28,24 +23,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.yenaly.han1meviewer.MONTH_DAY_FORMAT
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.currentLocalDate
+import com.yenaly.han1meviewer.generated.resources.*
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.format
-import kotlinx.datetime.isoDayNumber
-import java.text.DateFormatSymbols
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * 今日打卡卡片。
  *
  * @param today 今天的日期
+ * @param weekdayLabel 已按平台当前语言格式化的星期名称
  * @param count 今日已打卡次数
  * @param maxCount 每日最大打卡数
  * @param onCheckIn 打卡按钮回调
@@ -56,6 +50,7 @@ import java.text.DateFormatSymbols
 fun TodayCheckInCard(
     modifier: Modifier = Modifier,
     today: LocalDate,
+    weekdayLabel: String,
     count: Int,
     maxCount: Int = 20,
     onCheckIn: () -> Unit,
@@ -78,7 +73,7 @@ fun TodayCheckInCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                imageVector = Icons.Filled.DateRange,
+                imageVector = DailyCheckInIcons.DateRange,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onPrimaryContainer,
                 modifier = Modifier.size(40.dp)
@@ -86,17 +81,17 @@ fun TodayCheckInCard(
             Spacer(modifier = Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "${today.format(MONTH_DAY_FORMAT)} ${today.localizedWeekdayName()}",
+                    text = "${today.format(MONTH_DAY_FORMAT)} $weekdayLabel",
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
                 Text(
-                    text = if (count > 0) "${stringResource(R.string.today_checked)} $count/$maxCount ${
+                    text = if (count > 0) "${stringResource(Res.string.today_checked)} $count/$maxCount ${
                         stringResource(
-                            R.string.times
+                            Res.string.times
                         )
                     }"
-                    else stringResource(R.string.not_checked_yet),
+                    else stringResource(Res.string.not_checked_yet),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
                 )
@@ -110,14 +105,14 @@ fun TodayCheckInCard(
                         contentColor = MaterialTheme.colorScheme.onPrimary
                     )
                 ) {
-                    Icon(Icons.Filled.Check, null, modifier = Modifier.size(18.dp))
+                    Icon(DailyCheckInIcons.Check, null, modifier = Modifier.size(18.dp))
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(if (count > 0) stringResource(R.string.view_checkin) else stringResource(R.string.checkin))
+                    Text(if (count > 0) stringResource(Res.string.view_checkin) else stringResource(Res.string.checkin))
                 }
                 if (count > 0) {
                     TextButton(onClick = onClear) {
                         Text(
-                            stringResource(R.string.clear_checkin),
+                            stringResource(Res.string.clear_checkin),
                             fontSize = 12.sp,
                             color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.6f)
                         )
@@ -152,9 +147,9 @@ fun StatsCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             StatItem(
-                icon = Icons.Filled.Star,
-                label = stringResource(R.string.this_month_checkin),
-                value = stringResource(R.string.days, checkedDays)
+                icon = DailyCheckInIcons.Star,
+                label = stringResource(Res.string.this_month_checkin),
+                value = stringResource(Res.string.days, checkedDays)
             )
             HorizontalDivider(
                 modifier = Modifier
@@ -162,9 +157,9 @@ fun StatsCard(
                     .width(1.dp)
             )
             StatItem(
-                icon = Icons.Filled.Favorite,
-                label = stringResource(R.string.has_cum_days),
-                value = stringResource(R.string.counts, monthlyTotal)
+                icon = DailyCheckInIcons.Favorite,
+                label = stringResource(Res.string.has_cum_days),
+                value = stringResource(Res.string.counts, monthlyTotal)
             )
             HorizontalDivider(
                 modifier = Modifier
@@ -172,9 +167,9 @@ fun StatsCard(
                     .width(1.dp)
             )
             StatItem(
-                icon = Icons.Filled.Favorite,
-                label = stringResource(R.string.best_streak),
-                value = "${bestStreak}${stringResource(R.string.day_unit)}"
+                icon = DailyCheckInIcons.Favorite,
+                label = stringResource(Res.string.best_streak),
+                value = "${bestStreak}${stringResource(Res.string.day_unit)}"
             )
         }
     }
@@ -224,15 +219,11 @@ fun RowScope.StatItem(
 private fun PreviewTodayCheckInCard() {
     TodayCheckInCard(
         today = currentLocalDate(),
+        weekdayLabel = "Sunday",
         count = 3,
         onCheckIn = {},
         onClear = {},
     )
-}
-
-private fun LocalDate.localizedWeekdayName(): String {
-    val calendarDay = dayOfWeek.isoDayNumber % 7 + 1
-    return DateFormatSymbols.getInstance().weekdays[calendarDay]
 }
 
 @Preview

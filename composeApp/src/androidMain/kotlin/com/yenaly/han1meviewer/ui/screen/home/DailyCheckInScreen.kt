@@ -38,6 +38,7 @@ import com.yenaly.han1meviewer.ui.screen.home.dailycheckin.DailyCheckInContent
 import com.yenaly.han1meviewer.ui.screen.home.dailycheckin.DailyCheckInEvent
 import com.yenaly.han1meviewer.ui.screen.home.dailycheckin.DailyCheckInUiState
 import com.yenaly.han1meviewer.ui.screen.home.dailycheckin.createCalendarEvent
+import com.yenaly.han1meviewer.ui.screen.home.dailycheckin.localizedWeekdayName
 import com.yenaly.han1meviewer.ui.screen.home.dailycheckin.updateReportWindowMode
 import com.yenaly.han1meviewer.ui.viewmodel.CheckInCalendarViewModel
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -197,6 +198,7 @@ fun DailyCheckInScreen(
         DailyCheckInContent(
             paddingValues = innerPadding,
             uiState = uiState,
+            weekdayLabel = uiState.today.localizedWeekdayName(),
             onEvent = handleEvent,
             onNavigateToVideo = onNavigateToVideo,
             showEasterEgg = showEasterEgg,

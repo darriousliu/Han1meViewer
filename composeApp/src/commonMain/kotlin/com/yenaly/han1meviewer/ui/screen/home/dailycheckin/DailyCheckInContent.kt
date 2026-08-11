@@ -29,17 +29,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.currentYearMonth
+import com.yenaly.han1meviewer.generated.resources.*
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.YearMonth
 import kotlinx.datetime.plus
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * 打卡日历页面的纯 UI Content 层。
@@ -48,6 +48,7 @@ import kotlinx.datetime.plus
  *
  * @param paddingValues 从 Scaffold 传入的内边距
  * @param uiState 页面 UI 状态
+ * @param weekdayLabel 已按平台当前语言格式化的今日星期名称
  * @param onEvent 用户交互事件回调
  * @param showEasterEgg 彩蛋文本（空字符串表示无彩蛋）
  * @param eggVisible 彩蛋是否当前可见
@@ -61,6 +62,7 @@ fun DailyCheckInContent(
     modifier: Modifier = Modifier,
     paddingValues: PaddingValues,
     uiState: DailyCheckInUiState,
+    weekdayLabel: String,
     onEvent: (DailyCheckInEvent) -> Unit,
     onNavigateToVideo: (String) -> Unit = {},
     showEasterEgg: String = "",
@@ -89,6 +91,7 @@ fun DailyCheckInContent(
     ) {
         TodayCheckInCard(
             today = uiState.today,
+            weekdayLabel = weekdayLabel,
             count = uiState.todayCount,
             maxCount = 20,
             onCheckIn = { onEvent(DailyCheckInEvent.OnTodayCheckIn) },
@@ -111,20 +114,20 @@ fun DailyCheckInContent(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = stringResource(R.string.checkin_calendar),
+                text = stringResource(Res.string.checkin_calendar),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(onClick = { onEvent(DailyCheckInEvent.OnPreviousMonth) }) {
-                    Icon(painterResource(R.drawable.previous_double_arrow_24), "previous")
+                    Icon(painterResource(Res.drawable.previous_double_arrow_24), "previous")
                 }
                 Text(
                     text = uiState.currentMonth.toString(),
                     style = MaterialTheme.typography.titleMedium
                 )
                 IconButton(onClick = { onEvent(DailyCheckInEvent.OnNextMonth) }) {
-                    Icon(painterResource(R.drawable.next_double_arrow_24), "next")
+                    Icon(painterResource(Res.drawable.next_double_arrow_24), "next")
                 }
             }
         }
@@ -191,7 +194,7 @@ fun DailyCheckInContent(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = stringResource(R.string.checkin_tip),
+            text = stringResource(Res.string.checkin_tip),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.fillMaxWidth(),
@@ -211,6 +214,7 @@ private fun PreviewDailyCheckInContent() {
     DailyCheckInContent(
         paddingValues = PaddingValues(0.dp),
         uiState = DailyCheckInUiState(),
+        weekdayLabel = "Sunday",
         onEvent = {},
         pagerState = androidx.compose.foundation.pager.rememberPagerState { 1 },
         anchorMonth = currentYearMonth(),
