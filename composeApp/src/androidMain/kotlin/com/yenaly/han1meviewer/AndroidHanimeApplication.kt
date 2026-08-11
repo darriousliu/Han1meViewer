@@ -15,12 +15,12 @@ import com.google.firebase.remoteconfig.remoteConfig
 import com.google.firebase.remoteconfig.remoteConfigSettings
 import com.yenaly.han1meviewer.logic.network.HProxySelector
 import com.yenaly.han1meviewer.platform.AppBuildInfoProvider
+import com.yenaly.han1meviewer.platform.platformServices
 import com.yenaly.han1meviewer.storage.AndroidStorageBootstrap
 import com.yenaly.han1meviewer.ui.viewmodel.AppViewModel
 import com.yenaly.han1meviewer.util.AnimeShaders
 import com.yenaly.han1meviewer.util.ThemeUtils
 import com.yenaly.yenaly_libs.base.YenalyApplication
-import com.yenaly.yenaly_libs.utils.LanguageHelper
 import java.net.ProxySelector
 
 /**
@@ -69,7 +69,7 @@ open class AndroidHanimeApplication : YenalyApplication() {
             setCustomKeys {
                 key(
                     FirebaseConstants.APP_LANGUAGE,
-                    LanguageHelper.preferredLanguage.toLanguageTag()
+                    platformServices().language.preferredLanguage().tag
                 )
                 key(
                     FirebaseConstants.VERSION_SOURCE,

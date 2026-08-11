@@ -1,8 +1,7 @@
 package com.yenaly.han1meviewer.util
 
-import com.yenaly.yenaly_libs.utils.LanguageHelper
+import com.yenaly.han1meviewer.platform.platformServices
 import java.math.BigDecimal
-import java.util.Locale
 
 object DisplayTextLocalizer {
 
@@ -14,17 +13,17 @@ object DisplayTextLocalizer {
         val count = match.groupValues[1]
         val unit = match.groupValues[2]
         return when (language()) {
-            Locale.SIMPLIFIED_CHINESE.language -> when (unit) {
+            "zh" -> when (unit) {
                 "万次", "萬次" -> "${count}万次"
                 else -> "${count}次"
             }
 
-            Locale.ENGLISH.language -> when (unit) {
+            "en" -> when (unit) {
                 "万次", "萬次" -> "${count.toKViews()} views"
                 else -> "$count views"
             }
 
-            Locale.JAPANESE.language -> when (unit) {
+            "ja" -> when (unit) {
                 "万次", "萬次" -> "${count}万回"
                 else -> "${count}回"
             }
@@ -41,14 +40,14 @@ object DisplayTextLocalizer {
         val count = match.groupValues[1]
         val unit = match.groupValues[2]
         return when (language()) {
-            Locale.SIMPLIFIED_CHINESE.language -> "$count${unit.toSimplifiedUnit()}前"
-            Locale.ENGLISH.language -> "$count ${unit.toEnglishUnit(count)} ago"
-            Locale.JAPANESE.language -> "$count${unit.toJapaneseUnit()}前"
+            "zh" -> "$count${unit.toSimplifiedUnit()}前"
+            "en" -> "$count ${unit.toEnglishUnit(count)} ago"
+            "ja" -> "$count${unit.toJapaneseUnit()}前"
             else -> "$count${unit.toTraditionalUnit()}前"
         }
     }
 
-    private fun language(): String = LanguageHelper.preferredLanguage.language
+    private fun language(): String = platformServices().language.preferredLanguage().language
 
     private fun String.toSimplifiedUnit(): String = when (this) {
         "分鐘", "分钟" -> "分钟"

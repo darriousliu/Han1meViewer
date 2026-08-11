@@ -22,13 +22,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.entity.HKeyframeEntity
+import com.yenaly.han1meviewer.platform.getOrThrow
+import com.yenaly.han1meviewer.platform.platformServices
 import com.yenaly.han1meviewer.ui.component.ConfirmDialog
 import com.yenaly.han1meviewer.ui.screen.settings.HKeyframeSettingsScreen
 import com.yenaly.han1meviewer.ui.screen.settings.HKeyframeSettingsUiState
 import com.yenaly.han1meviewer.ui.screen.settings.HKeyframesScreen
 import com.yenaly.han1meviewer.ui.screen.settings.SharedHKeyframesScreen
 import com.yenaly.han1meviewer.ui.viewmodel.SettingsViewModel
-import com.yenaly.yenaly_libs.utils.copyToClipboard
 import com.yenaly.han1meviewer.util.decodeBase64ToString
 import com.yenaly.yenaly_libs.utils.showShortToast
 import kotlinx.serialization.json.Json
@@ -94,7 +95,7 @@ fun HKeyframesRouteScreen(
             showShortToast(R.string.modify_success)
         },
         onCopyShareContent = {
-            it.copyToClipboard()
+            platformServices().clipboard.writeText(it).getOrThrow()
             showShortToast(R.string.copy_to_clipboard)
         },
     )

@@ -15,6 +15,8 @@ import com.yenaly.han1meviewer.getHanimeShareText
 import com.yenaly.han1meviewer.logic.DatabaseRepo
 import com.yenaly.han1meviewer.logic.entity.CheckInType
 import com.yenaly.han1meviewer.logic.model.Announcement
+import com.yenaly.han1meviewer.platform.getOrThrow
+import com.yenaly.han1meviewer.platform.platformServices
 import com.yenaly.han1meviewer.ui.activity.AndroidMainActivity
 import com.yenaly.han1meviewer.ui.screen.home.homepage.component.AnnouncementDialog
 import com.yenaly.han1meviewer.ui.component.TripleButtonDialog
@@ -22,7 +24,6 @@ import com.yenaly.han1meviewer.ui.screen.home.homepage.HomePageScreen
 import com.yenaly.han1meviewer.ui.screen.home.homepage.HomeUiEvent
 import com.yenaly.han1meviewer.ui.screen.home.homepage.LocalSearchHistoryQuery
 import com.yenaly.han1meviewer.ui.viewmodel.CheckInCalendarViewModel
-import com.yenaly.yenaly_libs.utils.copyTextToClipboard
 import com.yenaly.yenaly_libs.utils.showShortToast
 import kotlinx.coroutines.flow.first
 import kotlinx.datetime.format
@@ -62,7 +63,9 @@ fun HomeRouteScreen(
                     is HomeUiEvent.NavigateToSearchAdvanced -> onNavigateToSearchAdvanced(event.params)
                     is HomeUiEvent.OpenVideo -> onNavigateToVideo(event.videoCode)
                     is HomeUiEvent.LongPressVideoCopy -> {
-                        copyTextToClipboard(getHanimeShareText(event.videoTitle, event.videoCode))
+                        platformServices().clipboard.writeText(
+                            getHanimeShareText(event.videoTitle, event.videoCode)
+                        ).getOrThrow()
                         showShortToast(R.string.copy_to_clipboard)
                     }
                     is HomeUiEvent.ShowAnnouncementDialog -> { announcement = event.announcement }

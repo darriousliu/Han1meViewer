@@ -12,16 +12,16 @@ import com.yenaly.han1meviewer.getHanimeVideoDownloadLink
 import com.yenaly.han1meviewer.getHanimeVideoLink
 import com.yenaly.han1meviewer.logic.model.HanimeVideo
 import com.yenaly.han1meviewer.logic.model.SearchOption
+import com.yenaly.han1meviewer.platform.DownloadJobRequest
+import com.yenaly.han1meviewer.platform.PlatformActionResult
+import com.yenaly.han1meviewer.platform.backgroundJobScheduler
+import com.yenaly.han1meviewer.platform.getOrThrow
+import com.yenaly.han1meviewer.platform.platformServices
 import com.yenaly.han1meviewer.ui.activity.AndroidMainActivity
 import com.yenaly.han1meviewer.ui.navigation.navigateSafely
 import com.yenaly.han1meviewer.ui.navigation.main.SearchRoute
 import com.yenaly.han1meviewer.ui.viewmodel.VideoViewModel
-import com.yenaly.han1meviewer.util.requestPostNotificationPermission
 import com.yenaly.han1meviewer.util.showAlertDialog
-import com.yenaly.han1meviewer.worker.HanimeDownloadManagerV2
-import com.yenaly.han1meviewer.worker.HanimeDownloadWorker
-import com.yenaly.yenaly_libs.utils.browse
-import com.yenaly.yenaly_libs.utils.copyToClipboard
 import com.yenaly.yenaly_libs.utils.showShortToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -56,6 +56,9 @@ class VideoRouteActions(
     private val onStoragePermissionDenied: () -> Unit = {},
     private val onDownloadPermissionDialogCancelled: () -> Unit = {},
 ) {
+    private val platform = platformServices()
+    private val backgroundJobs = backgroundJobScheduler()
+
     fun openArtistSearch(artist: HanimeVideo.Artist) {
         val searchKey = genres.firstOrNull { option ->
             option.lang?.let { lang ->
@@ -140,29 +143,25 @@ class VideoRouteActions(
     }
 
     fun openIntroductionLink(link: String) {
-        try {
-            context.browse(link)
-        } catch (_: Exception) {
-            link.copyToClipboard()
+        if (platform.externalNavigator.open(link) !is PlatformActionResult.Success) {
+            platform.clipboard.writeText(link).getOrThrow()
             showShortToast(R.string.copy_to_clipboard)
         }
     }
 
     fun openOriginalComic(comicLink: String) {
-        try {
-            context.startActivity(Intent(Intent.ACTION_VIEW, comicLink.toUri()))
-        } catch (_: Exception) {
+        if (platform.externalNavigator.open(comicLink) !is PlatformActionResult.Success) {
             Toast.makeText(context, context.getString(R.string.fault_prompt), Toast.LENGTH_SHORT)
                 .show()
         }
     }
 
     fun openVideoWebPage() {
-        context.browse(getHanimeVideoLink(viewModel.videoCode))
+        platform.externalNavigator.open(getHanimeVideoLink(viewModel.videoCode)).getOrThrow()
     }
 
     fun openOfficialDownloadPage() {
-        context.browse(getHanimeVideoDownloadLink(viewModel.videoCode))
+        platform.externalNavigator.open(getHanimeVideoDownloadLink(viewModel.videoCode)).getOrThrow()
     }
 
     fun startDownloadFlow(videoData: HanimeVideo) {
@@ -198,13 +197,13 @@ class VideoRouteActions(
     }
 
     private suspend fun enqueueDownloadWork(videoData: HanimeVideo, redownload: Boolean = false) {
-        context.requestPostNotificationPermission()
+        platform.notificationPublisher.requestPermission().getOrThrow()
         val quality = getCheckedQuality()
         withContext(Dispatchers.IO) {
             HCacheManager.saveHanimeVideoInfo(context, viewModel.videoCode, videoData)
         }
-        HanimeDownloadManagerV2.addTask(
-            HanimeDownloadWorker.Args(
+        backgroundJobs.enqueueDownload(
+            DownloadJobRequest(
                 quality = quality,
                 downloadUrl = videoData.videoUrls[quality]?.link,
                 videoType = videoData.videoUrls[quality]?.suffix,
@@ -213,7 +212,7 @@ class VideoRouteActions(
                 coverUrl = videoData.coverUrl,
             ),
             redownload = redownload,
-        )
+        ).getOrThrow()
     }
 
     fun openDownloadPermissionSettings() {

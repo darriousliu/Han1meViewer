@@ -1,10 +1,9 @@
 package com.yenaly.han1meviewer.logic.model
 
 import com.yenaly.han1meviewer.R
-import com.yenaly.yenaly_libs.utils.LanguageHelper
+import com.yenaly.han1meviewer.platform.platformServices
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import java.util.Locale
 
 @Suppress("EqualsOrHashCode")
 @Serializable
@@ -67,15 +66,15 @@ data class SearchOption(
     val value: String
         get() = when {
             lang == null -> name.orEmpty()
-            else -> LanguageHelper.preferredLanguage.let { pl ->
+            else -> platformServices().language.preferredLanguage().let { pl ->
                 when (pl.language) {
-                    Locale.CHINESE.language -> when (pl.country) {
-                        Locale.SIMPLIFIED_CHINESE.country -> lang.zhrCN
+                    "zh" -> when (pl.country) {
+                        "CN" -> lang.zhrCN
                         else -> lang.zhrTW
                     }
 
-                    Locale.ENGLISH.language -> lang.en
-                    Locale.JAPANESE.language -> lang.ja
+                    "en" -> lang.en
+                    "ja" -> lang.ja
                     else -> lang.zhrTW
                 }
             } ?: lang.zhrTW.orEmpty()

@@ -1,7 +1,6 @@
 package com.yenaly.han1meviewer.ui.navigation.settings
 
 import android.Manifest
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
@@ -16,30 +15,30 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
-import androidx.documentfile.provider.DocumentFile
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.R
-import com.yenaly.han1meviewer.logic.dao.DownloadDatabase
 import com.yenaly.han1meviewer.logic.network.interceptor.SpeedLimitInterceptor
+import com.yenaly.han1meviewer.platform.FileAccess
+import com.yenaly.han1meviewer.platform.PlatformActionResult
+import com.yenaly.han1meviewer.platform.backgroundJobScheduler
+import com.yenaly.han1meviewer.platform.fileAccess
+import com.yenaly.han1meviewer.platform.getOrThrow
 import com.yenaly.han1meviewer.ui.activity.AndroidMainActivity
 import com.yenaly.han1meviewer.ui.component.ConfirmDialog
 import com.yenaly.han1meviewer.ui.component.TripleButtonDialog
 import com.yenaly.han1meviewer.ui.screen.settings.DownloadSettingsScreen
 import com.yenaly.han1meviewer.ui.screen.settings.DownloadSettingsUiState
-import com.yenaly.han1meviewer.util.SafFileManager
-import com.yenaly.han1meviewer.util.SafFileManager.KEY_TREE_URI
 import com.yenaly.han1meviewer.util.showToast
-import com.yenaly.han1meviewer.worker.HanimeDownloadManagerV2
+import kotlinx.coroutines.launch
 
 private const val DOWNLOAD_COUNT_LIMIT = "download_count_limit"
 private const val DOWNLOAD_SPEED_LIMIT = "download_speed_limit"
-private const val DOWNLOAD_USE_PRIVATE_STORAGE = "use_private_storage"
-
 @Composable
 fun DownloadSettingsRouteScreen(
     activity: AndroidMainActivity,
@@ -48,19 +47,24 @@ fun DownloadSettingsRouteScreen(
     var refreshKey by remember { mutableIntStateOf(0) }
     var showDownloadPathDialog by remember { mutableStateOf(false) }
     var showRestoreDefaultConfirm by remember { mutableStateOf(false) }
-    val dao = remember { DownloadDatabase.instance.hanimeDownloadDao }
-    val uiState = remember(refreshKey, context) { buildDownloadSettingsUiState(context) }
+    val scope = rememberCoroutineScope()
+    val files = remember { fileAccess() }
+    val backgroundJobs = remember { backgroundJobScheduler() }
+    val uiState = remember(refreshKey, context) { buildDownloadSettingsUiState(context, files) }
+    val chooseDownloadDirectory = {
+        scope.launch {
+            when (val result = files.chooseDownloadDirectory()) {
+                is PlatformActionResult.Success -> {
+                    context.showToast(R.string.directory_saved, result.value.confirmationText)
+                    refreshKey++
+                }
 
-    val openDirectoryPicker = rememberLauncherForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK && result.data != null) {
-            SafFileManager.persistUriPermission(context, result.data)
-            Preferences.editSettings { putBoolean(DOWNLOAD_USE_PRIVATE_STORAGE, false) }
-            context.showToast(R.string.directory_saved, result.data.toString())
-            refreshKey++
-        } else {
-            context.showToast(R.string.no_directory_selected)
+                PlatformActionResult.Cancelled -> {
+                    context.showToast(R.string.no_directory_selected)
+                }
+
+                else -> result.getOrThrow()
+            }
         }
     }
 
@@ -106,11 +110,11 @@ fun DownloadSettingsRouteScreen(
         onOpenDownloadPath = { showDownloadPathDialog = true },
         onRestoreDefaultPath = { },
         onImportDownloadedFiles = {
-            importDownloadedFiles(context, activity, dao, onCompleted = { refreshKey++ })
+            importDownloadedFiles(context, activity, onCompleted = { refreshKey++ })
         },
         onDownloadCountLimitChange = { value ->
             Preferences.editSettings { putInt(DOWNLOAD_COUNT_LIMIT, value) }
-            HanimeDownloadManagerV2.maxConcurrentDownloadCount = value
+            backgroundJobs.setMaxConcurrentDownloadCount(value).getOrThrow()
             refreshKey++
         },
         onDownloadSpeedLimitChange = { value ->
@@ -134,7 +138,7 @@ fun DownloadSettingsRouteScreen(
             },
             onPositive = {
                 showDownloadPathDialog = false
-                openDirectoryPicker.launch(SafFileManager.buildOpenDirectoryIntent())
+                chooseDownloadDirectory()
             },
             onDismiss = { showDownloadPathDialog = false },
         )
@@ -147,7 +151,7 @@ fun DownloadSettingsRouteScreen(
             dismissText = stringResource(R.string.cancel),
             onConfirm = {
                 showDownloadPathDialog = false
-                openDirectoryPicker.launch(SafFileManager.buildOpenDirectoryIntent())
+                chooseDownloadDirectory()
             },
             onDismiss = { showDownloadPathDialog = false },
         )
@@ -160,10 +164,7 @@ fun DownloadSettingsRouteScreen(
         confirmText = stringResource(R.string.ok),
         dismissText = stringResource(R.string.cancel),
         onConfirm = {
-            Preferences.editSettings {
-                putBoolean(DOWNLOAD_USE_PRIVATE_STORAGE, true)
-                remove(KEY_TREE_URI)
-            }
+            files.restoreDefaultDownloadDirectory().getOrThrow()
             refreshKey++
             showRestoreDefaultConfirm = false
             context.showToast(R.string.default_path_restored)
@@ -172,32 +173,15 @@ fun DownloadSettingsRouteScreen(
     )
 }
 
-private fun buildDownloadSettingsUiState(context: Context): DownloadSettingsUiState {
-    val uri = SafFileManager.getSavedUri()
+private fun buildDownloadSettingsUiState(
+    context: Context,
+    files: FileAccess,
+): DownloadSettingsUiState {
     val pathSummary = if (Preferences.isUsePrivateStorage) {
-        context.getExternalFilesDir(null)?.absolutePath.orEmpty()
+        files.privateDownloadDirectoryDisplayName().getOrThrow()
     } else {
-        DocumentFile.fromTreeUri(
-            context,
-            uri ?: return DownloadSettingsUiState(
-                downloadPathSummary = context.getString(R.string.unknown_error),
-                downloadCountLimit = Preferences.downloadCountLimit,
-                downloadCountLimitSummary = toDownloadCountLimitPrettyString(
-                    context,
-                    Preferences.downloadCountLimit
-                ),
-                downloadSpeedLimitIndex = Preferences.getIntSetting(
-                    DOWNLOAD_SPEED_LIMIT,
-                    SpeedLimitInterceptor.NO_LIMIT_INDEX,
-                ),
-                downloadSpeedLimitSummary = SpeedLimitInterceptor.SPEED_BYTES[
-                    Preferences.getIntSetting(
-                        DOWNLOAD_SPEED_LIMIT,
-                        SpeedLimitInterceptor.NO_LIMIT_INDEX,
-                    )
-                ].toDownloadSpeedPrettyString(context),
-            )
-        )?.name ?: uri.toString()
+        files.selectedDownloadDirectoryDisplayName().getOrThrow()
+            ?: context.getString(R.string.unknown_error)
     }
     val speedIndex = Preferences.getIntSetting(
         DOWNLOAD_SPEED_LIMIT,

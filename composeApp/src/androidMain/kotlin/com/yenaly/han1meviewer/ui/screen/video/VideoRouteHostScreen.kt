@@ -64,6 +64,8 @@ import com.yenaly.han1meviewer.playback.model.PlaybackPhase
 import com.yenaly.han1meviewer.playback.model.PlaybackSource
 import com.yenaly.han1meviewer.playback.model.toPlaybackSource
 import com.yenaly.han1meviewer.playback.platform.PlaybackPlatformBridge
+import com.yenaly.han1meviewer.platform.getOrThrow
+import com.yenaly.han1meviewer.platform.platformServices
 import com.yenaly.han1meviewer.ui.activity.AndroidMainActivity
 import com.yenaly.han1meviewer.ui.bridge.VideoPageHost
 import com.yenaly.han1meviewer.ui.component.ConfirmDialog
@@ -75,9 +77,6 @@ import com.yenaly.han1meviewer.ui.viewmodel.VideoViewModel
 import com.yenaly.han1meviewer.util.checkBadGuy
 import com.yenaly.han1meviewer.util.loadAssetAs
 import com.yenaly.yenaly_libs.utils.OrientationManager
-import com.yenaly.yenaly_libs.utils.browse
-import com.yenaly.yenaly_libs.utils.copyToClipboard
-import com.yenaly.yenaly_libs.utils.shareText
 import com.yenaly.yenaly_libs.utils.showShortToast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -223,7 +222,10 @@ fun VideoRouteHostScreen(
         val source = pendingSource ?: enginePlaybackState.source
         if (source == null) {
             showShortToast(R.string.fail_to_get_video_link)
-            if (route.videoCode != "-1") activity.browse(getHanimeVideoLink(route.videoCode))
+            if (route.videoCode != "-1") {
+                platformServices().externalNavigator.open(getHanimeVideoLink(route.videoCode))
+                    .getOrThrow()
+            }
             return
         }
         hasStartedPlayback = true
@@ -465,7 +467,8 @@ fun VideoRouteHostScreen(
             is VideoLoadingState.Error -> {
                 state.throwable.localizedMessage?.let { showShortToast(it) }
                 if (state.throwable is ParseException) {
-                    activity.browse(getHanimeVideoLink(route.videoCode))
+                    platformServices().externalNavigator.open(getHanimeVideoLink(route.videoCode))
+                        .getOrThrow()
                 }
             }
 
@@ -691,9 +694,11 @@ fun VideoRouteHostScreen(
                             routeActions::openDownloadPermissionSettings,
                         onOpenWebPage = routeActions::openVideoWebPage,
                         onOpenOriginalComic = routeActions::openOriginalComic,
-                        onOpenShare = { content, title -> shareText(content, title) },
+                        onOpenShare = { content, title ->
+                            platformServices().share.shareText(content, title).getOrThrow()
+                        },
                         onCopyText = {
-                            it.copyToClipboard()
+                            platformServices().clipboard.writeText(it).getOrThrow()
                             showShortToast(R.string.copy_to_clipboard)
                         },
                         onIntroductionLinkClick = routeActions::openIntroductionLink,

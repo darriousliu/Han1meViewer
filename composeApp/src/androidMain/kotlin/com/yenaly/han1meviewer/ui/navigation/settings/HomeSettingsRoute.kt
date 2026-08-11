@@ -51,6 +51,8 @@ import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.BackupManager
 import com.yenaly.han1meviewer.logic.state.WebsiteState
 import com.yenaly.han1meviewer.platform.AppBuildInfoProvider
+import com.yenaly.han1meviewer.platform.getOrThrow
+import com.yenaly.han1meviewer.platform.platformServices
 import com.yenaly.han1meviewer.ui.activity.AndroidMainActivity
 import com.yenaly.han1meviewer.ui.component.ConfirmDialog
 import com.yenaly.han1meviewer.ui.screen.home.homepage.defaultHomeCategoryPreferenceItems
@@ -66,7 +68,6 @@ import com.yenaly.han1meviewer.util.ThemeUtils
 import com.yenaly.han1meviewer.util.showToast
 import com.yenaly.yenaly_libs.ActivityManager
 import com.yenaly.yenaly_libs.utils.applicationContext
-import com.yenaly.yenaly_libs.utils.browse
 import com.yenaly.yenaly_libs.utils.folderSize
 import com.yenaly.yenaly_libs.utils.showShortToast
 import kotlinx.coroutines.Dispatchers
@@ -222,12 +223,15 @@ fun HomeSettingsRouteScreen(
             }
         },
         onAllowPipModeChange = { enabled ->
-            if (enabled && !isPipPermissionGranted(context)) {
-                context.showToast(R.string.request_pip_alert)
-                openPipPermissionSettings(context)
-                saveBoolean(SettingsPreferenceKeys.ALLOW_PIP_MODE, false)
-                refreshKey++
-                return@HomeSettingsScreen
+            if (enabled) {
+                val pipSettings = platformServices().pictureInPictureSettings
+                if (!pipSettings.isPermissionGranted().getOrThrow()) {
+                    context.showToast(R.string.request_pip_alert)
+                    pipSettings.openPermissionSettings().getOrThrow()
+                    saveBoolean(SettingsPreferenceKeys.ALLOW_PIP_MODE, false)
+                    refreshKey++
+                    return@HomeSettingsScreen
+                }
             }
             saveBoolean(SettingsPreferenceKeys.ALLOW_PIP_MODE, enabled)
             refreshKey++
@@ -377,8 +381,12 @@ fun HomeSettingsRouteScreen(
         onImportBackup = {
             importLauncher.launch(arrayOf("application/json", "text/*", "*/*"))
         },
-        onSubmitBug = { context.browse(HA1_GITHUB_ISSUE_URL) },
-        onOpenForum = { context.browse(HA1_GITHUB_FORUM_URL) },
+        onSubmitBug = {
+            platformServices().externalNavigator.open(HA1_GITHUB_ISSUE_URL).getOrThrow()
+        },
+        onOpenForum = {
+            platformServices().externalNavigator.open(HA1_GITHUB_FORUM_URL).getOrThrow()
+        },
     )
 
     ConfirmDialog(

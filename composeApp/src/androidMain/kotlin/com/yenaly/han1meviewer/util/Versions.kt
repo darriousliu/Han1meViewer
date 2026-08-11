@@ -12,9 +12,13 @@ import com.itxca.spannablex.spannable
 import com.yenaly.han1meviewer.FILE_PROVIDER_AUTHORITY
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.R
-import com.yenaly.han1meviewer.platform.AppBuildInfoProvider
 import com.yenaly.han1meviewer.logic.model.github.Latest
-import com.yenaly.han1meviewer.worker.HUpdateWorker
+import com.yenaly.han1meviewer.platform.AppBuildInfoProvider
+import com.yenaly.han1meviewer.platform.PlatformFileRef
+import com.yenaly.han1meviewer.platform.UpdateJobRequest
+import com.yenaly.han1meviewer.platform.backgroundJobScheduler
+import com.yenaly.han1meviewer.platform.getOrThrow
+import com.yenaly.han1meviewer.platform.platformServices
 import com.yenaly.yenaly_libs.utils.dp
 import com.yenaly.yenaly_libs.utils.showShortToast
 import java.io.File
@@ -28,6 +32,8 @@ fun checkNeedUpdate(versionName: String): Boolean {
 }
 
 suspend fun Context.showUpdateDialog(latest: Latest) {
+    val platform = platformServices()
+    val backgroundJobs = backgroundJobScheduler()
     val spannable = spannable {
 //        getString(R.string.new_version_found).span {
 //            style(Typeface.BOLD)
@@ -78,10 +84,19 @@ suspend fun Context.showUpdateDialog(latest: Latest) {
     if (res == AlertDialog.BUTTON_POSITIVE) {
         val update = this.getUpdateIfExists(latest)
         if (update != null) {
-            installApkPackage(update)
+            platform.appInstaller.requestInstall(
+                PlatformFileRef(update.absolutePath)
+            ).getOrThrow()
         } else {
-            if (requestPostNotificationPermission()) {
-                HUpdateWorker.enqueue(this.applicationContext, latest)
+            if (platform.notificationPublisher.requestPermission().getOrThrow()) {
+                backgroundJobs.enqueueUpdate(
+                    UpdateJobRequest(
+                        version = latest.version,
+                        changelog = latest.changelog,
+                        downloadLink = latest.downloadLink,
+                        nodeId = latest.nodeId,
+                    )
+                ).getOrThrow()
                 showShortToast(R.string.update_download_background)
             }
         }

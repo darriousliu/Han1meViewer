@@ -69,6 +69,8 @@ import com.yenaly.han1meviewer.logic.model.UserAccount
 import com.yenaly.han1meviewer.logic.model.UserAccountAction
 import com.yenaly.han1meviewer.logic.model.UserAccountSubmittingState
 import com.yenaly.han1meviewer.logic.state.WebsiteState
+import com.yenaly.han1meviewer.platform.getOrThrow
+import com.yenaly.han1meviewer.platform.platformServices
 import com.yenaly.han1meviewer.ui.component.PageContent
 import com.yenaly.han1meviewer.ui.component.appbar.HanimeScaffold
 import com.yenaly.han1meviewer.ui.component.content.ErrorContent
@@ -76,7 +78,6 @@ import com.yenaly.han1meviewer.ui.preview.ComponentPreview
 import com.yenaly.han1meviewer.ui.screen.rememberRandomLoadingHint
 import com.yenaly.han1meviewer.ui.viewmodel.UserAccountViewModel
 import com.yenaly.han1meviewer.util.pickVisualMedia
-import com.yenaly.yenaly_libs.utils.browse
 import com.yenaly.yenaly_libs.utils.showShortToast
 import kotlinx.coroutines.launch
 
@@ -430,7 +431,11 @@ private fun AccountContent(
                 )
 
                 TextButton(
-                    onClick = { context.browse("${com.yenaly.han1meviewer.HANIME_BASE_URL}password/reset") },
+                    onClick = {
+                        platformServices().externalNavigator.open(
+                            "${com.yenaly.han1meviewer.HANIME_BASE_URL}password/reset"
+                        ).getOrThrow()
+                    },
                     modifier = Modifier.align(Alignment.Start),
                     contentPadding = PaddingValues(horizontal = 0.dp)
                 ) {

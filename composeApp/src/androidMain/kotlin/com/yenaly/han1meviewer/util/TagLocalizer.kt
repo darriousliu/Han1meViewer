@@ -1,7 +1,7 @@
 package com.yenaly.han1meviewer.util
 
 import com.yenaly.han1meviewer.logic.model.SearchOption
-import com.yenaly.yenaly_libs.utils.LanguageHelper
+import com.yenaly.han1meviewer.platform.platformServices
 
 object TagLocalizer {
 
@@ -22,7 +22,7 @@ object TagLocalizer {
 
     private val tagMappings: TagMappings
         get() {
-            val languageTag = LanguageHelper.preferredLanguage.toLanguageTag()
+            val languageTag = platformServices().language.preferredLanguage().tag
             val mappings = cachedMappings
             if (cachedLanguageTag == languageTag && mappings != null) return mappings
             return buildTagMappings(tagOptions).also {

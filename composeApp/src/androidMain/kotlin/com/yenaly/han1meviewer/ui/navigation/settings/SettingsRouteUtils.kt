@@ -22,10 +22,9 @@ import com.yenaly.han1meviewer.HanimeConstants.HANIME_HOSTNAME
 import com.yenaly.han1meviewer.HanimeConstants.HANIME_URL
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.R
-import com.yenaly.han1meviewer.logic.dao.download.HanimeDownloadDao
+import com.yenaly.han1meviewer.platform.fileAccess
+import com.yenaly.han1meviewer.platform.getOrThrow
 import com.yenaly.han1meviewer.playback.model.PlaybackDefaults
-import com.yenaly.han1meviewer.util.SafFileManager.checkSafPermissions
-import com.yenaly.han1meviewer.util.SafFileManager.migratePrivateToSaf
 import com.yenaly.han1meviewer.util.showAlertDialog
 import com.yenaly.yenaly_libs.utils.formatBytesPerSecond
 import com.yenaly.yenaly_libs.utils.formatFileSizeV2
@@ -60,12 +59,12 @@ internal fun buildDomainOptions(context: Context): List<Pair<String, String>> = 
 internal fun importDownloadedFiles(
     context: Context,
     activity: Activity,
-    dao: HanimeDownloadDao,
     onCompleted: () -> Unit,
 ) {
+    val files = fileAccess()
     if (!Preferences.isUsePrivateStorage &&
-        !Preferences.safDownloadPath.isNullOrBlank() &&
-        checkSafPermissions(context)
+        files.selectedDownloadDirectory().getOrThrow() != null &&
+        files.hasDownloadDirectoryAccess().getOrThrow()
     ) {
         MaterialAlertDialogBuilder(context)
             .setTitle(context.getString(R.string.confirm_import))
@@ -84,19 +83,21 @@ internal fun importDownloadedFiles(
                     .setCancelable(false)
                     .create()
                 progressDialog.show()
-                migratePrivateToSaf(context, dao) { migrated, total ->
+                files.migratePrivateDownloads { progress ->
+                    val migrated = progress.migrated
+                    val total = progress.total
                     Log.i("migrate", "$migrated,$total")
                     when (total) {
                         0 -> {
                             progressDialog.dismiss()
                             showLongToast(context.getString(R.string.no_exportable_files))
-                            return@migratePrivateToSaf
+                            return@migratePrivateDownloads
                         }
 
                         -1 -> {
                             progressDialog.dismiss()
                             showLongToast(context.getString(R.string.permission_error))
-                            return@migratePrivateToSaf
+                            return@migratePrivateDownloads
                         }
                     }
                     val percent = migrated * 100 / total
@@ -111,7 +112,7 @@ internal fun importDownloadedFiles(
                         showLongToast(context.getString(R.string.import_complete, total))
                         onCompleted()
                     }
-                }
+                }.getOrThrow()
             }
             .setNegativeButton(context.getString(R.string.cancel), null)
             .show()

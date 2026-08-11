@@ -9,10 +9,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.getHanimeShareText
+import com.yenaly.han1meviewer.platform.getOrThrow
+import com.yenaly.han1meviewer.platform.platformServices
 import com.yenaly.han1meviewer.ui.screen.search.AdvancedSearchSheet
 import com.yenaly.han1meviewer.ui.screen.search.SearchScreen
 import com.yenaly.han1meviewer.ui.viewmodel.SearchViewModel
-import com.yenaly.yenaly_libs.utils.copyTextToClipboard
 import com.yenaly.yenaly_libs.utils.showShortToast
 import kotlinx.serialization.json.Json
 
@@ -56,7 +57,8 @@ fun SearchRouteScreen(
         onBack = onBack,
         onOpenVideo = onNavigateToVideo,
         onLongPressCopy = { videoCode, title ->
-            copyTextToClipboard(getHanimeShareText(title, videoCode))
+            platformServices().clipboard.writeText(getHanimeShareText(title, videoCode))
+                .getOrThrow()
             showShortToast(R.string.copy_to_clipboard)
         },
         onOpenAdvancedSearch = { showAdvancedSearchSheet = true },

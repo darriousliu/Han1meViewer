@@ -24,6 +24,11 @@ import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.exception.CloudFlareBlockedException
 import com.yenaly.han1meviewer.logic.model.github.Latest
 import com.yenaly.han1meviewer.logic.state.PageState
+import com.yenaly.han1meviewer.platform.PlatformFileRef
+import com.yenaly.han1meviewer.platform.UpdateJobRequest
+import com.yenaly.han1meviewer.platform.backgroundJobScheduler
+import com.yenaly.han1meviewer.platform.getOrThrow
+import com.yenaly.han1meviewer.platform.platformServices
 import com.yenaly.han1meviewer.ui.activity.AndroidMainActivity
 import com.yenaly.han1meviewer.ui.component.UpdateDialog
 import com.yenaly.han1meviewer.ui.component.UsageNoticeDialog
@@ -35,9 +40,6 @@ import com.yenaly.han1meviewer.ui.theme.HanimeTheme
 import com.yenaly.han1meviewer.ui.viewmodel.AppViewModel
 import com.yenaly.han1meviewer.ui.screen.home.homepage.HomePageViewModel
 import com.yenaly.han1meviewer.util.getUpdateIfExists
-import com.yenaly.han1meviewer.util.installApkPackage
-import com.yenaly.han1meviewer.util.requestPostNotificationPermission
-import com.yenaly.han1meviewer.worker.HUpdateWorker
 import com.yenaly.yenaly_libs.utils.showShortToast
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -60,6 +62,8 @@ fun MainActivityContent(
         val composeNavController = rememberNavController()
         val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
         val scope = rememberCoroutineScope()
+        val platform = remember { platformServices() }
+        val backgroundJobs = remember { backgroundJobScheduler() }
         var currentMainDestination by remember { mutableStateOf(MainDestinationSpec.Home) }
         var pendingUpdate by remember { mutableStateOf<Latest?>(null) }
         var showUsageNotice by remember { mutableStateOf(!Preferences.usageNoticeAccepted) }
@@ -172,10 +176,21 @@ fun MainActivityContent(
                             scope.launch {
                                 val file = activity.getUpdateIfExists(latest)
                                 if (file != null) {
-                                    activity.installApkPackage(file)
+                                    platform.appInstaller.requestInstall(
+                                        PlatformFileRef(file.absolutePath)
+                                    ).getOrThrow()
                                 } else {
-                                    if (activity.requestPostNotificationPermission()) {
-                                        HUpdateWorker.enqueue(activity.applicationContext, latest)
+                                    if (platform.notificationPublisher.requestPermission()
+                                            .getOrThrow()
+                                    ) {
+                                        backgroundJobs.enqueueUpdate(
+                                            UpdateJobRequest(
+                                                version = latest.version,
+                                                changelog = latest.changelog,
+                                                downloadLink = latest.downloadLink,
+                                                nodeId = latest.nodeId,
+                                            )
+                                        ).getOrThrow()
                                         showShortToast(R.string.update_download_background)
                                     }
                                 }

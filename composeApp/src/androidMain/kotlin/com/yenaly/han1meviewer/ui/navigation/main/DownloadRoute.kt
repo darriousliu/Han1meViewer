@@ -7,24 +7,22 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.R
-import com.yenaly.han1meviewer.logic.dao.DownloadDatabase
 import com.yenaly.han1meviewer.logic.entity.download.HanimeDownloadEntity
 import com.yenaly.han1meviewer.logic.entity.download.VideoWithCategories
+import com.yenaly.han1meviewer.platform.PlatformFileRef
+import com.yenaly.han1meviewer.platform.backgroundJobScheduler
+import com.yenaly.han1meviewer.platform.fileAccess
+import com.yenaly.han1meviewer.platform.getOrThrow
 import com.yenaly.han1meviewer.ui.component.ConfirmDialog
 import com.yenaly.han1meviewer.ui.screen.home.DownloadScreen
 import com.yenaly.han1meviewer.ui.screen.home.download.DownloadEvent
 import com.yenaly.han1meviewer.ui.viewmodel.DownloadViewModel
-import com.yenaly.han1meviewer.util.SafFileManager
-import com.yenaly.han1meviewer.util.SafFileManager.checkSafPermissions
-import com.yenaly.han1meviewer.util.SafFileManager.scanAndImportHanimeDownloads
-import com.yenaly.han1meviewer.util.openDownloadedHanimeVideoLocally
-import com.yenaly.han1meviewer.worker.HanimeDownloadManagerV2
 import com.yenaly.yenaly_libs.utils.application
 import com.yenaly.yenaly_libs.utils.showLongToast
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -35,10 +33,10 @@ fun DownloadRouteScreen(
     onNavigateToVideo: (String) -> Unit,
     onNavigateToLocalVideo: (String, String?) -> Unit,
 ) {
-    val context = LocalContext.current
     val viewModel: DownloadViewModel = viewModel()
     val scope = rememberCoroutineScope()
-    val dao = remember { DownloadDatabase.instance.hanimeDownloadDao }
+    val files = remember { fileAccess() }
+    val backgroundJobs = remember { backgroundJobScheduler() }
     var showVideoNotExistConfirm by remember { mutableStateOf<VideoWithCategories?>(null) }
     var showDeleteVideoConfirm by remember { mutableStateOf<VideoWithCategories?>(null) }
     var showImportDownloadedConfirm by remember { mutableStateOf(false) }
@@ -47,17 +45,18 @@ fun DownloadRouteScreen(
     val handleEvent: (DownloadEvent) -> Unit = { event ->
         when (event) {
             is DownloadEvent.OnPauseAll -> event.items.forEach { entity ->
-                if (entity.isDownloading) HanimeDownloadManagerV2.stopTask(entity)
+                if (entity.isDownloading) backgroundJobs.pauseDownload(entity).getOrThrow()
             }
             is DownloadEvent.OnResumeAll -> event.items.forEach { entity ->
-                if (!entity.isDownloading) HanimeDownloadManagerV2.resumeTask(entity)
+                if (!entity.isDownloading) backgroundJobs.resumeDownload(entity).getOrThrow()
             }
-            is DownloadEvent.OnPauseItem -> HanimeDownloadManagerV2.stopTask(event.item)
-            is DownloadEvent.OnResumeItem -> HanimeDownloadManagerV2.resumeTask(event.item)
-            is DownloadEvent.OnDeleteDownloadingItem -> HanimeDownloadManagerV2.deleteTask(event.item)
+            is DownloadEvent.OnPauseItem -> backgroundJobs.pauseDownload(event.item).getOrThrow()
+            is DownloadEvent.OnResumeItem -> backgroundJobs.resumeDownload(event.item).getOrThrow()
+            is DownloadEvent.OnDeleteDownloadingItem ->
+                backgroundJobs.deleteDownload(event.item).getOrThrow()
 
             is DownloadEvent.OnImportDownloaded -> {
-                if (!Preferences.safDownloadPath.isNullOrBlank() &&
+                if (files.selectedDownloadDirectory().getOrThrow() != null &&
                     !Preferences.isUsePrivateStorage && !isImportingDownloaded
                 ) {
                     showImportDownloadedConfirm = true
@@ -72,9 +71,9 @@ fun DownloadRouteScreen(
             )
 
             is DownloadEvent.OnExternalPlayback -> {
-                context.openDownloadedHanimeVideoLocally(event.video.video.videoUri) {
-                    showVideoNotExistConfirm = event.video
-                }
+                files.openDownloadedVideo(
+                    PlatformFileRef(event.video.video.videoUri),
+                ) { showVideoNotExistConfirm = event.video }.getOrThrow()
             }
 
             is DownloadEvent.OnDeleteDownloadedVideo -> showDeleteVideoConfirm = event.video
@@ -104,7 +103,7 @@ fun DownloadRouteScreen(
 
             is DownloadEvent.OnBatchDelete -> event.videos.forEach { video ->
                 viewModel.deleteDownloadHanimeBy(video.video.videoCode, video.video.quality)
-                SafFileManager.deleteDownloadVideoFolder(context, video.video.videoCode)
+                files.deleteDownloadedVideoFolder(video.video.videoCode).getOrThrow()
             }
 
             is DownloadEvent.OnBatchMoveGroup -> event.videos.forEach { video ->
@@ -149,9 +148,13 @@ fun DownloadRouteScreen(
             scope.launch {
                 val importSucceeded = withContext(Dispatchers.IO) {
                     try {
-                        if (!checkSafPermissions(context)) return@withContext false
-                        scanAndImportHanimeDownloads(context, dao)
+                        if (!files.hasDownloadDirectoryAccess().getOrThrow()) {
+                            return@withContext false
+                        }
+                        files.scanAndImportDownloads().getOrThrow()
                         true
+                    } catch (cancelled: CancellationException) {
+                        throw cancelled
                     } catch (e: Exception) {
                         Log.e("ImportHanime", "Failed to import downloaded videos", e)
                         false
@@ -195,7 +198,7 @@ fun DownloadRouteScreen(
             confirmText = application.getString(R.string.confirm),
             dismissText = application.getString(R.string.cancel),
             onConfirm = {
-                SafFileManager.deleteDownloadVideoFolder(context, video.video.videoCode)
+                files.deleteDownloadedVideoFolder(video.video.videoCode).getOrThrow()
                 viewModel.deleteDownloadHanimeBy(video.video.videoCode, video.video.quality)
                 showDeleteVideoConfirm = null
             },
