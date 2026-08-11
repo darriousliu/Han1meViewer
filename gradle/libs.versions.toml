@@ -41,7 +41,6 @@ serialization = "1.11.0"
 ktor = "3.5.2"
 ksoup = "0.2.6"
 sqlite = "2.7.0"
-coil = "2.7.0"
 okhttp = "5.4.0"
 junit = "4.13.2"
 testJunit = "1.3.0"
@@ -75,7 +74,6 @@ androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefre
 androidx-window = { module = "androidx.window:window", version.ref = "window" }
 androidx-window-java = { module = "androidx.window:window-java", version.ref = "window" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
-coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilCompose" }
 compose-avatar-cropper = { module = "cn.mucute:compose-avatar-cropper", version.ref = "composeAvatarCropper" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
@@ -137,7 +135,6 @@ ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "kto
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
 # Pic
-coil = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coilCompose" }
 # Test
 junit = { group = "junit", name = "junit", version.ref = "junit" } # testImplementation

@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import coil3.ImageLoader
-import coil3.network.okhttp.OkHttpNetworkFetcherFactory
+import coil3.network.ktor3.KtorNetworkFetcherFactory
 import coil3.request.ImageRequest
 import com.yenaly.han1meviewer.DESKTOP_USER_AGENT
 import com.yenaly.han1meviewer.currentLocalDate
@@ -12,9 +12,13 @@ import com.yenaly.han1meviewer.datetime.shiftYearMonthCode
 import com.yenaly.han1meviewer.datetime.yearMonthCode
 import com.yenaly.han1meviewer.logic.network.HDns
 import com.yenaly.han1meviewer.logic.network.HProxySelector
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.HttpTimeoutConfig
+import io.ktor.client.plugins.api.createClientPlugin
+import io.ktor.http.HttpHeaders
 import kotlinx.datetime.number
-import okhttp3.OkHttpClient
-import java.util.concurrent.TimeUnit
 
 internal fun currentGetchuDateCode(): String {
     val now = currentLocalDate()
@@ -33,6 +37,39 @@ internal fun getchuMonthOptions(centerCode: String): List<String> {
     return (-12..12).map { delta -> shiftGetchuMonthCode(centerCode, delta) }
 }
 
+private val GetchuImageHeadersPlugin = createClientPlugin("GetchuImageHeadersPlugin") {
+    onRequest { request, _ ->
+        val url = request.url.build()
+        if (url.host == "www.getchu.com" &&
+            url.encodedPath.startsWith("/brandnew/")
+        ) {
+            request.headers[HttpHeaders.UserAgent] = DESKTOP_USER_AGENT
+            request.headers[HttpHeaders.Referrer] = "https://www.getchu.com/"
+            request.headers[HttpHeaders.Cookie] = "getchu_adalt_flag=getchu.com; gc=gc"
+        }
+    }
+}
+
+private val getchuImageHttpClient by lazy {
+    HttpClient(OkHttp) {
+        followRedirects = false
+        install(HttpTimeout) {
+            requestTimeoutMillis = HttpTimeoutConfig.INFINITE_TIMEOUT_MS
+            connectTimeoutMillis = 15_000
+            socketTimeoutMillis = 10_000
+        }
+        install(GetchuImageHeadersPlugin)
+        engine {
+            config {
+                dns(HDns())
+                proxySelector(HProxySelector())
+                followRedirects(true)
+                followSslRedirects(true)
+            }
+        }
+    }
+}
+
 @Composable
 internal fun getchuImageRequest(url: String?): ImageRequest {
     val context = LocalContext.current
@@ -42,26 +79,9 @@ internal fun getchuImageRequest(url: String?): ImageRequest {
 }
 
 internal fun createGetchuImageLoader(context: Context): ImageLoader {
-    val imageClient = OkHttpClient.Builder()
-        .connectTimeout(15, TimeUnit.SECONDS)
-        .dns(HDns())
-        .proxySelector(HProxySelector())
-        .addInterceptor { chain ->
-            val request = chain.request()
-            val url = request.url
-            val builder = request.newBuilder()
-            if (url.host == "www.getchu.com" && url.encodedPath.startsWith("/brandnew/")) {
-                builder
-                    .header("User-Agent", DESKTOP_USER_AGENT)
-                    .header("Referer", "https://www.getchu.com/")
-                    .header("Cookie", "getchu_adalt_flag=getchu.com; gc=gc")
-            }
-            chain.proceed(builder.build())
-        }
-        .build()
     return ImageLoader.Builder(context)
         .components {
-            add(OkHttpNetworkFetcherFactory(callFactory = { imageClient }))
+            add(KtorNetworkFetcherFactory(httpClient = { getchuImageHttpClient }))
         }
         .build()
 }

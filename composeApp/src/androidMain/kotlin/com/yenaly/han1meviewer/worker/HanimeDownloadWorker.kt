@@ -21,6 +21,7 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import coil3.asDrawable
 import com.yenaly.han1meviewer.DOWNLOAD_NOTIFICATION_CHANNEL
 import com.yenaly.han1meviewer.EMPTY_STRING
 import com.yenaly.han1meviewer.HFileManager
@@ -549,7 +550,9 @@ class HanimeDownloadWorker(
             val (os, uri) = SafFileManager.openOutputStreamForCover(
                 context, entity.videoCode, entity.title
             )
-            val isSuccess = os?.use { out -> imgRes.drawable?.saveTo(out) == true } ?: false
+            val isSuccess = os?.use { out ->
+                imgRes.image?.asDrawable(context.resources)?.saveTo(out) == true
+            } ?: false
             if (isSuccess && uri != null) {
                 val coverUriStr = uri.toString()
                 withContext(Dispatchers.IO) {

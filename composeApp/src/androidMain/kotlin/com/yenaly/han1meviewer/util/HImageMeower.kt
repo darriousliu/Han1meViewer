@@ -1,30 +1,42 @@
 package com.yenaly.han1meviewer.util
 
 import android.util.Log
-import android.widget.ImageView
-import coil.ImageLoader
-import coil.imageLoader
-import coil.request.ErrorResult
-import coil.request.ImageRequest
-import coil.request.ImageResult
+import coil3.ImageLoader
+import coil3.network.ktor3.KtorNetworkFetcherFactory
+import coil3.request.ImageRequest
+import coil3.request.ImageResult
 import com.yenaly.yenaly_libs.utils.applicationContext
 import com.yenaly.han1meviewer.logic.network.HDns
-import okhttp3.OkHttpClient
-import java.lang.ref.WeakReference
-import java.util.concurrent.TimeUnit
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.HttpTimeoutConfig
 
 @Suppress("NOTHING_TO_INLINE")
 object HImageMeower {
 
     private const val TAG = "CoilImageNyanner"
 
-    private val okHttpClient = OkHttpClient.Builder()
-        .connectTimeout(5, TimeUnit.SECONDS)
-        .dns(HDns())
-        .build()
+    private val httpClient = HttpClient(OkHttp) {
+        followRedirects = false
+        install(HttpTimeout) {
+            requestTimeoutMillis = HttpTimeoutConfig.INFINITE_TIMEOUT_MS
+            connectTimeoutMillis = 5_000
+            socketTimeoutMillis = 10_000
+        }
+        engine {
+            config {
+                dns(HDns())
+                followRedirects(true)
+                followSslRedirects(true)
+            }
+        }
+    }
 
     private val imageLoader = ImageLoader.Builder(applicationContext)
-        .okHttpClient(okHttpClient)
+        .components {
+            add(KtorNetworkFetcherFactory(httpClient = { httpClient }))
+        }
         .build()
 
     suspend fun execute(data: Any): ImageResult {
@@ -36,19 +48,4 @@ object HImageMeower {
 
     inline fun placeholder(height: Int, width: Int, blur: Int = 8) =
         "https://picsum.photos/$width/$height/?blur=$blur"
-
-    fun ImageView.loadUnhappily(data: Any?, fallbackData: Any?) {
-        Log.d(TAG, "primary: $data, fallback: $fallbackData")
-        val primaryRequest = ImageRequest.Builder(context)
-            .data(data ?: fallbackData)
-            .crossfade(true)
-            .target(this)
-            .listener(object : ImageRequest.Listener {
-                private val ivRef = WeakReference(this@loadUnhappily)
-                override fun onError(request: ImageRequest, result: ErrorResult) {
-                    fallbackData?.let { ivRef.get()?.loadUnhappily(it, null) }
-                }
-            }).build()
-        context.imageLoader.enqueue(primaryRequest)
-    }
 }

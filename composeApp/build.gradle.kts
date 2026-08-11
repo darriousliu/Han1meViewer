@@ -200,8 +200,6 @@ kotlin {
                 implementation(libs.androidx.ui)
                 implementation(libs.androidx.navigation.compose)
                 implementation(libs.androidx.material.icons.core)
-                implementation(libs.coil.compose)
-                implementation(libs.coil.network.okhttp)
                 implementation(libs.aboutlibraries.compose.m3)
                 implementation(libs.compose.avatar.cropper)
 
@@ -210,8 +208,6 @@ kotlin {
                 implementation(libs.okhttp)
                 implementation(libs.okhttp.dns.over.https)
                 implementation(libs.ktor.client.okhttp)
-
-                implementation(libs.coil)
 
                 implementation(libs.media3.exoplayer)
                 implementation(libs.media3.exoplayer.hls)
