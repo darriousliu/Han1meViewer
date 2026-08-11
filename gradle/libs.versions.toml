@@ -115,6 +115,7 @@ compose-foundation-multiplatform = { module = "org.jetbrains.compose.foundation:
 compose-material3-multiplatform = { module = "org.jetbrains.compose.material3:material3", version.ref = "composeMultiplatformMaterial3" }
 compose-ui-multiplatform = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMultiplatform" }
 compose-resources-multiplatform = { module = "org.jetbrains.compose.components:components-resources", version.ref = "composeMultiplatform" }
+compose-ui-tooling-preview-multiplatform = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }
 lifecycle-runtime-compose-multiplatform = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
 lifecycle-viewmodel-multiplatform = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycle" }
 lifecycle-viewmodel-compose-multiplatform = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }

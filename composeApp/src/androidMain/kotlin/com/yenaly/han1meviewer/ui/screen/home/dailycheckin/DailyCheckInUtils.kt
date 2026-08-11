@@ -12,7 +12,6 @@ import android.widget.Toast
 import androidx.compose.ui.graphics.Color
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.currentLocalDate
-import com.yenaly.han1meviewer.logic.entity.CheckInType
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -46,21 +45,6 @@ internal fun getContributionLevel(count: Int): Int = when {
     count == 2 -> 2
     count in 3..4 -> 3
     else -> 4
-}
-
-/**
- * 将打卡类型转换为对应 emoji。
- *
- * @param type [CheckInType.storeName] 值
- * @return 对应的 emoji 字符
- */
-fun typeEmoji(type: String): String = when (type) {
-    CheckInType.MASTURBATION.storeName -> "\uD83E\uDD1C"
-    CheckInType.WET_DREAM.storeName -> "\uD83D\uDCA4"
-    CheckInType.SEX.storeName -> "\uD83D\uDC91"
-    CheckInType.ORAL.storeName -> "\uD83D\uDC45"
-    CheckInType.OTHER.storeName -> "\u2753"
-    else -> "\uD83D\uDCCA"
 }
 
 /**

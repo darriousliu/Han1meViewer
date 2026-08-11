@@ -150,6 +150,7 @@ kotlin {
                 implementation(libs.compose.material3.multiplatform)
                 implementation(libs.compose.ui.multiplatform)
                 implementation(libs.compose.resources.multiplatform)
+                implementation(libs.compose.ui.tooling.preview.multiplatform)
 
                 implementation(libs.coroutines.core)
                 implementation(libs.atomicfu)

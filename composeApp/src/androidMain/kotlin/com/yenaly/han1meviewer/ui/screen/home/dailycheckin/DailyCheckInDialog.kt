@@ -64,6 +64,7 @@ import com.yenaly.han1meviewer.logic.entity.CheckInType
 import com.yenaly.han1meviewer.logic.entity.WatchHistoryEntity
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.format
+import org.jetbrains.compose.resources.stringResource as cmpStringResource
 
 /**
  * 打卡弹窗。展示历史记录、添加新记录的表单。
@@ -256,7 +257,7 @@ fun AddCheckInForm(
                 FilterChip(
                     selected = selectedType == type,
                     onClick = { selectedType = type },
-                    label = { Text(stringResource(type.displayNameRes)) }
+                    label = { Text(cmpStringResource(type.displayNameRes)) }
                 )
             }
         }
@@ -463,7 +464,7 @@ fun ExistingRecordItem(
                         color = MaterialTheme.colorScheme.secondaryContainer
                     ) {
                         Text(
-                            text = stringResource(CheckInType.fromDisplayName(record.type).displayNameRes),
+                            text = cmpStringResource(CheckInType.fromDisplayName(record.type).displayNameRes),
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onSecondaryContainer,
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
