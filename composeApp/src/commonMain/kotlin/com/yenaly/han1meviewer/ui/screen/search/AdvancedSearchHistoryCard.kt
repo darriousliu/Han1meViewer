@@ -14,11 +14,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.yenaly.han1meviewer.R
+import com.yenaly.han1meviewer.generated.resources.*
 import com.yenaly.han1meviewer.logic.entity.HanimeAdvancedSearchHistoryEntity
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun AdvancedSearchHistoryCard(
@@ -26,13 +26,13 @@ fun AdvancedSearchHistoryCard(
     onDelete: () -> Unit,
     onClick: () -> Unit,
 ) {
-    val type = stringResource(R.string.type)
-    val sortOption = stringResource(R.string.sort_option)
-    val pairWidely = stringResource(R.string.pair_widely)
-    val releaseDate = stringResource(R.string.release_date)
-    val duration = stringResource(R.string.duration)
-    val tag = stringResource(R.string.tag)
-    val brand = stringResource(R.string.brand)
+    val type = stringResource(Res.string.type)
+    val sortOption = stringResource(Res.string.sort_option)
+    val pairWidely = stringResource(Res.string.pair_widely)
+    val releaseDate = stringResource(Res.string.release_date)
+    val duration = stringResource(Res.string.duration)
+    val tag = stringResource(Res.string.tag)
+    val brand = stringResource(Res.string.brand)
     val conditions = remember(history) {
         buildList {
             history.genre?.takeIf { it.isNotBlank() }?.let { add("$type: $it") }
@@ -77,8 +77,8 @@ fun AdvancedSearchHistoryCard(
             }
             IconButton(onClick = onDelete) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_baseline_delete_24),
-                    contentDescription = stringResource(R.string.delete),
+                    painter = painterResource(Res.drawable.ic_baseline_delete_24),
+                    contentDescription = stringResource(Res.string.delete),
                 )
             }
         }
