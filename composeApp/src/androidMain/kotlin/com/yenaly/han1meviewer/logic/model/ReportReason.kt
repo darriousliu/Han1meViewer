@@ -1,23 +1,19 @@
 package com.yenaly.han1meviewer.logic.model
 
-import android.os.Parcelable
 import com.yenaly.yenaly_libs.utils.LanguageHelper
-import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.util.Locale
 
 @Suppress("EqualsOrHashCode")
 @Serializable
-@Parcelize
 data class ReportReason(
     @SerialName("lang")
     val lang: Language? = null,
     @SerialName("reason_key")
     val reasonKey: String? = null
-) : Parcelable {
+) {
     @Serializable
-    @Parcelize
     data class Language(
         @SerialName("zh-rCN")
         val zhrCN: String? = null,
@@ -27,7 +23,7 @@ data class ReportReason(
         val en: String? = null,
         @SerialName("ja")
         val ja: String? = null,
-    ) : Parcelable
+    )
 
     override fun hashCode(): Int = reasonKey?.hashCode() ?: 0
 

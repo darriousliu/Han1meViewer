@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -34,6 +35,38 @@ import com.yenaly.han1meviewer.ui.screen.home.subscription.SubscriptionContent
 import com.yenaly.han1meviewer.ui.screen.home.subscription.SubscriptionEvent
 import com.yenaly.han1meviewer.ui.screen.home.subscription.SubscriptionUiState
 import com.yenaly.han1meviewer.ui.viewmodel.MySubscriptionsViewModel
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+
+private val subscriptionCacheJson = Json {
+    encodeDefaults = true
+    ignoreUnknownKeys = true
+}
+
+internal fun encodeSubscriptionItems(items: List<SubscriptionItem>): String =
+    subscriptionCacheJson.encodeToString(items)
+
+internal fun decodeSubscriptionItems(value: String): List<SubscriptionItem> =
+    runCatching { subscriptionCacheJson.decodeFromString<List<SubscriptionItem>>(value) }
+        .getOrDefault(emptyList())
+
+internal fun encodeSubscriptionVideos(items: List<SubscriptionVideosItem>): String =
+    subscriptionCacheJson.encodeToString(items)
+
+internal fun decodeSubscriptionVideos(value: String): List<SubscriptionVideosItem> =
+    runCatching { subscriptionCacheJson.decodeFromString<List<SubscriptionVideosItem>>(value) }
+        .getOrDefault(emptyList())
+
+private val subscriptionItemsSaver = Saver<List<SubscriptionItem>, String>(
+    save = { runCatching { encodeSubscriptionItems(it) }.getOrNull() },
+    restore = ::decodeSubscriptionItems,
+)
+
+private val subscriptionVideosSaver = Saver<List<SubscriptionVideosItem>, String>(
+    save = { runCatching { encodeSubscriptionVideos(it) }.getOrNull() },
+    restore = ::decodeSubscriptionVideos,
+)
 
 /**
  * 订阅页面 Screen 层。
@@ -59,8 +92,12 @@ fun SubscriptionScreen(
     onLongClickVideosItem: (String, String) -> Unit,
 ) {
     val state by viewModel.subscriptionsState.collectAsStateWithLifecycle()
-    val cachedArtists = rememberSaveable { mutableStateOf<List<SubscriptionItem>>(emptyList()) }
-    val cachedVideos = rememberSaveable { mutableStateOf<List<SubscriptionVideosItem>>(emptyList()) }
+    val cachedArtists = rememberSaveable(stateSaver = subscriptionItemsSaver) {
+        mutableStateOf<List<SubscriptionItem>>(emptyList())
+    }
+    val cachedVideos = rememberSaveable(stateSaver = subscriptionVideosSaver) {
+        mutableStateOf<List<SubscriptionVideosItem>>(emptyList())
+    }
     val scrollBehavior = pinnedScrollBehavior(rememberTopAppBarState())
     val gridState = rememberLazyGridState()
 

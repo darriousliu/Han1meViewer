@@ -1,22 +1,21 @@
 package com.yenaly.han1meviewer.logic.model
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
-@Parcelize
+@Serializable
 data class MySubscriptions(
     val subscriptions: List<SubscriptionItem>,
     val subscriptionsVideos: List<SubscriptionVideosItem>,
     val maxPage: Int
-) : Parcelable
+)
 
-@Parcelize
+@Serializable
 data class SubscriptionItem(
     val artistName: String,
     val avatar: String
-) : Parcelable
+)
 
-@Parcelize
+@Serializable
 data class SubscriptionVideosItem(
     override val title: String,
     override val coverUrl: String,
@@ -26,4 +25,4 @@ data class SubscriptionVideosItem(
     override val reviews: String? = null,
     override val currentArtist: String? = null,
     override val uploadTime: String?= null,
-) : Parcelable, VideoItemType
+) : VideoItemType

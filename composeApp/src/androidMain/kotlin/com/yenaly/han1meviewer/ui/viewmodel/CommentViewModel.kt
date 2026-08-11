@@ -16,7 +16,6 @@ import com.yenaly.han1meviewer.ui.viewmodel.AppViewModel.csrfToken
 import com.yenaly.han1meviewer.util.loadAssetAs
 import com.yenaly.yenaly_libs.base.YenalyViewModel
 import com.yenaly.yenaly_libs.utils.showShortToast
-import com.yenaly.yenaly_libs.utils.unsafeLazy
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -75,7 +74,7 @@ class CommentViewModel(application: Application) : YenalyViewModel(application) 
     private val _commentLikeFlow =
         MutableSharedFlow<WebsiteState<VideoCommentArgs>>(replay = 0)
     val commentLikeFlow = _commentLikeFlow.asSharedFlow()
-    val reportReason by unsafeLazy {
+    val reportReason by lazy(LazyThreadSafetyMode.NONE) {
         loadAssetAs<List<ReportReason>>("report_reason.json").orEmpty()
     }
 

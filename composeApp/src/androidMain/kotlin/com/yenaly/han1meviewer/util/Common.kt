@@ -31,7 +31,7 @@ fun isLegalBuild(context: Context, sha: String): Boolean {
         signatures?.any { sig ->
             val md = MessageDigest.getInstance("SHA-256")
             val digest = md.digest(sig.toByteArray())
-            digest.joinToString("") { "%02X".format(it) } == sha
+            digest.toUpperHexString() == sha
         } ?: false
     } catch (_: Exception) {
         false
@@ -45,7 +45,7 @@ fun getSha(context: Context, res: Int): String {
     input.skip((totalSize - 32).toLong())
     input.read(buffer)
     input.close()
-    return buffer.joinToString("") { "%02X".format(it) }
+    return buffer.toUpperHexString()
 }
 fun checkBadGuy(context: Context, res: Int): IntArray {
     try {

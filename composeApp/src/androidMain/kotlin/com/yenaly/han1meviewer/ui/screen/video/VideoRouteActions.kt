@@ -5,7 +5,6 @@ import android.content.Intent
 import android.provider.Settings
 import android.widget.Toast
 import androidx.core.net.toUri
-import com.yenaly.han1meviewer.HAdvancedSearch
 import com.yenaly.han1meviewer.HCacheManager
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.R
@@ -29,7 +28,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
-import java.io.Serializable
+
+internal fun buildArtistSearchParameters(
+    artistName: String,
+    genreSearchKey: String?,
+    includeGenre: Boolean,
+): Map<String, String> = buildMap {
+    put("QUERY", artistName)
+    if (!genreSearchKey.isNullOrEmpty() && includeGenre) {
+        put("GENRE", genreSearchKey)
+    }
+}
 
 class VideoRouteActions(
     private val context: Context,
@@ -55,16 +64,11 @@ class VideoRouteActions(
                         artist.genre == lang.en
             } == true
         }?.searchKey ?: ""
-        val map = buildMap<HAdvancedSearch, Serializable> {
-            put(HAdvancedSearch.QUERY, artist.name)
-            if (searchKey.isNotEmpty() && !Preferences.searchArtistIgnoreVideoType) {
-                put(HAdvancedSearch.GENRE, searchKey)
-            }
-        }
-        val bundleMap = HashMap<String, Serializable>().apply {
-            map.forEach { (key, value) -> put(key.name, value) }
-        }
-        val routeMap = bundleMap.mapValues { it.value.toString() }
+        val routeMap = buildArtistSearchParameters(
+            artistName = artist.name,
+            genreSearchKey = searchKey,
+            includeGenre = !Preferences.searchArtistIgnoreVideoType,
+        )
         (context as? AndroidMainActivity)?.navController?.navigateSafely(
             SearchRoute(query = artist.name, advancedSearchJson = Json.encodeToString(routeMap))
         )

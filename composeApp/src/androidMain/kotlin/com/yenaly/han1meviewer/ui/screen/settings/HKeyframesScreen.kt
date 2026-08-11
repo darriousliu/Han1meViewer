@@ -31,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.entity.HKeyframeEntity
+import com.yenaly.han1meviewer.util.encodeBase64
 import com.yenaly.han1meviewer.playback.model.formatPlaybackTime
 import com.yenaly.han1meviewer.ui.component.ConfirmDialog
 import com.yenaly.han1meviewer.ui.component.content.EmptyContent
@@ -374,9 +375,7 @@ private fun ShareEntityDialog(
 ) {
     val content = remember(entity) {
         val toJson = kotlinx.serialization.json.Json.encodeToString(entity)
-        val toBase64 = toJson.encodeToByteArray().let {
-            android.util.Base64.encodeToString(it, android.util.Base64.NO_WRAP)
-        }
+        val toBase64 = toJson.encodeToByteArray().encodeBase64()
         ">>>${toBase64}<<<"
     }
     AlertDialog(

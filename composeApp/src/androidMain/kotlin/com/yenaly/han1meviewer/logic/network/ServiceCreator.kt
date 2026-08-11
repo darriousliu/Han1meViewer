@@ -11,7 +11,6 @@ import com.yenaly.han1meviewer.logic.network.interceptor.SpeedLimitInterceptor
 import com.yenaly.han1meviewer.logic.network.interceptor.UrlLoggingInterceptor
 import com.yenaly.han1meviewer.logic.network.interceptor.UserAgentInterceptor
 import com.yenaly.yenaly_libs.utils.applicationContext
-import com.yenaly.yenaly_libs.utils.unsafeLazy
 import okhttp3.Cache
 import okhttp3.CookieJar
 import okhttp3.MediaType.Companion.toMediaType
@@ -33,7 +32,7 @@ object ServiceCreator {
         maxSize = 10 * 1024 * 1024
     )
 
-    private val downloadSpeedLimitInterceptor by unsafeLazy {
+    private val downloadSpeedLimitInterceptor by lazy(LazyThreadSafetyMode.NONE) {
         SpeedLimitInterceptor(maxSpeed = Preferences.downloadSpeedLimit)
     }
 

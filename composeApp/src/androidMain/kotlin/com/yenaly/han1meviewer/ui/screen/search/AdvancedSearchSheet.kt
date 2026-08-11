@@ -1,6 +1,5 @@
 package com.yenaly.han1meviewer.ui.screen.search
 
-import android.util.SparseArray
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -44,7 +43,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.util.isNotEmpty
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.SEARCH_YEAR_RANGE_END
@@ -737,12 +735,12 @@ private fun buildTagScopeSections(
 private fun groupSelectedTagOptions(
     selected: Set<SearchOption>,
     tags: Map<String, List<SearchOption>>,
-): SparseArray<Set<SearchOption>> {
-    return SparseArray<Set<SearchOption>>().also { grouped ->
+): MutableMap<Int, Set<SearchOption>> {
+    return mutableMapOf<Int, Set<SearchOption>>().also { grouped ->
         advancedSearchTagScopeResIds.forEach { scopeRes ->
             val selectedInScope = tags[scopeRes].filterTo(mutableSetOf()) { it in selected }
             if (selectedInScope.isNotEmpty()) {
-                grouped.put(scopeRes, selectedInScope)
+                grouped[scopeRes] = selectedInScope
             }
         }
     }

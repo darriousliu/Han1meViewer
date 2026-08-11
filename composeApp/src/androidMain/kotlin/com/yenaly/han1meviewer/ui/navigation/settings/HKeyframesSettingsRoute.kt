@@ -30,7 +30,7 @@ import com.yenaly.han1meviewer.ui.screen.settings.HKeyframesScreen
 import com.yenaly.han1meviewer.ui.screen.settings.SharedHKeyframesScreen
 import com.yenaly.han1meviewer.ui.viewmodel.SettingsViewModel
 import com.yenaly.yenaly_libs.utils.copyToClipboard
-import com.yenaly.yenaly_libs.utils.decodeFromStringByBase64
+import com.yenaly.han1meviewer.util.decodeBase64ToString
 import com.yenaly.yenaly_libs.utils.showShortToast
 import kotlinx.serialization.json.Json
 
@@ -127,7 +127,7 @@ private fun parseSharedHKeyframe(content: String): HKeyframeEntity? {
     return runCatching {
         val matchResult = shareRegex.find(content) ?: return@runCatching null
         val (toBase64) = matchResult.destructured
-        val toJson = toBase64.decodeFromStringByBase64()
+        val toJson = toBase64.decodeBase64ToString()
         Json.decodeFromString<HKeyframeEntity>(toJson)
     }.getOrNull()
 }

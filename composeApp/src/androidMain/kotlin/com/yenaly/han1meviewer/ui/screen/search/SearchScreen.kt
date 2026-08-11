@@ -1,6 +1,5 @@
 package com.yenaly.han1meviewer.ui.screen.search
 
-import android.util.SparseArray
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -86,6 +85,7 @@ import com.yenaly.han1meviewer.logic.entity.SearchHistoryEntity
 import com.yenaly.han1meviewer.logic.model.HanimeInfo
 import com.yenaly.han1meviewer.logic.model.HanimeInfo.Companion.NORMAL
 import com.yenaly.han1meviewer.logic.model.SearchOption
+import com.yenaly.han1meviewer.logic.model.SearchOption.Companion.flatten
 import com.yenaly.han1meviewer.logic.state.PageLoadingState
 import com.yenaly.han1meviewer.ui.component.VideoCardItem
 import com.yenaly.han1meviewer.ui.component.content.EmptyContent
@@ -153,8 +153,8 @@ fun SearchScreen(
             viewModel.broad,
             viewModel.getSearchDate(),
             viewModel.duration,
-            tagFlatten(viewModel.tagMap),
-            brandFlatten(viewModel.brandMap)
+            viewModel.tagMap.flatten(),
+            viewModel.brandMap.flatten()
         )
     }
 
@@ -176,8 +176,8 @@ fun SearchScreen(
                 viewModel.sort != null ||
                 viewModel.duration != null ||
                 viewModel.getSearchDate() != null ||
-                viewModel.tagMap.size() > 0 ||
-                viewModel.brandMap.size() > 0 ||
+                viewModel.tagMap.isNotEmpty() ||
+                viewModel.brandMap.isNotEmpty() ||
                 viewModel.broad
     }
 
@@ -189,16 +189,16 @@ fun SearchScreen(
         viewModel.duration,
         viewModel.getSearchDate(),
         viewModel.broad,
-        viewModel.tagMap.size(),
-        viewModel.brandMap.size(),
+        viewModel.tagMap.size,
+        viewModel.brandMap.size,
     ) {
         SearchFilter(
             genre = viewModel.genre,
             sort = viewModel.sort,
             duration = viewModel.duration,
             releaseDate = viewModel.getSearchDate(),
-            tagCount = tagFlatten(viewModel.tagMap).size,
-            brandCount = brandFlatten(viewModel.brandMap).size,
+            tagCount = viewModel.tagMap.flatten().size,
+            brandCount = viewModel.brandMap.flatten().size,
             broad = viewModel.broad,
         )
     }
@@ -820,18 +820,6 @@ private fun ActiveSearchCriteria(
 // ─────────────────────────────────────────────
 // 辅助
 // ─────────────────────────────────────────────
-
-private fun tagFlatten(map: SparseArray<Set<SearchOption>>): Set<String> {
-    val r = mutableSetOf<String>(); for (i in 0 until map.size()) {
-        map.valueAt(i).mapNotNullTo(r) { it.searchKey }
-    }; return r
-}
-
-private fun brandFlatten(map: SparseArray<Set<SearchOption>>): Set<String> {
-    val r = mutableSetOf<String>(); for (i in 0 until map.size()) {
-        map.valueAt(i).mapNotNullTo(r) { it.searchKey }
-    }; return r
-}
 
 // ─────────────────────────────────────────────
 // Preview

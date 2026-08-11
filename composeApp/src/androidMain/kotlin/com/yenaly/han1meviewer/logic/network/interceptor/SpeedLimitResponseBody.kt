@@ -1,6 +1,5 @@
 package com.yenaly.han1meviewer.logic.network.interceptor
 
-import com.yenaly.yenaly_libs.utils.unsafeLazy
 import okhttp3.ResponseBody
 import okio.Throttler
 import okio.buffer
@@ -13,7 +12,7 @@ class SpeedLimitResponseBody(
     private val maxSpeed: Long
 ) : ResponseBody() {
 
-    private val throttler by unsafeLazy {
+    private val throttler by lazy(LazyThreadSafetyMode.NONE) {
         Throttler().apply { bytesPerSecond(maxSpeed) }
     }
 

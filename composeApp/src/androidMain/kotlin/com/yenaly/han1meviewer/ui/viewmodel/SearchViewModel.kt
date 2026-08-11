@@ -1,9 +1,7 @@
 package com.yenaly.han1meviewer.ui.viewmodel
 
 import android.app.Application
-import android.os.Parcelable
 import android.util.Log
-import android.util.SparseArray
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.yenaly.han1meviewer.HanimeConstants.HANIME_URL
@@ -18,7 +16,6 @@ import com.yenaly.han1meviewer.logic.model.SearchOption
 import com.yenaly.han1meviewer.logic.state.PageLoadingState
 import com.yenaly.han1meviewer.util.loadAssetAs
 import com.yenaly.yenaly_libs.base.YenalyViewModel
-import com.yenaly.yenaly_libs.utils.unsafeLazy
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -85,29 +82,29 @@ class SearchViewModel(
             state["gridFirstVisibleItemScrollOffset"] = value
         }
 
-    var tagMap = SparseArray<Set<SearchOption>>()
-    var brandMap = SparseArray<Set<SearchOption>>()
+    var tagMap: MutableMap<Int, Set<SearchOption>> = mutableMapOf()
+    var brandMap: MutableMap<Int, Set<SearchOption>> = mutableMapOf()
 
-    val genres by unsafeLazy {
+    val genres by lazy(LazyThreadSafetyMode.NONE) {
         loadAssetAs<List<SearchOption>>(if (Preferences.baseUrl == HANIME_URL[3]) "search_options/genre_av.json" else "search_options/genre.json").orEmpty()
     }
 
-    val tags by unsafeLazy {
+    val tags by lazy(LazyThreadSafetyMode.NONE) {
         loadAssetAs<Map<String, List<SearchOption>>>("search_options/tags.json").orEmpty()
     }
 
-    val brands by unsafeLazy {
+    val brands by lazy(LazyThreadSafetyMode.NONE) {
         loadAssetAs<List<SearchOption>>("search_options/brands.json").orEmpty()
     }
 
-    val sortOptions by unsafeLazy {
+    val sortOptions by lazy(LazyThreadSafetyMode.NONE) {
         loadAssetAs<List<SearchOption>>("search_options/sort_option.json").orEmpty()
     }
 
-    val durations by unsafeLazy {
+    val durations by lazy(LazyThreadSafetyMode.NONE) {
         loadAssetAs<List<SearchOption>>("search_options/duration.json").orEmpty()
     }
-    val timeList by unsafeLazy {
+    val timeList by lazy(LazyThreadSafetyMode.NONE) {
         loadAssetAs<List<SearchOption>>("search_options/release_date.json").orEmpty()
     }
 
@@ -117,7 +114,6 @@ class SearchViewModel(
 
     private val _searchFlow = MutableStateFlow(emptyList<HanimeInfo>())
     val searchFlow = _searchFlow.asStateFlow()
-    var recyclerViewState: Parcelable? = null
 
     fun clearHanimeSearchResult() {
         _searchFlow.value = emptyList()
@@ -136,7 +132,6 @@ class SearchViewModel(
         duration = null
         tagMap.clear()
         brandMap.clear()
-        recyclerViewState = null
         gridFirstVisibleItemIndex = 0
         gridFirstVisibleItemScrollOffset = 0
         _searchFlow.value = emptyList()
