@@ -8,7 +8,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.core.content.edit
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.playback.model.PlaybackDefaults
@@ -68,7 +67,7 @@ fun PlayerSettingsRouteScreen(
             refreshKey++
         },
         onSlideSensitivityChange = {
-            Preferences.preferenceSp.edit { putInt(PLAYER_SLIDE_SENSITIVITY, it) }
+            Preferences.editSettings { putInt(PLAYER_SLIDE_SENSITIVITY, it) }
             refreshKey++
         },
         onOpenMpvSettings = onNavigateToMpvSettings,

@@ -915,6 +915,10 @@
     <string name="backup_export_success">資料備份已匯出</string>
     <string name="backup_export_failed">資料備份匯出失敗</string>
     <string name="backup_import_success">資料備份已匯入</string>
+    <string name="backup_import_partial">資料已匯入，但部分未知或不相容的設定已略過</string>
+    <string name="backup_import_lock_not_configured">資料已匯入，但裝置尚未設定驗證憑證，應用程式鎖定保持關閉</string>
+    <string name="backup_import_lock_unsupported">資料已匯入，但此系統不支援應用程式鎖定驗證，該選項保持關閉</string>
+    <string name="backup_import_lock_not_restored">資料已匯入，但驗證未完成，應用程式鎖定保持關閉</string>
     <string name="backup_import_failed">資料備份匯入失敗，請確認檔案是否正確</string>
     <string name="home_category_layout">首頁欄目排序與隱藏</string>
     <string name="home_category_layout_summary">目前顯示 %1$d / %2$d 個欄目</string>

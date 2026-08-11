@@ -861,6 +861,10 @@ Recommendations are as follows:\n
     <string name="backup_export_success">Data backup exported</string>
     <string name="backup_export_failed">Failed to export data backup</string>
     <string name="backup_import_success">Data backup imported</string>
+    <string name="backup_import_partial">Data was imported, but some unknown or incompatible settings were skipped.</string>
+    <string name="backup_import_lock_not_configured">Data was imported, but no device credential is configured. App lock remains off.</string>
+    <string name="backup_import_lock_unsupported">Data was imported, but app-lock authentication is unavailable on this system. App lock remains off.</string>
+    <string name="backup_import_lock_not_restored">Data was imported, but authentication was not completed. App lock remains off.</string>
     <string name="backup_import_failed">Failed to import data backup. Please check whether the file is valid.</string>
     <string name="home_category_layout">Home Section Order and Visibility</string>
     <string name="home_category_layout_summary">Showing %1$d / %2$d sections</string>

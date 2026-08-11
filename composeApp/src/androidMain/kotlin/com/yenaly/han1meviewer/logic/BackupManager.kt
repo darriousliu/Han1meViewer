@@ -2,9 +2,11 @@ package com.yenaly.han1meviewer.logic
 
 import android.content.Context
 import android.net.Uri
-import androidx.core.content.edit
-import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.platform.AppBuildInfoProvider
+import com.yenaly.han1meviewer.storage.AppStorage
+import com.yenaly.han1meviewer.storage.StorageSchema
+import com.yenaly.han1meviewer.storage.StorageWriteEntryResult
+import com.yenaly.han1meviewer.storage.StoredValue
 import com.yenaly.han1meviewer.logic.dao.CheckInRecordDatabase
 import com.yenaly.han1meviewer.logic.dao.DownloadDatabase
 import com.yenaly.han1meviewer.logic.dao.HistoryDatabase
@@ -21,6 +23,12 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import java.io.OutputStream
+import java.util.concurrent.atomic.AtomicBoolean
+
+data class BackupImportResult(
+    val pendingAppLockRestore: Boolean,
+    val skippedSettings: List<String>,
+)
 
 object BackupManager {
     private const val BACKUP_VERSION = 1
@@ -32,6 +40,8 @@ object BackupManager {
         explicitNulls = true
         classDiscriminator = "type"
     }
+
+    private val hasPendingAppLockRestore = AtomicBoolean(false)
 
     @Serializable
     private data class BackupData(
@@ -83,7 +93,7 @@ object BackupManager {
         } ?: error("Unable to open backup file")
     }
 
-    suspend fun importFrom(context: Context, uri: Uri) {
+    suspend fun importFrom(context: Context, uri: Uri): BackupImportResult {
         val backup = context.contentResolver.openInputStream(uri)?.use { inputStream ->
             json.decodeFromString<BackupData>(inputStream.bufferedReader().readText())
         } ?: error("Unable to open backup file")
@@ -149,25 +159,37 @@ object BackupManager {
             }
         }
 
-        backup.settings?.let { settings ->
-            Preferences.preferenceSp.edit {
-                settings.forEach { (key, value) ->
-                    when (value) {
-                        is PreferenceValue.BooleanValue -> putBoolean(key, value.value)
-                        is PreferenceValue.FloatValue -> putFloat(key, value.value)
-                        is PreferenceValue.IntValue -> putInt(key, value.value)
-                        is PreferenceValue.LongValue -> putLong(key, value.value)
-                        is PreferenceValue.StringSetValue -> putStringSet(key, value.value)
-                        is PreferenceValue.StringValue -> putString(key, value.value)
-                    }
-                }
-            }
+        val storageRestore = backup.settings
+            ?.mapValues { (_, value) -> value.toStoredValue() }
+            ?.let(AppStorage::restoreLegacyV1)
+
+        if (storageRestore != null) {
+            check(storageRestore.isFullySuccessful) { "Unable to persist all restored settings" }
         }
+
+        val pendingAppLockRestore = storageRestore?.pendingAppLockRestore == true
+        hasPendingAppLockRestore.set(pendingAppLockRestore)
+
+        AppStorage.refreshAll()
+        return BackupImportResult(
+            pendingAppLockRestore = pendingAppLockRestore,
+            skippedSettings = storageRestore?.skipped.orEmpty().map { it.keyName },
+        )
+    }
+
+    /** Completes a pending backup restore only after the UI has performed device authentication. */
+    fun completePendingAppLockRestore(authenticationSucceeded: Boolean): Boolean {
+        if (!hasPendingAppLockRestore.compareAndSet(true, false)) return false
+        val result = AppStorage.settings.state(StorageSchema.Settings.useLockScreen)
+            .set(authenticationSucceeded)
+        return authenticationSucceeded && result is StorageWriteEntryResult.Success
     }
 
     private suspend fun exportTo(context: Context, outputStream: OutputStream) {
+        val settingsSnapshot = AppStorage.snapshotLegacyV1()
+        check(settingsSnapshot.issues.isEmpty()) { "Unable to read all settings for backup" }
         val backup = BackupData(
-            settings = Preferences.preferenceSp.all.mapValuesNotNull { (_, value) ->
+            settings = settingsSnapshot.values.mapValues { (_, value) ->
                 value.toPreferenceValue()
             },
             hKeyframes = MiscellanyDatabase.instance.hKeyframeDao.getAll(),
@@ -184,23 +206,23 @@ object BackupManager {
         }
     }
 
-    private inline fun <K, V, R : Any> Map<K, V>.mapValuesNotNull(
-        transform: (Map.Entry<K, V>) -> R?
-    ): Map<K, R> {
-        return mapNotNull { entry -> transform(entry)?.let { entry.key to it } }.toMap()
+    private fun StoredValue.toPreferenceValue(): PreferenceValue = when (this) {
+        is StoredValue.BooleanValue -> PreferenceValue.BooleanValue(value)
+        is StoredValue.FloatValue -> PreferenceValue.FloatValue(value)
+        is StoredValue.IntValue -> PreferenceValue.IntValue(value)
+        is StoredValue.LongValue -> PreferenceValue.LongValue(value)
+        is StoredValue.StringValue -> PreferenceValue.StringValue(value)
+        is StoredValue.StringSetValue -> PreferenceValue.StringSetValue(value.toSet())
+        else -> error("Backup version 1 does not support $kind")
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private fun Any?.toPreferenceValue(): PreferenceValue? {
-        return when (this) {
-            is Boolean -> PreferenceValue.BooleanValue(this)
-            is Float -> PreferenceValue.FloatValue(this)
-            is Int -> PreferenceValue.IntValue(this)
-            is Long -> PreferenceValue.LongValue(this)
-            is String -> PreferenceValue.StringValue(this)
-            is Set<*> -> PreferenceValue.StringSetValue(this.filterIsInstance<String>().toSet())
-            else -> null
-        }
+    private fun PreferenceValue.toStoredValue(): StoredValue = when (this) {
+        is PreferenceValue.BooleanValue -> StoredValue.BooleanValue(value)
+        is PreferenceValue.FloatValue -> StoredValue.FloatValue(value)
+        is PreferenceValue.IntValue -> StoredValue.IntValue(value)
+        is PreferenceValue.LongValue -> StoredValue.LongValue(value)
+        is PreferenceValue.StringValue -> StoredValue.StringValue(value)
+        is PreferenceValue.StringSetValue -> StoredValue.StringSetValue(value.toSet())
     }
 
     private fun CheckInRecordEntity.normalizeSideDishes(): CheckInRecordEntity {

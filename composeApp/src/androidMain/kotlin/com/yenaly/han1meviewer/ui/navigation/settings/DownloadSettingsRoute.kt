@@ -20,7 +20,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
-import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
 import com.yenaly.han1meviewer.Preferences
@@ -57,7 +56,7 @@ fun DownloadSettingsRouteScreen(
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK && result.data != null) {
             SafFileManager.persistUriPermission(context, result.data)
-            Preferences.preferenceSp.edit { putBoolean(DOWNLOAD_USE_PRIVATE_STORAGE, false) }
+            Preferences.editSettings { putBoolean(DOWNLOAD_USE_PRIVATE_STORAGE, false) }
             context.showToast(R.string.directory_saved, result.data.toString())
             refreshKey++
         } else {
@@ -110,12 +109,12 @@ fun DownloadSettingsRouteScreen(
             importDownloadedFiles(context, activity, dao, onCompleted = { refreshKey++ })
         },
         onDownloadCountLimitChange = { value ->
-            Preferences.preferenceSp.edit { putInt(DOWNLOAD_COUNT_LIMIT, value) }
+            Preferences.editSettings { putInt(DOWNLOAD_COUNT_LIMIT, value) }
             HanimeDownloadManagerV2.maxConcurrentDownloadCount = value
             refreshKey++
         },
         onDownloadSpeedLimitChange = { value ->
-            Preferences.preferenceSp.edit { putInt(DOWNLOAD_SPEED_LIMIT, value) }
+            Preferences.editSettings { putInt(DOWNLOAD_SPEED_LIMIT, value) }
             refreshKey++
         },
     )
@@ -161,7 +160,7 @@ fun DownloadSettingsRouteScreen(
         confirmText = stringResource(R.string.ok),
         dismissText = stringResource(R.string.cancel),
         onConfirm = {
-            Preferences.preferenceSp.edit {
+            Preferences.editSettings {
                 putBoolean(DOWNLOAD_USE_PRIVATE_STORAGE, true)
                 remove(KEY_TREE_URI)
             }
@@ -187,12 +186,12 @@ private fun buildDownloadSettingsUiState(context: Context): DownloadSettingsUiSt
                     context,
                     Preferences.downloadCountLimit
                 ),
-                downloadSpeedLimitIndex = Preferences.preferenceSp.getInt(
+                downloadSpeedLimitIndex = Preferences.getIntSetting(
                     DOWNLOAD_SPEED_LIMIT,
                     SpeedLimitInterceptor.NO_LIMIT_INDEX,
                 ),
                 downloadSpeedLimitSummary = SpeedLimitInterceptor.SPEED_BYTES[
-                    Preferences.preferenceSp.getInt(
+                    Preferences.getIntSetting(
                         DOWNLOAD_SPEED_LIMIT,
                         SpeedLimitInterceptor.NO_LIMIT_INDEX,
                     )
@@ -200,7 +199,7 @@ private fun buildDownloadSettingsUiState(context: Context): DownloadSettingsUiSt
             )
         )?.name ?: uri.toString()
     }
-    val speedIndex = Preferences.preferenceSp.getInt(
+    val speedIndex = Preferences.getIntSetting(
         DOWNLOAD_SPEED_LIMIT,
         SpeedLimitInterceptor.NO_LIMIT_INDEX,
     )

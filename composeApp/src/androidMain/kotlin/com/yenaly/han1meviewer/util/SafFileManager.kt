@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Environment
 import android.util.Log
-import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
 import com.yenaly.han1meviewer.APP_NAME
@@ -73,7 +72,7 @@ object SafFileManager {
         val flags = (Intent.FLAG_GRANT_READ_URI_PERMISSION
                 or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
         contentResolver.takePersistableUriPermission(treeUri, flags)
-        Preferences.preferenceSp.edit {
+        Preferences.editSettings {
             putString(KEY_TREE_URI, treeUri.toString())
         }
     }

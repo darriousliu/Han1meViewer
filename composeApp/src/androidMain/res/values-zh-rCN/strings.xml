@@ -866,6 +866,10 @@
     <string name="backup_export_success">数据备份已导出</string>
     <string name="backup_export_failed">数据备份导出失败</string>
     <string name="backup_import_success">数据备份已导入</string>
+    <string name="backup_import_partial">数据已导入，但部分未知或不兼容的设置已跳过</string>
+    <string name="backup_import_lock_not_configured">数据已导入，但设备尚未设置验证凭据，应用锁保持关闭</string>
+    <string name="backup_import_lock_unsupported">数据已导入，但当前系统不支持应用锁验证，该选项保持关闭</string>
+    <string name="backup_import_lock_not_restored">数据已导入，但验证未完成，应用锁保持关闭</string>
     <string name="backup_import_failed">数据备份导入失败，请确认文件是否正确</string>
     <string name="home_category_layout">首页栏目排序与隐藏</string>
     <string name="home_category_layout_summary">当前显示 %1$d / %2$d 个栏目</string>

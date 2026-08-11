@@ -5,6 +5,7 @@ import com.yenaly.han1meviewer.desktop.crash.runDesktopCrashApplication
 import com.yenaly.han1meviewer.desktop.crash.runNormalDesktopApplication
 import com.yenaly.han1meviewer.platform.AppBuildInfo
 import com.yenaly.han1meviewer.platform.AppBuildInfoProvider
+import com.yenaly.han1meviewer.storage.initializeDesktopStorage
 import kotlin.system.exitProcess
 
 fun main() {
@@ -12,6 +13,7 @@ fun main() {
     val exitCode = fatalController.runTwoPhase(
         normalApplication = {
             AppBuildInfoProvider.install(readDesktopBuildInfo())
+            initializeDesktopStorage()
             runNormalDesktopApplication(fatalController)
         },
         crashApplication = { incident ->

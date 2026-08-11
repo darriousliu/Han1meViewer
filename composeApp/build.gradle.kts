@@ -143,6 +143,7 @@ kotlin {
                 implementation(libs.compose.resources.multiplatform)
 
                 implementation(libs.coroutines.core)
+                implementation(libs.atomicfu)
                 implementation(libs.datetime)
                 implementation(libs.serialization.json)
                 implementation(libs.ktor.client.core)

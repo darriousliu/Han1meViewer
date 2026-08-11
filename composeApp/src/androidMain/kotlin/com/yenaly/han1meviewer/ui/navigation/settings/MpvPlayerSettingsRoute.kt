@@ -9,7 +9,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.core.content.edit
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.ui.screen.settings.MpvChoiceDialog
@@ -78,7 +77,7 @@ fun MpvPlayerSettingsRouteScreen() {
             refreshKey++
         },
         onCacheSecsChange = {
-            Preferences.preferenceSp.edit { putInt(MPV_CACHE_SECS, it) }
+            Preferences.editSettings { putInt(MPV_CACHE_SECS, it) }
             refreshKey++
         },
         onTlsVerifyChange = {
@@ -86,7 +85,7 @@ fun MpvPlayerSettingsRouteScreen() {
             refreshKey++
         },
         onNetworkTimeoutChange = {
-            Preferences.preferenceSp.edit { putInt(MPV_NETWORK_TIMEOUT, it) }
+            Preferences.editSettings { putInt(MPV_NETWORK_TIMEOUT, it) }
             refreshKey++
         },
         onCustomParamsChange = {

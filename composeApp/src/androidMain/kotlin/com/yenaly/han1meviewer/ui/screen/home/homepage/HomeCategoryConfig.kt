@@ -1,7 +1,6 @@
 package com.yenaly.han1meviewer.ui.screen.home.homepage
 
 import androidx.annotation.StringRes
-import androidx.core.content.edit
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.ui.navigation.settings.SettingsPreferenceKeys
@@ -45,21 +44,21 @@ val defaultHomeCategoryOrder: List<String>
 
 val homeCategoryOrder: List<String>
     get() = normalizeHomeCategoryKeys(
-        Preferences.preferenceSp.getString(SettingsPreferenceKeys.HOME_CATEGORY_ORDER, null)
+        Preferences.getStringSetting(SettingsPreferenceKeys.HOME_CATEGORY_ORDER, null)
             ?.split(',')
             .orEmpty()
             .filter { it.isNotBlank() }
     )
 
 val hiddenHomeCategoryKeys: Set<String>
-    get() = Preferences.preferenceSp.getString(SettingsPreferenceKeys.HOME_CATEGORY_HIDDEN, null)
+    get() = Preferences.getStringSetting(SettingsPreferenceKeys.HOME_CATEGORY_HIDDEN, null)
         ?.split(',')
         .orEmpty()
         .filter { it.isNotBlank() }
         .toSet()
 
 fun saveHomeCategoryPreferences(order: List<String>, hiddenKeys: Set<String>) {
-    Preferences.preferenceSp.edit {
+    Preferences.editSettings {
         putString(SettingsPreferenceKeys.HOME_CATEGORY_ORDER, normalizeHomeCategoryKeys(order).joinToString(","))
         putString(
             SettingsPreferenceKeys.HOME_CATEGORY_HIDDEN,

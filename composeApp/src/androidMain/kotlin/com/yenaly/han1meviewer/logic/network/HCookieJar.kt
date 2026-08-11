@@ -30,8 +30,8 @@ class HCookieJar : CookieJar {
         val cookies = mutableListOf<Cookie>()
         cookieMap[host]?.let { cookies.addAll(it) }
 
-        cookies.addAll(Preferences.loginCookieStateFlow.value.toLoginCookieList(host))
-        cookies.addAll(Preferences.cloudFlareCookieStateFlow.value.toLoginCookieList(host))
+        cookies.addAll(CookieString(Preferences.loginCookieStateFlow.value).toLoginCookieList(host))
+        cookies.addAll(CookieString(Preferences.cloudFlareCookieStateFlow.value).toLoginCookieList(host))
 
         Log.d("HCookieJar", "loadForRequest for $host: $cookies")
 
@@ -40,7 +40,7 @@ class HCookieJar : CookieJar {
 
     override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
         cookieMap[url.host] = cookies.toMutableList().also {
-            it += Preferences.loginCookieStateFlow.value.toLoginCookieList(url.host)
+            it += CookieString(Preferences.loginCookieStateFlow.value).toLoginCookieList(url.host)
         }
     }
 }

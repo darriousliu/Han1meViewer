@@ -1,5 +1,6 @@
 package com.yenaly.han1meviewer.ui.navigation.settings
 
+/** Stable persisted names shared by every platform. Never derive storage keys from property names. */
 object SettingsPreferenceKeys {
     const val VIDEO_LANGUAGE = "video_language"
     const val DEFAULT_VIDEO_QUALITY = "default_video_quality"

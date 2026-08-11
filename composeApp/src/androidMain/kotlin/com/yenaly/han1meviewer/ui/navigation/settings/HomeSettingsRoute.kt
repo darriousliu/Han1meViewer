@@ -38,7 +38,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
-import androidx.core.content.edit
 import androidx.core.text.parseAsHtml
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.firebase.Firebase
@@ -303,29 +302,40 @@ fun HomeSettingsRouteScreen(
             Firebase.analytics.setAnalyticsCollectionEnabled(true)
         },
         onUseLockScreenChange = { value ->
-            if (value) {
-                if (!isDeviceSecureCompat(context)) {
-                    context.showToast(R.string.not_set_sys_lock)
-                    refreshKey++
-                    return@HomeSettingsScreen
-                }
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-                    context.showToast(R.string.not_compact_lock_screen)
-                    refreshKey++
-                    return@HomeSettingsScreen
-                }
+            if (!value) {
+                saveBoolean(HOME_USE_LOCK_SCREEN, false)
+                refreshKey++
+                return@HomeSettingsScreen
             }
-            saveBoolean(HOME_USE_LOCK_SCREEN, value)
-            refreshKey++
+            if (!isDeviceSecureCompat(context)) {
+                context.showToast(R.string.not_set_sys_lock)
+                refreshKey++
+                return@HomeSettingsScreen
+            }
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+                context.showToast(R.string.not_compact_lock_screen)
+                refreshKey++
+                return@HomeSettingsScreen
+            }
+            activity.requestAppLockAuthentication(
+                onSuccess = {
+                    saveBoolean(HOME_USE_LOCK_SCREEN, true)
+                    refreshKey++
+                },
+                onFailed = {
+                    saveBoolean(HOME_USE_LOCK_SCREEN, false)
+                    refreshKey++
+                },
+            )
         },
         onOpenPlayerSettings = onNavigateToPlayerSettings,
         onOpenHKeyframeSettings = onNavigateToHKeyframeSettings,
         onOpenDownloadSettings = onNavigateToDownloadSettings,
         onOpenNetworkSettings = onNavigateToNetworkSettings,
         onOpenAppLanguageSettings = { value ->
-            val old = Preferences.preferenceSp.getString(HOME_APP_LANGUAGE, "system") ?: "system"
+            val old = Preferences.getStringSetting(HOME_APP_LANGUAGE, "system") ?: "system"
             if (old != value) {
-                Preferences.preferenceSp.edit { putString(HOME_APP_LANGUAGE, value) }
+                Preferences.editSettings { putString(HOME_APP_LANGUAGE, value) }
                 refreshKey++
                 activity.recreate()
             }
@@ -339,7 +349,7 @@ fun HomeSettingsRouteScreen(
             }
         },
         onUpdatePopupIntervalDaysChange = {
-            Preferences.preferenceSp.edit { putInt(HOME_UPDATE_POPUP_INTERVAL_DAYS, it) }
+            Preferences.editSettings { putInt(HOME_UPDATE_POPUP_INTERVAL_DAYS, it) }
             refreshKey++
         },
         onOpenApplyDeepLinks = {
@@ -382,11 +392,48 @@ fun HomeSettingsRouteScreen(
             pendingImportUri = null
             coroutineScope.launch(Dispatchers.IO) {
                 runCatching { BackupManager.importFrom(context, uri) }
-                    .onSuccess {
+                    .onSuccess { result ->
                         withContext(Dispatchers.Main) {
-                            showShortToast(R.string.backup_import_success)
-                            refreshKey++
-                            activity.recreate()
+                            fun finishImport(messageRes: Int) {
+                                showShortToast(messageRes)
+                                refreshKey++
+                                activity.recreate()
+                            }
+
+                            val successMessage = if (result.skippedSettings.isEmpty()) {
+                                R.string.backup_import_success
+                            } else {
+                                R.string.backup_import_partial
+                            }
+
+                            if (!result.pendingAppLockRestore) {
+                                finishImport(successMessage)
+                                return@withContext
+                            }
+                            if (!isDeviceSecureCompat(context)) {
+                                BackupManager.completePendingAppLockRestore(false)
+                                finishImport(R.string.backup_import_lock_not_configured)
+                                return@withContext
+                            }
+                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+                                BackupManager.completePendingAppLockRestore(false)
+                                finishImport(R.string.backup_import_lock_unsupported)
+                                return@withContext
+                            }
+                            activity.requestAppLockAuthentication(
+                                onSuccess = {
+                                    val restored =
+                                        BackupManager.completePendingAppLockRestore(true)
+                                    finishImport(
+                                        if (restored) successMessage
+                                        else R.string.backup_import_lock_not_restored,
+                                    )
+                                },
+                                onFailed = {
+                                    BackupManager.completePendingAppLockRestore(false)
+                                    finishImport(R.string.backup_import_lock_not_restored)
+                                },
+                            )
                         }
                     }
                     .onFailure {
@@ -493,7 +540,7 @@ fun HomeSettingsRouteScreen(
                     launcherItems.forEach { item ->
                         TextButton(
                             onClick = {
-                                Preferences.preferenceSp.edit {
+                                Preferences.editSettings {
                                     putString(HOME_FAKE_LAUNCHER_ICON, item.alias)
                                 }
                                 (context.applicationContext as? AndroidHanimeApplication)?.switchLauncher(
@@ -552,7 +599,7 @@ private fun buildHomeSettingsUiState(
         else -> Preferences.useDarkMode
     }
     val appLanguageValue =
-        Preferences.preferenceSp.getString(HOME_APP_LANGUAGE, "system") ?: "system"
+        Preferences.getStringSetting(HOME_APP_LANGUAGE, "system") ?: "system"
     val appLanguageLabel = when (appLanguageValue) {
         "system" -> context.getString(R.string.follow_system)
         "zh-rCN" -> context.getString(R.string.simplified_chinese)
@@ -578,12 +625,12 @@ private fun buildHomeSettingsUiState(
         disableMobileDataWarning = Preferences.disableMobileDataWarning,
         disablePredictiveBack = Preferences.disablePredictiveBack,
         tabletMode = Preferences.tabletMode,
-        disableComments = Preferences.preferenceSp.getBoolean(HOME_DISABLE_COMMENTS, false),
+        disableComments = Preferences.getBooleanSetting(HOME_DISABLE_COMMENTS, false),
         collapseDownloadedGroup = Preferences.collapseDownloadedGroup,
         useDynamicColor = Preferences.useDynamicColor,
         useCIUpdateChannel = Preferences.useCIUpdateChannel,
         useAnalytics = Preferences.isAnalyticsEnabled,
-        useLockScreen = Preferences.preferenceSp.getBoolean(HOME_USE_LOCK_SCREEN, false),
+        useLockScreen = Preferences.getBooleanSetting(HOME_USE_LOCK_SCREEN, false),
         fakeLauncherIconName = currentItem.name,
         updateSummary = updateSummary,
         cacheSummary = cacheSummary,

@@ -17,7 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.core.content.edit
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yenaly.han1meviewer.Preferences
@@ -205,7 +204,7 @@ fun HKeyframeSettingsRouteScreen(
             refreshKey++
         },
         onWhenCountdownRemindChange = {
-            Preferences.preferenceSp.edit { putInt(WHEN_COUNTDOWN_REMIND, it) }
+            Preferences.editSettings { putInt(WHEN_COUNTDOWN_REMIND, it) }
             refreshKey++
         },
     )

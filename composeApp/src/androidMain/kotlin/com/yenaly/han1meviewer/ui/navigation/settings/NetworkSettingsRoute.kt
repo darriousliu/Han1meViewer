@@ -17,7 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.core.content.edit
 import androidx.core.net.toUri
 import com.yenaly.han1meviewer.EMPTY_STRING
 import com.yenaly.han1meviewer.Preferences
@@ -256,7 +255,7 @@ fun NetworkSettingsRouteScreen() {
                 pendingDohConflictTarget = DohConflictTarget.EnableBuiltInHosts
                 return@NetworkSettingsScreen
             }
-            Preferences.preferenceSp.edit { putBoolean(NETWORK_USE_BUILT_IN_HOSTS, value) }
+            Preferences.editSettings { putBoolean(NETWORK_USE_BUILT_IN_HOSTS, value) }
             refreshKey++
             showHostsRestartConfirm = true
         },
@@ -266,7 +265,7 @@ fun NetworkSettingsRouteScreen() {
                 showCustomHostsValidationError = errors
                 return@NetworkSettingsScreen
             }
-            Preferences.preferenceSp.edit(commit = true) {
+            Preferences.editSettings {
                 putString(NETWORK_CUSTOM_HOSTS_DATA, data)
             }
             refreshKey++
@@ -286,7 +285,7 @@ fun NetworkSettingsRouteScreen() {
                 pendingDohConflictTarget = DohConflictTarget.EnableDoH
                 return@NetworkSettingsScreen
             }
-            Preferences.preferenceSp.edit(commit = true) {
+            Preferences.editSettings {
                 putBoolean(NETWORK_USE_DOH, enabled)
                 putString(NETWORK_DOH_PRESET, preset)
                 putString(NETWORK_DOH_CUSTOM_URL, url)
@@ -336,7 +335,7 @@ fun NetworkSettingsRouteScreen() {
                     setPositiveButton(R.string.confirm) { _, _ -> }
                 }
             }
-            Preferences.preferenceSp.edit(commit = true) {
+            Preferences.editSettings {
                 putInt(NETWORK_PROXY_TYPE, type)
                 putString(NETWORK_PROXY_IP, ip)
                 putInt(NETWORK_PROXY_PORT, port)
@@ -355,7 +354,7 @@ fun NetworkSettingsRouteScreen() {
         dismissText = stringResource(R.string.cancel),
         cancelable = false,
         onConfirm = {
-            Preferences.preferenceSp.edit(commit = true) {
+            Preferences.editSettings {
                 if (pendingDomainValue.isNotEmpty()) {
                     putString(NETWORK_DOMAIN_NAME, pendingDomainValue)
                     putString(NETWORK_SELECTED_BASE_URL, pendingDomainValue)
@@ -441,7 +440,7 @@ fun NetworkSettingsRouteScreen() {
         dismissText = stringResource(R.string.cancel),
         cancelable = false,
         onConfirm = {
-            Preferences.preferenceSp.edit(commit = true) {
+            Preferences.editSettings {
                 when (pendingDohConflictTarget) {
                     DohConflictTarget.EnableDoH -> {
                         putBoolean(NETWORK_USE_BUILT_IN_HOSTS, false)

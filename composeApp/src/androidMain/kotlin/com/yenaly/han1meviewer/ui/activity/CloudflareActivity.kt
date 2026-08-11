@@ -16,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.ComposeView
-import androidx.preference.PreferenceManager
+import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.Preferences.cloudFlareCookie
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.USER_AGENT
@@ -144,8 +144,7 @@ class CloudflareActivity : AppCompatActivity() {
     }
 
     private fun applyAppLocale(context: Context): Context {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        val lang = prefs.getString("app_language", "system") ?: "system"
+        val lang = Preferences.getStringSetting("app_language", "system") ?: "system"
         val newLocale = when (lang) {
             "zh-rCN" -> Locale.SIMPLIFIED_CHINESE
             "zh" -> Locale.TRADITIONAL_CHINESE

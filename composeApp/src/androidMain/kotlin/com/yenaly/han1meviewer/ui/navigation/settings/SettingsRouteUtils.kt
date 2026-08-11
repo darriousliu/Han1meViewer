@@ -13,7 +13,6 @@ import android.provider.Settings
 import android.util.Log
 import androidx.annotation.IntRange
 import androidx.annotation.RequiresApi
-import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.core.text.parseAsHtml
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -40,15 +39,15 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
 internal fun saveBoolean(key: String, value: Boolean) {
-    Preferences.preferenceSp.edit { putBoolean(key, value) }
+    Preferences.editSettings { putBoolean(key, value) }
 }
 
 internal fun saveString(key: String, value: String) {
-    Preferences.preferenceSp.edit { putString(key, value) }
+    Preferences.editSettings { putString(key, value) }
 }
 
 internal fun saveInt(key: String, value: Int) {
-    Preferences.preferenceSp.edit { putInt(key, value) }
+    Preferences.editSettings { putInt(key, value) }
 }
 
 internal fun buildDomainOptions(context: Context): List<Pair<String, String>> = listOf(

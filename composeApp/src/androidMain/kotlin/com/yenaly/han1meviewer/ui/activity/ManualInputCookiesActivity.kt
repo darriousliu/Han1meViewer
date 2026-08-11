@@ -9,7 +9,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.preference.PreferenceManager
+import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.ui.screen.login.ManualInputCookiesScreen
 import com.yenaly.han1meviewer.ui.theme.HanimeTheme
 import java.util.Locale
@@ -36,8 +36,7 @@ class ManualInputCookiesActivity : ComponentActivity() {
     }
 
     private fun applyAppLocale(context: Context): Context {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        val lang = prefs.getString("app_language", "system") ?: "system"
+        val lang = Preferences.getStringSetting("app_language", "system") ?: "system"
         val newLocale = when (lang) {
             "zh-rCN" -> Locale.SIMPLIFIED_CHINESE
             "zh" -> Locale.TRADITIONAL_CHINESE

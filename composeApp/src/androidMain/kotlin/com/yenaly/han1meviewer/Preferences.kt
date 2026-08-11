@@ -1,197 +1,168 @@
 package com.yenaly.han1meviewer
 
-import android.content.SharedPreferences
-import androidx.core.content.edit
 import androidx.core.net.toUri
-import androidx.preference.PreferenceManager
 import com.yenaly.han1meviewer.HanimeConstants.HANIME_URL
 import com.yenaly.han1meviewer.Preferences.loginCookie
 import com.yenaly.han1meviewer.logic.network.HProxySelector
 import com.yenaly.han1meviewer.logic.network.interceptor.SpeedLimitInterceptor
 import com.yenaly.han1meviewer.playback.model.PlaybackDefaults
 import com.yenaly.han1meviewer.playback.model.PlaybackEngineType
+import com.yenaly.han1meviewer.storage.AppStorage
+import com.yenaly.han1meviewer.storage.StorageKey
+import com.yenaly.han1meviewer.storage.StorageMutation
+import com.yenaly.han1meviewer.storage.StorageSchema
+import com.yenaly.han1meviewer.storage.StorageValueKind
 import com.yenaly.han1meviewer.ui.navigation.settings.SettingsPreferenceKeys
 import com.yenaly.han1meviewer.util.CookieString
-import com.yenaly.han1meviewer.util.SafFileManager
-import com.yenaly.han1meviewer.worker.HanimeDownloadManagerV2
-import com.yenaly.yenaly_libs.utils.applicationContext
-import com.yenaly.yenaly_libs.utils.getSpValue
-import com.yenaly.yenaly_libs.utils.putSpValue
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlin.time.Duration.Companion.days
 import kotlin.time.ExperimentalTime
 
+/**
+ * Android compatibility facade while call sites move into commonMain.
+ *
+ * Values are owned by the typed common storage schema; this object intentionally exposes neither
+ * Android SharedPreferences nor raw MMKV APIs.
+ */
 object Preferences {
-    private const val USAGE_NOTICE_ACCEPTED = "usage_notice_accepted"
+    private val authStore
+        get() = AppStorage.auth
+    private val settingsStore
+        get() = AppStorage.settings
+    private val uiStateStore
+        get() = AppStorage.uiState
 
-    /**
-     * [Preference][androidx.preference.PreferenceFragmentCompat]自帶的SP
-     */
-    val preferenceSp: SharedPreferences
-        get() = PreferenceManager.getDefaultSharedPreferences(
-            applicationContext
-        )
+    // app related
 
-    // app 相關
-
-    /**
-     * 是否登入，一般跟[loginCookie]一起賦值
-     */
+    /** Whether the user is logged in. This is normally changed together with [loginCookie]. */
     var isAlreadyLogin: Boolean
-        get() = getSpValue(ALREADY_LOGIN, false)
+        get() = authStore.value(StorageSchema.Auth.alreadyLogin)
         set(value) {
-            loginStateFlow.value = value
-            putSpValue(ALREADY_LOGIN, value)
+            authStore.state(StorageSchema.Auth.alreadyLogin).set(value)
         }
 
-    val loginStateFlow = MutableStateFlow(isAlreadyLogin)
+    val loginStateFlow
+        get() = authStore.state(StorageSchema.Auth.alreadyLogin).flow
 
     var usageNoticeAccepted: Boolean
-        get() = preferenceSp.getBoolean(USAGE_NOTICE_ACCEPTED, false)
-        set(value) = preferenceSp.edit { putBoolean(USAGE_NOTICE_ACCEPTED, value) }
-
-    val savedUserId: String
-        get() = preferenceSp.getString(SAVED_USER_ID,"") ?: ""
-
-    /**
-     * 保存的string格式的登入cookie
-     */
-    var loginCookie
-        get() = CookieString(getSpValue(LOGIN_COOKIE, EMPTY_STRING))
+        get() = uiStateStore.value(StorageSchema.UiState.usageNoticeAccepted)
         set(value) {
-            loginCookieStateFlow.value = value
-            putSpValue(LOGIN_COOKIE, value.cookie)
+            uiStateStore.state(StorageSchema.UiState.usageNoticeAccepted).set(value)
         }
 
-    val loginCookieStateFlow = MutableStateFlow(loginCookie)
-
-    var cloudFlareCookie
-        get() = CookieString(getSpValue(CLOUDFLARE_COOKIE   , EMPTY_STRING))
+    var savedUserId: String
+        get() = authStore.value(StorageSchema.Auth.savedUserId)
         set(value) {
-            cloudFlareCookieStateFlow.value = value
-            putSpValue(CLOUDFLARE_COOKIE, value.cookie)
+            authStore.state(StorageSchema.Auth.savedUserId).set(value)
         }
-    val cloudFlareCookieStateFlow = MutableStateFlow(cloudFlareCookie)
 
-    // 更新 相關
+    /** Saved login cookie in its historical string representation. */
+    var loginCookie: CookieString
+        get() = CookieString(authStore.value(StorageSchema.Auth.loginCookie))
+        set(value) {
+            authStore.state(StorageSchema.Auth.loginCookie).set(value.cookie)
+        }
 
-    private const val UPDATE_NODE_ID = "update_node_id"
+    val loginCookieStateFlow
+        get() = authStore.state(StorageSchema.Auth.loginCookie).flow
+
+    var cloudFlareCookie: CookieString
+        get() = CookieString(authStore.value(StorageSchema.Auth.cloudflareCookie))
+        set(value) {
+            authStore.state(StorageSchema.Auth.cloudflareCookie).set(value.cookie)
+        }
+
+    val cloudFlareCookieStateFlow
+        get() = authStore.state(StorageSchema.Auth.cloudflareCookie).flow
+
+    // update related
 
     var updateNodeId: String
-        get() = getSpValue(UPDATE_NODE_ID, EMPTY_STRING)
-        set(value) = putSpValue(UPDATE_NODE_ID, value)
+        get() = uiStateStore.value(StorageSchema.UiState.updateNodeId)
+        set(value) {
+            uiStateStore.state(StorageSchema.UiState.updateNodeId).set(value)
+        }
 
-    var lastUpdatePopupTime
-        get() = getSpValue(SettingsPreferenceKeys.LAST_UPDATE_POPUP_TIME, 0L)
-        set(value) = putSpValue(SettingsPreferenceKeys.LAST_UPDATE_POPUP_TIME, value)
+    var lastUpdatePopupTime: Long
+        get() = uiStateStore.value(StorageSchema.UiState.lastUpdatePopupTime)
+        set(value) {
+            uiStateStore.state(StorageSchema.UiState.lastUpdatePopupTime).set(value)
+        }
 
-    val updatePopupIntervalDays
-        get() = preferenceSp.getInt(SettingsPreferenceKeys.UPDATE_POPUP_INTERVAL_DAYS, 0)
+    var lastDismissTime: Long
+        get() = uiStateStore.value(StorageSchema.UiState.lastDismissTime)
+        set(value) {
+            uiStateStore.state(StorageSchema.UiState.lastDismissTime).set(value)
+        }
 
-    val useCIUpdateChannel
-        get() = preferenceSp.getBoolean(SettingsPreferenceKeys.USE_CI_UPDATE_CHANNEL, false)
+    val updatePopupIntervalDays: Int
+        get() = settingsStore.value(StorageSchema.Settings.updatePopupIntervalDays)
 
-    // Check if show update dialog.
+    val useCIUpdateChannel: Boolean
+        get() = settingsStore.value(StorageSchema.Settings.useCiUpdateChannel)
+
     @OptIn(ExperimentalTime::class)
     val isUpdateDialogVisible: Boolean
         get() {
             val now = kotlin.time.Clock.System.now()
             val lastCheckTime = kotlin.time.Instant.fromEpochSeconds(lastUpdatePopupTime)
-            val interval = updatePopupIntervalDays
-            return now > lastCheckTime + interval.days
+            return now > lastCheckTime + updatePopupIntervalDays.days
         }
 
-    // 設定 相關
+    // settings
 
     val switchPlayerKernel: String
-        get() {
-            val persistedValue = preferenceSp.getString(
-                SettingsPreferenceKeys.SWITCH_PLAYER_KERNEL,
-                PlaybackEngineType.Media3.persistedValue,
-            ).orEmpty()
-            return PlaybackEngineType.fromString(persistedValue).persistedValue
-        }
+        get() = PlaybackEngineType.fromString(
+            settingsStore.value(StorageSchema.Settings.switchPlayerKernel),
+        ).persistedValue
 
     val showBottomProgress: Boolean
-        get() = preferenceSp.getBoolean(
-            SettingsPreferenceKeys.SHOW_BOTTOM_PROGRESS,
-            true
-        )
+        get() = settingsStore.value(StorageSchema.Settings.showBottomProgress)
 
     val playerSpeed: Float
-        get() = preferenceSp.getString(
-            SettingsPreferenceKeys.PLAYER_SPEED,
-            PlaybackDefaults.DEFAULT_SPEED.toString(),
-        )?.toFloatOrNull() ?: PlaybackDefaults.DEFAULT_SPEED
+        get() = settingsStore.value(StorageSchema.Settings.playerSpeed).toFloatOrNull()
+            ?: PlaybackDefaults.DEFAULT_SPEED
 
     val slideSensitivity: Int
-        get() = preferenceSp.getInt(
-            SettingsPreferenceKeys.SLIDE_SENSITIVITY,
-            PlaybackDefaults.DEFAULT_PROGRESS_SLIDE_SENSITIVITY,
-        )
+        get() = settingsStore.value(StorageSchema.Settings.slideSensitivity)
 
     val longPressSpeedTime: Float
-        get() = preferenceSp.getString(
-            SettingsPreferenceKeys.LONG_PRESS_SPEED_TIMES,
-            PlaybackDefaults.DEFAULT_LONG_PRESS_SPEED_MULTIPLIER.toString(),
-        )?.toFloatOrNull() ?: PlaybackDefaults.DEFAULT_LONG_PRESS_SPEED_MULTIPLIER
+        get() = settingsStore.value(StorageSchema.Settings.longPressSpeedTimes).toFloatOrNull()
+            ?: PlaybackDefaults.DEFAULT_LONG_PRESS_SPEED_MULTIPLIER
 
     val videoLanguage: String
-        get() = preferenceSp.getString(SettingsPreferenceKeys.VIDEO_LANGUAGE, "zhs") ?: "zht"
+        get() = settingsStore.value(StorageSchema.Settings.videoLanguage)
 
     val videoQuality: String
-        get() = preferenceSp.getString(SettingsPreferenceKeys.DEFAULT_VIDEO_QUALITY, "1080P") ?: "1080P"
+        get() = settingsStore.value(StorageSchema.Settings.defaultVideoQuality)
 
     val showPlayedIndicator: Boolean
-        get() = preferenceSp.getBoolean(SettingsPreferenceKeys.SHOW_PLAYED_INDICATOR,true)
+        get() = settingsStore.value(StorageSchema.Settings.showPlayedIndicator)
 
     val allowPipMode: Boolean
-        get() = preferenceSp.getBoolean(SettingsPreferenceKeys.ALLOW_PIP_MODE, false)
+        get() = settingsStore.value(StorageSchema.Settings.allowPipMode)
 
     val searchGridColumnsConfig: SearchGridColumnsConfig
         get() = SearchGridColumnsConfig(
-            compactColumns = preferenceSp.getInt(
-                SettingsPreferenceKeys.SEARCH_GRID_COLUMNS_COMPACT,
-                SearchGridColumnsConfig.DEFAULT_COMPACT_COLUMNS,
-            ),
-            mediumColumns = preferenceSp.getInt(
-                SettingsPreferenceKeys.SEARCH_GRID_COLUMNS_MEDIUM,
-                SearchGridColumnsConfig.DEFAULT_MEDIUM_COLUMNS,
-            ),
-            expandedColumns = preferenceSp.getInt(
-                SettingsPreferenceKeys.SEARCH_GRID_COLUMNS_EXPANDED,
-                SearchGridColumnsConfig.DEFAULT_EXPANDED_COLUMNS,
-            ),
-            largeColumns = preferenceSp.getInt(
-                SettingsPreferenceKeys.SEARCH_GRID_COLUMNS_LARGE,
-                SearchGridColumnsConfig.DEFAULT_LARGE_COLUMNS,
-            ),
+            compactColumns = settingsStore.value(StorageSchema.Settings.searchGridColumnsCompact),
+            mediumColumns = settingsStore.value(StorageSchema.Settings.searchGridColumnsMedium),
+            expandedColumns = settingsStore.value(StorageSchema.Settings.searchGridColumnsExpanded),
+            largeColumns = settingsStore.value(StorageSchema.Settings.searchGridColumnsLarge),
         )
 
     val horizontalCardCountConfig: HorizontalCardCountConfig
         get() = HorizontalCardCountConfig(
-            narrowCount = preferenceSp.getString(
-                SettingsPreferenceKeys.HORIZONTAL_CARD_COUNT_NARROW,
-                HorizontalCardCountConfig.DEFAULT_NARROW_COUNT.toString(),
-            )?.toFloatOrNull() ?: HorizontalCardCountConfig.DEFAULT_NARROW_COUNT,
-            compactCount = preferenceSp.getString(
-                SettingsPreferenceKeys.HORIZONTAL_CARD_COUNT_COMPACT,
-                HorizontalCardCountConfig.DEFAULT_COMPACT_COUNT.toString(),
-            )?.toFloatOrNull() ?: HorizontalCardCountConfig.DEFAULT_COMPACT_COUNT,
-            mediumCount = preferenceSp.getString(
-                SettingsPreferenceKeys.HORIZONTAL_CARD_COUNT_MEDIUM,
-                HorizontalCardCountConfig.DEFAULT_MEDIUM_COUNT.toString(),
-            )?.toFloatOrNull() ?: HorizontalCardCountConfig.DEFAULT_MEDIUM_COUNT,
-            expandedCount = preferenceSp.getString(
-                SettingsPreferenceKeys.HORIZONTAL_CARD_COUNT_EXPANDED,
-                HorizontalCardCountConfig.DEFAULT_EXPANDED_COUNT.toString(),
-            )?.toFloatOrNull() ?: HorizontalCardCountConfig.DEFAULT_EXPANDED_COUNT,
+            narrowCount = settingsStore.value(StorageSchema.Settings.horizontalCardCountNarrow)
+                .toFloatOrNull() ?: HorizontalCardCountConfig.DEFAULT_NARROW_COUNT,
+            compactCount = settingsStore.value(StorageSchema.Settings.horizontalCardCountCompact)
+                .toFloatOrNull() ?: HorizontalCardCountConfig.DEFAULT_COMPACT_COUNT,
+            mediumCount = settingsStore.value(StorageSchema.Settings.horizontalCardCountMedium)
+                .toFloatOrNull() ?: HorizontalCardCountConfig.DEFAULT_MEDIUM_COUNT,
+            expandedCount = settingsStore.value(StorageSchema.Settings.horizontalCardCountExpanded)
+                .toFloatOrNull() ?: HorizontalCardCountConfig.DEFAULT_EXPANDED_COUNT,
         )
 
     val fakeLauncherIcon: String
-        get() = preferenceSp.getString(
-            SettingsPreferenceKeys.FAKE_LAUNCHER_ICON,
-            "com.yenaly.han1meviewer.LauncherAliasDefault") ?: "com.yenaly.han1meviewer.LauncherAliasDefault"
+        get() = settingsStore.value(StorageSchema.Settings.fakeLauncherIcon)
 
     val baseUrl: String
         get() {
@@ -199,24 +170,20 @@ object Preferences {
                 val url = if (appendCustomMirrorPath) customMirrorSite else customMirrorSite.toRootUrl()
                 return url.toRetrofitBaseUrl()
             }
-            return preferenceSp.getString(SettingsPreferenceKeys.DOMAIN_NAME, HANIME_URL[0])
-                ?: HANIME_URL[0]
+            return settingsStore.value(StorageSchema.Settings.domainName)
         }
 
     val homeUrl: String
-        get() {
-            if (useCustomMirrorSite && customMirrorSite.isNotBlank()) return customMirrorSite
-            return baseUrl
-        }
+        get() = if (useCustomMirrorSite && customMirrorSite.isNotBlank()) customMirrorSite else baseUrl
 
     val useCustomMirrorSite: Boolean
-        get() = preferenceSp.getBoolean(SettingsPreferenceKeys.USE_CUSTOM_MIRROR_SITE, false)
+        get() = settingsStore.value(StorageSchema.Settings.useCustomMirrorSite)
 
     val customMirrorSite: String
-        get() = preferenceSp.getString(SettingsPreferenceKeys.CUSTOM_MIRROR_SITE, EMPTY_STRING).orEmpty()
+        get() = settingsStore.value(StorageSchema.Settings.customMirrorSite)
 
     val appendCustomMirrorPath: Boolean
-        get() = preferenceSp.getBoolean(SettingsPreferenceKeys.APPEND_CUSTOM_MIRROR_PATH, true)
+        get() = settingsStore.value(StorageSchema.Settings.appendCustomMirrorPath)
 
     private fun String.toRetrofitBaseUrl(): String = if (endsWith('/')) this else "$this/"
 
@@ -226,160 +193,193 @@ object Preferences {
     }
 
     val selectedBaseUrl: String
-        get() = preferenceSp.getString(SettingsPreferenceKeys.SELECTED_BASE_URL, HANIME_URL[0])
-            ?: HANIME_URL[0]
+        get() = settingsStore.value(StorageSchema.Settings.selectedBaseUrl)
 
     val useBuiltInHosts: Boolean
-        get() = preferenceSp.getBoolean(SettingsPreferenceKeys.USE_BUILT_IN_HOSTS, false)
+        get() = settingsStore.value(StorageSchema.Settings.useBuiltInHosts)
 
     val customHostsData: String
-        get() = preferenceSp.getString(SettingsPreferenceKeys.CUSTOM_HOSTS_DATA, EMPTY_STRING).orEmpty()
+        get() = settingsStore.value(StorageSchema.Settings.customHostsData)
 
     val useDoH: Boolean
-        get() = preferenceSp.getBoolean(SettingsPreferenceKeys.USE_DOH, false)
+        get() = settingsStore.value(StorageSchema.Settings.useDoh)
 
     val dohPreset: String
-        get() = preferenceSp.getString(SettingsPreferenceKeys.DOH_PRESET, "alidns") ?: "alidns"
+        get() = settingsStore.value(StorageSchema.Settings.dohPreset)
 
     val dohCustomUrl: String
-        get() = preferenceSp.getString(SettingsPreferenceKeys.DOH_CUSTOM_URL, EMPTY_STRING).orEmpty()
+        get() = settingsStore.value(StorageSchema.Settings.dohCustomUrl)
 
     val dohBootstrapIps: String
-        get() = preferenceSp.getString(SettingsPreferenceKeys.DOH_BOOTSTRAP_IPS, EMPTY_STRING).orEmpty()
+        get() = settingsStore.value(StorageSchema.Settings.dohBootstrapIps)
 
     val dohTimeoutSeconds: Int
-        get() = preferenceSp.getInt(SettingsPreferenceKeys.DOH_TIMEOUT_SECONDS, 10)
-
-    // 關鍵H幀 相關
+        get() = settingsStore.value(StorageSchema.Settings.dohTimeoutSeconds)
 
     val whenCountdownRemind: Int
-        get() = preferenceSp.getInt(
-            SettingsPreferenceKeys.WHEN_COUNTDOWN_REMIND,
-            PlaybackDefaults.DEFAULT_KEYFRAME_COUNTDOWN_SECONDS,
-        ) * 1_000 // 越不了界，最大就30_000ms而已
+        get() = settingsStore.value(StorageSchema.Settings.whenCountdownRemind) * 1_000
 
     val showCommentWhenCountdown: Boolean
-        get() = preferenceSp.getBoolean(
-            SettingsPreferenceKeys.SHOW_COMMENT_WHEN_COUNTDOWN,
-            false
-        )
+        get() = settingsStore.value(StorageSchema.Settings.showCommentWhenCountdown)
 
     val hKeyframesEnable: Boolean
-        get() = preferenceSp.getBoolean(
-            SettingsPreferenceKeys.H_KEYFRAMES_ENABLE,
-            true
-        )
+        get() = settingsStore.value(StorageSchema.Settings.hKeyframesEnable)
 
     val sharedHKeyframesEnable: Boolean
-        get() = preferenceSp.getBoolean(
-            SettingsPreferenceKeys.SHARED_H_KEYFRAMES_ENABLE,
-            true
-        )
+        get() = settingsStore.value(StorageSchema.Settings.sharedHKeyframesEnable)
 
     val sharedHKeyframesUseFirst: Boolean
-        get() = preferenceSp.getBoolean(
-            SettingsPreferenceKeys.SHARED_H_KEYFRAMES_USE_FIRST,
-            false
-        )
-
-    // 代理 相關
+        get() = settingsStore.value(StorageSchema.Settings.sharedHKeyframesUseFirst)
 
     val proxyType: Int
-        get() = preferenceSp.getInt(
-            SettingsPreferenceKeys.PROXY_TYPE,
-            HProxySelector.TYPE_SYSTEM
-        )
+        get() = settingsStore.value(StorageSchema.Settings.proxyType)
 
     val proxyIp: String
-        get() = preferenceSp.getString(SettingsPreferenceKeys.PROXY_IP, EMPTY_STRING).orEmpty()
+        get() = settingsStore.value(StorageSchema.Settings.proxyIp)
 
     val proxyPort: Int
-        get() = preferenceSp.getInt(SettingsPreferenceKeys.PROXY_PORT, -1)
-
-    // 隐私 相關
+        get() = settingsStore.value(StorageSchema.Settings.proxyPort)
 
     val isAnalyticsEnabled: Boolean
-        get() = preferenceSp.getBoolean(SettingsPreferenceKeys.USE_ANALYTICS, true)
-
-    // 下载 相關
+        get() = settingsStore.value(StorageSchema.Settings.useAnalytics)
 
     val downloadCountLimit: Int
-        get() = preferenceSp.getInt(
-            SettingsPreferenceKeys.DOWNLOAD_COUNT_LIMIT,
-            // HanimeDownloadManager.MAX_CONCURRENT_DOWNLOAD_DEF
-            HanimeDownloadManagerV2.MAX_CONCURRENT_DOWNLOAD_DEF
-        )
+        get() = settingsStore.value(StorageSchema.Settings.downloadCountLimit)
 
     val collapseDownloadedGroup: Boolean
-        get() = preferenceSp.getBoolean(SettingsPreferenceKeys.COLLAPSE_DOWNLOADED_GROUP,false)
+        get() = settingsStore.value(StorageSchema.Settings.collapseDownloadedGroup)
+
     val isUsePrivateStorage: Boolean
-        get() = preferenceSp.getBoolean(SettingsPreferenceKeys.USE_PRIVATE_STORAGE,true)
+        get() = settingsStore.value(StorageSchema.Settings.usePrivateStorage)
+
     val safDownloadPath: String?
-        get() = preferenceSp.getString(SafFileManager.KEY_TREE_URI,null)
+        get() = settingsStore.value(StorageSchema.Settings.safDownloadPath)
 
     val useDarkMode: String
-        get() = preferenceSp.getString(SettingsPreferenceKeys.USE_DARK_MODE,"always_off") ?: "always_off"
+        get() = settingsStore.value(StorageSchema.Settings.useDarkMode)
+
     val useDynamicColor: Boolean
-        get() = preferenceSp.getBoolean(SettingsPreferenceKeys.USE_DYNAMIC_COLOR,false)
+        get() = settingsStore.value(StorageSchema.Settings.useDynamicColor)
+
     val themeColor: String?
-        get() = preferenceSp.getString(SettingsPreferenceKeys.THEME_COLOR, null)
+        get() = settingsStore.value(StorageSchema.Settings.themeColor)
+
     val allowResumePlayback: Boolean
-        get() = preferenceSp.getBoolean(SettingsPreferenceKeys.ALLOW_RESUME_PLAYBACK,true)
+        get() = settingsStore.value(StorageSchema.Settings.allowResumePlayback)
 
     val searchArtistIgnoreVideoType: Boolean
-        get() = preferenceSp.getBoolean(SettingsPreferenceKeys.SEARCH_ARTIST_IGNORE_VIDEO_TYPE,false)
+        get() = settingsStore.value(StorageSchema.Settings.searchArtistIgnoreVideoType)
 
     val disableMobileDataWarning: Boolean
-        get() = preferenceSp.getBoolean(SettingsPreferenceKeys.DISABLE_MOBILE_DATA_WARNING,false)
+        get() = settingsStore.value(StorageSchema.Settings.disableMobileDataWarning)
 
     val disablePredictiveBack: Boolean
-        get() = preferenceSp.getBoolean(SettingsPreferenceKeys.DISABLE_PREDICTIVE_BACK, false)
+        get() = settingsStore.value(StorageSchema.Settings.disablePredictiveBack)
 
     val tabletMode: Boolean
-        get() = preferenceSp.getBoolean(SettingsPreferenceKeys.TABLET_MODE, false)
+        get() = settingsStore.value(StorageSchema.Settings.tabletMode)
 
-    /**
-     * MPV播放器设置
-     */
-    val mpvProfile: String // 预设模式
-        get() = preferenceSp.getString(SettingsPreferenceKeys.MPV_PROFILE, "fast") ?: "fast"
+    val mpvProfile: String
+        get() = settingsStore.value(StorageSchema.Settings.mpvProfile)
 
-    val enableGPUNextRenderer: Boolean // gpu-next 渲染器
-        get() = preferenceSp.getBoolean(SettingsPreferenceKeys.ENABLE_GPU_NEXT_RENDERER, false)
+    val enableGPUNextRenderer: Boolean
+        get() = settingsStore.value(StorageSchema.Settings.enableGpuNextRenderer)
 
-    val mpvInterpolation: Boolean  // 插帧相关
-        get() = preferenceSp.getBoolean(SettingsPreferenceKeys.MPV_INTERPOLATION, false)
+    val mpvInterpolation: Boolean
+        get() = settingsStore.value(StorageSchema.Settings.mpvInterpolation)
 
-    val mpvDeband: Boolean  // 去色带
-        get() = preferenceSp.getBoolean(SettingsPreferenceKeys.MPV_DEBAND, true)
+    val mpvDeband: Boolean
+        get() = settingsStore.value(StorageSchema.Settings.mpvDeband)
 
-    val mpvFramedrop: Boolean  // GPU 繁忙时允许丢帧
-        get() = preferenceSp.getBoolean(SettingsPreferenceKeys.MPV_FRAMEDROP, true)
+    val mpvFramedrop: Boolean
+        get() = settingsStore.value(StorageSchema.Settings.mpvFramedrop)
 
-    val mpvHwdec: String  // 硬件解码
-        get() = preferenceSp.getString(SettingsPreferenceKeys.MPV_HWDEC, "Auto")?: "Auto"
+    val mpvHwdec: String
+        get() = settingsStore.value(StorageSchema.Settings.mpvHwdec)
 
-    val mpvCacheSecs: Int  // 预缓存秒数
-        get() = preferenceSp.getInt(SettingsPreferenceKeys.MPV_CACHE_SECS, 60)
+    val mpvCacheSecs: Int
+        get() = settingsStore.value(StorageSchema.Settings.mpvCacheSecs)
 
-    val mpvTlsVerify: Boolean  // 忽略证书验证
-        get() = preferenceSp.getBoolean(SettingsPreferenceKeys.MPV_TLS_VERIFY, true)
+    val mpvTlsVerify: Boolean
+        get() = settingsStore.value(StorageSchema.Settings.mpvTlsVerify)
 
-    val mpvNetworkTimeout: Int  // 请求超时
-        get() = preferenceSp.getInt(SettingsPreferenceKeys.MPV_NETWORK_TIMEOUT, 10)
+    val mpvNetworkTimeout: Int
+        get() = settingsStore.value(StorageSchema.Settings.mpvNetworkTimeout)
 
     val customMpvParams: String
-        get() = preferenceSp.getString(SettingsPreferenceKeys.CUSTOM_PARAMS,"")?: ""
+        get() = settingsStore.value(StorageSchema.Settings.customMpvParams)
 
-    /**
-     * 对应关系详见 [SpeedLimitInterceptor.SPEED_BYTES]
-     */
     val downloadSpeedLimit: Long
         get() {
-            val index = preferenceSp.getInt(
-                SettingsPreferenceKeys.DOWNLOAD_SPEED_LIMIT,
-                SpeedLimitInterceptor.NO_LIMIT_INDEX
-            )
+            val index = settingsStore.value(StorageSchema.Settings.downloadSpeedLimit)
             return SpeedLimitInterceptor.SPEED_BYTES[index]
         }
+
+    fun getBooleanSetting(key: String, defaultValue: Boolean): Boolean =
+        readSetting(key, StorageValueKind.Boolean) as? Boolean ?: defaultValue
+
+    fun getIntSetting(key: String, defaultValue: Int): Int =
+        readSetting(key, StorageValueKind.Int) as? Int ?: defaultValue
+
+    fun getStringSetting(key: String, defaultValue: String?): String? =
+        readSetting(key, StorageValueKind.String) as? String ?: defaultValue
+
+    fun editSettings(block: SettingsEditor.() -> Unit): Boolean {
+        val editor = SettingsEditor().apply(block)
+        return settingsStore.writeBatch(editor.mutations).isFullySuccessful
+    }
+
+    class SettingsEditor internal constructor() {
+        internal val mutations = mutableListOf<StorageMutation>()
+
+        fun putBoolean(key: String, value: Boolean) {
+            mutations += StorageMutation.Set(requireBooleanKey(key), value)
+        }
+
+        fun putInt(key: String, value: Int) {
+            mutations += StorageMutation.Set(requireIntKey(key), value)
+        }
+
+        fun putString(key: String, value: String?) {
+            mutations += if (value == null) {
+                StorageMutation.Remove(requireStringKey(key))
+            } else {
+                StorageMutation.Set(requireStringKey(key), value)
+            }
+        }
+
+        fun remove(key: String) {
+            mutations += StorageMutation.Remove(settingsStore.requireKey(key))
+        }
+    }
+
+    private fun readSetting(key: String, expectedKind: StorageValueKind): Any? {
+        val storageKey = settingsStore.findKey(key) ?: return null
+        if (storageKey.codec.storageKind != expectedKind) return null
+        return settingsStore.value(storageKey)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun requireBooleanKey(name: String): StorageKey<Boolean> =
+        settingsStore.requireKey(name).also {
+            require(it.codec.storageKind == StorageValueKind.Boolean) {
+                "Setting $name is ${it.codec.storageKind}, not Boolean"
+            }
+        } as StorageKey<Boolean>
+
+    @Suppress("UNCHECKED_CAST")
+    private fun requireIntKey(name: String): StorageKey<Int> =
+        settingsStore.requireKey(name).also {
+            require(it.codec.storageKind == StorageValueKind.Int) {
+                "Setting $name is ${it.codec.storageKind}, not Int"
+            }
+        } as StorageKey<Int>
+
+    @Suppress("UNCHECKED_CAST")
+    private fun requireStringKey(name: String): StorageKey<String> =
+        settingsStore.requireKey(name).also {
+            require(it.codec.storageKind == StorageValueKind.String) {
+                "Setting $name is ${it.codec.storageKind}, not String"
+            }
+        } as StorageKey<String>
 }

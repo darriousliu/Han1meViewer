@@ -866,6 +866,10 @@ hanime1.me以外のドメインは、特定の時間帯にhanime1.meにリダイ
     <string name="backup_export_success">データバックアップをエクスポートしました</string>
     <string name="backup_export_failed">データバックアップのエクスポートに失敗しました</string>
     <string name="backup_import_success">データバックアップをインポートしました</string>
+    <string name="backup_import_partial">データをインポートしましたが、不明または互換性のない一部の設定をスキップしました</string>
+    <string name="backup_import_lock_not_configured">データをインポートしましたが、端末の認証情報が未設定のため、アプリロックはオフのままです</string>
+    <string name="backup_import_lock_unsupported">データをインポートしましたが、このシステムではアプリロック認証を利用できないため、オフのままです</string>
+    <string name="backup_import_lock_not_restored">データをインポートしましたが、認証が完了しなかったため、アプリロックはオフのままです</string>
     <string name="backup_import_failed">データバックアップのインポートに失敗しました。ファイルが正しいか確認してください</string>
     <string name="home_category_layout">ホーム欄の並び替えと表示</string>
     <string name="home_category_layout_summary">%1$d / %2$d 件を表示中</string>
