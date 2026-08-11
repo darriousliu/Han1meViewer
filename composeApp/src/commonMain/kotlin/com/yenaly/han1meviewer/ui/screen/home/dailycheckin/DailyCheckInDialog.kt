@@ -19,9 +19,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -46,7 +43,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -57,14 +53,15 @@ import androidx.compose.ui.window.DialogProperties
 import coil3.compose.AsyncImage
 import com.yenaly.han1meviewer.FULL_DATE_FORMAT
 import com.yenaly.han1meviewer.LOCAL_TIME_FORMAT
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.currentLocalDateTime
+import com.yenaly.han1meviewer.generated.resources.*
 import com.yenaly.han1meviewer.logic.entity.CheckInRecordEntity
 import com.yenaly.han1meviewer.logic.entity.CheckInType
 import com.yenaly.han1meviewer.logic.entity.WatchHistoryEntity
+import com.yenaly.han1meviewer.platform.NumberFormatter
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.format
-import org.jetbrains.compose.resources.stringResource as cmpStringResource
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * 打卡弹窗。展示历史记录、添加新记录的表单。
@@ -143,7 +140,7 @@ fun CheckInDialog(
                         )
                     }
                     IconButton(onClick = onDismiss) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "close")
+                        Icon(DailyCheckInIcons.ArrowBack, "close")
                     }
                 }
 
@@ -151,7 +148,7 @@ fun CheckInDialog(
 
                 if (existingRecords.isNotEmpty()) {
                     Text(
-                        text = stringResource(R.string.dialog_existing_records),
+                        text = stringResource(Res.string.dialog_existing_records),
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(start = 16.dp, top = 12.dp, bottom = 4.dp)
@@ -182,10 +179,10 @@ fun CheckInDialog(
                 }
 
                 if (canAddMore) {
-                    val eggSex = stringResource(R.string.egg_three)
-                    val eggNine = stringResource(R.string.egg_four)
-                    val eggGod = stringResource(R.string.egg_god, 6)
-                    val eggRoundTemplate = stringResource(R.string.egg_round)
+                    val eggSex = stringResource(Res.string.egg_three)
+                    val eggNine = stringResource(Res.string.egg_four)
+                    val eggGod = stringResource(Res.string.egg_god, 6)
+                    val eggRoundTemplate = stringResource(Res.string.egg_round)
                     AddCheckInForm(
                         watchHistory = watchHistory,
                         onNavigateToVideo = onNavigateToVideo,
@@ -197,9 +194,7 @@ fun CheckInDialog(
                                     newCount + 1 == 4 -> onEasterEgg(eggNine)
                                     newCount + 1 == 6 -> onEasterEgg(eggGod)
                                     newCount + 1 % 10 == 0 -> onEasterEgg(
-                                        eggRoundTemplate.format(
-                                            newCount
-                                        )
+                                        eggRoundTemplate.formatInteger(newCount)
                                     )
                                 }
                                 onDismiss()
@@ -209,7 +204,7 @@ fun CheckInDialog(
                     )
                 } else if (todayCount >= 20) {
                     Text(
-                        text = stringResource(R.string.dialog_max_reached),
+                        text = stringResource(Res.string.dialog_max_reached),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.padding(16.dp)
@@ -244,7 +239,7 @@ fun AddCheckInForm(
 
     Column(modifier = Modifier.padding(horizontal = 16.dp)) {
         Text(
-            text = stringResource(R.string.dialog_type_label),
+            text = stringResource(Res.string.dialog_type_label),
             style = MaterialTheme.typography.titleSmall,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 4.dp)
@@ -257,7 +252,7 @@ fun AddCheckInForm(
                 FilterChip(
                     selected = selectedType == type,
                     onClick = { selectedType = type },
-                    label = { Text(cmpStringResource(type.displayNameRes)) }
+                    label = { Text(stringResource(type.displayNameRes)) }
                 )
             }
         }
@@ -265,7 +260,7 @@ fun AddCheckInForm(
         Spacer(modifier = Modifier.height(12.dp))
 
         Text(
-            text = stringResource(R.string.dialog_sidedish_label),
+            text = stringResource(Res.string.dialog_sidedish_label),
             style = MaterialTheme.typography.titleSmall,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 4.dp)
@@ -285,8 +280,8 @@ fun AddCheckInForm(
                         label = { Text(dish.substringBefore(sep)) },
                         trailingIcon = {
                             Icon(
-                                Icons.Filled.Close,
-                                contentDescription = stringResource(R.string.remove),
+                                DailyCheckInIcons.Close,
+                                contentDescription = stringResource(Res.string.remove),
                                 modifier = Modifier.size(16.dp)
                             )
                         }
@@ -304,7 +299,7 @@ fun AddCheckInForm(
                     value = sideDishInput,
                     onValueChange = { sideDishInput = it },
                     modifier = Modifier.weight(1f),
-                    placeholder = { Text(stringResource(R.string.dialog_sidedish_hint)) },
+                    placeholder = { Text(stringResource(Res.string.dialog_sidedish_hint)) },
                     singleLine = true
                 )
                 Button(
@@ -318,7 +313,7 @@ fun AddCheckInForm(
                     enabled = sideDishInput.trim().isNotEmpty() && sideDishes.size < 5,
                     modifier = Modifier.padding(start = 8.dp)
                 ) {
-                    Text(stringResource(R.string.add))
+                    Text(stringResource(Res.string.add))
                 }
             }
         }
@@ -326,7 +321,7 @@ fun AddCheckInForm(
         if (watchHistory.isNotEmpty() && sideDishes.size < 5) {
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = stringResource(R.string.dialog_recent_watched),
+                text = stringResource(Res.string.dialog_recent_watched),
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 4.dp)
@@ -348,7 +343,7 @@ fun AddCheckInForm(
         Spacer(modifier = Modifier.height(12.dp))
 
         Text(
-            text = stringResource(R.string.dialog_feeling_label),
+            text = stringResource(Res.string.dialog_feeling_label),
             style = MaterialTheme.typography.titleSmall,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 4.dp)
@@ -359,7 +354,7 @@ fun AddCheckInForm(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(80.dp),
-            placeholder = { Text(stringResource(R.string.dialog_feeling_hint)) },
+            placeholder = { Text(stringResource(Res.string.dialog_feeling_hint)) },
             maxLines = 3
         )
 
@@ -370,7 +365,7 @@ fun AddCheckInForm(
             horizontalArrangement = Arrangement.End
         ) {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.dialog_cancel))
+                Text(stringResource(Res.string.dialog_cancel))
             }
             Spacer(modifier = Modifier.width(8.dp))
             Button(
@@ -385,7 +380,7 @@ fun AddCheckInForm(
                     )
                 }
             ) {
-                Text(stringResource(R.string.dialog_confirm))
+                Text(stringResource(Res.string.dialog_confirm))
             }
         }
 
@@ -464,7 +459,7 @@ fun ExistingRecordItem(
                         color = MaterialTheme.colorScheme.secondaryContainer
                     ) {
                         Text(
-                            text = cmpStringResource(CheckInType.fromDisplayName(record.type).displayNameRes),
+                            text = stringResource(CheckInType.fromDisplayName(record.type).displayNameRes),
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onSecondaryContainer,
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
@@ -490,8 +485,8 @@ fun ExistingRecordItem(
                     modifier = Modifier.size(28.dp)
                 ) {
                     Icon(
-                        Icons.Filled.Close,
-                        contentDescription = stringResource(R.string.delete),
+                        DailyCheckInIcons.Close,
+                        contentDescription = stringResource(Res.string.delete),
                         modifier = Modifier.size(16.dp),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
                     )
@@ -583,6 +578,11 @@ fun ExistingRecordItem(
     }
 }
 
+private fun String.formatInteger(value: Int): String = replace(
+    oldValue = "%1\$d",
+    newValue = NumberFormatter.formatFixedLocalized(value.toDouble(), fractionDigits = 0),
+)
+
 /**
  * 播放历史条目，在打卡弹窗中用作"配菜"快速选择。
  *
@@ -634,7 +634,7 @@ fun WatchHistoryItem(
                 )
             }
             Text(
-                text = stringResource(R.string.dialog_add_sidedish),
+                text = stringResource(Res.string.dialog_add_sidedish),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.clickable(onClick = onClick)

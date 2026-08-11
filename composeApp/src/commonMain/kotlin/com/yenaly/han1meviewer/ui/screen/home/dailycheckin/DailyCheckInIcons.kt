@@ -13,6 +13,22 @@ import androidx.compose.ui.unit.dp
  * Compose Material Icons Extended 组件。
  */
 internal object DailyCheckInIcons {
+    val ArrowBack: ImageVector by lazy {
+        materialIcon("ArrowBack", autoMirror = true) {
+            moveTo(20.0f, 11.0f)
+            horizontalLineTo(7.83f)
+            lineToRelative(5.59f, -5.59f)
+            lineTo(12.0f, 4.0f)
+            lineToRelative(-8.0f, 8.0f)
+            lineToRelative(8.0f, 8.0f)
+            lineToRelative(1.41f, -1.41f)
+            lineTo(7.83f, 13.0f)
+            horizontalLineTo(20.0f)
+            verticalLineToRelative(-2.0f)
+            close()
+        }
+    }
+
     val Check: ImageVector by lazy {
         materialIcon("Check") {
             moveTo(9.0f, 16.17f)
@@ -21,6 +37,24 @@ internal object DailyCheckInIcons {
             lineTo(9.0f, 19.0f)
             lineTo(21.0f, 7.0f)
             lineToRelative(-1.41f, -1.41f)
+            close()
+        }
+    }
+
+    val Close: ImageVector by lazy {
+        materialIcon("Close") {
+            moveTo(19.0f, 6.41f)
+            lineTo(17.59f, 5.0f)
+            lineTo(12.0f, 10.59f)
+            lineTo(6.41f, 5.0f)
+            lineTo(5.0f, 6.41f)
+            lineTo(10.59f, 12.0f)
+            lineTo(5.0f, 17.59f)
+            lineTo(6.41f, 19.0f)
+            lineTo(12.0f, 13.41f)
+            lineTo(17.59f, 19.0f)
+            lineTo(19.0f, 17.59f)
+            lineTo(13.41f, 12.0f)
             close()
         }
     }
@@ -106,6 +140,7 @@ internal object DailyCheckInIcons {
 
 private inline fun materialIcon(
     name: String,
+    autoMirror: Boolean = false,
     pathBuilder: androidx.compose.ui.graphics.vector.PathBuilder.() -> Unit,
 ): ImageVector = ImageVector.Builder(
     name = "DailyCheckIn.$name",
@@ -113,6 +148,7 @@ private inline fun materialIcon(
     defaultHeight = 24.dp,
     viewportWidth = 24.0f,
     viewportHeight = 24.0f,
+    autoMirror = autoMirror,
 ).apply {
     path(
         fill = SolidColor(Color.Black),
