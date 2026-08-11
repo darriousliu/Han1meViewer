@@ -51,6 +51,7 @@ circularRevealSwitch = "0.4.6"
 desugarJdkLibs = "2.1.5"
 firebaseBom = "34.17.0"
 composeBom = "2026.06.01"
+composeMultiplatform = "1.11.0"
 compose-material3 = "1.5.0-alpha25"
 mpv = "v0.1.7"
 
@@ -102,6 +103,7 @@ androidx-activity-compose = { group = "androidx.activity", name = "activity-comp
 compose-material3 = { group = "androidx.compose.material3", name = "material3",version.ref = "compose-material3" }
 compose-ui-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 compose-ui-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+compose-runtime-multiplatform = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "composeMultiplatform" }
 
 # Parse
 serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
@@ -173,6 +175,8 @@ aboutlibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "abo
 ben-manes-versions = { id = "com.github.ben-manes.versions", version.ref = "benManesVersions" }
 com-android-application = { id = "com.android.application", version.ref = "androidGradle" }
 com-android-library = { id = "com.android.library", version.ref = "androidGradle" }
+android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "androidGradle" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 com-google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 org-jetbrains-kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 org-jetbrains-kotlin-plugin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
@@ -180,4 +184,4 @@ com-google-gms-google-services = { id = "com.google.gms.google-services", versio
 com-google-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.7" }
 com-google-firebase-firebase-pref = { id = "com.google.firebase.firebase-perf", version = "2.0.2" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigation" }
+compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }

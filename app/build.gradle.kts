@@ -4,39 +4,44 @@ import Config.Version.createVersion
 import Config.Version.source
 import Config.isRelease
 import Config.lastCommitSha
-import com.android.build.api.variant.impl.VariantOutputImpl
+import com.android.build.api.artifact.SingleArtifact
+import com.android.build.api.variant.BuiltArtifactsLoader
+import org.gradle.api.DefaultTask
+import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.file.FileSystemOperations
+import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputDirectory
+import org.gradle.api.tasks.Internal
+import org.gradle.api.tasks.OutputDirectory
+import org.gradle.api.tasks.PathSensitive
+import org.gradle.api.tasks.PathSensitivity
+import org.gradle.api.tasks.TaskAction
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import javax.inject.Inject
 
 plugins {
     alias(libs.plugins.com.android.application)
-    alias(libs.plugins.org.jetbrains.kotlin.plugin.parcelize)
-    alias(libs.plugins.org.jetbrains.kotlin.plugin.serialization)
-    alias(libs.plugins.com.google.devtools.ksp)
     alias(libs.plugins.com.google.gms.google.services)
     alias(libs.plugins.com.google.firebase.crashlytics)
     alias(libs.plugins.com.google.firebase.firebase.pref)
-    alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.navigation.safeargs)
-    alias(libs.plugins.aboutlibraries)
     alias(libs.plugins.ben.manes.versions)
 }
 
 android {
-    compileSdk = property("compile.sdk")?.toString()?.toIntOrNull()
+    namespace = "com.yenaly.han1meviewer.androidapp"
+    compileSdk = property("compile.sdk").toString().toInt()
 
-    val commitSha = if (isRelease) lastCommitSha else "b8eace8" // 方便调试
-
-    // 先 Github Secrets 再读取环境变量，若没有则读取本地文件
-
+    val commitSha = if (isRelease) lastCommitSha else "b8eace8"
     val githubToken = System.getenv("HA_GITHUB_TOKEN") ?: File(
-        projectDir, "ha1_github_token.txt"
+        projectDir,
+        "ha1_github_token.txt",
     ).checkIfExists()?.readText().orEmpty()
-
 
     defaultConfig {
         applicationId = "com.yenaly.han1meviewer"
-        minSdk = property("min.sdk")?.toString()?.toIntOrNull()
-        targetSdk = property("target.sdk")?.toString()?.toIntOrNull()
+        minSdk = property("min.sdk").toString().toInt()
+        targetSdk = property("target.sdk").toString().toInt()
         val (code, name) = createVersion(major = 1, minor = 0, patch = 1)
         versionCode = code
         versionName = name
@@ -44,13 +49,13 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "COMMIT_SHA", "\"$commitSha\"")
-        buildConfigField("String", "VERSION_NAME", "\"${versionName}\"")
+        buildConfigField("String", "VERSION_NAME", "\"$versionName\"")
         buildConfigField("int", "VERSION_CODE", "$versionCode")
-        buildConfigField("String", "HA_GITHUB_TOKEN", "\"${githubToken}\"")
-        buildConfigField("String", "VERSION_SOURCE", "\"${source}\"")
-
+        buildConfigField("String", "HA_GITHUB_TOKEN", "\"$githubToken\"")
+        buildConfigField("String", "VERSION_SOURCE", "\"$source\"")
         buildConfigField("int", "SEARCH_YEAR_RANGE_END", "${Config.thisYear}")
     }
+
     signingConfigs {
         create("release") {
             storeFile = file(System.getenv("HOME") + "/.android/keystore.jks")
@@ -62,7 +67,7 @@ android {
 
     splits {
         abi {
-            isEnable = (gradle.startParameter.taskRequests.toString().contains("Release"))
+            isEnable = gradle.startParameter.taskRequests.toString().contains("Release")
             reset()
             include("arm64-v8a")
             isUniversalApk = false
@@ -75,155 +80,112 @@ android {
             isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
             signingConfig = signingConfigs.getByName("release")
             manifestPlaceholders["appIcon"] = "@mipmap/ic_launcher_new"
-
         }
 
         debug {
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
             )
             applicationIdSuffix = ".debug"
             manifestPlaceholders["appIcon"] = "@mipmap/ic_launcher_debug"
         }
     }
+
     buildFeatures {
-        //noinspection DataBindingWithoutKapt
-        dataBinding = true
         buildConfig = true
-        viewBinding = true
-        compose  =  true
     }
+
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
+
     lint {
-        disable += setOf("EnsureInitializerMetadata")
+        disable += "EnsureInitializerMetadata"
     }
-    namespace = "com.yenaly.han1meviewer"
 }
 
 kotlin {
     compilerOptions {
-        jvmTarget.value(JvmTarget.JVM_21)
+        jvmTarget.set(JvmTarget.JVM_21)
         freeCompilerArgs.addAll(
             "-opt-in=kotlin.RequiresOptIn",
-            "-jvm-default=enable"
+            "-jvm-default=enable",
         )
     }
 }
 
-
 androidComponents {
     onVariants { variant ->
-        variant.outputs.forEach { output ->
-
-            //  val apkName = "你的应用名_V${output.versionName.get()}_Build${output.versionCode.get()}_${variant.buildType}.apk"
-            val apkName = "Han1meViewer-v${output.versionName.get()}.apk"
-            (output as VariantOutputImpl).outputFileName = apkName
+        val taskSuffix = variant.name.replaceFirstChar { it.uppercase() }
+        val copyTask = tasks.register<CopyApkTask>("copy${taskSuffix}Apk") {
+            apkDirectory.set(variant.artifacts.get(SingleArtifact.APK))
+            builtArtifactsLoader.set(variant.artifacts.getBuiltArtifactsLoader())
+            outputDirectory.set(layout.buildDirectory.dir("outputs/renamedApk/${variant.name}"))
+            outputFileName.set(
+                variant.outputs.single().versionName.map { versionName ->
+                    "Han1meViewer-v$versionName.apk"
+                },
+            )
+        }
+        tasks.configureEach {
+            if (name == "assemble$taskSuffix") {
+                dependsOn(copyTask)
+            }
         }
     }
 }
 
 dependencies {
+    implementation(project(":composeApp"))
     implementation(libs.appcompat)
-    implementation(libs.androidx.window)
-    implementation(libs.androidx.window.java)
-    implementation(project(":yenaly_libs"))
-    implementation(libs.aboutlibraries.core)
-    implementation(libs.androidx.biometric)
-    implementation(libs.androidx.core.splashscreen)
-    implementation(libs.androidx.swiperefreshlayout)
-    implementation(libs.androidx.material.icons.extended)
-    // android related
-
-    implementation(libs.bundles.android.base)
-    implementation(libs.bundles.android.jetpack)
-    implementation(libs.palette)
-    implementation(libs.material)
-    //compose
-    implementation(platform(libs.compose.compose.bom))
-    implementation(libs.compose.ui.graphics)
-    implementation(libs.compose.material3)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.compose.ui.ui.tooling.preview)
-    implementation(libs.androidx.ui)
-    androidTestImplementation(platform(libs.compose.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(platform(libs.compose.compose.bom))
-    debugImplementation(libs.compose.ui.ui.tooling)
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.material.icons.core)
-    implementation(libs.coil.compose)
-    implementation(libs.coil.network.okhttp)
-    implementation(libs.aboutlibraries.compose.m3)
-    implementation(libs.compose.avatar.cropper)
-    // datetime
-
-    implementation(libs.datetime)
-
-    // parse
-
-    implementation(libs.serialization.json)
-    implementation(libs.jsoup)
-
-    // network
-
-    implementation(libs.retrofit)
-    implementation(libs.converter.serialization)
-    implementation(libs.okhttp)
-    implementation(libs.okhttp.dns.over.https)
-
-    // pic
-
-    implementation(libs.coil)
-
-
-    // video
-
-    implementation(libs.media3.exoplayer)
-    implementation(libs.media3.exoplayer.hls)
-    implementation(libs.media3.ui.compose)
-    implementation(libs.mpv.lib)
-
-    // view
-
-    implementation(libs.multitype)
-    implementation(libs.base.recyclerview.adapter.helper4)
-    implementation(libs.expandable.textview)
-    implementation(libs.spannable.x)
-    implementation(libs.about)
-    implementation(libs.circular.reveal.switch)
-    implementation(libs.drawerlayout)
-
-    // firebase
-
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.analytics)
-    implementation(libs.firebase.crashlytics)
-    implementation(libs.firebase.perf)
-    implementation(libs.firebase.config)
-    debugImplementation(libs.androidx.ui.test.manifest)
-    implementation(libs.firebase.database)
-    ksp(libs.room.compiler)
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
-    testImplementation(libs.junit)
+    debugImplementation(platform(libs.compose.compose.bom))
+    debugImplementation(libs.compose.ui.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
 
     androidTestImplementation(libs.test.junit)
     androidTestImplementation(libs.test.espresso.core)
-
-    // debugImplementation(libs.leak.canary)
 }
 
-/**
- * This function is used to check if a file exists and is a file.
- */
+abstract class CopyApkTask : DefaultTask() {
+    @get:InputDirectory
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    abstract val apkDirectory: DirectoryProperty
+
+    @get:Internal
+    abstract val builtArtifactsLoader: Property<BuiltArtifactsLoader>
+
+    @get:OutputDirectory
+    abstract val outputDirectory: DirectoryProperty
+
+    @get:Input
+    abstract val outputFileName: Property<String>
+
+    @get:Inject
+    abstract val fileSystemOperations: FileSystemOperations
+
+    @TaskAction
+    fun copyApk() {
+        val builtArtifacts = checkNotNull(
+            builtArtifactsLoader.get().load(apkDirectory.get()),
+        ) { "Unable to load APK metadata from ${apkDirectory.get().asFile}" }
+        val apk = builtArtifacts.elements.single()
+        fileSystemOperations.copy {
+            from(apk.outputFile)
+            into(outputDirectory)
+            rename { outputFileName.get() }
+        }
+    }
+}
+
 fun File.checkIfExists(): File? = if (exists() && isFile) this else null
