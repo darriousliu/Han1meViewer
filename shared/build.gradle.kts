@@ -112,6 +112,9 @@ kotlin {
             implementation(libs.coroutines.core)
             implementation(libs.datetime)
             implementation(libs.serialization.json)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
         }
@@ -163,6 +166,7 @@ kotlin {
 
             // network
 
+            implementation(libs.ktor.client.okhttp)
             implementation(libs.retrofit)
             implementation(libs.converter.serialization)
             implementation(libs.okhttp)
@@ -202,6 +206,14 @@ kotlin {
 
             implementation(libs.crashx)
             // debugImplementation(libs.leak.canary)
+        }
+
+        getByName("iosMain").dependencies {
+            implementation(libs.ktor.client.darwin)
+        }
+
+        jvmMain.dependencies {
+            implementation(libs.ktor.client.okhttp)
         }
 
         val androidJvmMain = create("androidJvmMain") {
