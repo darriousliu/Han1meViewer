@@ -1,4 +1,4 @@
-import SharedBridge
+import Shared
 import SwiftUI
 import UIKit
 
@@ -11,7 +11,7 @@ struct ContentView: View {
 
 private struct ComposeView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIViewController {
-        makeSharedViewController()
+        MainViewControllerKt.MainViewController()
     }
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {

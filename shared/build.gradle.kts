@@ -92,6 +92,18 @@ kotlin {
 
     applyDefaultHierarchyTemplate()
 
+    swiftPMDependencies {
+        iosMinimumDeploymentTarget.set("15.0")
+        swiftPackage(
+            url = url("https://github.com/firebase/firebase-ios-sdk.git"),
+            version = exact(libs.versions.firebaseApple.get()),
+            products = listOf(
+                product("FirebaseAnalytics"),
+                product("FirebaseCrashlytics"),
+            ),
+        )
+    }
+
     sourceSets {
         commonMain.dependencies {
             implementation(libs.compose.multiplatform.runtime)
