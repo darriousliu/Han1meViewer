@@ -1,19 +1,57 @@
 @file:Suppress("UnstableApiUsage")
 
+import Config.Version.createVersion
+import Config.Version.source
+import Config.isRelease
+import Config.lastCommitSha
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.INT
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
+    alias(libs.plugins.org.jetbrains.kotlin.plugin.parcelize)
+    alias(libs.plugins.org.jetbrains.kotlin.plugin.serialization)
+    alias(libs.plugins.com.google.devtools.ksp)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.com.google.devtools.ksp)
+    alias(libs.plugins.aboutlibraries)
+    alias(libs.plugins.ben.manes)
+    alias(libs.plugins.buildkonfig)
+}
+
+val releaseBuild = isRelease
+val commitSha = if (releaseBuild) lastCommitSha else "b8eace8"
+val githubToken = System.getenv("HA_GITHUB_TOKEN") ?: rootProject
+    .file("app/ha1_github_token.txt")
+    .takeIf { it.isFile }
+    ?.readText()
+    .orEmpty()
+val (versionCode, versionName) = createVersion(major = 1, minor = 0, patch = 2)
+val applicationId = "com.yenaly.han1meviewer${if (releaseBuild) "" else ".debug"}"
+
+buildkonfig {
+    packageName = "com.yenaly.han1meviewer"
+    exposeObjectWithName = "BuildConfig"
+
+    defaultConfigs {
+        buildConfigField(BOOLEAN, "DEBUG", (!releaseBuild).toString(), false, true)
+        buildConfigField(STRING, "APPLICATION_ID", applicationId, false, true)
+        buildConfigField(STRING, "COMMIT_SHA", commitSha, false, true)
+        buildConfigField(STRING, "VERSION_NAME", versionName, false, true)
+        buildConfigField(INT, "VERSION_CODE", versionCode.toString(), false, true)
+        buildConfigField(STRING, "HA_GITHUB_TOKEN", githubToken, false, true)
+        buildConfigField(STRING, "VERSION_SOURCE", source, false, true)
+        buildConfigField(INT, "SEARCH_YEAR_RANGE_END", Config.thisYear.toString(), false, true)
+    }
 }
 
 kotlin {
     android {
-        namespace = "com.yenaly.han1meviewer.shared"
+        namespace = "com.yenaly.han1meviewer"
         compileSdk = property("compile.sdk").toString().toInt()
         minSdk = property("min.sdk").toString().toInt()
 

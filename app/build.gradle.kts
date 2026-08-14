@@ -1,9 +1,6 @@
 @file:Suppress("UnstableApiUsage")
 
 import Config.Version.createVersion
-import Config.Version.source
-import Config.isRelease
-import Config.lastCommitSha
 import com.android.build.api.variant.impl.VariantOutputImpl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -17,21 +14,10 @@ plugins {
     alias(libs.plugins.com.google.firebase.firebase.pref)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.navigation.safeargs)
-    id("com.mikepenz.aboutlibraries.plugin") version "14.2.0"
-    id("com.github.ben-manes.versions") version "0.54.0"
 }
 
 android {
     compileSdk = property("compile.sdk")?.toString()?.toIntOrNull()
-
-    val commitSha = if (isRelease) lastCommitSha else "b8eace8" // 方便调试
-
-    // 先 Github Secrets 再读取环境变量，若没有则读取本地文件
-
-    val githubToken = System.getenv("HA_GITHUB_TOKEN") ?: File(
-        projectDir, "ha1_github_token.txt"
-    ).checkIfExists()?.readText().orEmpty()
-
 
     defaultConfig {
         applicationId = "com.yenaly.han1meviewer"
@@ -42,14 +28,6 @@ android {
         versionName = name
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        buildConfigField("String", "COMMIT_SHA", "\"$commitSha\"")
-        buildConfigField("String", "VERSION_NAME", "\"${versionName}\"")
-        buildConfigField("int", "VERSION_CODE", "$versionCode")
-        buildConfigField("String", "HA_GITHUB_TOKEN", "\"${githubToken}\"")
-        buildConfigField("String", "VERSION_SOURCE", "\"${source}\"")
-
-        buildConfigField("int", "SEARCH_YEAR_RANGE_END", "${Config.thisYear}")
     }
     signingConfigs {
         create("release") {
@@ -92,10 +70,7 @@ android {
         }
     }
     buildFeatures {
-        //noinspection DataBindingWithoutKapt
-        dataBinding = true
-        buildConfig = true
-        viewBinding = true
+        buildConfig = false
         compose  =  true
     }
     compileOptions {
@@ -106,7 +81,7 @@ android {
     lint {
         disable += setOf("EnsureInitializerMetadata")
     }
-    namespace = "com.yenaly.han1meviewer"
+    namespace = "com.yenaly.han1meviewer.app"
 }
 
 kotlin {
@@ -143,8 +118,3 @@ dependencies {
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 }
-
-/**
- * This function is used to check if a file exists and is a file.
- */
-fun File.checkIfExists(): File? = if (exists() && isFile) this else null

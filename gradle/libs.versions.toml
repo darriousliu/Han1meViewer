@@ -3,6 +3,7 @@
 aboutlibraries = "14.2.0"
 androidGradle = "9.3.1"
 biometric = "1.1.0"
+buildKonfig = "0.22.0"
 coilCompose = "3.4.0"
 composeAvatarCropper = "1.0.0"
 coreSplashscreen = "1.2.0"
@@ -62,6 +63,7 @@ firebaseBom = "34.13.0"
 composeBom = "2026.05.01"
 compose-material3 = "1.5.0-alpha20"
 mpv = "v0.1.7"
+ben-manes = "0.54.0"
 
 [libraries]
 # Android
@@ -112,7 +114,7 @@ compose-multiplatform-ui = { module = "org.jetbrains.compose.ui:ui", version.ref
 compose-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity" }
-compose-material3 = { group = "androidx.compose.material3", name = "material3",version.ref = "compose-material3" }
+compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "compose-material3" }
 compose-ui-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 compose-ui-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 
@@ -185,6 +187,7 @@ android-jetpack = [
 com-android-application = { id = "com.android.application", version.ref = "androidGradle" }
 com-android-library = { id = "com.android.library", version.ref = "androidGradle" }
 android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "androidGradle" }
+buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildKonfig" }
 com-google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
@@ -196,3 +199,5 @@ com-google-firebase-firebase-pref = { id = "com.google.firebase.firebase-perf", 
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "safeargs" }
+aboutlibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "aboutlibraries" }
+ben-manes = { id = "com.github.ben-manes.versions", version.ref = "ben-manes" }

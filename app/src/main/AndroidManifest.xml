@@ -26,7 +26,7 @@
     </queries>
 
     <application
-        android:name=".HanimeApplication"
+        android:name="com.yenaly.han1meviewer.HanimeApplication"
         android:allowBackup="true"
         android:hasFragileUserData="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -39,13 +39,13 @@
         android:theme="@style/Theme.Hanime"
         tools:targetApi="34">
         <activity
-            android:name=".ui.activity.ManualInputCookiesActivity"
+            android:name="com.yenaly.han1meviewer.ui.activity.ManualInputCookiesActivity"
             android:exported="false"
             android:label="@string/title_activity_qrcode_scanner"
             android:theme="@style/Theme.Hanime" />
 
         <activity
-            android:name=".ui.activity.CloudflareActivity"
+            android:name="com.yenaly.han1meviewer.ui.activity.CloudflareActivity"
             android:theme="@style/Theme.Hanime"
             android:exported="false"
             android:launchMode="singleTask"/>
@@ -80,7 +80,7 @@
 
         <!-- MainActivity 本体：无 launcher 配置 -->
         <activity
-            android:name=".ui.activity.MainActivity"
+            android:name="com.yenaly.han1meviewer.ui.activity.MainActivity"
             android:supportsPictureInPicture="true"
             android:configChanges="orientation|smallestScreenSize|screenLayout|screenSize|keyboardHidden"
             android:exported="true"
@@ -109,12 +109,12 @@
 
         <!-- 默认启动器别名 -->
         <activity-alias
-            android:name=".LauncherAliasDefault"
+            android:name="com.yenaly.han1meviewer.LauncherAliasDefault"
             android:enabled="true"
             android:exported="true"
             android:icon="@mipmap/ic_launcher_new"
             android:label="@string/hanime_app_name"
-            android:targetActivity=".ui.activity.MainActivity">
+            android:targetActivity="com.yenaly.han1meviewer.ui.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -123,12 +123,12 @@
 
         <!-- 伪装1 -->
         <activity-alias
-            android:name=".LauncherFakeCalc"
+            android:name="com.yenaly.han1meviewer.LauncherFakeCalc"
             android:enabled="false"
             android:exported="true"
             android:icon="@mipmap/ic_launcher_calc"
             android:label="@string/app_name_fake_calc"
-            android:targetActivity=".ui.activity.MainActivity">
+            android:targetActivity="com.yenaly.han1meviewer.ui.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -136,12 +136,12 @@
         </activity-alias>
         <!-- 伪装2 -->
         <activity-alias
-            android:name=".LauncherFakeCornhub"
+            android:name="com.yenaly.han1meviewer.LauncherFakeCornhub"
             android:enabled="false"
             android:exported="true"
             android:icon="@mipmap/ic_launcher_cornhub"
             android:label="@string/app_name_fake_cornhub"
-            android:targetActivity=".ui.activity.MainActivity">
+            android:targetActivity="com.yenaly.han1meviewer.ui.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -149,26 +149,26 @@
         </activity-alias>
         <!-- 伪装3 -->
         <activity-alias
-            android:name=".LauncherFakeXxt"
+            android:name="com.yenaly.han1meviewer.LauncherFakeXxt"
             android:enabled="false"
             android:exported="true"
             android:icon="@mipmap/ic_launcher_xxt"
             android:label="@string/app_name_fake_xxt"
-            android:targetActivity=".ui.activity.MainActivity">
+            android:targetActivity="com.yenaly.han1meviewer.ui.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity-alias>
         <activity
-            android:name=".ui.activity.LoginActivity"
+            android:name="com.yenaly.han1meviewer.ui.activity.LoginActivity"
             android:configChanges="screenSize|orientation"
             android:exported="true">
 
         </activity>
 
         <receiver
-            android:name=".ui.widget.CheckInWidgetProvider"
+            android:name="com.yenaly.han1meviewer.ui.widget.CheckInWidgetProvider"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
