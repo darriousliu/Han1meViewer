@@ -28,6 +28,7 @@ gradle-app.setting
 
 # 构建输出
 **/build/
+**/.build/
 **/outputs/
 
 # 本地配置文件
