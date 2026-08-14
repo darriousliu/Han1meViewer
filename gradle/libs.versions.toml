@@ -106,6 +106,9 @@ guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 startup-runtime = { group = "androidx.startup", name = "startup-runtime", version.ref = "startupRuntime" }
 palette = { group = "androidx.palette", name = "palette", version.ref = "palette" }
 # Compose
+compose-multiplatform-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "composeMultiplatform" }
+compose-multiplatform-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "composeMultiplatform" }
+compose-multiplatform-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMultiplatform" }
 compose-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity" }
