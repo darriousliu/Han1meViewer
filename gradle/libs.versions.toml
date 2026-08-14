@@ -1,16 +1,16 @@
 [versions]
 # Plugins
 aboutlibraries = "14.2.0"
-androidGradle = "9.2.1"
+androidGradle = "9.3.1"
 biometric = "1.1.0"
 coilCompose = "3.4.0"
 composeAvatarCropper = "1.0.0"
 coreSplashscreen = "1.2.0"
 crashx = "7.0.1"
-kotlin = "2.3.21"
+kotlin = "2.4.20-Beta2"
+composeMultiplatform = "1.11.1"
 materialIconsCore = "1.7.8"
-serializationPlugin = "2.3.21"
-ksp = "2.3.2"
+ksp = "2.3.11"
 drawerlayout = "1.2.0"
 safeargs = "2.9.8"
 # Dependencies
@@ -181,11 +181,15 @@ android-jetpack = [
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "androidGradle" }
 com-android-library = { id = "com.android.library", version.ref = "androidGradle" }
+android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "androidGradle" }
 com-google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-org-jetbrains-kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "serializationPlugin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+org-jetbrains-kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 org-jetbrains-kotlin-plugin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 com-google-gms-google-services = { id = "com.google.gms.google-services", version = "4.4.4" }
 com-google-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.7" }
 com-google-firebase-firebase-pref = { id = "com.google.firebase.firebase-perf", version = "2.0.2" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "safeargs" }
