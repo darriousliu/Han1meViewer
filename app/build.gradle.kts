@@ -132,95 +132,16 @@ androidComponents {
 }
 
 dependencies {
-    implementation(libs.appcompat)
-    implementation(libs.androidx.window)
-    implementation(libs.androidx.window.java)
     implementation(project(":shared"))
-    implementation(project(":yenaly_libs"))
-    implementation(libs.aboutlibraries.core)
-    implementation(libs.androidx.biometric)
-    implementation(libs.androidx.core.splashscreen)
-    implementation(libs.androidx.swiperefreshlayout)
-    implementation(libs.androidx.material.icons.extended)
-    // android related
 
-    implementation(libs.bundles.android.base)
-    implementation(libs.bundles.android.jetpack)
-    implementation(libs.palette)
-    implementation(libs.material)
-    //compose
-    implementation(platform(libs.compose.compose.bom))
-    implementation(libs.compose.ui.graphics)
-    implementation(libs.compose.material3)
     implementation(libs.androidx.activity.compose)
+
+    implementation(project.dependencies.platform(libs.compose.compose.bom))
     implementation(libs.compose.ui.ui.tooling.preview)
-    implementation(libs.androidx.ui)
-    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(project.dependencies.platform(libs.compose.compose.bom))
     debugImplementation(libs.compose.ui.ui.tooling)
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.material.icons.core)
-    implementation(libs.coil.compose)
-    implementation(libs.coil.network.okhttp)
-    implementation(libs.aboutlibraries.compose.m3)
-    implementation(libs.compose.avatar.cropper)
-    // datetime
-
-    implementation(libs.datetime)
-
-    // parse
-
-    implementation(libs.serialization.json)
-    implementation(libs.jsoup)
-
-    // network
-
-    implementation(libs.retrofit)
-    implementation(libs.converter.serialization)
-    implementation(libs.okhttp)
-    implementation(libs.okhttp.dns.over.https)
-
-    // pic
-
-    implementation(libs.coil)
-
-
-    // video
-
-    implementation(libs.jiaozi.video.player)
-    implementation(libs.media3.exoplayer)
-    implementation(libs.media3.exoplayer.hls)
-    implementation(libs.mpv.lib)
-
-    // view
-
-    implementation(libs.multitype)
-    implementation(libs.base.recyclerview.adapter.helper4)
-    implementation(libs.expandable.textview)
-    implementation(libs.spannable.x)
-    implementation(libs.about)
-    implementation(libs.circular.reveal.switch)
-    implementation(libs.drawerlayout)
-
-    // firebase
-
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.analytics)
-    implementation(libs.firebase.crashlytics)
-    implementation(libs.firebase.perf)
-    implementation(libs.firebase.config)
-    debugImplementation(libs.androidx.ui.test.manifest)
-    implementation(libs.firebase.database)
-    ksp(libs.room.compiler)
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
-
-    testImplementation(libs.junit)
-
-    androidTestImplementation(libs.test.junit)
-    androidTestImplementation(libs.test.espresso.core)
-
-    implementation(libs.crashx)
-    // debugImplementation(libs.leak.canary)
 }
 
 /**
