@@ -7,7 +7,6 @@ import Config.lastCommitSha
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.INT
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
-import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -16,6 +15,7 @@ plugins {
     alias(libs.plugins.org.jetbrains.kotlin.plugin.parcelize)
     alias(libs.plugins.org.jetbrains.kotlin.plugin.serialization)
     alias(libs.plugins.com.google.devtools.ksp)
+    alias(libs.plugins.androidx.room)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.aboutlibraries)
@@ -109,6 +109,11 @@ kotlin {
             implementation(libs.compose.multiplatform.runtime)
             implementation(libs.compose.multiplatform.ui)
             implementation(libs.compose.multiplatform.foundation)
+            implementation(libs.coroutines.core)
+            implementation(libs.datetime)
+            implementation(libs.serialization.json)
+            implementation(libs.room.runtime)
+            implementation(libs.sqlite.bundled)
         }
 
         getByName("androidHostTest").dependencies {
@@ -152,13 +157,8 @@ kotlin {
             implementation(libs.coil.network.okhttp)
             implementation(libs.aboutlibraries.compose.m3)
             implementation(libs.compose.avatar.cropper)
-            // datetime
-
-            implementation(libs.datetime)
-
             // parse
 
-            implementation(libs.serialization.json)
             implementation(libs.jsoup)
 
             // network
@@ -216,13 +216,13 @@ dependencies {
     androidRuntimeClasspath(libs.compose.ui.ui.tooling)
 
     add("kspAndroid", libs.room.compiler)
-    kotlin.targets.filter { it.name.startsWith("ios") }.forEach { target ->
-        add(
-            "ksp${target.name.replaceFirstChar { it.uppercaseChar() }}",
-            libs.room.compiler
-        )
-    }
+    add("kspIosArm64", libs.room.compiler)
+    add("kspIosSimulatorArm64", libs.room.compiler)
     add("kspJvm", libs.room.compiler)
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
 }

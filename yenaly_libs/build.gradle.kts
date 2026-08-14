@@ -52,14 +52,14 @@ kotlin {
 dependencies {
 
     implementation(libs.recyclerview)
-    implementation(libs.core.ktx)
+    implementation(libs.core)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.coroutines.android)
 
-    implementation(libs.navigation.fragment.ktx)
-    implementation(libs.lifecycle.livedata.ktx)
-    implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.navigation.fragment)
+    implementation(libs.lifecycle.livedata)
+    implementation(libs.lifecycle.viewmodel)
     implementation(libs.preference.ktx)
     implementation(libs.startup.runtime)
     implementation(libs.gson)

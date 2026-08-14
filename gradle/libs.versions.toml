@@ -4,7 +4,7 @@ aboutlibraries = "14.2.0"
 androidGradle = "9.3.1"
 biometric = "1.1.0"
 buildKonfig = "0.22.0"
-coilCompose = "3.4.0"
+coilCompose = "3.5.0"
 composeAvatarCropper = "1.0.0"
 coreSplashscreen = "1.2.0"
 crashx = "7.0.1"
@@ -16,10 +16,10 @@ drawerlayout = "1.2.0"
 safeargs = "2.9.8"
 # Dependencies
 about = "2.5.2"
-coreKtx = "1.18.0"
-appcompat = "1.7.1"
+core = "1.19.0"
+appcompat = "1.8.0"
 material = "1.14.0"
-coroutinesAndroid = "1.11.0"
+coroutines = "1.11.0"
 activity = "1.13.0"
 fragment = "1.8.9"
 constraintLayout = "2.2.1"
@@ -27,19 +27,14 @@ recyclerView = "1.4.0"
 expandableTextView = "v1.6.1-x"
 baseRecyclerViewAdapterHelper4 = "4.4.0"
 multiType = "4.3.0"
-lifecycleViewModelKtx = "2.10.0"
-lifecycleRuntimeKtx = "2.10.0"
-lifecycleLiveDataKtx = "2.10.0"
-roomRuntime = "2.8.4"
-roomKtx = "2.8.4"
-roomCompiler = "2.8.4"
+lifecycle = "2.11.0"
+room = "2.8.4"
+sqlite = "2.7.0"
 navigation = "2.9.8"
 preferenceKtx = "1.2.1"
 swiperefreshlayout = "1.2.0"
-windowJava = "1.5.1"
 window = "1.5.1"
-workRuntime = "2.11.2"
-workRuntimeKtx = "2.11.2"
+work = "2.11.2"
 startupRuntime = "1.2.0"
 palette = "1.0.0"
 spannableX = "1.0.4"
@@ -50,21 +45,21 @@ jsoup = "1.22.2"
 retrofit = "3.0.0"
 converterSerialization = "1.0.0"
 coil = "2.7.0"
-okhttp = "5.3.2"
+okhttp = "5.4.0"
 jiaoziVideoPlayer = "7.7.2.3300"
 junit = "4.13.2"
 testJunit = "1.3.0"
 testEspressoCore = "3.7.0"
 guava = "33.6.0-android"
-exoplayer = "1.10.1"
+exoplayer = "1.11.0"
 circularRevealSwitch = "0.4.6"
 desugarJdkLibs = "2.1.5"
-firebaseBom = "34.13.0"
+firebaseBom = "34.17.0"
 firebaseApple = "12.17.0"
-composeBom = "2026.05.01"
-compose-material3 = "1.5.0-alpha20"
+composeBom = "2026.08.00"
+compose-material3 = "1.5.0-alpha26"
 mpv = "v0.1.7"
-ben-manes = "0.54.0"
+ben-manes = "0.61.0"
 
 [libraries]
 # Android
@@ -76,35 +71,33 @@ androidx-material-icons-extended = { module = "androidx.compose.material:materia
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
 androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
 androidx-window = { module = "androidx.window:window", version.ref = "window" }
-androidx-window-java = { module = "androidx.window:window-java", version.ref = "windowJava" }
+androidx-window-java = { module = "androidx.window:window-java", version.ref = "window" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilCompose" }
 compose-avatar-cropper = { module = "cn.mucute:compose-avatar-cropper", version.ref = "composeAvatarCropper" }
-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+core = { group = "androidx.core", name = "core", version.ref = "core" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 crashx = { module = "io.github.tutorialsandroid:crashx", version.ref = "crashx" }
 firebase-database = { module = "com.google.firebase:firebase-database" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutinesAndroid" }
+coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintLayout" }
 recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerView" }
 drawerlayout = { module = "androidx.drawerlayout:drawerlayout", version.ref = "drawerlayout" }
 # Jetpack
-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewModelKtx" }
-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycleLiveDataKtx" }
+lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "lifecycle" }
+lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime", version.ref = "lifecycle" }
+lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata", version.ref = "lifecycle" }
 activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activity" }
 fragment = { group = "androidx.fragment", name = "fragment", version.ref = "fragment" }
-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragment" }
-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomRuntime" }
-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCompiler" }
-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation" }
-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigation" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+sqlite-bundled = { group = "androidx.sqlite", name = "sqlite-bundled", version.ref = "sqlite" }
+navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigation" }
+navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigation" }
 preference-ktx = { group = "androidx.preference", name = "preference-ktx", version.ref = "preferenceKtx" }
-work-runtime = { group = "androidx.work", name = "work-runtime", version.ref = "workRuntime" }
-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workRuntimeKtx" }
+work-runtime = { group = "androidx.work", name = "work-runtime", version.ref = "work" }
 guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 startup-runtime = { group = "androidx.startup", name = "startup-runtime", version.ref = "startupRuntime" }
 palette = { group = "androidx.palette", name = "palette", version.ref = "palette" }
@@ -167,7 +160,7 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 [bundles]
 
 android-base = [
-    "core-ktx",
+    "core",
     "appcompat",
     "material",
     "coroutines-android",
@@ -176,12 +169,11 @@ android-base = [
 ]
 
 android-jetpack = [
-    "lifecycle-viewmodel-ktx", "lifecycle-runtime-ktx", "lifecycle-livedata-ktx",
-    "activity", "activity-ktx", "fragment", "fragment-ktx",
-    "room-runtime", "room-ktx",
-    "navigation-fragment-ktx", "navigation-ui-ktx",
+    "lifecycle-viewmodel", "lifecycle-runtime", "lifecycle-livedata",
+    "activity", "fragment",
+    "navigation-fragment", "navigation-ui",
     "preference-ktx",
-    "work-runtime", "work-runtime-ktx", "guava"
+    "work-runtime", "guava"
 ]
 
 [plugins]
@@ -190,11 +182,12 @@ com-android-library = { id = "com.android.library", version.ref = "androidGradle
 android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "androidGradle" }
 buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildKonfig" }
 com-google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+androidx-room = { id = "androidx.room", version.ref = "room" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 org-jetbrains-kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 org-jetbrains-kotlin-plugin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
-com-google-gms-google-services = { id = "com.google.gms.google-services", version = "4.4.4" }
+com-google-gms-google-services = { id = "com.google.gms.google-services", version = "4.5.0" }
 com-google-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.7" }
 com-google-firebase-firebase-pref = { id = "com.google.firebase.firebase-perf", version = "2.0.2" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
