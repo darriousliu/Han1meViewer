@@ -70,3 +70,16 @@ Thumbs.db
 
 # 忽略 debug 测试构建
 /app/build/outputs/apk/debug/
+
+.kotlin
+xcuserdata
+!src/**/build/
+.idea
+captures
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcodeproj/project.xcworkspace/
+!*.xcworkspace/contents.xcworkspacedata
+**/xcshareddata/WorkspaceSettings.xcsettings
+node_modules/
