@@ -69,6 +69,12 @@ kotlin {
         }.configure {
             instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
+        optimization {
+            consumerKeepRules.apply {
+                publish = true
+                file("androidMain/keepRules/rules.keep")
+            }
+        }
     }
 
     jvm {
@@ -109,6 +115,7 @@ kotlin {
             implementation(libs.compose.multiplatform.runtime)
             implementation(libs.compose.multiplatform.ui)
             implementation(libs.compose.multiplatform.foundation)
+            implementation(libs.compose.resources)
             implementation(libs.coroutines.core)
             implementation(libs.datetime)
             implementation(libs.serialization.json)
@@ -117,6 +124,8 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
+            implementation(libs.sqlite.async)
+            implementation(libs.filekit.core)
         }
 
         getByName("androidHostTest").dependencies {
@@ -235,6 +244,6 @@ dependencies {
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 }
 
-room {
+room3 {
     schemaDirectory("$projectDir/schemas")
 }

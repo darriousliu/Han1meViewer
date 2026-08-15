@@ -1,0 +1,7 @@
+# Project-specific R8 rules will live here.
+
+-keep class * implements com.google.firebase.components.ComponentRegistrar { <init>(); }
+-keep,allowshrinking interface com.google.firebase.components.ComponentRegistrar
+
+# Room 3 databases are instantiated from generated implementations at runtime.
+-keep class * extends androidx.room3.RoomDatabase { <init>(); }

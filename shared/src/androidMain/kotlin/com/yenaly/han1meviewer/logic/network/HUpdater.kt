@@ -11,7 +11,6 @@ import com.yenaly.han1meviewer.logic.model.github.Latest
 import com.yenaly.han1meviewer.util.checkNeedUpdate
 import com.yenaly.han1meviewer.util.copyTo
 import com.yenaly.han1meviewer.util.runSuspendCatching
-import okio.use
 import java.io.File
 import java.util.zip.ZipInputStream
 

@@ -308,7 +308,7 @@ fun VideoRouteHostScreen(
                         record.copy(sideDishes = "${record.sideDishes}\u001E${route.videoCode}")
                     }
                     scope.launch(Dispatchers.IO) {
-                        CheckInRecordDatabase.getDatabase(activity).checkInDao()
+                        CheckInRecordDatabase.instance.checkInDao()
                             .insert(normalizedRecord)
                         withContext(Dispatchers.Main) {
                             Toast.makeText(activity, R.string.checkin, Toast.LENGTH_SHORT).show()

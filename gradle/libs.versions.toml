@@ -9,7 +9,7 @@ composeAvatarCropper = "1.0.0"
 coreSplashscreen = "1.2.0"
 crashx = "7.0.1"
 kotlin = "2.4.20-Beta2"
-composeMultiplatform = "1.11.1"
+composeMultiplatform = "1.12.0-rc01"
 materialIconsCore = "1.7.8"
 ksp = "2.3.11"
 drawerlayout = "1.2.0"
@@ -28,8 +28,9 @@ expandableTextView = "v1.6.1-x"
 baseRecyclerViewAdapterHelper4 = "4.4.0"
 multiType = "4.3.0"
 lifecycle = "2.11.0"
-room = "2.8.4"
+room = "3.0.1"
 sqlite = "2.7.0"
+filekit = "0.15.0"
 navigation = "2.9.8"
 preferenceKtx = "1.2.1"
 swiperefreshlayout = "1.2.0"
@@ -75,6 +76,7 @@ androidx-window = { module = "androidx.window:window", version.ref = "window" }
 androidx-window-java = { module = "androidx.window:window-java", version.ref = "window" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilCompose" }
+compose-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "composeMultiplatform" }
 compose-avatar-cropper = { module = "cn.mucute:compose-avatar-cropper", version.ref = "composeAvatarCropper" }
 core = { group = "androidx.core", name = "core", version.ref = "core" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
@@ -92,9 +94,11 @@ lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime", 
 lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata", version.ref = "lifecycle" }
 activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 fragment = { group = "androidx.fragment", name = "fragment", version.ref = "fragment" }
-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+room-runtime = { group = "androidx.room3", name = "room3-runtime", version.ref = "room" }
+room-compiler = { group = "androidx.room3", name = "room3-compiler", version.ref = "room" }
 sqlite-bundled = { group = "androidx.sqlite", name = "sqlite-bundled", version.ref = "sqlite" }
+sqlite-async = { group = "androidx.sqlite", name = "sqlite-async", version.ref = "sqlite" }
+filekit-core = { module = "io.github.vinceglb:filekit-core", version.ref = "filekit" }
 navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigation" }
 navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigation" }
 preference-ktx = { group = "androidx.preference", name = "preference-ktx", version.ref = "preferenceKtx" }
@@ -188,7 +192,7 @@ com-android-library = { id = "com.android.library", version.ref = "androidGradle
 android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "androidGradle" }
 buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildKonfig" }
 com-google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-androidx-room = { id = "androidx.room", version.ref = "room" }
+androidx-room = { id = "androidx.room3", version.ref = "room" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 org-jetbrains-kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
