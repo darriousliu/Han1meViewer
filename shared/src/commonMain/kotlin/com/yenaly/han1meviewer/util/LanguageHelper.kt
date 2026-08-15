@@ -4,7 +4,8 @@ import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.intl.LocaleList
 
 object LanguageHelper {
-    val preferredLanguage: Locale = LocaleList.current[0]
+    val preferredLanguage: Locale
+        get() = LocaleList.current[0]
 }
 
 val Locale.Companion.CHINESE: Locale
