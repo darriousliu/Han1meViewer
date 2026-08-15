@@ -1,6 +1,5 @@
 package com.yenaly.han1meviewer.ui.screen.search
 
-import android.util.SparseArray
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -24,18 +23,18 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.PrimaryScrollableTabRow
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.SheetValue
 import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -44,7 +43,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.util.isNotEmpty
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.SEARCH_YEAR_RANGE_END
@@ -61,16 +59,25 @@ import com.yenaly.han1meviewer.ui.component.lazy.LazyVerticalGrid
 import com.yenaly.han1meviewer.ui.model.AdvancedSearchDialogState
 import com.yenaly.han1meviewer.ui.model.SearchScopeSection
 import com.yenaly.han1meviewer.ui.viewmodel.SearchViewModel
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.appearance_and_figure
+import han1meviewer.shared.generated.resources.characteristics
+import han1meviewer.shared.generated.resources.relationship
+import han1meviewer.shared.generated.resources.sex_position
+import han1meviewer.shared.generated.resources.story_location
+import han1meviewer.shared.generated.resources.story_plot
+import han1meviewer.shared.generated.resources.video_attr
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 
 private val advancedSearchTagScopeResIds = listOf(
-    R.string.video_attr,
-    R.string.relationship,
-    R.string.characteristics,
-    R.string.appearance_and_figure,
-    R.string.story_plot,
-    R.string.story_location,
-    R.string.sex_position,
+    Res.string.video_attr,
+    Res.string.relationship,
+    Res.string.characteristics,
+    Res.string.appearance_and_figure,
+    Res.string.story_plot,
+    Res.string.story_location,
+    Res.string.sex_position,
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -737,12 +744,12 @@ private fun buildTagScopeSections(
 private fun groupSelectedTagOptions(
     selected: Set<SearchOption>,
     tags: Map<String, List<SearchOption>>,
-): SparseArray<Set<SearchOption>> {
-    return SparseArray<Set<SearchOption>>().also { grouped ->
+): MutableMap<String, Set<SearchOption>> {
+    return mutableMapOf<String, Set<SearchOption>>().also { grouped ->
         advancedSearchTagScopeResIds.forEach { scopeRes ->
             val selectedInScope = tags[scopeRes].filterTo(mutableSetOf()) { it in selected }
             if (selectedInScope.isNotEmpty()) {
-                grouped.put(scopeRes, selectedInScope)
+                grouped[scopeRes.key] = selectedInScope
             }
         }
     }

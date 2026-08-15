@@ -75,6 +75,12 @@ kotlin {
                 file("androidMain/keepRules/rules.keep")
             }
         }
+        compilerOptions {
+            freeCompilerArgs.addAll(
+                "-P",
+                "plugin:org.jetbrains.kotlin.parcelize:additionalAnnotation=com.yenaly.han1meviewer.util.Parcelize",
+            )
+        }
     }
 
     jvm {

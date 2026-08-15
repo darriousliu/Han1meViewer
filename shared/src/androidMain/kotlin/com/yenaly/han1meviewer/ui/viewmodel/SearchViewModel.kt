@@ -3,7 +3,6 @@ package com.yenaly.han1meviewer.ui.viewmodel
 import android.app.Application
 import android.os.Parcelable
 import android.util.Log
-import android.util.SparseArray
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.yenaly.han1meviewer.HanimeConstants.HANIME_URL
@@ -85,8 +84,8 @@ class SearchViewModel(
             state["gridFirstVisibleItemScrollOffset"] = value
         }
 
-    var tagMap = SparseArray<Set<SearchOption>>()
-    var brandMap = SparseArray<Set<SearchOption>>()
+    var tagMap = mutableMapOf<String, Set<SearchOption>>()
+    var brandMap = mutableMapOf<String, Set<SearchOption>>()
 
     val genres by unsafeLazy {
         loadAssetAs<List<SearchOption>>(if (Preferences.baseUrl == HANIME_URL[3]) "search_options/genre_av.json" else "search_options/genre.json").orEmpty()
@@ -277,12 +276,12 @@ class SearchViewModel(
 
             history.tags?.takeIf { it.isNotBlank() }?.let { tagsString ->
                 val tagOptions = tagsString.toSearchOptionSet()
-                tagMap.put(0, tagOptions)
+                tagMap.put("", tagOptions)
             }
 
             history.brands?.takeIf { it.isNotBlank() }?.let { brandsString ->
                 val brandOptions = brandsString.toSearchOptionSet()
-                brandMap.put(0, brandOptions)
+                brandMap.put("", brandOptions)
             }
         }
     }

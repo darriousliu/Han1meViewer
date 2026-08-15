@@ -1,7 +1,7 @@
 package com.yenaly.han1meviewer.logic.model
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import com.yenaly.han1meviewer.util.Parcelable
+import com.yenaly.han1meviewer.util.Parcelize
 
 @Parcelize
 data class MySubscriptions(

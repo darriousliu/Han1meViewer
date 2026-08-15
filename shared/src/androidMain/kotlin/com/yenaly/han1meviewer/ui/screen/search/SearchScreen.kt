@@ -1,6 +1,5 @@
 package com.yenaly.han1meviewer.ui.screen.search
 
-import android.util.SparseArray
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -72,7 +71,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalWindowInfo
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -176,8 +174,8 @@ fun SearchScreen(
                 viewModel.sort != null ||
                 viewModel.duration != null ||
                 viewModel.getSearchDate() != null ||
-                viewModel.tagMap.size() > 0 ||
-                viewModel.brandMap.size() > 0 ||
+                viewModel.tagMap.isNotEmpty() ||
+                viewModel.brandMap.isNotEmpty() ||
                 viewModel.broad
     }
 
@@ -189,8 +187,8 @@ fun SearchScreen(
         viewModel.duration,
         viewModel.getSearchDate(),
         viewModel.broad,
-        viewModel.tagMap.size(),
-        viewModel.brandMap.size(),
+        viewModel.tagMap.size,
+        viewModel.brandMap.size,
     ) {
         SearchFilter(
             genre = viewModel.genre,
@@ -821,15 +819,15 @@ private fun ActiveSearchCriteria(
 // 辅助
 // ─────────────────────────────────────────────
 
-private fun tagFlatten(map: SparseArray<Set<SearchOption>>): Set<String> {
-    val r = mutableSetOf<String>(); for (i in 0 until map.size()) {
-        map.valueAt(i).mapNotNullTo(r) { it.searchKey }
+private fun tagFlatten(map: Map<String, Set<SearchOption>>): Set<String> {
+    val r = mutableSetOf<String>(); for (i in 0 until map.size) {
+        map.values.elementAt(i).mapNotNullTo(r) { it.searchKey }
     }; return r
 }
 
-private fun brandFlatten(map: SparseArray<Set<SearchOption>>): Set<String> {
-    val r = mutableSetOf<String>(); for (i in 0 until map.size()) {
-        map.valueAt(i).mapNotNullTo(r) { it.searchKey }
+private fun brandFlatten(map: Map<String, Set<SearchOption>>): Set<String> {
+    val r = mutableSetOf<String>(); for (i in 0 until map.size) {
+        map.values.elementAt(i).mapNotNullTo(r) { it.searchKey }
     }; return r
 }
 
