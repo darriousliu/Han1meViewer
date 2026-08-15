@@ -59,6 +59,7 @@ import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.entity.CheckInRecordEntity
 import com.yenaly.han1meviewer.logic.entity.CheckInType
 import com.yenaly.han1meviewer.logic.entity.WatchHistoryEntity
+import org.jetbrains.compose.resources.stringResource
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
