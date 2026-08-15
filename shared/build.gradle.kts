@@ -116,6 +116,7 @@ kotlin {
             implementation(libs.compose.multiplatform.ui)
             implementation(libs.compose.multiplatform.foundation)
             implementation(libs.compose.resources)
+            implementation(libs.jetbrains.compose.material3)
             implementation(libs.coroutines.core)
             implementation(libs.datetime)
             implementation(libs.serialization.json)

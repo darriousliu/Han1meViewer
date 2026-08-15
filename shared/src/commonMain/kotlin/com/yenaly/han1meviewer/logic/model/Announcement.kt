@@ -1,6 +1,5 @@
 package com.yenaly.han1meviewer.logic.model
 
-import androidx.annotation.Keep
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -17,16 +16,15 @@ import kotlinx.datetime.format
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.ExperimentalTime
 
-@Keep
 data class Announcement(
-    @JvmField val title: String,
-    @JvmField val content: String,
-    @JvmField val positiveText: String ? = null,
-    @JvmField val negativeText: String ? = null,
-    @JvmField val timestamp: Long = 0,
-    @JvmField val priority: Int = 1,
-    @JvmField val imageUrl: String ? = null,
-    @JvmField val isActive: Boolean = false
+    val title: String,
+    val content: String,
+    val positiveText: String ? = null,
+    val negativeText: String ? = null,
+    val timestamp: Long = 0,
+    val priority: Int = 1,
+    val imageUrl: String ? = null,
+    val isActive: Boolean = false
 ) {
     //firebase初始化需要一个空的构造函数
     constructor() : this("", "", null, null, 0L, 1, null, false)
