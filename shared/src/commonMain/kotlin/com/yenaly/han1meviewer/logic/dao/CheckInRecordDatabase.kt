@@ -10,7 +10,8 @@ import androidx.sqlite.async.executeSQL
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.yenaly.han1meviewer.logic.entity.CheckInRecordEntity
 import com.yenaly.han1meviewer.logic.entity.SideDishEntity
-import com.yenaly.han1meviewer.util.ioDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 
 @ConstructedBy(CheckInRecordDatabaseConstructor::class)
 @Database(
@@ -93,7 +94,7 @@ internal fun buildCheckInRecordDatabase(
     builder: RoomDatabase.Builder<CheckInRecordDatabase>
 ): CheckInRecordDatabase = builder
     .setDriver(BundledSQLiteDriver())
-    .setQueryCoroutineContext(ioDispatcher)
+    .setQueryCoroutineContext(Dispatchers.IO)
     .addMigrations(
         CheckInRecordDatabase.MIGRATION_1_2,
         CheckInRecordDatabase.MIGRATION_2_3,

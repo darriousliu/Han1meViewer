@@ -11,7 +11,8 @@ import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.yenaly.han1meviewer.logic.entity.HanimeAdvancedSearchHistoryEntity
 import com.yenaly.han1meviewer.logic.entity.SearchHistoryEntity
 import com.yenaly.han1meviewer.logic.entity.WatchHistoryEntity
-import com.yenaly.han1meviewer.util.ioDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 
 /**
  * @project Hanime1
@@ -105,7 +106,7 @@ internal fun buildHistoryDatabase(
     builder: RoomDatabase.Builder<HistoryDatabase>
 ): HistoryDatabase = builder
     .setDriver(BundledSQLiteDriver())
-    .setQueryCoroutineContext(ioDispatcher)
+    .setQueryCoroutineContext(Dispatchers.IO)
     .addMigrations(
         HistoryDatabase.Migration1To2,
         HistoryDatabase.Migration2To3,

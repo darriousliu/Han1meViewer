@@ -15,7 +15,8 @@ import com.yenaly.han1meviewer.logic.entity.download.DownloadGroupEntity
 import com.yenaly.han1meviewer.logic.entity.download.HanimeCategoryCrossRef
 import com.yenaly.han1meviewer.logic.entity.download.HanimeDownloadEntity
 import com.yenaly.han1meviewer.logic.state.DownloadState
-import com.yenaly.han1meviewer.util.ioDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 
 /**
  * @project Han1meViewer
@@ -200,7 +201,7 @@ internal fun buildDownloadDatabase(
     builder: RoomDatabase.Builder<DownloadDatabase>
 ): DownloadDatabase = builder
     .setDriver(BundledSQLiteDriver())
-    .setQueryCoroutineContext(ioDispatcher)
+    .setQueryCoroutineContext(Dispatchers.IO)
     .addMigrations(
         DownloadDatabase.Migration1To2,
         DownloadDatabase.Migration2To3,

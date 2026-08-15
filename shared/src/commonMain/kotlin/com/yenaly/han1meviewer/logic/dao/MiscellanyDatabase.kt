@@ -6,7 +6,8 @@ import androidx.room3.RoomDatabase
 import androidx.room3.RoomDatabaseConstructor
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.yenaly.han1meviewer.logic.entity.HKeyframeEntity
-import com.yenaly.han1meviewer.util.ioDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 
 /**
  * 这是各种 有数据库需求的小功能 的聚集地，
@@ -35,7 +36,7 @@ internal fun buildMiscellanyDatabase(
     builder: RoomDatabase.Builder<MiscellanyDatabase>
 ): MiscellanyDatabase = builder
     .setDriver(BundledSQLiteDriver())
-    .setQueryCoroutineContext(ioDispatcher)
+    .setQueryCoroutineContext(Dispatchers.IO)
     .build()
 
 @Suppress("KotlinNoActualForExpect")
