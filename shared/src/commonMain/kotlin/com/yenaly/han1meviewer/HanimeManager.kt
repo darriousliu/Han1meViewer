@@ -1,8 +1,6 @@
 package com.yenaly.han1meviewer
 
-import android.webkit.CookieManager
 import androidx.compose.runtime.Composable
-import androidx.core.text.parseAsHtml
 import com.yenaly.han1meviewer.Preferences.isAlreadyLogin
 import com.yenaly.han1meviewer.Preferences.loginCookie
 import com.yenaly.han1meviewer.logic.network.HCookiesStorage
@@ -20,20 +18,13 @@ import com.yenaly.han1meviewer.util.localizedText
 @Composable
 fun Throwable.pienization(): String = "🥺\n" + localizedText()
 
-// base
-
-private const val HANIME_TITLE_HTML =
-    """<span style="color: #FF0000;"><b>H</b></span><b>an1me</b>Viewer"""
-
-val hanimeSpannedTitle = HANIME_TITLE_HTML.parseAsHtml()
-
 // log in and log out
 
 fun logout() {
     isAlreadyLogin = false
     loginCookie = CookieString(EMPTY_STRING)
     HCookiesStorage.clear()
-    CookieManager.getInstance().removeAllCookies(null)
+    removeAllCookies()
 }
 
 fun login(cookies: String) {
@@ -46,3 +37,5 @@ fun login(cookies: List<String>) {
         it.substringBefore(';')
     })
 }
+
+expect fun removeAllCookies()
