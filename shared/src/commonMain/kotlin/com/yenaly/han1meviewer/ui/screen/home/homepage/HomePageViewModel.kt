@@ -1,13 +1,9 @@
 package com.yenaly.han1meviewer.ui.screen.home.homepage
 
-import android.util.Log
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.database.FirebaseDatabase
-import com.yenaly.han1meviewer.FIREBASE_REALTIME_DATABASE
+import co.touchlab.kermit.Logger
 import com.yenaly.han1meviewer.Preferences
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.DatabaseRepo
 import com.yenaly.han1meviewer.logic.NetworkRepo
 import com.yenaly.han1meviewer.logic.entity.HKeyframeEntity
@@ -17,8 +13,13 @@ import com.yenaly.han1meviewer.logic.model.Announcement
 import com.yenaly.han1meviewer.logic.state.PageState
 import com.yenaly.han1meviewer.logic.state.WebsiteState
 import com.yenaly.han1meviewer.logout
-import com.yenaly.han1meviewer.ui.viewmodel.AppViewModel
+import com.yenaly.han1meviewer.ui.viewmodel.CsrfTokenStore
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.login_state_expired
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -27,21 +28,29 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withTimeoutOrNull
-import kotlin.coroutines.resume
-import kotlin.time.Duration.Companion.milliseconds
+import org.jetbrains.compose.resources.StringResource
+
+/**
+ * 公告的来源由平台侧在启动时注册（Android 走 Firebase Realtime Database）。
+ *
+ * 没注册就不显示公告——桌面 / iOS 目前没有对应实现，这是合理的默认行为。
+ * 和 CloudflareChallengeHandler.solver 是同一套注入模式。
+ */
+object AnnouncementSource {
+    var fetch: (suspend () -> List<Announcement>)? = null
+}
+
+private val logger = Logger.withTag("HomePageViewModel")
 
 class HomePageViewModel: ViewModel() {
     data class SessionExpiredMessage(
         val message: String?,
-        @param:StringRes val fallbackResId: Int,
+        val fallbackRes: StringResource,
     )
 
     private val _homePageFlow = MutableStateFlow<PageState<HomeData>>(PageState.Loading)
     val homePageFlow = _homePageFlow.asStateFlow()
-
-    private val database = FirebaseDatabase.getInstance(FIREBASE_REALTIME_DATABASE)
 
     private val _sessionExpiredMessage = MutableSharedFlow<SessionExpiredMessage>()
     val sessionExpiredMessage = _sessionExpiredMessage
@@ -68,7 +77,7 @@ class HomePageViewModel: ViewModel() {
             }
             val announcementsDeferred = async(Dispatchers.IO) {
                 withTimeoutOrNull(ANNOUNCEMENTS_TIMEOUT_MILLIS.milliseconds) {
-                    fetchAnnouncementsFromFirebase()
+                    fetchAnnouncements()
                 }.orEmpty()
             }
             NetworkRepo.getHomePage().collect { networkState ->
@@ -80,7 +89,7 @@ class HomePageViewModel: ViewModel() {
                             _sessionExpiredMessage.emit(
                                 SessionExpiredMessage(
                                     message = networkState.throwable.message,
-                                    fallbackResId = R.string.login_state_expired,
+                                    fallbackRes = Res.string.login_state_expired,
                                 )
                             )
                         }
@@ -89,7 +98,7 @@ class HomePageViewModel: ViewModel() {
                     }
                     is WebsiteState.Success -> {
                         val currentAnnouncements = announcementsDeferred.await()
-                        AppViewModel.csrfToken = networkState.info.csrfToken
+                        CsrfTokenStore.csrfToken = networkState.info.csrfToken
                         networkState.info.userId.takeIf { it.isNotEmpty() }?.let { userId ->
                             Preferences.savedUserId = userId
                         }
@@ -101,47 +110,29 @@ class HomePageViewModel: ViewModel() {
             }
         }
     }
-    private suspend fun fetchAnnouncementsFromFirebase(): List<Announcement> =
-        suspendCancellableCoroutine { continuation ->
-            val lastDismissTime = Preferences.lastDismissTime
-            val shouldShowAnno = System.currentTimeMillis() - lastDismissTime > 24 * 60 * 60 * 1000L
-            if (!shouldShowAnno) {
-                continuation.resume(emptyList())
-                return@suspendCancellableCoroutine
-            }
+    /**
+     * 「关掉公告后 24 小时内不再弹」这条策略留在 common，平台侧只负责把公告取回来。
+     * 取不到（没注册 / 抛异常）一律当空列表——公告不该阻塞首页。
+     */
+    private suspend fun fetchAnnouncements(): List<Announcement> {
+        val lastDismissTime = Preferences.lastDismissTime
+        val now = Clock.System.now().toEpochMilliseconds()
+        if (now - lastDismissTime <= 24 * 60 * 60 * 1000L) return emptyList()
 
-            database.getReference("announcements").get()
-                .addOnSuccessListener { snapshot ->
-                    val list = mutableListOf<Announcement>()
-                    if (snapshot.exists()) {
-                        for (announceSnap in snapshot.children) {
-                            val announcement = announceSnap.getValue(Announcement::class.java)
-                            if (announcement != null && announcement.isActive) {
-                                list.add(announcement)
-                            }
-                        }
-                        if (continuation.isActive) {
-                            continuation.resume(list.sortedBy { it.priority })
-                        }
-                    } else {
-                        if (continuation.isActive) {
-                            continuation.resume(emptyList())
-                        }
-                    }
-                }.addOnFailureListener { e ->
-                    Log.e("Announcement", "读取失败: ${e.message}")
-                    if (continuation.isActive) {
-                        continuation.resume(emptyList()) // 失败也容错返回空列表
-                    }
-                }
-        }
+        val fetch = AnnouncementSource.fetch ?: return emptyList()
+        return runCatching { fetch() }
+            .onFailure { logger.e(it) { "公告读取失败" } }
+            .getOrDefault(emptyList())
+            .filter { it.isActive }
+            .sortedBy { it.priority }
+    }
 
     private companion object {
         const val ANNOUNCEMENTS_TIMEOUT_MILLIS = 5_000L
     }
 
     fun dismissAnnouncements(){
-        Preferences.lastDismissTime = System.currentTimeMillis()
+        Preferences.lastDismissTime = Clock.System.now().toEpochMilliseconds()
         val current = _homePageFlow.value
         if (current is PageState.Success) {
             _homePageFlow.value = current.copy(info = current.info.copy(announcements = emptyList()))
@@ -151,14 +142,14 @@ class HomePageViewModel: ViewModel() {
     fun deleteWatchHistory(history: WatchHistoryEntity) {
         viewModelScope.launch(Dispatchers.IO) {
             DatabaseRepo.WatchHistory.delete(history)
-            Log.d("delete_watch_hty", "$history DONE!")
+            logger.d { "$history DONE!" }
         }
     }
 
     fun deleteAllWatchHistories() {
         viewModelScope.launch(Dispatchers.IO) {
             DatabaseRepo.WatchHistory.deleteAll()
-            Log.d("del_all_watch_hty", "DONE!")
+            logger.d { "delete all watch history DONE!" }
         }
     }
 
@@ -170,7 +161,7 @@ class HomePageViewModel: ViewModel() {
     fun removeHKeyframe(videoCode: String, hKeyframe: HKeyframeEntity.Keyframe) {
         viewModelScope.launch(Dispatchers.IO) {
             DatabaseRepo.HKeyframe.removeKeyframe(videoCode, hKeyframe)
-            Log.d("HKeyframe", "removeHKeyframe:$hKeyframe DONE!")
+            logger.d { "removeHKeyframe:$hKeyframe DONE!" }
             _modifyHKeyframeFlow.emit(true)
         }
     }
@@ -180,7 +171,7 @@ class HomePageViewModel: ViewModel() {
     ) {
         viewModelScope.launch {
             DatabaseRepo.HKeyframe.modifyKeyframe(videoCode, oldKeyframe, keyframe)
-            Log.d("HKeyframe", "modifyHKeyframe:$keyframe DONE!")
+            logger.d { "modifyHKeyframe:$keyframe DONE!" }
             _modifyHKeyframeFlow.emit(true)
         }
     }

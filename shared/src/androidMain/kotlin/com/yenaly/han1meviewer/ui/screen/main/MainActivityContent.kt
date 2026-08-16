@@ -39,9 +39,10 @@ import com.yenaly.han1meviewer.util.installApkPackage
 import com.yenaly.han1meviewer.util.requestPostNotificationPermission
 import com.yenaly.han1meviewer.util.showShortToast
 import com.yenaly.han1meviewer.worker.HUpdateWorker
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import kotlin.time.ExperimentalTime
+import org.jetbrains.compose.resources.getString
 
 @OptIn(ExperimentalTime::class)
 @Composable
@@ -97,7 +98,7 @@ fun MainActivityContent(
         }
         LaunchedEffect(viewModel) {
             viewModel.sessionExpiredMessage.collect { event ->
-                event.message?.let(::showShortToast) ?: showShortToast(event.fallbackResId)
+                event.message?.let(::showShortToast) ?: showShortToast(getString(event.fallbackRes))
             }
         }
         LaunchedEffect(homeState) {

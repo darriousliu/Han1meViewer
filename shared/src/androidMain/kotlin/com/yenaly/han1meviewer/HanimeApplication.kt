@@ -17,6 +17,8 @@ import com.google.firebase.database.database
 import com.google.firebase.remoteconfig.remoteConfig
 import com.google.firebase.remoteconfig.remoteConfigSettings
 import com.yenaly.han1meviewer.logic.network.AndroidCloudflareSolver
+import com.yenaly.han1meviewer.logic.network.fetchAnnouncementsFromFirebase
+import com.yenaly.han1meviewer.ui.screen.home.homepage.AnnouncementSource
 import com.yenaly.han1meviewer.logic.network.HProxySelector
 import com.yenaly.han1meviewer.logic.network.OkHttpNetworkConfig
 import com.yenaly.han1meviewer.logic.network.plugin.CloudflareChallengeHandler
@@ -85,6 +87,9 @@ class HanimeApplication : Application() {
         VideoPlatformBridge.loadCachedVideo = { videoCode ->
             HCacheManager.loadHanimeVideoInfo(this, videoCode)
         }
+        // 首页公告走 Firebase Realtime Database，只有 Android 有；
+        // 取回来之后的过滤、排序和「24 小时内不重复弹」都在 commonMain 的 VM 里。
+        AnnouncementSource.fetch = { fetchAnnouncementsFromFirebase() }
         VideoPlatformBridge.defaultPlayerHeightPx = { 250.dpPx }
         // MMKV 必须早于任何 Preferences 访问：Preferences 里的几个 StateFlow 一被碰到就会读盘。
         // 放在 isMainProcess() 判断之前，因为非主进程（下载 worker 等）同样会读 Preferences。
