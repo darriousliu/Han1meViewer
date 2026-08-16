@@ -34,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -48,7 +49,7 @@ import com.yenaly.han1meviewer.ui.component.isFirstPageError
 import com.yenaly.han1meviewer.ui.component.isFirstPageLoading
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
 import com.yenaly.han1meviewer.ui.screen.rememberRandomLoadingHint
-import com.yenaly.han1meviewer.util.toNetworkErrorMessageRes
+import com.yenaly.han1meviewer.util.toNetworkErrorMessage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -131,7 +132,7 @@ fun GetchuPreviewScreen(
             isLoading = state.isFirstPageLoading,
             isError = state.isFirstPageError,
             isEmpty = state.isFirstPageEmpty || state.dataOrNull?.groups?.isEmpty() == true,
-            errorMessage = (state as? PageState.Error)?.throwable?.toNetworkErrorMessageRes()?.let {
+            errorMessage = (state as? PageState.Error)?.throwable?.toNetworkErrorMessage()?.let {
                 stringResource(it)
             } ?: "",
             onRetry = { viewModel.getPreview(dateCode) },
