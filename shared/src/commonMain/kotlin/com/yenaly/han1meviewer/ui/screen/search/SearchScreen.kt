@@ -1,6 +1,5 @@
 package com.yenaly.han1meviewer.ui.screen.search
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -61,7 +60,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -71,7 +72,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalWindowInfo
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -79,7 +79,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yenaly.han1meviewer.Preferences
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.entity.SearchHistoryEntity
 import com.yenaly.han1meviewer.logic.model.HanimeInfo
 import com.yenaly.han1meviewer.logic.model.HanimeInfo.Companion.NORMAL
@@ -95,13 +94,29 @@ import com.yenaly.han1meviewer.ui.theme.VideoNormalCardMinWidth
 import com.yenaly.han1meviewer.ui.theme.VideoSimplifiedCardMinWidth
 import com.yenaly.han1meviewer.ui.viewmodel.SearchViewModel
 import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.advanced
+import han1meviewer.shared.generated.resources.back
+import han1meviewer.shared.generated.resources.brand
+import han1meviewer.shared.generated.resources.clear_checkin
+import han1meviewer.shared.generated.resources.duration
 import han1meviewer.shared.generated.resources.h_chan_sad
 import han1meviewer.shared.generated.resources.h_chan_speechless
+import han1meviewer.shared.generated.resources.pair_widely
+import han1meviewer.shared.generated.resources.recent_searches
+import han1meviewer.shared.generated.resources.release_date
+import han1meviewer.shared.generated.resources.reset
+import han1meviewer.shared.generated.resources.search_load_failed_with_reason
+import han1meviewer.shared.generated.resources.search_no_results
+import han1meviewer.shared.generated.resources.search_video_hint
+import han1meviewer.shared.generated.resources.sort_option
+import han1meviewer.shared.generated.resources.tag
+import han1meviewer.shared.generated.resources.type
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 
 // ─────────────────────────────────────────────
 // 搜索主屏幕
@@ -110,7 +125,9 @@ import kotlinx.coroutines.launch
 @OptIn(
     ExperimentalMaterial3Api::class,
     ExperimentalMaterial3ExpressiveApi::class,
-    FlowPreview::class
+    FlowPreview::class,
+    // CMP 的 BackHandler（ui-backhandler 制品）目前还带实验标记
+    ExperimentalComposeUiApi::class,
 )
 @Composable
 fun SearchScreen(
@@ -414,7 +431,7 @@ fun SearchScreen(
                 // 未搜索 + 搜索框为空 → 显示历史
                 Column(Modifier.fillMaxSize()) {
                     Text(
-                        stringResource(R.string.recent_searches),
+                        stringResource(Res.string.recent_searches),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
@@ -465,7 +482,7 @@ fun SearchAppBar(
             IconButton(onClick = onBack) {
                 Icon(
                     Icons.AutoMirrored.Filled.ArrowBack,
-                    stringResource(R.string.back),
+                    stringResource(Res.string.back),
                     tint = MaterialTheme.colorScheme.onSurface
                 )
             }
@@ -490,7 +507,7 @@ fun SearchAppBar(
                     decorationBox = { inner ->
                         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.CenterStart) {
                             if (query.isEmpty()) Text(
-                                stringResource(R.string.search_video_hint),
+                                stringResource(Res.string.search_video_hint),
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -502,12 +519,12 @@ fun SearchAppBar(
             if (query.isNotEmpty()) IconButton(onClick = { onQueryChange("") }) {
                 Icon(
                     Icons.Default.Close,
-                    stringResource(R.string.clear_checkin),
+                    stringResource(Res.string.clear_checkin),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
             Text(
-                stringResource(R.string.advanced),
+                stringResource(Res.string.advanced),
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
@@ -683,20 +700,20 @@ fun SearchStateIndicator(
         }
 
         is PageLoadingState.NoMoreData -> if (resultCount == 0) EmptyContent(
-            hint = stringResource(R.string.search_no_results),
+            hint = stringResource(Res.string.search_no_results),
             picRes = Res.drawable.h_chan_speechless
         )
 
         is PageLoadingState.Error -> EmptyContent(
             hint = stringResource(
-                R.string.search_load_failed_with_reason,
+                Res.string.search_load_failed_with_reason,
                 state.throwable.message.orEmpty()
             ),
             picRes = Res.drawable.h_chan_sad
         )
 
         is PageLoadingState.Success -> if (resultCount == 0) EmptyContent(
-            hint = stringResource(R.string.search_no_results),
+            hint = stringResource(Res.string.search_no_results),
             picRes = Res.drawable.h_chan_speechless
         )
     }
@@ -747,7 +764,7 @@ private fun ActiveSearchCriteria(
             val label = searchOptions.genres.find { option -> option.searchKey == it }?.name ?: it
             AssistChip(
                 onClick = onClearGenre,
-                label = { Text("${stringResource(R.string.type)}: $label") },
+                label = { Text("${stringResource(Res.string.type)}: $label") },
                 colors = AssistChipDefaults.assistChipColors(
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
                 ),
@@ -756,7 +773,7 @@ private fun ActiveSearchCriteria(
         if (filter.tagCount > 0) {
             AssistChip(
                 onClick = onClearTagCount,
-                label = { Text("${stringResource(R.string.tag)} (${filter.tagCount})") },
+                label = { Text("${stringResource(Res.string.tag)} (${filter.tagCount})") },
                 colors = AssistChipDefaults.assistChipColors(
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
                 ),
@@ -766,7 +783,7 @@ private fun ActiveSearchCriteria(
             val label = searchOptions.sortOptions.find { option -> option.searchKey == it }?.name ?: it
             AssistChip(
                 onClick = onClearSort,
-                label = { Text("${stringResource(R.string.sort_option)}: $label") },
+                label = { Text("${stringResource(Res.string.sort_option)}: $label") },
                 colors = AssistChipDefaults.assistChipColors(
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
                 ),
@@ -775,7 +792,7 @@ private fun ActiveSearchCriteria(
         filter.releaseDate?.let {
             AssistChip(
                 onClick = onClearDuration,
-                label = { Text("${stringResource(R.string.release_date)}: $it") },
+                label = { Text("${stringResource(Res.string.release_date)}: $it") },
                 colors = AssistChipDefaults.assistChipColors(
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
                 ),
@@ -785,7 +802,7 @@ private fun ActiveSearchCriteria(
             val label = searchOptions.durations.find { option -> option.searchKey == it }?.name ?: it
             AssistChip(
                 onClick = onClearDuration,
-                label = { Text("${stringResource(R.string.duration)}: $label") },
+                label = { Text("${stringResource(Res.string.duration)}: $label") },
                 colors = AssistChipDefaults.assistChipColors(
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
                 ),
@@ -794,7 +811,7 @@ private fun ActiveSearchCriteria(
         if (filter.brandCount > 0) {
             AssistChip(
                 onClick = onClearBrandCount,
-                label = { Text("${stringResource(R.string.brand)} (${filter.brandCount})") },
+                label = { Text("${stringResource(Res.string.brand)} (${filter.brandCount})") },
                 colors = AssistChipDefaults.assistChipColors(
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
                 ),
@@ -803,7 +820,7 @@ private fun ActiveSearchCriteria(
         if (filter.broad) {
             AssistChip(
                 onClick = onClearBroad,
-                label = { Text(stringResource(R.string.pair_widely)) },
+                label = { Text(stringResource(Res.string.pair_widely)) },
                 colors = AssistChipDefaults.assistChipColors(
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
                 ),
@@ -811,7 +828,7 @@ private fun ActiveSearchCriteria(
         }
         AssistChip(
             onClick = onClearAll,
-            label = { Text(stringResource(R.string.reset)) },
+            label = { Text(stringResource(Res.string.reset)) },
             colors = AssistChipDefaults.assistChipColors(
                 containerColor = MaterialTheme.colorScheme.surfaceVariant,
             ),
