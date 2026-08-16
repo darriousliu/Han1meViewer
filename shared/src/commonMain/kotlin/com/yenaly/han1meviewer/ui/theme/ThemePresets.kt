@@ -1,31 +1,36 @@
 package com.yenaly.han1meviewer.ui.theme
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import com.yenaly.han1meviewer.R
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.theme_color_blue
+import han1meviewer.shared.generated.resources.theme_color_default
+import han1meviewer.shared.generated.resources.theme_color_high_contrast
+import han1meviewer.shared.generated.resources.theme_color_light_green
+import han1meviewer.shared.generated.resources.theme_color_orange
+import han1meviewer.shared.generated.resources.theme_color_pink
+import han1meviewer.shared.generated.resources.theme_color_purple
+import han1meviewer.shared.generated.resources.theme_color_system
+import han1meviewer.shared.generated.resources.theme_color_teal
+import han1meviewer.shared.generated.resources.theme_color_yellow
+import org.jetbrains.compose.resources.StringResource
 
 enum class ThemeColorPreset(
-    val displayNameRes: Int,
+    val displayNameRes: StringResource,
     val key: String,
 ) {
-    SYSTEM(R.string.theme_color_system, "system"),
-    DEFAULT(R.string.theme_color_default, "default"),
-    BLUE(R.string.theme_color_blue, "blue"),
-    LIGHT_GREEN(R.string.theme_color_light_green, "light_green"),
-    PURPLE(R.string.theme_color_purple, "purple"),
-    PINK(R.string.theme_color_pink, "pink"),
-    ORANGE(R.string.theme_color_orange, "orange"),
-    TEAL(R.string.theme_color_teal, "teal"),
-    YELLOW(R.string.theme_color_yellow, "yellow"),
-    HIGH_CONTRAST(R.string.theme_color_high_contrast, "high_contrast");
+    SYSTEM(Res.string.theme_color_system, "system"),
+    DEFAULT(Res.string.theme_color_default, "default"),
+    BLUE(Res.string.theme_color_blue, "blue"),
+    LIGHT_GREEN(Res.string.theme_color_light_green, "light_green"),
+    PURPLE(Res.string.theme_color_purple, "purple"),
+    PINK(Res.string.theme_color_pink, "pink"),
+    ORANGE(Res.string.theme_color_orange, "orange"),
+    TEAL(Res.string.theme_color_teal, "teal"),
+    YELLOW(Res.string.theme_color_yellow, "yellow"),
+    HIGH_CONTRAST(Res.string.theme_color_high_contrast, "high_contrast");
 
     companion object {
         fun fromKey(key: String?): ThemeColorPreset =
@@ -456,7 +461,7 @@ private val highContrastBlueDark = darkColorScheme(
 )
 
 fun ThemeColorPreset.colorScheme(darkTheme: Boolean): ColorScheme = when (this) {
-    ThemeColorPreset.SYSTEM -> error("Use dynamicColorScheme for SYSTEM preset")
+    ThemeColorPreset.SYSTEM -> error("Use dynamicColorSchemeOrNull for SYSTEM preset")
     ThemeColorPreset.DEFAULT -> if (darkTheme) redDark else redLight
     ThemeColorPreset.BLUE -> if (darkTheme) blueDark else blueLight
     ThemeColorPreset.PURPLE -> if (darkTheme) purpleDark else purpleLight
@@ -466,11 +471,4 @@ fun ThemeColorPreset.colorScheme(darkTheme: Boolean): ColorScheme = when (this) 
     ThemeColorPreset.PINK -> if (darkTheme) pinkDark else pinkLight
     ThemeColorPreset.LIGHT_GREEN -> if (darkTheme) lightGreenDark else lightGreenLight
     ThemeColorPreset.HIGH_CONTRAST -> if (darkTheme) highContrastBlueDark else highContrastBlueLight
-}
-
-@RequiresApi(Build.VERSION_CODES.S)
-@Composable
-fun dynamicColorScheme(darkTheme: Boolean): ColorScheme {
-    val context = LocalContext.current
-    return if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
 }

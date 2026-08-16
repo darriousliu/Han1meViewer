@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
@@ -166,12 +167,16 @@ fun HomeSettingsRouteScreen(
             }
         }
     }
-    val uiState = remember(refreshKey, updateSummary, cacheSummary, launcherItems, context) {
+    val themeColorName = stringResource(ThemeColorPreset.fromKey(Preferences.themeColor).displayNameRes)
+    val uiState = remember(
+        refreshKey, updateSummary, cacheSummary, launcherItems, context, themeColorName,
+    ) {
         buildHomeSettingsUiState(
             context = context,
             launcherItems = launcherItems,
             updateSummary = updateSummary,
             cacheSummary = cacheSummary,
+            themeColorName = themeColorName,
         )
     }
 
@@ -508,6 +513,7 @@ private fun buildHomeSettingsUiState(
     launcherItems: List<LauncherItem>,
     updateSummary: String,
     cacheSummary: String,
+    themeColorName: String,
 ): HomeSettingsUiState {
     val currentAlias = Preferences.fakeLauncherIcon
     val currentItem = launcherItems.find { it.alias == currentAlias } ?: launcherItems.first()
@@ -568,7 +574,7 @@ private fun buildHomeSettingsUiState(
         updatePopupIntervalDays = Preferences.updatePopupIntervalDays,
         dynamicColorEnabled = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S,
         themeColorKey = Preferences.themeColor ?: ThemeColorPreset.DEFAULT.key,
-        themeColorName = context.getString(ThemeColorPreset.fromKey(Preferences.themeColor).displayNameRes),
+        themeColorName = themeColorName,
         searchGridColumnsSummary = listOf(
             searchGridColumnsConfig.compactColumns,
             searchGridColumnsConfig.mediumColumns,
