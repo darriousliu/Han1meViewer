@@ -10,6 +10,7 @@
 		A10000000000000000000008 /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000006 /* iOSApp.swift */; };
 		A10000000000000000000009 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000007 /* ContentView.swift */; };
 		A10000000000000000000022 /* KotlinMultiplatformLinkedPackage in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000021 /* KotlinMultiplatformLinkedPackage */; };
+		A10000000000000000000026 /* MMKV in Frameworks */ = {isa = PBXBuildFile; productRef = A10000000000000000000025 /* MMKV */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A10000000000000000000022 /* KotlinMultiplatformLinkedPackage in Frameworks */,
+				A10000000000000000000026 /* MMKV in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,6 +76,7 @@
 			name = iosApp;
 			packageProductDependencies = (
 				A10000000000000000000021 /* KotlinMultiplatformLinkedPackage */,
+				A10000000000000000000025 /* MMKV */,
 			);
 			productName = Han1meViewer;
 			productReference = A10000000000000000000005 /* Han1meViewer.app */;
@@ -105,6 +108,7 @@
 			mainGroup = A10000000000000000000002;
 			packageReferences = (
 				A10000000000000000000020 /* XCLocalSwiftPackageReference "KotlinMultiplatformLinkedPackage" */,
+				A10000000000000000000024 /* XCRemoteSwiftPackageReference "MMKV" */,
 			);
 			productRefGroup = A10000000000000000000003 /* Products */;
 			projectDirPath = "";
@@ -296,10 +300,26 @@
 		};
 /* End XCLocalSwiftPackageReference section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		A10000000000000000000024 /* XCRemoteSwiftPackageReference "MMKV" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Tencent/MMKV.git";
+			requirement = {
+				kind = exactVersion;
+				version = 2.4.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		A10000000000000000000021 /* KotlinMultiplatformLinkedPackage */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = KotlinMultiplatformLinkedPackage;
+		};
+		A10000000000000000000025 /* MMKV */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A10000000000000000000024 /* XCRemoteSwiftPackageReference "MMKV" */;
+			productName = MMKV;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
