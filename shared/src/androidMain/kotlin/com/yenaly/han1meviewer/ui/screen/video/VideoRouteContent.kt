@@ -8,7 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.preference.PreferenceManager
+import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.model.HanimeInfo
 import com.yenaly.han1meviewer.logic.state.VideoLoadingState
@@ -49,8 +49,7 @@ fun VideoRouteContent(
 ) {
     val hostUiState by videoViewModel.videoHostUiStateFlow.collectAsStateWithLifecycle()
     val disableComments = remember {
-        PreferenceManager.getDefaultSharedPreferences(application)
-            .getBoolean("disable_comments", false)
+        Preferences.disableComments
     }
     val tabs = remember(disableComments, hostUiState.commentBadgeCount, fromDownload) {
         buildList {

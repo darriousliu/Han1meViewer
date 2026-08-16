@@ -13,7 +13,6 @@ import android.provider.Settings
 import android.util.Log
 import androidx.annotation.IntRange
 import androidx.annotation.RequiresApi
-import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.core.text.parseAsHtml
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -38,18 +37,6 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.ExperimentalTime
-
-internal fun saveBoolean(key: String, value: Boolean) {
-    Preferences.preferenceSp.edit { putBoolean(key, value) }
-}
-
-internal fun saveString(key: String, value: String) {
-    Preferences.preferenceSp.edit { putString(key, value) }
-}
-
-internal fun saveInt(key: String, value: Int) {
-    Preferences.preferenceSp.edit { putInt(key, value) }
-}
 
 internal fun buildDomainOptions(context: Context): List<Pair<String, String>> = listOf(
     "${HANIME_HOSTNAME[0]} (${context.getString(R.string.default_)})" to HANIME_URL[0],

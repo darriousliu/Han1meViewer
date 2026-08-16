@@ -17,7 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.core.content.edit
 import androidx.core.net.toUri
 import com.yenaly.han1meviewer.EMPTY_STRING
 import com.yenaly.han1meviewer.Preferences
@@ -42,22 +41,6 @@ import com.yenaly.yenaly_libs.utils.showShortToast
 import okhttp3.Request
 import java.net.InetAddress
 import java.util.concurrent.Executors
-
-private const val NETWORK_PROXY_TYPE = "proxy_type"
-private const val NETWORK_PROXY_IP = "proxy_ip"
-private const val NETWORK_PROXY_PORT = "proxy_port"
-private const val NETWORK_DOMAIN_NAME = "domain_name"
-private const val NETWORK_SELECTED_BASE_URL = "selectedBaseUrl"
-private const val NETWORK_USE_CUSTOM_MIRROR_SITE = "use_custom_mirror_site"
-private const val NETWORK_CUSTOM_MIRROR_SITE = "custom_mirror_site"
-private const val NETWORK_APPEND_CUSTOM_MIRROR_PATH = "append_custom_mirror_path"
-private const val NETWORK_USE_BUILT_IN_HOSTS = "use_built_in_hosts"
-private const val NETWORK_CUSTOM_HOSTS_DATA = "custom_hosts_data"
-private const val NETWORK_USE_DOH = "use_doh"
-private const val NETWORK_DOH_PRESET = "doh_preset"
-private const val NETWORK_DOH_CUSTOM_URL = "doh_custom_url"
-private const val NETWORK_DOH_BOOTSTRAP_IPS = "doh_bootstrap_ips"
-private const val NETWORK_DOH_TIMEOUT_SECONDS = "doh_timeout_seconds"
 
 private enum class DohConflictTarget {
     EnableDoH,
@@ -256,7 +239,7 @@ fun NetworkSettingsRouteScreen() {
                 pendingDohConflictTarget = DohConflictTarget.EnableBuiltInHosts
                 return@NetworkSettingsScreen
             }
-            Preferences.preferenceSp.edit { putBoolean(NETWORK_USE_BUILT_IN_HOSTS, value) }
+            Preferences.useBuiltInHosts = value
             refreshKey++
             showHostsRestartConfirm = true
         },
@@ -266,9 +249,7 @@ fun NetworkSettingsRouteScreen() {
                 showCustomHostsValidationError = errors
                 return@NetworkSettingsScreen
             }
-            Preferences.preferenceSp.edit(commit = true) {
-                putString(NETWORK_CUSTOM_HOSTS_DATA, data)
-            }
+            Preferences.customHostsData = data
             refreshKey++
             if (Preferences.useBuiltInHosts) {
                 HanimeNetwork.rebuildNetwork()
@@ -286,13 +267,11 @@ fun NetworkSettingsRouteScreen() {
                 pendingDohConflictTarget = DohConflictTarget.EnableDoH
                 return@NetworkSettingsScreen
             }
-            Preferences.preferenceSp.edit(commit = true) {
-                putBoolean(NETWORK_USE_DOH, enabled)
-                putString(NETWORK_DOH_PRESET, preset)
-                putString(NETWORK_DOH_CUSTOM_URL, url)
-                putString(NETWORK_DOH_BOOTSTRAP_IPS, bootstrapIps)
-                putInt(NETWORK_DOH_TIMEOUT_SECONDS, timeoutSeconds.coerceIn(1, 60))
-            }
+            Preferences.useDoH = enabled
+            Preferences.dohPreset = preset
+            Preferences.dohCustomUrl = url
+            Preferences.dohBootstrapIps = bootstrapIps
+            Preferences.dohTimeoutSeconds = timeoutSeconds.coerceIn(1, 60)
             currentHost = Preferences.baseUrl
             refreshKey++
             HanimeNetwork.rebuildNetwork()
@@ -336,11 +315,9 @@ fun NetworkSettingsRouteScreen() {
                     setPositiveButton(R.string.confirm) { _, _ -> }
                 }
             }
-            Preferences.preferenceSp.edit(commit = true) {
-                putInt(NETWORK_PROXY_TYPE, type)
-                putString(NETWORK_PROXY_IP, ip)
-                putInt(NETWORK_PROXY_PORT, port)
-            }
+            Preferences.proxyType = type
+            Preferences.proxyIp = ip
+            Preferences.proxyPort = port
             HProxySelector.rebuildNetwork()
             HanimeNetwork.rebuildNetwork()
             refreshKey++
@@ -355,15 +332,13 @@ fun NetworkSettingsRouteScreen() {
         dismissText = stringResource(R.string.cancel),
         cancelable = false,
         onConfirm = {
-            Preferences.preferenceSp.edit(commit = true) {
-                if (pendingDomainValue.isNotEmpty()) {
-                    putString(NETWORK_DOMAIN_NAME, pendingDomainValue)
-                    putString(NETWORK_SELECTED_BASE_URL, pendingDomainValue)
-                }
-                putBoolean(NETWORK_USE_CUSTOM_MIRROR_SITE, pendingUseCustomMirrorSite)
-                putString(NETWORK_CUSTOM_MIRROR_SITE, pendingCustomMirrorSite)
-                putBoolean(NETWORK_APPEND_CUSTOM_MIRROR_PATH, pendingAppendCustomMirrorPath)
+            if (pendingDomainValue.isNotEmpty()) {
+                Preferences.domainName = pendingDomainValue
+                Preferences.selectedBaseUrl = pendingDomainValue
             }
+            Preferences.useCustomMirrorSite = pendingUseCustomMirrorSite
+            Preferences.customMirrorSite = pendingCustomMirrorSite
+            Preferences.appendCustomMirrorPath = pendingAppendCustomMirrorPath
             logout()
             ActivityManager.restart(killProcess = true)
         },
@@ -441,21 +416,19 @@ fun NetworkSettingsRouteScreen() {
         dismissText = stringResource(R.string.cancel),
         cancelable = false,
         onConfirm = {
-            Preferences.preferenceSp.edit(commit = true) {
-                when (pendingDohConflictTarget) {
-                    DohConflictTarget.EnableDoH -> {
-                        putBoolean(NETWORK_USE_BUILT_IN_HOSTS, false)
-                        putBoolean(NETWORK_USE_DOH, pendingDohEnabled)
-                        putString(NETWORK_DOH_PRESET, pendingDohPreset)
-                        putString(NETWORK_DOH_CUSTOM_URL, pendingDohCustomUrl)
-                        putString(NETWORK_DOH_BOOTSTRAP_IPS, pendingDohBootstrapIps)
-                        putInt(NETWORK_DOH_TIMEOUT_SECONDS, pendingDohTimeoutSeconds.coerceIn(1, 60))
-                    }
+            when (pendingDohConflictTarget) {
+                DohConflictTarget.EnableDoH -> {
+                    Preferences.useBuiltInHosts = false
+                    Preferences.useDoH = pendingDohEnabled
+                    Preferences.dohPreset = pendingDohPreset
+                    Preferences.dohCustomUrl = pendingDohCustomUrl
+                    Preferences.dohBootstrapIps = pendingDohBootstrapIps
+                    Preferences.dohTimeoutSeconds = pendingDohTimeoutSeconds.coerceIn(1, 60)
+                }
 
-                    DohConflictTarget.EnableBuiltInHosts -> {
-                        putBoolean(NETWORK_USE_DOH, false)
-                        putBoolean(NETWORK_USE_BUILT_IN_HOSTS, true)
-                    }
+                DohConflictTarget.EnableBuiltInHosts -> {
+                    Preferences.useDoH = false
+                    Preferences.useBuiltInHosts = true
                 }
             }
             showDohConflictConfirm = false

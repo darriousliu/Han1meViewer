@@ -22,9 +22,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.lifecycle.lifecycleScope
-import androidx.preference.PreferenceManager
 import com.yenaly.han1meviewer.HANIME_LOGIN_URL
 import com.yenaly.han1meviewer.HanimeConstants.HANIME_URL
+import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.USER_AGENT
 import com.yenaly.han1meviewer.logic.NetworkRepo
@@ -192,8 +192,7 @@ class LoginActivity : FrameActivity() {
     }
 
     private fun applyAppLocale(context: Context): Context {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        val lang = prefs.getString("app_language", "system") ?: "system"
+        val lang = Preferences.appLanguage
 
         val newLocale = when (lang) {
             "zh-rCN" -> Locale.SIMPLIFIED_CHINESE

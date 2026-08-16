@@ -7,6 +7,7 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.await
 import androidx.work.workDataOf
+import com.yenaly.han1meviewer.DownloadDefaults
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.logic.DatabaseRepo
 import com.yenaly.han1meviewer.logic.dao.DownloadDatabase
@@ -32,7 +33,7 @@ object HanimeDownloadManagerV2 {
 
     private const val TAG = "HanimeDownloadManager"
 
-    const val MAX_CONCURRENT_DOWNLOAD_DEF = 2
+    const val MAX_CONCURRENT_DOWNLOAD_DEF = DownloadDefaults.MAX_CONCURRENT_DOWNLOAD_DEF
     var maxConcurrentDownloadCount = 0
         set(value) {
             field = if (value > 0) value else Int.MAX_VALUE

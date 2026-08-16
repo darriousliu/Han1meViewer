@@ -17,7 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.core.content.edit
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yenaly.han1meviewer.Preferences
@@ -33,12 +32,6 @@ import com.yenaly.yenaly_libs.utils.copyToClipboard
 import com.yenaly.yenaly_libs.utils.decodeFromStringByBase64
 import com.yenaly.yenaly_libs.utils.showShortToast
 import kotlinx.serialization.json.Json
-
-private const val H_KEYFRAMES_ENABLE = "h_keyframes_enable"
-private const val SHOW_COMMENT_WHEN_COUNTDOWN = "show_comment_when_countdown"
-private const val SHARED_H_KEYFRAMES_ENABLE = "shared_h_keyframes_enable"
-private const val SHARED_H_KEYFRAMES_USE_FIRST = "shared_h_keyframes_use_first"
-private const val WHEN_COUNTDOWN_REMIND = "when_countdown_remind"
 
 @Composable
 fun HKeyframesTopBarActions(onImportClick: () -> Unit) {
@@ -187,25 +180,25 @@ fun HKeyframeSettingsRouteScreen(
     HKeyframeSettingsScreen(
         state = uiState,
         onHKeyframesEnableChange = {
-            saveBoolean(H_KEYFRAMES_ENABLE, it)
+            Preferences.hKeyframesEnable = it
             refreshKey++
         },
         onOpenHKeyframeManage = onNavigateToHKeyframes,
         onSharedHKeyframesEnableChange = {
-            saveBoolean(SHARED_H_KEYFRAMES_ENABLE, it)
+            Preferences.sharedHKeyframesEnable = it
             refreshKey++
         },
         onSharedHKeyframesUseFirstChange = {
-            saveBoolean(SHARED_H_KEYFRAMES_USE_FIRST, it)
+            Preferences.sharedHKeyframesUseFirst = it
             refreshKey++
         },
         onOpenSharedHKeyframeManage = onNavigateToSharedHKeyframes,
         onShowCommentWhenCountdownChange = {
-            saveBoolean(SHOW_COMMENT_WHEN_COUNTDOWN, it)
+            Preferences.showCommentWhenCountdown = it
             refreshKey++
         },
         onWhenCountdownRemindChange = {
-            Preferences.preferenceSp.edit { putInt(WHEN_COUNTDOWN_REMIND, it) }
+            Preferences.whenCountdownRemindSec = it
             refreshKey++
         },
     )

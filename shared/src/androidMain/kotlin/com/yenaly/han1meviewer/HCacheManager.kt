@@ -5,10 +5,8 @@ import android.os.Looper
 import android.util.Log
 import androidx.annotation.WorkerThread
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.edit
 import com.yenaly.han1meviewer.logic.DatabaseRepo
 import com.yenaly.han1meviewer.logic.model.HanimeVideo
-import com.yenaly.han1meviewer.ui.navigation.settings.SettingsPreferenceKeys
 import com.yenaly.han1meviewer.util.SafFileManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -72,9 +70,7 @@ object HCacheManager {
             if (shouldSwitch) {
                 notify(context)
                 Log.w("FileSave", "⛔ 写入失败 (${e.message})，切换为私有路径")
-                Preferences.preferenceSp.edit {
-                    putBoolean(SettingsPreferenceKeys.USE_PRIVATE_STORAGE, true)
-                }
+                Preferences.isUsePrivateStorage = true
                 return saveHanimeVideoInfo(context, videoCode, info) // ⬅️ 重试一次
             }
 

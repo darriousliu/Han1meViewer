@@ -9,23 +9,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.core.content.edit
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.ui.screen.settings.MpvChoiceDialog
 import com.yenaly.han1meviewer.ui.screen.settings.MpvPlayerSettingsScreen
 import com.yenaly.han1meviewer.ui.screen.settings.MpvPlayerSettingsUiState
-
-private const val MPV_PROFILE = "mpv_profile"
-private const val MPV_INTERPOLATION = "mpv_interpolation"
-private const val MPV_DEBAND = "mpv_deband"
-private const val MPV_FRAMEDROP = "mpv_framedrop"
-private const val MPV_HWDEC = "mpv_hwdecx"
-private const val MPV_CACHE_SECS = "mpv_cache_secs"
-private const val MPV_TLS_VERIFY = "mpv_tls_verify"
-private const val MPV_NETWORK_TIMEOUT = "mpv_network_timeout"
-private const val ENABLE_GPU_NEXT_RENDERER = "mpv_gpu_next_render"
-private const val CUSTOM_PARAMS = "mpv_custom_parameters"
 
 @Composable
 fun MpvPlayerSettingsRouteScreen() {
@@ -54,43 +42,43 @@ fun MpvPlayerSettingsRouteScreen() {
         onOpenCustomParamsDialog = { activeDialog = MpvChoiceDialog.CustomParams },
         onDismissDialog = { activeDialog = null },
         onProfileChange = {
-            saveString(MPV_PROFILE, it)
+            Preferences.mpvProfile = it
             refreshKey++
         },
         onEnableGpuNextRendererChange = {
-            saveBoolean(ENABLE_GPU_NEXT_RENDERER, it)
+            Preferences.enableGPUNextRenderer = it
             refreshKey++
         },
         onInterpolationChange = {
-            saveBoolean(MPV_INTERPOLATION, it)
+            Preferences.mpvInterpolation = it
             refreshKey++
         },
         onDebandChange = {
-            saveBoolean(MPV_DEBAND, it)
+            Preferences.mpvDeband = it
             refreshKey++
         },
         onFramedropChange = {
-            saveBoolean(MPV_FRAMEDROP, it)
+            Preferences.mpvFramedrop = it
             refreshKey++
         },
         onHwdecChange = {
-            saveString(MPV_HWDEC, it)
+            Preferences.mpvHwdec = it
             refreshKey++
         },
         onCacheSecsChange = {
-            Preferences.preferenceSp.edit { putInt(MPV_CACHE_SECS, it) }
+            Preferences.mpvCacheSecs = it
             refreshKey++
         },
         onTlsVerifyChange = {
-            saveBoolean(MPV_TLS_VERIFY, it)
+            Preferences.mpvTlsVerify = it
             refreshKey++
         },
         onNetworkTimeoutChange = {
-            Preferences.preferenceSp.edit { putInt(MPV_NETWORK_TIMEOUT, it) }
+            Preferences.mpvNetworkTimeout = it
             refreshKey++
         },
         onCustomParamsChange = {
-            saveString(CUSTOM_PARAMS, it)
+            Preferences.customMpvParams = it
             refreshKey++
         },
     )

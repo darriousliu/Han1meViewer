@@ -14,6 +14,7 @@ plugins {
     alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.org.jetbrains.kotlin.plugin.parcelize)
     alias(libs.plugins.org.jetbrains.kotlin.plugin.serialization)
+    alias(libs.plugins.ktorfit)
     alias(libs.plugins.com.google.devtools.ksp)
     alias(libs.plugins.androidx.room)
     alias(libs.plugins.compose.multiplatform)
@@ -50,6 +51,9 @@ buildkonfig {
 }
 
 kotlin {
+    compilerOptions {
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
     android {
         namespace = "com.yenaly.han1meviewer"
         compileSdk = property("compile.sdk").toString().toInt()
@@ -118,6 +122,8 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            implementation(libs.kotlinx.io.core)
+            implementation(libs.mmkv.kotlin)
             implementation(libs.compose.multiplatform.runtime)
             implementation(libs.compose.multiplatform.ui)
             implementation(libs.compose.multiplatform.foundation)
@@ -128,7 +134,11 @@ kotlin {
             implementation(libs.serialization.json)
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.client.logging)
             implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.ktorfit.lib.light)
+            implementation(libs.kermit)
+            implementation(libs.sonner)
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
             implementation(libs.sqlite.async)
@@ -148,6 +158,7 @@ kotlin {
 
         androidMain.dependencies {
             implementation(libs.appcompat)
+            implementation(libs.mmkv)
             implementation(libs.androidx.window)
             implementation(libs.androidx.window.java)
             implementation(project(":yenaly_libs"))
@@ -234,6 +245,9 @@ kotlin {
 
         val androidJvmMain = create("androidJvmMain") {
             dependsOn(commonMain.get())
+        }
+        androidJvmMain.dependencies {
+            implementation(libs.ktor.client.okhttp)
         }
         androidMain.get().dependsOn(androidJvmMain)
         jvmMain.get().dependsOn(androidJvmMain)

@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.org.jetbrains.kotlin.plugin.serialization) apply false
     alias(libs.plugins.org.jetbrains.kotlin.plugin.parcelize) apply false
+    alias(libs.plugins.ktorfit) apply false
     alias(libs.plugins.androidx.room) apply false
     alias(libs.plugins.com.google.gms.google.services) apply false
     alias(libs.plugins.com.google.firebase.crashlytics) apply false

@@ -56,6 +56,17 @@ object HanimeConstants {
 }
 
 
+// 站点基础 URL
+//
+// 原本因为要读 Preferences 而留在 androidMain 的 BaseUrls.kt，Step 4 之后 Preferences
+// 进了 commonMain，这里就并回来了。
+//
+// 注意是 get()：用户在设置里换镜像站后即时生效，不需要重启 App。
+
+val HANIME_BASE_URL: String get() = Preferences.baseUrl
+
+val HANIME_LOGIN_URL: String get() = HANIME_BASE_URL + "login"
+
 // github url
 
 const val HA1_GITHUB_URL = "https://github.com/misaka10032w/Han1meViewer"

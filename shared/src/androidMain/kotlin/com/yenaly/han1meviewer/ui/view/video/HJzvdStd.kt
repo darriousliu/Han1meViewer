@@ -1,8 +1,8 @@
 package com.yenaly.han1meviewer.ui.view.video
 
 import android.annotation.SuppressLint
-import android.content.res.ColorStateList
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Typeface
 import android.media.AudioFocusRequest
@@ -38,8 +38,6 @@ import androidx.core.view.isVisible
 import androidx.core.view.size
 import androidx.core.view.updatePadding
 import androidx.fragment.app.FragmentActivity
-import androidx.navigation.findNavController
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.jzvd.JZDataSource
@@ -49,6 +47,7 @@ import cn.jzvd.JzvdStd
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.color.MaterialColors
 import com.itxca.spannablex.spannable
+import com.yenaly.han1meviewer.PlayerDefaults
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.entity.HKeyframeEntity
@@ -97,14 +96,14 @@ class HJzvdStd @JvmOverloads constructor(
         /**
          * 默認滑動調整進度條的靈敏度 越大播放进度条滑动越慢
          */
-        const val DEF_PROGRESS_SLIDE_SENSITIVITY = 5
+        const val DEF_PROGRESS_SLIDE_SENSITIVITY = PlayerDefaults.PROGRESS_SLIDE_SENSITIVITY
 
-        const val DEF_COUNTDOWN_SEC = 10
+        const val DEF_COUNTDOWN_SEC = PlayerDefaults.COUNTDOWN_SEC
 
         /**
          * 默認速度
          */
-        const val DEF_SPEED = 1.0F
+        const val DEF_SPEED = PlayerDefaults.SPEED
 
         /**
          * 默認速度的索引
@@ -114,7 +113,7 @@ class HJzvdStd @JvmOverloads constructor(
         /**
          * 默認長按速度是原先速度的幾倍
          */
-        const val DEF_LONG_PRESS_SPEED_TIMES = 2.5F
+        const val DEF_LONG_PRESS_SPEED_TIMES = PlayerDefaults.LONG_PRESS_SPEED_TIMES
 
         /**
          * 速度列表
@@ -453,8 +452,7 @@ class HJzvdStd @JvmOverloads constructor(
     }
     override fun setUp(jzDataSource: JZDataSource?, screen: Int, clazz: Class<*>) {
         super.setUp(jzDataSource, screen, clazz)
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        val preferredQuality = prefs.getString("default_video_quality", null)
+        val preferredQuality = Preferences.videoQuality
         if (Preferences.disableMobileDataWarning){
             WIFI_TIP_DIALOG_SHOWED = true
         }

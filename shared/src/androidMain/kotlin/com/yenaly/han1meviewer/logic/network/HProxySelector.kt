@@ -1,6 +1,7 @@
 package com.yenaly.han1meviewer.logic.network
 
 import com.yenaly.han1meviewer.Preferences
+import com.yenaly.han1meviewer.ProxyType
 import okhttp3.internal.proxy.NullProxySelector
 import java.io.IOException
 import java.net.InetAddress
@@ -29,10 +30,12 @@ class HProxySelector : ProxySelector() {
     }
 
     companion object {
-        const val TYPE_DIRECT = 0
-        const val TYPE_SYSTEM = 1
-        const val TYPE_HTTP = 2
-        const val TYPE_SOCKS = 3
+        // 真正的定义已抽到 commonMain 的 ProxyType（Preferences 上移 commonMain 需要），
+        // 这里保留别名，现有调用点不用改。
+        const val TYPE_DIRECT = ProxyType.DIRECT
+        const val TYPE_SYSTEM = ProxyType.SYSTEM
+        const val TYPE_HTTP = ProxyType.HTTP
+        const val TYPE_SOCKS = ProxyType.SOCKS
 
         private val ipv4Regex =
             Regex("^(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])$")

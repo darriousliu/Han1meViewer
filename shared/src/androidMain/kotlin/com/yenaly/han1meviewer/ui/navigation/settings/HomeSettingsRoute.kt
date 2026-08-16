@@ -38,29 +38,28 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
-import androidx.core.content.edit
 import androidx.core.text.parseAsHtml
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.firebase.Firebase
 import com.google.firebase.analytics.analytics
 import com.yenaly.han1meviewer.BuildConfig
-import com.yenaly.han1meviewer.HanimeConstants
 import com.yenaly.han1meviewer.HA1_GITHUB_FORUM_URL
 import com.yenaly.han1meviewer.HA1_GITHUB_ISSUE_URL
 import com.yenaly.han1meviewer.HanimeApplication
+import com.yenaly.han1meviewer.HanimeConstants
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.BackupManager
 import com.yenaly.han1meviewer.logic.state.WebsiteState
 import com.yenaly.han1meviewer.ui.activity.MainActivity
 import com.yenaly.han1meviewer.ui.component.ConfirmDialog
-import com.yenaly.han1meviewer.ui.screen.settings.HomeSettingsScreen
-import com.yenaly.han1meviewer.ui.screen.settings.dialog.LicenseDialog
-import com.yenaly.han1meviewer.ui.screen.settings.model.HomeSettingsUiState
 import com.yenaly.han1meviewer.ui.screen.home.homepage.defaultHomeCategoryPreferenceItems
 import com.yenaly.han1meviewer.ui.screen.home.homepage.hiddenHomeCategoryKeys
 import com.yenaly.han1meviewer.ui.screen.home.homepage.homeCategoryOrder
 import com.yenaly.han1meviewer.ui.screen.home.homepage.saveHomeCategoryPreferences
+import com.yenaly.han1meviewer.ui.screen.settings.HomeSettingsScreen
+import com.yenaly.han1meviewer.ui.screen.settings.dialog.LicenseDialog
+import com.yenaly.han1meviewer.ui.screen.settings.model.HomeSettingsUiState
 import com.yenaly.han1meviewer.ui.theme.ThemeColorPreset
 import com.yenaly.han1meviewer.ui.viewmodel.AppViewModel
 import com.yenaly.han1meviewer.util.ThemeUtils
@@ -73,34 +72,6 @@ import com.yenaly.yenaly_libs.utils.showShortToast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-
-private const val HOME_VIDEO_LANGUAGE = "video_language"
-private const val HOME_DEFAULT_VIDEO_QUALITY = "default_video_quality"
-private const val HOME_SHOW_PLAYED_INDICATOR = "show_played_indicator"
-private const val HOME_ALLOW_PIP_MODE = "allow_pip_mode"
-private const val HOME_UPDATE_POPUP_INTERVAL_DAYS = "update_popup_interval_days"
-private const val HOME_USE_CI_UPDATE_CHANNEL = "use_ci_update_channel"
-private const val HOME_USE_ANALYTICS = "use_analytics"
-private const val HOME_FAKE_LAUNCHER_ICON = "pref_fake_launcher_icon"
-private const val HOME_USE_DARK_MODE = "use_dark_mode"
-private const val HOME_ALLOW_RESUME_PLAYBACK = "allow_resume_playback"
-private const val HOME_SEARCH_ARTIST_IGNORE_VIDEO_TYPE = "search_artist_ignore_video_type"
-private const val HOME_DISABLE_MOBILE_DATA_WARNING = "disable_mobile_data_warning"
-private const val HOME_COLLAPSE_DOWNLOADED_GROUP = "collapse_downloaded_group"
-private const val HOME_DISABLE_PREDICTIVE_BACK = "disable_predictive_back"
-private const val HOME_TABLET_MODE = "tablet_mode"
-private const val HOME_DISABLE_COMMENTS = "disable_comments"
-private const val HOME_USE_LOCK_SCREEN = "use_lock_screen"
-private const val HOME_APP_LANGUAGE = "app_language"
-private const val HOME_THEME_COLOR = "theme_color"
-private const val HOME_SEARCH_GRID_COLUMNS_COMPACT = "search_grid_columns_compact"
-private const val HOME_SEARCH_GRID_COLUMNS_MEDIUM = "search_grid_columns_medium"
-private const val HOME_SEARCH_GRID_COLUMNS_EXPANDED = "search_grid_columns_expanded"
-private const val HOME_SEARCH_GRID_COLUMNS_LARGE = "search_grid_columns_large"
-private const val HOME_HORIZONTAL_CARD_COUNT_NARROW = "horizontal_card_count_narrow"
-private const val HOME_HORIZONTAL_CARD_COUNT_COMPACT = "horizontal_card_count_compact"
-private const val HOME_HORIZONTAL_CARD_COUNT_MEDIUM = "horizontal_card_count_medium"
-private const val HOME_HORIZONTAL_CARD_COUNT_EXPANDED = "horizontal_card_count_expanded"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -207,18 +178,18 @@ fun HomeSettingsRouteScreen(
         state = uiState,
         onVideoLanguageChange = { value ->
             if (value != Preferences.videoLanguage) {
-                saveString(HOME_VIDEO_LANGUAGE, value)
+                Preferences.videoLanguage = value
                 showRestartConfirmDialog = true
             }
         },
         onVideoQualityChange = { value ->
-            saveString(HOME_DEFAULT_VIDEO_QUALITY, value)
+            Preferences.videoQuality = value
             refreshKey++
             context.showToast(R.string.success_value, value)
         },
         onDarkModeChange = { value ->
             if (value != Preferences.useDarkMode) {
-                saveString(HOME_USE_DARK_MODE, value)
+                Preferences.useDarkMode = value
                 ThemeUtils.applyDarkModeFromPreferences(context)
                 activity.recreate()
             }
@@ -227,61 +198,61 @@ fun HomeSettingsRouteScreen(
             if (enabled && !isPipPermissionGranted(context)) {
                 context.showToast(R.string.request_pip_alert)
                 openPipPermissionSettings(context)
-                saveBoolean(HOME_ALLOW_PIP_MODE, false)
+                Preferences.allowPipMode = false
                 refreshKey++
                 return@HomeSettingsScreen
             }
-            saveBoolean(HOME_ALLOW_PIP_MODE, enabled)
+            Preferences.allowPipMode = enabled
             refreshKey++
         },
         onAllowResumePlaybackChange = {
-            saveBoolean(HOME_ALLOW_RESUME_PLAYBACK, it)
+            Preferences.allowResumePlayback = it
             refreshKey++
         },
         onShowPlayedIndicatorChange = {
-            saveBoolean(HOME_SHOW_PLAYED_INDICATOR, it)
+            Preferences.showPlayedIndicator = it
             refreshKey++
         },
         onSearchArtistIgnoreVideoTypeChange = {
-            saveBoolean(HOME_SEARCH_ARTIST_IGNORE_VIDEO_TYPE, it)
+            Preferences.searchArtistIgnoreVideoType = it
             refreshKey++
         },
         onDisableMobileDataWarningChange = {
-            saveBoolean(HOME_DISABLE_MOBILE_DATA_WARNING, it)
+            Preferences.disableMobileDataWarning = it
             refreshKey++
         },
         onDisablePredictiveBackChange = {
-            saveBoolean(HOME_DISABLE_PREDICTIVE_BACK, it)
+            Preferences.disablePredictiveBack = it
             refreshKey++
         },
         onTabletModeChange = {
-            saveBoolean(HOME_TABLET_MODE, it)
+            Preferences.tabletMode = it
             refreshKey++
         },
         onDisableCommentsChange = {
-            saveBoolean(HOME_DISABLE_COMMENTS, it)
+            Preferences.disableComments = it
             refreshKey++
         },
         onCollapseDownloadedGroupChange = {
-            saveBoolean(HOME_COLLAPSE_DOWNLOADED_GROUP, it)
+            Preferences.collapseDownloadedGroup = it
             refreshKey++
         },
         onSearchGridColumnsConfigChange = { config ->
-            saveInt(HOME_SEARCH_GRID_COLUMNS_COMPACT, config.compactColumns)
-            saveInt(HOME_SEARCH_GRID_COLUMNS_MEDIUM, config.mediumColumns)
-            saveInt(HOME_SEARCH_GRID_COLUMNS_EXPANDED, config.expandedColumns)
-            saveInt(HOME_SEARCH_GRID_COLUMNS_LARGE, config.largeColumns)
+            Preferences.searchGridColumnsCompact = config.compactColumns
+            Preferences.searchGridColumnsMedium = config.mediumColumns
+            Preferences.searchGridColumnsExpanded = config.expandedColumns
+            Preferences.searchGridColumnsLarge = config.largeColumns
             refreshKey++
         },
         onHorizontalCardCountConfigChange = { config ->
-            saveString(HOME_HORIZONTAL_CARD_COUNT_NARROW, config.narrowCount.toString())
-            saveString(HOME_HORIZONTAL_CARD_COUNT_COMPACT, config.compactCount.toString())
-            saveString(HOME_HORIZONTAL_CARD_COUNT_MEDIUM, config.mediumCount.toString())
-            saveString(HOME_HORIZONTAL_CARD_COUNT_EXPANDED, config.expandedCount.toString())
+            Preferences.horizontalCardCountNarrow = config.narrowCount
+            Preferences.horizontalCardCountCompact = config.compactCount
+            Preferences.horizontalCardCountMedium = config.mediumCount
+            Preferences.horizontalCardCountExpanded = config.expandedCount
             refreshKey++
         },
         onThemeColorChange = { key ->
-            saveString(HOME_THEME_COLOR, key)
+            Preferences.themeColor = key
             refreshKey++
             activity.recreate()
         },
@@ -290,7 +261,7 @@ fun HomeSettingsRouteScreen(
             refreshKey++
         },
         onUseCIUpdateChannelChange = { value ->
-            saveBoolean(HOME_USE_CI_UPDATE_CHANNEL, value)
+            Preferences.useCIUpdateChannel = value
             refreshKey++
             AppViewModel.getLatestVersion()
         },
@@ -299,7 +270,7 @@ fun HomeSettingsRouteScreen(
                 showAnalyticsDialog = true
                 return@HomeSettingsScreen
             }
-            saveBoolean(HOME_USE_ANALYTICS, true)
+            Preferences.isAnalyticsEnabled = true
             refreshKey++
             Firebase.analytics.setAnalyticsCollectionEnabled(true)
         },
@@ -316,7 +287,7 @@ fun HomeSettingsRouteScreen(
                     return@HomeSettingsScreen
                 }
             }
-            saveBoolean(HOME_USE_LOCK_SCREEN, value)
+            Preferences.useLockScreen = value
             refreshKey++
         },
         onOpenPlayerSettings = onNavigateToPlayerSettings,
@@ -324,9 +295,9 @@ fun HomeSettingsRouteScreen(
         onOpenDownloadSettings = onNavigateToDownloadSettings,
         onOpenNetworkSettings = onNavigateToNetworkSettings,
         onOpenAppLanguageSettings = { value ->
-            val old = Preferences.preferenceSp.getString(HOME_APP_LANGUAGE, "system") ?: "system"
+            val old = Preferences.appLanguage
             if (old != value) {
-                Preferences.preferenceSp.edit { putString(HOME_APP_LANGUAGE, value) }
+                Preferences.appLanguage = value
                 refreshKey++
                 activity.recreate()
             }
@@ -340,7 +311,7 @@ fun HomeSettingsRouteScreen(
             }
         },
         onUpdatePopupIntervalDaysChange = {
-            Preferences.preferenceSp.edit { putInt(HOME_UPDATE_POPUP_INTERVAL_DAYS, it) }
+            Preferences.updatePopupIntervalDays = it
             refreshKey++
         },
         onOpenApplyDeepLinks = {
@@ -451,7 +422,7 @@ fun HomeSettingsRouteScreen(
             },
             dismissButton = {
                 TextButton(onClick = {
-                    saveBoolean(HOME_USE_ANALYTICS, false)
+                    Preferences.isAnalyticsEnabled = false
                     refreshKey++
                     Firebase.analytics.setAnalyticsCollectionEnabled(false)
                     showAnalyticsDialog = false
@@ -494,9 +465,7 @@ fun HomeSettingsRouteScreen(
                     launcherItems.forEach { item ->
                         TextButton(
                             onClick = {
-                                Preferences.preferenceSp.edit {
-                                    putString(HOME_FAKE_LAUNCHER_ICON, item.alias)
-                                }
+                                Preferences.fakeLauncherIcon = item.alias
                                 (context.applicationContext as? HanimeApplication)?.switchLauncher(
                                     item.alias
                                 )
@@ -552,8 +521,7 @@ private fun buildHomeSettingsUiState(
         "always_on" -> context.getString(R.string.always_on)
         else -> Preferences.useDarkMode
     }
-    val appLanguageValue =
-        Preferences.preferenceSp.getString(HOME_APP_LANGUAGE, "system") ?: "system"
+    val appLanguageValue = Preferences.appLanguage
     val appLanguageLabel = when (appLanguageValue) {
         "system" -> context.getString(R.string.follow_system)
         "zh-rCN" -> context.getString(R.string.simplified_chinese)
@@ -572,19 +540,19 @@ private fun buildHomeSettingsUiState(
         darkModeLabel = darkModeLabel,
         appLanguage = appLanguageValue,
         appLanguageLabel = appLanguageLabel,
-        allowPipMode = Preferences.preferenceSp.getBoolean(HOME_ALLOW_PIP_MODE, false),
+        allowPipMode = Preferences.allowPipMode,
         allowResumePlayback = Preferences.allowResumePlayback,
         showPlayedIndicator = Preferences.showPlayedIndicator,
         searchArtistIgnoreVideoType = Preferences.searchArtistIgnoreVideoType,
         disableMobileDataWarning = Preferences.disableMobileDataWarning,
         disablePredictiveBack = Preferences.disablePredictiveBack,
         tabletMode = Preferences.tabletMode,
-        disableComments = Preferences.preferenceSp.getBoolean(HOME_DISABLE_COMMENTS, false),
+        disableComments = Preferences.disableComments,
         collapseDownloadedGroup = Preferences.collapseDownloadedGroup,
         useDynamicColor = Preferences.useDynamicColor,
         useCIUpdateChannel = Preferences.useCIUpdateChannel,
         useAnalytics = Preferences.isAnalyticsEnabled,
-        useLockScreen = Preferences.preferenceSp.getBoolean(HOME_USE_LOCK_SCREEN, false),
+        useLockScreen = Preferences.useLockScreen,
         fakeLauncherIconName = currentItem.name,
         updateSummary = updateSummary,
         cacheSummary = cacheSummary,

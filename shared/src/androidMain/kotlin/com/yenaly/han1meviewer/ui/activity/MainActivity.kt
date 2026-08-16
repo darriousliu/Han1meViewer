@@ -27,11 +27,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.edit
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavHostController
-import androidx.preference.PreferenceManager
 import com.google.android.material.snackbar.Snackbar
 import com.yenaly.han1meviewer.HanimeConstants.ANIME_URL
 import com.yenaly.han1meviewer.HanimeConstants.HANIME_URL
@@ -43,7 +41,6 @@ import com.yenaly.han1meviewer.ui.bridge.VideoPageHost
 import com.yenaly.han1meviewer.ui.navigation.main.AccountRoute
 import com.yenaly.han1meviewer.ui.navigation.main.VideoRoute
 import com.yenaly.han1meviewer.ui.navigation.navigateSafely
-import com.yenaly.han1meviewer.ui.navigation.settings.SettingsPreferenceKeys
 import com.yenaly.han1meviewer.ui.screen.home.homepage.HomePageViewModel
 import com.yenaly.han1meviewer.ui.screen.main.MainActivityContent
 import com.yenaly.han1meviewer.util.showAlertDialog
@@ -119,8 +116,7 @@ class MainActivity : FrameActivity(), PermissionRequester {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val useLock = prefs.getBoolean("use_lock_screen", false)
+        val useLock = Preferences.useLockScreen
 
         if (useLock && isDeviceSecureCompat(this)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -236,8 +232,7 @@ class MainActivity : FrameActivity(), PermissionRequester {
     }
 
     private fun applyAppLocale(context: Context): Context {
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        val lang = prefs.getString("app_language", "system") ?: "system"
+        val lang = Preferences.appLanguage
 
         val newLocale = when (lang) {
             "zh-rCN" -> Locale.SIMPLIFIED_CHINESE
@@ -274,15 +269,11 @@ class MainActivity : FrameActivity(), PermissionRequester {
                 val avSite = HANIME_URL[3]
                 val selectedBaseUrl = Preferences.selectedBaseUrl
                 if (currentSite in ANIME_URL) {
-                    Preferences.preferenceSp.edit(true) {
-                        putString(SettingsPreferenceKeys.SELECTED_BASE_URL, currentSite)
-                        putString(SettingsPreferenceKeys.DOMAIN_NAME, avSite)
-                    }
+                    Preferences.selectedBaseUrl = currentSite
+                    Preferences.domainName = avSite
                 } else {
-                    Preferences.preferenceSp.edit(true) {
-                        putString(SettingsPreferenceKeys.SELECTED_BASE_URL, selectedBaseUrl)
-                        putString(SettingsPreferenceKeys.DOMAIN_NAME, selectedBaseUrl)
-                    }
+                    Preferences.selectedBaseUrl = selectedBaseUrl
+                    Preferences.domainName = selectedBaseUrl
                 }
                 Handler(Looper.getMainLooper()).postDelayed({
                     ActivityManager.restart(killProcess = true)
@@ -392,8 +383,7 @@ class MainActivity : FrameActivity(), PermissionRequester {
         super.onUserLeaveHint()
         val currentFragment = currentVideoHost
 
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val allowPip = prefs.getBoolean("allow_pip_mode", true)
+        val allowPip = Preferences.allowPipMode
 
         Log.i("pipmode", "enter pip mode?\n$currentFragment\nallowpip:$allowPip\n")
 

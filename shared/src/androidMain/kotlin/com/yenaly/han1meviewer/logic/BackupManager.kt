@@ -2,10 +2,8 @@ package com.yenaly.han1meviewer.logic
 
 import android.content.Context
 import android.net.Uri
-import androidx.core.content.edit
 import com.yenaly.han1meviewer.BuildConfig
 import com.yenaly.han1meviewer.Preferences
-import com.yenaly.han1meviewer.logic.BackupManager.exportTo
 import com.yenaly.han1meviewer.logic.dao.CheckInRecordDatabase
 import com.yenaly.han1meviewer.logic.dao.DownloadDatabase
 import com.yenaly.han1meviewer.logic.dao.HistoryDatabase
@@ -18,6 +16,7 @@ import com.yenaly.han1meviewer.logic.entity.download.DownloadCategoryEntity
 import com.yenaly.han1meviewer.logic.entity.download.DownloadGroupEntity
 import com.yenaly.han1meviewer.logic.entity.download.HanimeCategoryCrossRef
 import com.yenaly.han1meviewer.logic.entity.download.HanimeDownloadEntity
+import com.yenaly.han1meviewer.mmkv.LegacyPreferenceKeys
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import java.io.OutputStream
@@ -142,26 +141,13 @@ object BackupManager {
         }
 
         backup.settings?.let { settings ->
-            Preferences.preferenceSp.edit {
-                settings.forEach { (key, value) ->
-                    when (value) {
-                        is PreferenceValue.BooleanValue -> putBoolean(key, value.value)
-                        is PreferenceValue.FloatValue -> putFloat(key, value.value)
-                        is PreferenceValue.IntValue -> putInt(key, value.value)
-                        is PreferenceValue.LongValue -> putLong(key, value.value)
-                        is PreferenceValue.StringSetValue -> putStringSet(key, value.value)
-                        is PreferenceValue.StringValue -> putString(key, value.value)
-                    }
-                }
-            }
+            importSettings(settings)
         }
     }
 
     private suspend fun exportTo(context: Context, outputStream: OutputStream) {
         val backup = BackupData(
-            settings = Preferences.preferenceSp.all.mapValuesNotNull { (_, value) ->
-                value.toPreferenceValue()
-            },
+            settings = exportSettings(),
             hKeyframes = MiscellanyDatabase.instance.hKeyframeDao.getAll(),
             checkInRecords = CheckInRecordDatabase.instance.checkInDao().getAllRecords(),
             sideDishes = CheckInRecordDatabase.instance.sideDishDao().getAll(),
@@ -176,24 +162,38 @@ object BackupManager {
         }
     }
 
-    private inline fun <K, V, R : Any> Map<K, V>.mapValuesNotNull(
-        transform: (Map.Entry<K, V>) -> R?
-    ): Map<K, R> {
-        return mapNotNull { entry -> transform(entry)?.let { entry.key to it } }.toMap()
+    private fun exportSettings(): Map<String, PreferenceValue> =
+        Preferences.exportSettings().mapValues { (_, value) -> value.toPreferenceValue() }
+
+    /**
+     * 旧版本导出的备份文件里，key 还是迁移前的下划线形式，先过一遍映射表再写回。
+     */
+    private fun importSettings(settings: Map<String, PreferenceValue>) {
+        Preferences.importSettings(
+            settings.entries.associate { (key, value) ->
+                (LegacyPreferenceKeys.settings[key] ?: key) to value.raw
+            }
+        )
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private fun Any?.toPreferenceValue(): PreferenceValue? {
-        return when (this) {
-            is Boolean -> PreferenceValue.BooleanValue(this)
-            is Float -> PreferenceValue.FloatValue(this)
-            is Int -> PreferenceValue.IntValue(this)
-            is Long -> PreferenceValue.LongValue(this)
-            is String -> PreferenceValue.StringValue(this)
-            is Set<*> -> PreferenceValue.StringSetValue(this.filterIsInstance<String>().toSet())
-            else -> null
-        }
+    private fun Any.toPreferenceValue(): PreferenceValue = when (this) {
+        is Boolean -> PreferenceValue.BooleanValue(this)
+        is Float -> PreferenceValue.FloatValue(this)
+        is Int -> PreferenceValue.IntValue(this)
+        is Long -> PreferenceValue.LongValue(this)
+        else -> PreferenceValue.StringValue(toString())
     }
+
+    private val PreferenceValue.raw: Any
+        get() = when (this) {
+            is PreferenceValue.BooleanValue -> value
+            is PreferenceValue.FloatValue -> value
+            is PreferenceValue.IntValue -> value
+            is PreferenceValue.LongValue -> value
+            is PreferenceValue.StringValue -> value
+            // 现在没有任何配置项是 Set<String>，留个兜底不至于崩
+            is PreferenceValue.StringSetValue -> value.joinToString(",")
+        }
 
     private fun CheckInRecordEntity.normalizeSideDishes(): CheckInRecordEntity {
         if (sideDishes.isBlank()) return this

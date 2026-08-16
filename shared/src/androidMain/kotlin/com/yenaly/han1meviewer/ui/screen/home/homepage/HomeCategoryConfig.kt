@@ -1,10 +1,8 @@
 package com.yenaly.han1meviewer.ui.screen.home.homepage
 
 import androidx.annotation.StringRes
-import androidx.core.content.edit
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.Preferences
-import com.yenaly.han1meviewer.ui.navigation.settings.SettingsPreferenceKeys
+import com.yenaly.han1meviewer.R
 
 const val HOME_CATEGORY_LATEST_HANIME = "latest_hanime"
 const val HOME_CATEGORY_LATEST_RELEASE = "latest_release"
@@ -45,27 +43,21 @@ val defaultHomeCategoryOrder: List<String>
 
 val homeCategoryOrder: List<String>
     get() = normalizeHomeCategoryKeys(
-        Preferences.preferenceSp.getString(SettingsPreferenceKeys.HOME_CATEGORY_ORDER, null)
-            ?.split(',')
-            .orEmpty()
+        Preferences.homeCategoryOrder
+            .split(',')
             .filter { it.isNotBlank() }
     )
 
 val hiddenHomeCategoryKeys: Set<String>
-    get() = Preferences.preferenceSp.getString(SettingsPreferenceKeys.HOME_CATEGORY_HIDDEN, null)
-        ?.split(',')
-        .orEmpty()
+    get() = Preferences.homeCategoryHidden
+        .split(',')
         .filter { it.isNotBlank() }
         .toSet()
 
 fun saveHomeCategoryPreferences(order: List<String>, hiddenKeys: Set<String>) {
-    Preferences.preferenceSp.edit {
-        putString(SettingsPreferenceKeys.HOME_CATEGORY_ORDER, normalizeHomeCategoryKeys(order).joinToString(","))
-        putString(
-            SettingsPreferenceKeys.HOME_CATEGORY_HIDDEN,
-            hiddenKeys.filter { it in defaultHomeCategoryOrder }.joinToString(",")
-        )
-    }
+    Preferences.homeCategoryOrder = normalizeHomeCategoryKeys(order).joinToString(",")
+    Preferences.homeCategoryHidden =
+        hiddenKeys.filter { it in defaultHomeCategoryOrder }.joinToString(",")
 }
 
 private fun normalizeHomeCategoryKeys(keys: List<String>): List<String> {

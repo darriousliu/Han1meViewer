@@ -4,9 +4,6 @@ import android.util.Log
 import com.yenaly.han1meviewer.Preferences
 import okhttp3.Cookie
 
-@JvmInline
-value class CookieString(val cookie: String)
-
 /**
  * 主要用於 [HCookieJar][com.yenaly.han1meviewer.logic.network.HCookieJar]，最好不要用到其他地方。
  */

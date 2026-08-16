@@ -6,6 +6,7 @@ import android.os.Process
 import android.util.Log
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationManagerCompat
+import com.developer.crashx.config.CrashConfig
 import com.google.android.material.color.DynamicColors
 import com.google.firebase.Firebase
 import com.google.firebase.analytics.analytics
@@ -15,11 +16,12 @@ import com.google.firebase.database.database
 import com.google.firebase.remoteconfig.remoteConfig
 import com.google.firebase.remoteconfig.remoteConfigSettings
 import com.yenaly.han1meviewer.logic.network.HProxySelector
-import com.yenaly.han1meviewer.ui.viewmodel.AppViewModel
+import com.yenaly.han1meviewer.mmkv.initializeMMKV
+import com.yenaly.han1meviewer.mmkv.migrateSharedPreferencesToMMKV
 import com.yenaly.han1meviewer.ui.activity.MainActivity
+import com.yenaly.han1meviewer.ui.viewmodel.AppViewModel
 import com.yenaly.han1meviewer.util.AnimeShaders
 import com.yenaly.han1meviewer.util.ThemeUtils
-import com.developer.crashx.config.CrashConfig
 import com.yenaly.yenaly_libs.base.YenalyApplication
 import com.yenaly.yenaly_libs.utils.LanguageHelper
 import `is`.xyz.mpv.MPVLib
@@ -74,7 +76,12 @@ class HanimeApplication : YenalyApplication() {
 
     override fun onCreate() {
         super.onCreate()
+        // MMKV 必须早于任何 Preferences 访问：Preferences 里的几个 StateFlow 一被碰到就会读盘。
+        // 放在 isMainProcess() 判断之前，因为非主进程（下载 worker 等）同样会读 Preferences。
+        initializeMMKV()
         if (!isMainProcess()) return
+        // 迁移只在主进程做一次，读写旧 SharedPreferences 不适合多进程并发。
+        migrateSharedPreferencesToMMKV(this)
         initCrashX()
         ThemeUtils.applyDarkModeFromPreferences(this)
         if (Preferences.useDynamicColor){

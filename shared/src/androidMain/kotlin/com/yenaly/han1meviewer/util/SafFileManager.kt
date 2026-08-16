@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Environment
 import android.util.Log
-import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
 import com.yenaly.han1meviewer.APP_NAME
@@ -50,7 +49,6 @@ import java.io.OutputStream
  */
 object SafFileManager {
 
-    const val KEY_TREE_URI = "saf_download_path"
     private val VIDEO_EXTENSIONS = setOf("mp4", "mkv", "avi", "flv", "mov", "webm")
     private val IMAGE_EXTENSIONS = setOf("jpg", "jpeg", "png", "webp")
 
@@ -73,9 +71,7 @@ object SafFileManager {
         val flags = (Intent.FLAG_GRANT_READ_URI_PERMISSION
                 or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
         contentResolver.takePersistableUriPermission(treeUri, flags)
-        Preferences.preferenceSp.edit {
-            putString(KEY_TREE_URI, treeUri.toString())
-        }
+        Preferences.safDownloadPath = treeUri.toString()
     }
 
     /**

@@ -1,22 +1,19 @@
 package com.yenaly.han1meviewer.logic.network.interceptor
 
+import com.yenaly.han1meviewer.DownloadDefaults
 import okhttp3.Interceptor
 import okhttp3.Response
 
 class SpeedLimitInterceptor(var maxSpeed: Long) : Interceptor {
 
     companion object {
-        const val NO_LIMIT = 0L
+        // 真正的定义已抽到 commonMain 的 DownloadDefaults（Preferences 上移 commonMain 需要），
+        // 这里保留别名，现有调用点不用改。
+        const val NO_LIMIT = DownloadDefaults.NO_LIMIT
 
-        const val NO_LIMIT_INDEX = 0
+        const val NO_LIMIT_INDEX = DownloadDefaults.NO_LIMIT_INDEX
 
-        @JvmField
-        val SPEED_BYTES = longArrayOf(
-            /* 不限速 */ 0L,
-            128 * 1024L, 256 * 1024L, 512 * 1024L,
-            1024 * 1024L, 2048 * 1024L, 4096 * 1024L,
-            8192 * 1024L, 10240 * 1024L
-        )
+        val SPEED_BYTES = DownloadDefaults.SPEED_BYTES
     }
 
     override fun intercept(chain: Interceptor.Chain): Response {

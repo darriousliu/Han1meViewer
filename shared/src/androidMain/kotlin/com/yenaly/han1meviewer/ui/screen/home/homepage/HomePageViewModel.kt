@@ -2,15 +2,12 @@ package com.yenaly.han1meviewer.ui.screen.home.homepage
 
 import android.util.Log
 import androidx.annotation.StringRes
-import androidx.core.content.edit
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.database.FirebaseDatabase
 import com.yenaly.han1meviewer.FIREBASE_REALTIME_DATABASE
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.R
-import com.yenaly.han1meviewer.SAVED_USER_ID
 import com.yenaly.han1meviewer.logic.DatabaseRepo
 import com.yenaly.han1meviewer.logic.NetworkRepo
 import com.yenaly.han1meviewer.logic.entity.HKeyframeEntity
@@ -21,8 +18,6 @@ import com.yenaly.han1meviewer.logic.state.PageState
 import com.yenaly.han1meviewer.logic.state.WebsiteState
 import com.yenaly.han1meviewer.logout
 import com.yenaly.han1meviewer.ui.viewmodel.AppViewModel
-import com.yenaly.yenaly_libs.utils.getSpValue
-import com.yenaly.yenaly_libs.utils.putSpValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
@@ -96,7 +91,7 @@ class HomePageViewModel: ViewModel() {
                         val currentAnnouncements = announcementsDeferred.await()
                         AppViewModel.csrfToken = networkState.info.csrfToken
                         networkState.info.userId.takeIf { it.isNotEmpty() }?.let { userId ->
-                            Preferences.preferenceSp.edit { putString(SAVED_USER_ID, userId) }
+                            Preferences.savedUserId = userId
                         }
                         val homeData = HomeData(page = networkState.info, announcements = currentAnnouncements)
                         _homePageFlow.value = PageState.Success(info = homeData, isRefreshing = false)
@@ -108,7 +103,7 @@ class HomePageViewModel: ViewModel() {
     }
     private suspend fun fetchAnnouncementsFromFirebase(): List<Announcement> =
         suspendCancellableCoroutine { continuation ->
-            val lastDismissTime = getSpValue("last_dismiss_time", 0L, "setting_pref")
+            val lastDismissTime = Preferences.lastDismissTime
             val shouldShowAnno = System.currentTimeMillis() - lastDismissTime > 24 * 60 * 60 * 1000L
             if (!shouldShowAnno) {
                 continuation.resume(emptyList())
@@ -146,7 +141,7 @@ class HomePageViewModel: ViewModel() {
     }
 
     fun dismissAnnouncements(){
-        putSpValue("last_dismiss_time", System.currentTimeMillis(), "setting_pref")
+        Preferences.lastDismissTime = System.currentTimeMillis()
         val current = _homePageFlow.value
         if (current is PageState.Success) {
             _homePageFlow.value = current.copy(info = current.info.copy(announcements = emptyList()))
