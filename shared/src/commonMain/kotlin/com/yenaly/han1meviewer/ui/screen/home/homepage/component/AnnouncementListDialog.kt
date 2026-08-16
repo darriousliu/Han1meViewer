@@ -16,15 +16,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.model.Announcement
 import com.yenaly.han1meviewer.ui.component.lazy.LazyColumn
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
 import com.yenaly.han1meviewer.ui.preview.fakeAnnouncements
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.announcement_list
+import han1meviewer.shared.generated.resources.close
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * 显示完整公告列表弹窗。
@@ -43,7 +45,7 @@ fun AnnouncementListDialog(
         onDismissRequest = onDismiss,
         title = {
             Text(
-                stringResource(R.string.announcement_list),
+                stringResource(Res.string.announcement_list),
                 style = MaterialTheme.typography.titleLarge
             )
         },
@@ -80,7 +82,7 @@ fun AnnouncementListDialog(
         },
         confirmButton = {
             Text(
-                stringResource(R.string.close),
+                stringResource(Res.string.close),
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
                     .clickable { onDismiss() }

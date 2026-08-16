@@ -1,7 +1,5 @@
 package com.yenaly.han1meviewer.ui.screen.home.homepage
 
-import android.widget.Toast
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -22,10 +20,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.state.PageState
 import com.yenaly.han1meviewer.logic.state.dataOrNull
 import com.yenaly.han1meviewer.ui.component.PageContent
@@ -36,7 +34,6 @@ import com.yenaly.han1meviewer.ui.component.isFirstPageLoading
 import com.yenaly.han1meviewer.ui.screen.home.homepage.component.HomePageTopBar
 import com.yenaly.han1meviewer.ui.screen.rememberRandomLoadingHint
 import com.yenaly.han1meviewer.util.toNetworkErrorMessage
-import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -46,7 +43,12 @@ import org.jetbrains.compose.resources.stringResource
  * @param isDrawerOpen 侧边抽屉是否已打开。
  * @param modifier 作用于屏幕根布局的修饰符。
  */
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3ExpressiveApi::class,
+    // CMP 的 BackHandler（org.jetbrains.compose.ui:ui-backhandler）目前还带实验标记
+    ExperimentalComposeUiApi::class,
+)
 @Composable
 fun HomePageScreen(
     viewModel: HomePageViewModel,
@@ -54,7 +56,6 @@ fun HomePageScreen(
     onEvent: (HomeUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
     val pageState by viewModel.homePageFlow.collectAsStateWithLifecycle()
     val refreshState = rememberPullToRefreshState()
     var wasRefreshing by remember { mutableStateOf(false) }
@@ -74,11 +75,7 @@ fun HomePageScreen(
     LaunchedEffect(pageState) {
         val errorState = pageState as? PageState.Error
         if (wasRefreshing && errorState?.cachedInfo != null) {
-            Toast.makeText(
-                context,
-                getString(errorState.throwable.toNetworkErrorMessage()),
-                Toast.LENGTH_SHORT
-            ).show()
+            onEvent(HomeUiEvent.ShowRefreshError(errorState.throwable.toNetworkErrorMessage()))
         }
         wasRefreshing = isCurrentlyRefreshing
     }

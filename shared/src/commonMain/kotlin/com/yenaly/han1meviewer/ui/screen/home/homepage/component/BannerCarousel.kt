@@ -28,16 +28,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.model.HomePage
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
 import com.yenaly.han1meviewer.ui.preview.fakeBanner
 import com.yenaly.han1meviewer.ui.screen.RetryableImage
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.h_chan_load_failed
+import han1meviewer.shared.generated.resources.h_chan_loading
+import org.jetbrains.compose.resources.painterResource
 
 /**
  * 显示首页 Banner 轮播图。
@@ -81,8 +83,8 @@ fun BannerCarousel(
                         contentDescription = item.title,
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop,
-                        placeholder = painterResource(R.drawable.h_chan_loading),
-                        error = painterResource(R.drawable.h_chan_load_failed)
+                        placeholder = painterResource(Res.drawable.h_chan_loading),
+                        error = painterResource(Res.drawable.h_chan_load_failed)
                     )
                     Box(
                         modifier = Modifier

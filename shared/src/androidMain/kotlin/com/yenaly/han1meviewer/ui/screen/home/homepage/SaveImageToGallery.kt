@@ -16,23 +16,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-
-/**
- * 将首页分类转换为高级搜索请求参数。
- *
- * 仅写入分类中存在的参数，避免向搜索页传递空值。
- *
- * @receiver 首页分类数据
- * @return 可直接用于高级搜索的参数映射
- */
-internal fun HomeCategory.toAdvancedSearchParams(): Map<String, String> = buildMap {
-    genre?.let { put("genre", it) }
-    sort?.let { put("sort", it) }
-    tags?.let { put("tags", it) }
-}
 
 /**
  * 下载远程图片并保存到系统相册。
@@ -73,17 +56,4 @@ internal suspend fun saveImageToGallery(context: Context, imageUrl: String) {
     withContext(Dispatchers.Main) {
         Toast.makeText(context, context.getString(R.string.saved), Toast.LENGTH_SHORT).show()
     }
-}
-
-/**
- * 将公告秒级时间戳格式化为本地时间字符串。
- *
- * @param timestamp 秒级 Unix 时间戳。
- * @return 本地日期时间字符串。
- */
-fun formatTimestamp(timestamp: Long): String {
-    val instant = Instant.ofEpochSecond(timestamp)
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-        .withZone(ZoneId.systemDefault())
-    return formatter.format(instant)
 }

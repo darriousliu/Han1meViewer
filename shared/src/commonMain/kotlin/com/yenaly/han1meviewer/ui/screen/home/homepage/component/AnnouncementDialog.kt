@@ -25,31 +25,32 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil3.compose.AsyncImage
+import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.model.Announcement
 import com.yenaly.han1meviewer.ui.component.ConfirmDialog
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
 import com.yenaly.han1meviewer.ui.preview.fakeAnnouncements
-import com.yenaly.han1meviewer.ui.screen.home.homepage.saveImageToGallery
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.cancel
+import han1meviewer.shared.generated.resources.i_understand
+import han1meviewer.shared.generated.resources.ic_baseline_alert_24
+import han1meviewer.shared.generated.resources.save_image_confirm
+import han1meviewer.shared.generated.resources.sure
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -57,9 +58,10 @@ import kotlinx.coroutines.launch
 fun AnnouncementDialog(
     announcementData: Announcement,
     onDismiss: () -> Unit,
+    /** 存图到相册是平台能力，屏幕层只发出请求，由 route 执行 */
+    onSaveImage: (imageUrl: String) -> Unit = {},
 ) {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
+    val context = LocalPlatformContext.current
     var showFullScreenImage by remember { mutableStateOf(false) }
     var showSaveImageConfirm by remember { mutableStateOf(false) }
 
@@ -83,7 +85,7 @@ fun AnnouncementDialog(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_baseline_alert_24),
+                        painter = painterResource(Res.drawable.ic_baseline_alert_24),
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(32.dp),
@@ -152,7 +154,7 @@ fun AnnouncementDialog(
                     TextButton(onClick = onDismiss) {
                         Text(
                             text = announcementData.positiveText
-                                ?: stringResource(R.string.i_understand)
+                                ?: stringResource(Res.string.i_understand)
                         )
                     }
                 }
@@ -183,15 +185,13 @@ fun AnnouncementDialog(
         val imageUrl = announcementData.imageUrl
         ConfirmDialog(
             visible = true,
-            title = stringResource(R.string.save_image_confirm),
+            title = stringResource(Res.string.save_image_confirm),
             message = "",
-            confirmText = stringResource(R.string.sure),
-            dismissText = stringResource(R.string.cancel),
+            confirmText = stringResource(Res.string.sure),
+            dismissText = stringResource(Res.string.cancel),
             onConfirm = {
                 showSaveImageConfirm = false
-                scope.launch(Dispatchers.IO) {
-                    saveImageToGallery(context, imageUrl)
-                }
+                onSaveImage(imageUrl)
             },
             onDismiss = { showSaveImageConfirm = false },
         )

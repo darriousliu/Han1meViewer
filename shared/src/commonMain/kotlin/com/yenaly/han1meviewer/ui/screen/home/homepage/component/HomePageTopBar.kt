@@ -27,13 +27,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringArrayResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.hanime_list
+import han1meviewer.shared.generated.resources.ic_baseline_newspaper_24
+import han1meviewer.shared.generated.resources.open_menu
+import han1meviewer.shared.generated.resources.search_placeholders
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringArrayResource
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * 渲染首页顶部栏，包含抽屉入口、搜索入口和新番列表入口。
@@ -51,8 +55,8 @@ fun HomePageTopBar(
     onNavigateToPreview: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val placeholders = stringArrayResource(R.array.search_placeholders)
-    val randomHint = placeholders.random()
+    val placeholders = stringArrayResource(Res.array.search_placeholders)
+    val randomHint = remember(placeholders) { placeholders.random() }
     Surface(
         color = MaterialTheme.colorScheme.surface,
         shadowElevation = 2.dp,
@@ -68,7 +72,7 @@ fun HomePageTopBar(
             IconButton(onClick = onOpenDrawer) {
                 Icon(
                     imageVector = Icons.Default.Menu,
-                    contentDescription = stringResource(R.string.open_menu),
+                    contentDescription = stringResource(Res.string.open_menu),
                     tint = MaterialTheme.colorScheme.onSurface
                 )
             }
@@ -102,8 +106,8 @@ fun HomePageTopBar(
             }
             IconButton(onClick = onNavigateToPreview) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_baseline_newspaper_24),
-                    contentDescription = stringResource(R.string.hanime_list),
+                    painter = painterResource(Res.drawable.ic_baseline_newspaper_24),
+                    contentDescription = stringResource(Res.string.hanime_list),
                     tint = MaterialTheme.colorScheme.onSurface
                 )
             }
