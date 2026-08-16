@@ -1,6 +1,6 @@
 package com.yenaly.han1meviewer.logic.network
 
-import android.util.Log
+import co.touchlab.kermit.Logger
 import com.yenaly.han1meviewer.HanimeConstants.HANIME_HOSTNAME
 import com.yenaly.han1meviewer.Preferences
 import okhttp3.Dns
@@ -112,7 +112,7 @@ class HDns : Dns {
         if (!dohUrl.isNullOrBlank()) {
             return runCatching { lookupByDoH(dohUrl, hostname) }
                 .getOrElse {
-                    Log.w("DOH", "lookup failed for $hostname: ${it.message}")
+                    Logger.w("DOH") { "lookup failed for $hostname: ${it.message}" }
                     Dns.SYSTEM.lookup(hostname)
                 }
         }
@@ -128,7 +128,7 @@ class HDns : Dns {
         )
         val dns = getOrCreateDohDns(config)
         return dns.lookup(hostname).also {
-            Log.i("DOH", it.toString())
+            Logger.i("DOH") { it.toString() }
         }
     }
 

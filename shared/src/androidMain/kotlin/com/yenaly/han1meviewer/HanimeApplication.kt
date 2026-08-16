@@ -15,7 +15,10 @@ import com.google.firebase.crashlytics.setCustomKeys
 import com.google.firebase.database.database
 import com.google.firebase.remoteconfig.remoteConfig
 import com.google.firebase.remoteconfig.remoteConfigSettings
+import com.yenaly.han1meviewer.logic.network.AndroidCloudflareSolver
 import com.yenaly.han1meviewer.logic.network.HProxySelector
+import com.yenaly.han1meviewer.logic.network.OkHttpNetworkConfig
+import com.yenaly.han1meviewer.logic.network.plugin.CloudflareChallengeHandler
 import com.yenaly.han1meviewer.mmkv.initializeMMKV
 import com.yenaly.han1meviewer.mmkv.migrateSharedPreferencesToMMKV
 import com.yenaly.han1meviewer.ui.activity.MainActivity
@@ -25,6 +28,8 @@ import com.yenaly.han1meviewer.util.ThemeUtils
 import com.yenaly.yenaly_libs.base.YenalyApplication
 import com.yenaly.yenaly_libs.utils.LanguageHelper
 import `is`.xyz.mpv.MPVLib
+import okhttp3.Cache
+import java.io.File
 import java.net.ProxySelector
 
 /**
@@ -36,6 +41,8 @@ class HanimeApplication : YenalyApplication() {
 
     companion object {
         const val TAG = "HanimeApplication"
+
+        private const val HTTP_CACHE_SIZE = 10L * 1024 * 1024
     }
 
     /**
@@ -82,6 +89,13 @@ class HanimeApplication : YenalyApplication() {
         if (!isMainProcess()) return
         // 迁移只在主进程做一次，读写旧 SharedPreferences 不适合多进程并发。
         migrateSharedPreferencesToMMKV(this)
+        // 过 Cloudflare 盾要拉起 Activity 跑 WebView，只有 Android 有；
+        // 检测和重发的逻辑在 commonMain 的 CloudflareChallenge 插件里。
+        CloudflareChallengeHandler.solver = AndroidCloudflareSolver(this)
+        // OkHttp 的磁盘缓存目录要 Context，androidJvmMain 拿不到，从这里注入。
+        OkHttpNetworkConfig.cacheProvider = {
+            Cache(directory = File(cacheDir, "http_cache"), maxSize = HTTP_CACHE_SIZE)
+        }
         initCrashX()
         ThemeUtils.applyDarkModeFromPreferences(this)
         if (Preferences.useDynamicColor){

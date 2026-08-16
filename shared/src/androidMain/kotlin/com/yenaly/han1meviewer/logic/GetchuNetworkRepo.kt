@@ -1,17 +1,18 @@
 package com.yenaly.han1meviewer.logic
 
 import android.util.Log
-import com.yenaly.han1meviewer.EMPTY_STRING
 import com.yenaly.han1meviewer.logic.NetworkRepo.handleException
 import com.yenaly.han1meviewer.logic.NetworkRepo.throwRequestException
 import com.yenaly.han1meviewer.logic.network.HanimeNetwork
 import com.yenaly.han1meviewer.logic.state.WebsiteState
+import io.ktor.client.call.body
+import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.isSuccess
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import okhttp3.ResponseBody
-import retrofit2.Response
 import java.nio.charset.Charset
 
 object GetchuNetworkRepo {
@@ -36,8 +37,8 @@ object GetchuNetworkRepo {
         val parentId = body.extractGetchuSeriesParentId() ?: return@websiteIOFlow detailState
         runCatching {
             val response = HanimeNetwork.getchuService.getSeriesItems(parentIdArray = parentId)
-            if (!response.isSuccessful) return@runCatching emptyList()
-            response.body()?.getchuString()?.let(GetchuParser::getchuSeriesItems).orEmpty()
+            if (!response.status.isSuccess()) return@runCatching emptyList()
+            GetchuParser.getchuSeriesItems(response.getchuString())
         }.getOrDefault(emptyList()).let { seriesItems ->
             Log.d(
                 "GetchuPreviewParser",
@@ -60,16 +61,16 @@ object GetchuNetworkRepo {
         }
     }
     private fun <T> websiteIOFlow(
-        request: suspend () -> Response<ResponseBody>,
+        request: suspend () -> HttpResponse,
         permittedSuccessCode: IntArray? = null,
-        bodyToString: (ResponseBody) -> String = ResponseBody::string,
+        bodyToString: suspend (HttpResponse) -> String = { it.bodyAsText() },
         action: suspend (String) -> WebsiteState<T>,
     ) = flow {
         val requestResult = request.invoke()
-        val resultBody = requestResult.body()?.let(bodyToString)
-        val permitted = permittedSuccessCode?.contains(requestResult.code()) == true
-        if ((permitted || requestResult.isSuccessful)) {
-            emit(action.invoke(resultBody ?: EMPTY_STRING))
+        val resultBody = bodyToString(requestResult)
+        val permitted = permittedSuccessCode?.contains(requestResult.status.value) == true
+        if ((permitted || requestResult.status.isSuccess())) {
+            emit(action.invoke(resultBody))
         } else {
             requestResult.throwRequestException()
         }
@@ -77,8 +78,16 @@ object GetchuNetworkRepo {
         emit(WebsiteState.Error(handleException(e)))
     }.flowOn(Dispatchers.IO)
 
-    private fun ResponseBody.getchuString(): String {
-        return bytes().toString(GETCHU_CHARSET)
+    /**
+     * getchu 的页面是 EUC-JP 编码，Ktor 的 `bodyAsText()` 按 UTF-8 解会全是乱码，
+     * 所以拿原始字节自己解。
+     *
+     * ⚠️ 这一步是本次迁移里少数**没能进 commonMain** 的地方：Kotlin/Native 上 Ktor 的
+     * charset 支持只有 UTF-8，EUC-JP 得走 `NSString.create(data:encoding:)`。
+     * 等 iOS 真要接 getchu 时再补 expect/actual。
+     */
+    private suspend fun HttpResponse.getchuString(): String {
+        return body<ByteArray>().toString(GETCHU_CHARSET)
     }
 
     private fun String.extractGetchuSeriesParentId(): String? {

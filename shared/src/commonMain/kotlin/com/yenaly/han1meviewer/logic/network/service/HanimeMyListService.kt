@@ -1,20 +1,17 @@
 package com.yenaly.han1meviewer.logic.network.service
 
-import androidx.annotation.IntRange
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import okhttp3.ResponseBody
-import retrofit2.Response
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
-import retrofit2.http.HTTP
-import retrofit2.http.Header
-import retrofit2.http.Multipart
-import retrofit2.http.POST
-import retrofit2.http.Part
-import retrofit2.http.Path
-import retrofit2.http.Query
+import de.jensklingenberg.ktorfit.http.Body
+import de.jensklingenberg.ktorfit.http.Field
+import de.jensklingenberg.ktorfit.http.FormUrlEncoded
+import de.jensklingenberg.ktorfit.http.GET
+import de.jensklingenberg.ktorfit.http.HTTP
+import de.jensklingenberg.ktorfit.http.Header
+import de.jensklingenberg.ktorfit.http.POST
+import de.jensklingenberg.ktorfit.http.Path
+import de.jensklingenberg.ktorfit.http.Query
+import io.ktor.client.request.forms.FormDataContent
+import io.ktor.client.request.forms.MultiPartFormDataContent
+import io.ktor.client.statement.HttpResponse
 
 /**
  * MyList 是指 喜欢的影片 + 稍后再看
@@ -30,34 +27,34 @@ interface HanimeMyListService {
     suspend fun getMyListItems(
         @Path("userid") userId: String,
         @Path("type") listType: String,
-        @Query("page") page: Int
-    ): Response<ResponseBody>
+        @Query("page") page: Int,
+    ): HttpResponse
 
     @GET("user/{userid}/histories")
     suspend fun getOnlineWatchHistories(
         @Path("userid") userId: String,
         @Query("sort") sort: String,
         @Query("page") page: Int,
-    ): Response<ResponseBody>
+    ): HttpResponse
 
     @GET("user/{userid}/edit")
     suspend fun getUserAccountPage(
         @Path("userid") userId: String,
-    ): Response<ResponseBody>
+    ): HttpResponse
 
     @GET("user/{userid}/uploaded")
     suspend fun getUploadedVideos(
         @Path("userid") userId: String,
         @Query("sort") sort: String,
         @Query("page") page: Int,
-    ): Response<ResponseBody>
+    ): HttpResponse
 
     @GET("user/{userid}/uploading")
     suspend fun getUploadingVideos(
         @Path("userid") userId: String,
         @Query("sort") sort: String,
         @Query("page") page: Int,
-    ): Response<ResponseBody>
+    ): HttpResponse
 
     @FormUrlEncoded
     @POST("user/{userid}")
@@ -69,7 +66,7 @@ interface HanimeMyListService {
         @Field("name") name: String,
         @Field("email") email: String,
         @Header("X-CSRF-TOKEN") csrfToken_1: String? = csrfToken,
-    ): Response<ResponseBody>
+    ): HttpResponse
 
     @FormUrlEncoded
     @POST("user/{userid}")
@@ -82,31 +79,37 @@ interface HanimeMyListService {
         @Field("password_new") newPassword: String,
         @Field("password_new_confirm") newPasswordConfirm: String,
         @Header("X-CSRF-TOKEN") csrfToken_1: String? = csrfToken,
-    ): Response<ResponseBody>
+    ): HttpResponse
 
-    @Multipart
+    /**
+     * 头像上传。
+     *
+     * 迁移前是 Retrofit 的 `@Multipart` + 四个 `@Part`；这里改成整个 body 由调用方拼好传进来，
+     * 因为文件字节的读取本来就在调用方（`NetworkRepo`），
+     * 让 multipart 的组装跟着它比拆成四个参数更直接。
+     */
     @POST("user/{userid}")
     suspend fun updateUserAccountAvatar(
         @Path("userid") userId: String,
-        @Part("_token") csrfToken: RequestBody,
-        @Part("_method") method: RequestBody,
-        @Part("type") type: RequestBody,
-        @Part photo: MultipartBody.Part,
-    ): Response<ResponseBody>
+        @Body body: MultiPartFormDataContent,
+    ): HttpResponse
 
-    @FormUrlEncoded
+    /**
+     * 带 body 的 DELETE。Ktorfit 不接受 `@FormUrlEncoded` 配 `@HTTP`
+     * （它只认 @POST/@PUT 那几个），所以表单由调用方拼成 [FormDataContent] 传进来。
+     */
     @HTTP(method = "DELETE", path = "user/tab-item/{id}", hasBody = true)
     suspend fun deleteOnlineWatchHistory(
         @Path("id") videoCode: String,
-        @Field("tab") tab: String = "histories",
+        @Body body: FormDataContent,
         @Header("X-CSRF-TOKEN") csrfToken: String?,
-    ): Response<ResponseBody>
+    ): HttpResponse
 
     @GET("playlist")
     suspend fun getMyPlayListItems(
         @Query("list") listCode: String,
-        @Query("page") page: Int
-    ): Response<ResponseBody>
+        @Query("page") page: Int,
+    ): HttpResponse
 
     @FormUrlEncoded
     @POST("deletePlayitem")
@@ -115,7 +118,7 @@ interface HanimeMyListService {
         @Field("video_id") videoCode: String,
         @Field("count") count: Int = 1, // 隨便傳一個就行
         @Header("X-CSRF-TOKEN") csrfToken: String?,
-    ): Response<ResponseBody>
+    ): HttpResponse
 
     @FormUrlEncoded
     @POST("like")
@@ -126,7 +129,7 @@ interface HanimeMyListService {
         @Field("like-user-id") userId: String?,
         @Field("like-is-positive") isPositive: Int = 1,
         @Header("X-CSRF-TOKEN") csrfToken_1: String? = csrfToken,
-    ): Response<ResponseBody>
+    ): HttpResponse
 
     @FormUrlEncoded
     @POST("like")
@@ -140,13 +143,13 @@ interface HanimeMyListService {
         @Field("_token") csrfToken: String?,
         @Field("like-user-id") userId: String?,
         @Header("X-CSRF-TOKEN") csrfToken_1: String? = csrfToken,
-    ): Response<ResponseBody>
+    ): HttpResponse
 
     @GET("user/{userid}/playlists")
     suspend fun getPlaylists(
         @Path("userid") userId: String,
-        @Query("page") @IntRange(from = 1) page: Int
-    ): Response<ResponseBody>
+        @Query("page") page: Int,
+    ): HttpResponse
 
     @FormUrlEncoded
     @POST("createPlaylist")
@@ -156,7 +159,7 @@ interface HanimeMyListService {
         @Field("playlist-title") title: String,
         @Field("playlist-description") description: String,
         @Header("X-CSRF-TOKEN") csrfToken_1: String? = csrfToken,
-    ): Response<ResponseBody>
+    ): HttpResponse
 
     @FormUrlEncoded
     @POST("save")
@@ -167,7 +170,7 @@ interface HanimeMyListService {
         @Field("is_checked") isChecked: Boolean,
         @Field("user_id") userId: String = "",
         @Header("X-CSRF-TOKEN") csrfToken_1: String? = csrfToken,
-    ): Response<ResponseBody>
+    ): HttpResponse
 
     @FormUrlEncoded
     @POST("playlist/{list_code}")
@@ -179,5 +182,5 @@ interface HanimeMyListService {
         @Field("_token") csrfToken: String?,
         @Field("_method") method: String? = "PUT",
         @Header("X-CSRF-TOKEN") csrfToken_1: String? = csrfToken,
-    ): Response<ResponseBody>
+    ): HttpResponse
 }

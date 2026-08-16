@@ -4,14 +4,8 @@ import android.webkit.CookieManager
 import androidx.core.text.parseAsHtml
 import com.yenaly.han1meviewer.Preferences.isAlreadyLogin
 import com.yenaly.han1meviewer.Preferences.loginCookie
-import com.yenaly.han1meviewer.logic.network.HCookieJar
+import com.yenaly.han1meviewer.logic.network.HCookiesStorage
 import com.yenaly.han1meviewer.util.CookieString
-import kotlinx.serialization.json.Json
-
-@JvmField
-val HJson = Json {
-    ignoreUnknownKeys = true
-}
 
 /**
  * 给用户显示的错误信息
@@ -71,7 +65,7 @@ fun String.toVideoCode() = videoUrlRegex.find(this)?.groupValues?.get(1)
 fun logout() {
     isAlreadyLogin = false
     loginCookie = CookieString(EMPTY_STRING)
-    HCookieJar.cookieMap.clear()
+    HCookiesStorage.clear()
     CookieManager.getInstance().removeAllCookies(null)
 }
 

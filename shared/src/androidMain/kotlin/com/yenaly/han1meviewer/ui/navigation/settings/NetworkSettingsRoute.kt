@@ -26,7 +26,6 @@ import com.yenaly.han1meviewer.logic.network.DohConfig
 import com.yenaly.han1meviewer.logic.network.HDns
 import com.yenaly.han1meviewer.logic.network.HProxySelector
 import com.yenaly.han1meviewer.logic.network.HanimeNetwork
-import com.yenaly.han1meviewer.logic.network.ServiceCreator
 import com.yenaly.han1meviewer.logic.state.WebsiteState
 import com.yenaly.han1meviewer.logout
 import com.yenaly.han1meviewer.ui.component.ConfirmDialog
@@ -38,7 +37,11 @@ import com.yenaly.han1meviewer.util.showAlertDialog
 import com.yenaly.yenaly_libs.ActivityManager
 import com.yenaly.yenaly_libs.utils.applicationContext
 import com.yenaly.yenaly_libs.utils.showShortToast
-import okhttp3.Request
+import io.ktor.client.request.get
+import io.ktor.client.statement.bodyAsText
+import io.ktor.client.statement.request
+import io.ktor.http.isSuccess
+import kotlinx.coroutines.runBlocking
 import java.net.InetAddress
 import java.util.concurrent.Executors
 
@@ -481,14 +484,15 @@ private fun normalizeCustomMirrorSite(url: String): String? {
 
 private fun testCustomMirrorSite(context: Context, homeUrl: String, appendPath: Boolean): String {
     return runCatching {
-        val request = Request.Builder().url(homeUrl).get().build()
-        ServiceCreator.hClient.newCall(request).execute().use { response ->
+        // 这几个测试跑在 executor 线程里，Ktor 全是 suspend，用 runBlocking 桥一下。
+        runBlocking {
+            val response = HanimeNetwork.hClient.get(homeUrl)
             val finalUrl = response.request.url.toString()
-            val body = response.body.string()
-            if (!response.isSuccessful) {
-                return context.getString(
+            val body = response.bodyAsText()
+            if (!response.status.isSuccess()) {
+                return@runBlocking context.getString(
                     R.string.custom_mirror_site_test_failed_http,
-                    response.code,
+                    response.status.value,
                     finalUrl,
                 )
             }
@@ -534,15 +538,14 @@ private fun testCustomMirrorSite(context: Context, homeUrl: String, appendPath: 
 
 private fun testCustomMirrorWatchUrl(context: Context, apiBaseUrl: String): String? {
     return runCatching {
-        val url = apiBaseUrl + "search"
-        val request = Request.Builder().url(url).get().build()
-        ServiceCreator.hClient.newCall(request).execute().use { response ->
-            if (response.isSuccessful) {
+        runBlocking {
+            val response = HanimeNetwork.hClient.get(apiBaseUrl + "search")
+            if (response.status.isSuccess()) {
                 null
             } else {
                 context.getString(
                     R.string.custom_mirror_site_watch_test_failed_http,
-                    response.code,
+                    response.status.value,
                     response.request.url.toString(),
                 )
             }

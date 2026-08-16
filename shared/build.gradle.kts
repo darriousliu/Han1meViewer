@@ -134,7 +134,6 @@ kotlin {
             implementation(libs.serialization.json)
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.client.logging)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktorfit.lib.light)
             implementation(libs.kermit)
@@ -193,11 +192,8 @@ kotlin {
 
             // network
 
-            implementation(libs.ktor.client.okhttp)
-            implementation(libs.retrofit)
-            implementation(libs.converter.serialization)
-            implementation(libs.okhttp)
-            implementation(libs.okhttp.dns.over.https)
+            // Coil 2 的 ImageLoader 还直接用 OkHttpClient（HImageMeower / GetchuPreviewUtils），
+            // 其余网络请求都走 commonMain 的 Ktor，okhttp 由 androidJvmMain 带下来。
 
             // pic
 
@@ -248,6 +244,10 @@ kotlin {
         }
         androidJvmMain.dependencies {
             implementation(libs.ktor.client.okhttp)
+            // OkHttp engine 上那些 Ktor 没有对应物的能力（自定义 DNS/DoH、ProxySelector、
+            // 磁盘缓存、Throttler 限速）要直接用 okhttp 的 API。
+            implementation(libs.okhttp)
+            implementation(libs.okhttp.dns.over.https)
         }
         androidMain.get().dependsOn(androidJvmMain)
         jvmMain.get().dependsOn(androidJvmMain)
@@ -256,6 +256,11 @@ kotlin {
 
 dependencies {
     androidRuntimeClasspath(libs.compose.ui.ui.tooling)
+
+    // Ktorfit 的 Gradle 插件只注册 compiler-plugin（负责把 ktorfit.create<T>() 重写成
+    // createT()），真正生成实现类的 KSP 处理器要自己加。生成一次进 commonMain metadata，
+    // 各目标共用。
+    add("kspCommonMainMetadata", libs.ktorfit.ksp)
 
     add("kspAndroid", libs.room.compiler)
     add("kspIosArm64", libs.room.compiler)
@@ -268,3 +273,19 @@ dependencies {
 room3 {
     schemaDirectory("$projectDir/schemas")
 }
+
+// KSP 在 commonMain 上生成的代码要手动挂进源集，并保证所有编译任务都排在它后面。
+kotlin.sourceSets.commonMain {
+    kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
+}
+
+// 各目标的编译任务和 KSP 任务都会读 commonMain 的生成目录，都要排在它后面，
+// 否则 Gradle 会报 "uses this output ... without declaring an explicit dependency"。
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask<*>>().configureEach {
+    if (name != "kspCommonMainKotlinMetadata") {
+        dependsOn("kspCommonMainKotlinMetadata")
+    }
+}
+
+tasks.matching { it.name.startsWith("ksp") && it.name != "kspCommonMainKotlinMetadata" }
+    .configureEach { dependsOn("kspCommonMainKotlinMetadata") }
