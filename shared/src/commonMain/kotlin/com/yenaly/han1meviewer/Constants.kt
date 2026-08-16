@@ -79,7 +79,7 @@ const val HA1_GITHUB_RELEASES_URL = "$HA1_GITHUB_URL/releases"
 
 const val HA1_GITHUB_API_URL = "https://api.github.com/repos/misaka10032w/Han1meViewer/"
 
-/** 检查 CI 更新时用的默认分支。androidMain 的 `HUpdater.DEFAULT_BRANCH` 是指向这里的别名。 */
+/** 检查 CI 更新时用的默认分支。`HUpdater.DEFAULT_BRANCH` 是指向这里的别名。 */
 const val HA1_GITHUB_DEFAULT_BRANCH = "main"
 const val FIREBASE_REALTIME_DATABASE = "https://han1meviewer-86e5f-default-rtdb.asia-southeast1.firebasedatabase.app/"
 // for Shared Preference

@@ -1,7 +1,5 @@
 package com.yenaly.han1meviewer.logic
 
-import android.content.Context
-import android.net.Uri
 import com.yenaly.han1meviewer.BuildConfig
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.logic.dao.CheckInRecordDatabase
@@ -17,10 +15,20 @@ import com.yenaly.han1meviewer.logic.entity.download.DownloadGroupEntity
 import com.yenaly.han1meviewer.logic.entity.download.HanimeCategoryCrossRef
 import com.yenaly.han1meviewer.logic.entity.download.HanimeDownloadEntity
 import com.yenaly.han1meviewer.mmkv.LegacyPreferenceKeys
+import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.readString
+import io.github.vinceglb.filekit.writeString
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import java.io.OutputStream
+import kotlin.time.Clock
 
+/**
+ * 设置与数据库的整体备份 / 恢复。
+ *
+ * 文件的落盘和读取走 FileKit 的 [PlatformFile]，所以整个类不再依赖 Android 的
+ * `Context` / `Uri` / `OutputStream`——调用方拿到什么句柄（Android 的 SAF `Uri`、
+ * 桌面/iOS 的路径）自己包成 [PlatformFile] 传进来即可。
+ */
 object BackupManager {
     private const val BACKUP_VERSION = 1
 
@@ -35,7 +43,7 @@ object BackupManager {
         val version: Int = BACKUP_VERSION,
         val appVersionCode: Int = BuildConfig.VERSION_CODE,
         val appVersionName: String = BuildConfig.VERSION_NAME,
-        val exportedAt: Long = System.currentTimeMillis(),
+        val exportedAt: Long = Clock.System.now().toEpochMilliseconds(),
         val settings: Map<String, PreferenceValue>? = null,
         val hKeyframes: List<HKeyframeEntity>? = null,
         val checkInRecords: List<CheckInRecordEntity>? = null,
@@ -68,16 +76,23 @@ object BackupManager {
         data class StringSetValue(val value: Set<String>) : PreferenceValue
     }
 
-    suspend fun exportTo(context: Context, uri: Uri) {
-        context.contentResolver.openOutputStream(uri)?.use { outputStream ->
-            exportTo(context, outputStream)
-        } ?: error("Unable to open backup file")
+    suspend fun exportTo(file: PlatformFile) {
+        val backup = BackupData(
+            settings = exportSettings(),
+            hKeyframes = MiscellanyDatabase.instance.hKeyframeDao.getAll(),
+            checkInRecords = CheckInRecordDatabase.instance.checkInDao().getAllRecords(),
+            sideDishes = CheckInRecordDatabase.instance.sideDishDao().getAll(),
+            watchHistories = HistoryDatabase.instance.watchHistory.getAll(),
+            downloadGroups = DownloadDatabase.instance.downloadGroupDao.getAllGroupsOnce(),
+            downloads = DownloadDatabase.instance.hanimeDownloadDao.getAll(),
+            downloadCategories = DownloadDatabase.instance.downloadCategoryDao.getAllCategoriesOnce(),
+            downloadCategoryCrossRefs = DownloadDatabase.instance.downloadCategoryDao.getAllCrossRefs(),
+        )
+        file.writeString(json.encodeToString(backup))
     }
 
-    suspend fun importFrom(context: Context, uri: Uri) {
-        val backup = context.contentResolver.openInputStream(uri)?.use { inputStream ->
-            json.decodeFromString<BackupData>(inputStream.bufferedReader().readText())
-        } ?: error("Unable to open backup file")
+    suspend fun importFrom(file: PlatformFile) {
+        val backup = json.decodeFromString<BackupData>(file.readString())
 
         backup.hKeyframes?.let { hKeyframes ->
             MiscellanyDatabase.instance.hKeyframeDao.apply {
@@ -142,23 +157,6 @@ object BackupManager {
 
         backup.settings?.let { settings ->
             importSettings(settings)
-        }
-    }
-
-    private suspend fun exportTo(context: Context, outputStream: OutputStream) {
-        val backup = BackupData(
-            settings = exportSettings(),
-            hKeyframes = MiscellanyDatabase.instance.hKeyframeDao.getAll(),
-            checkInRecords = CheckInRecordDatabase.instance.checkInDao().getAllRecords(),
-            sideDishes = CheckInRecordDatabase.instance.sideDishDao().getAll(),
-            watchHistories = HistoryDatabase.instance.watchHistory.getAll(),
-            downloadGroups = DownloadDatabase.instance.downloadGroupDao.getAllGroupsOnce(),
-            downloads = DownloadDatabase.instance.hanimeDownloadDao.getAll(),
-            downloadCategories = DownloadDatabase.instance.downloadCategoryDao.getAllCategoriesOnce(),
-            downloadCategoryCrossRefs = DownloadDatabase.instance.downloadCategoryDao.getAllCrossRefs(),
-        )
-        outputStream.bufferedWriter().use { writer ->
-            writer.write(json.encodeToString(backup))
         }
     }
 

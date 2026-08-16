@@ -2,7 +2,6 @@ package com.yenaly.han1meviewer.util
 
 import com.google.common.util.concurrent.ListenableFuture
 import com.yenaly.han1meviewer.R
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.net.ConnectException
 import java.net.SocketException
@@ -44,21 +43,6 @@ suspend fun <R> ListenableFuture<R>.await(): R {
         cancellableContinuation.invokeOnCancellation {
             cancel(false)
         }
-    }
-}
-
-/**
- * Run suspend catching
- *
- * @param block suspend block
- */
-inline fun <R> runSuspendCatching(block: () -> R): Result<R> {
-    return try {
-        Result.success(block())
-    } catch (c: CancellationException) {
-        throw c
-    } catch (e: Throwable) {
-        Result.failure(e)
     }
 }
 

@@ -69,6 +69,7 @@ import com.yenaly.yenaly_libs.utils.applicationContext
 import com.yenaly.yenaly_libs.utils.browse
 import com.yenaly.yenaly_libs.utils.folderSize
 import com.yenaly.yenaly_libs.utils.showShortToast
+import io.github.vinceglb.filekit.PlatformFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -99,7 +100,7 @@ fun HomeSettingsRouteScreen(
     ) { uri ->
         uri ?: return@rememberLauncherForActivityResult
         coroutineScope.launch(Dispatchers.IO) {
-            runCatching { BackupManager.exportTo(context, uri) }
+            runCatching { BackupManager.exportTo(PlatformFile(uri)) }
                 .onSuccess { withContext(Dispatchers.Main) { showShortToast(R.string.backup_export_success) } }
                 .onFailure { withContext(Dispatchers.Main) { showShortToast(R.string.backup_export_failed) } }
         }
@@ -353,7 +354,7 @@ fun HomeSettingsRouteScreen(
             val uri = pendingImportUri ?: return@ConfirmDialog
             pendingImportUri = null
             coroutineScope.launch(Dispatchers.IO) {
-                runCatching { BackupManager.importFrom(context, uri) }
+                runCatching { BackupManager.importFrom(PlatformFile(uri)) }
                     .onSuccess {
                         withContext(Dispatchers.Main) {
                             showShortToast(R.string.backup_import_success)

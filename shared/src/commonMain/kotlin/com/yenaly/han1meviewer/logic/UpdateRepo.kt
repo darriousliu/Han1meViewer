@@ -4,14 +4,17 @@ import com.yenaly.han1meviewer.logic.network.HUpdater
 import com.yenaly.han1meviewer.logic.state.WebsiteState
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
 /**
- * 应用更新检查。原本是 `NetworkRepo.getLatestVersion`，Step 6 把 `NetworkRepo` 上移
- * commonMain 时留了下来——它依赖的 [HUpdater] 要读 Firebase Remote Config，是 Android 专属；
- * 而且 iOS 走 App Store 更新，本来也用不上这套。
+ * 应用更新检查。原本是 `NetworkRepo.getLatestVersion`。
+ *
+ * [HUpdater] 里唯一的平台差异（Firebase Remote Config 的 CI 渠道开关）已经收成一个
+ * 注入点，检查逻辑本身是纯 GitHub API 调用，所以这层可以留在 commonMain。
+ * 真正只有 Android 才有的是**下载安装包**那一步，见 androidMain 的 `injectUpdate`。
  */
 object UpdateRepo {
 

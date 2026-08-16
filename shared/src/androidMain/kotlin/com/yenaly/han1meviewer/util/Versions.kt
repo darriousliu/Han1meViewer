@@ -22,11 +22,6 @@ import java.util.regex.Pattern
 
 val Context.updateFile: File get() = File(applicationContext.cacheDir, "update.apk")
 
-fun checkNeedUpdate(versionName: String): Boolean {
-    val latestVersionCode = versionName.substringAfter("+", "").toIntOrNull() ?: Int.MAX_VALUE
-    return BuildConfig.VERSION_CODE < latestVersionCode
-}
-
 suspend fun Context.showUpdateDialog(latest: Latest) {
     val spannable = spannable {
 //        getString(R.string.new_version_found).span {

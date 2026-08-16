@@ -28,7 +28,7 @@ import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.UPDATE_NOTIFICATION_CHANNEL
 import com.yenaly.han1meviewer.logic.model.github.Latest
-import com.yenaly.han1meviewer.logic.network.HUpdater
+import com.yenaly.han1meviewer.logic.network.injectUpdate
 import com.yenaly.han1meviewer.util.installApkPackage
 import com.yenaly.han1meviewer.util.runSuspendCatching
 import com.yenaly.han1meviewer.util.updateFile
@@ -110,27 +110,25 @@ class HUpdateWorker(
         val foregroundInfo = createForegroundInfo()
         setForeground(foregroundInfo)
         showDownloadNotification()
-        with(HUpdater) {
-            val file = context.updateFile.apply { delete() }
-            val inject = runSuspendCatching {
-                file.injectUpdate(downloadLink) { progress, fileSize, downloadedSize ->
-                    updateNotification(progress, fileSize, downloadedSize)
-                }
+        val file = context.updateFile.apply { delete() }
+        val inject = runSuspendCatching {
+            file.injectUpdate(downloadLink) { progress, fileSize, downloadedSize ->
+                updateNotification(progress, fileSize, downloadedSize)
             }
-            if (inject.isSuccess) {
-                val outputData = workDataOf(UPDATE_APK to file.toUri().toString())
-                Preferences.updateNodeId = nodeId
-                cancelDownloadNotification()
-                showInstallNotification(file)
-                return Result.success(outputData)
-            } else {
-                val error = inject.exceptionOrNull()
-                error?.printStackTrace()
-                file.delete()
-                cancelDownloadNotification()
-                showFailureNotification(error?.localizedMessage)
-                return Result.failure()
-            }
+        }
+        if (inject.isSuccess) {
+            val outputData = workDataOf(UPDATE_APK to file.toUri().toString())
+            Preferences.updateNodeId = nodeId
+            cancelDownloadNotification()
+            showInstallNotification(file)
+            return Result.success(outputData)
+        } else {
+            val error = inject.exceptionOrNull()
+            error?.printStackTrace()
+            file.delete()
+            cancelDownloadNotification()
+            showFailureNotification(error?.localizedMessage)
+            return Result.failure()
         }
     }
 

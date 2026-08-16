@@ -10,6 +10,7 @@ import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.INT
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -129,6 +130,7 @@ kotlin {
             products = listOf(
                 product("FirebaseAnalytics"),
                 product("FirebaseCrashlytics"),
+                product("FirebaseRemoteConfig")
             ),
         )
     }
@@ -333,7 +335,7 @@ kotlin.sourceSets.commonMain {
 
 // 各目标的编译任务和 KSP 任务都会读 commonMain 的生成目录，都要排在它后面，
 // 否则 Gradle 会报 "uses this output ... without declaring an explicit dependency"。
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask<*>>().configureEach {
+tasks.withType<KotlinCompilationTask<*>>().configureEach {
     if (name != "kspCommonMainKotlinMetadata") {
         dependsOn("kspCommonMainKotlinMetadata")
     }
