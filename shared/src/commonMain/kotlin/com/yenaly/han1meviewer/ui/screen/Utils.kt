@@ -1,6 +1,5 @@
 package com.yenaly.han1meviewer.ui.screen
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -10,21 +9,25 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalWindowInfo
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import co.touchlab.kermit.Logger
 import coil3.compose.AsyncImage
+import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.yenaly.han1meviewer.Preferences
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.ui.theme.SpacingLarge
 import com.yenaly.han1meviewer.ui.theme.SpacingNormal
 import com.yenaly.han1meviewer.ui.theme.VideoNormalCardMinWidth
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.loading_hints
+import org.jetbrains.compose.resources.stringArrayResource
+
+private val logger = Logger.withTag("ScreenUtils")
 
 @Composable
 fun RetryableImage(
@@ -36,7 +39,7 @@ fun RetryableImage(
     error: Painter,
     contentScale: ContentScale? = ContentScale.Fit
 ) {
-    val context = LocalContext.current
+    val context = LocalPlatformContext.current
     var retryCount by remember { mutableIntStateOf(0) }
     var currentModel by remember { mutableStateOf(model) }
 
@@ -46,7 +49,7 @@ fun RetryableImage(
             .crossfade(true)
             .listener(
                 onError = { _, result ->
-                    Log.e("CoilError", "Image load failed", result.throwable)
+                    logger.e(result.throwable) { "Image load failed" }
                 }
             ).build(),
         contentDescription = contentDescription,
@@ -113,6 +116,6 @@ fun rememberVideoGridColumns(): Int {
 
 @Composable
 fun rememberRandomLoadingHint(): String {
-    val placeholders = stringArrayResource(R.array.loading_hints)
+    val placeholders = stringArrayResource(Res.array.loading_hints)
     return remember(placeholders) { placeholders.random() }
 }

@@ -24,20 +24,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.model.VideoItemType
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
 import com.yenaly.han1meviewer.ui.preview.fakeVideosItem
 import com.yenaly.han1meviewer.ui.screen.RetryableImage
+import com.yenaly.han1meviewer.ui.theme.VideoMetaIconSize
+import com.yenaly.han1meviewer.ui.theme.VideoMetaTextSize
 import com.yenaly.han1meviewer.util.DisplayTextLocalizer
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.h_chan_load_failed
+import han1meviewer.shared.generated.resources.h_chan_loading
+import han1meviewer.shared.generated.resources.ic_baseline_access_time_24
+import han1meviewer.shared.generated.resources.ic_baseline_play_circle_outline_24
+import han1meviewer.shared.generated.resources.ic_baseline_thumb_up_alt_24
+import han1meviewer.shared.generated.resources.now_playing
+import han1meviewer.shared.generated.resources.played
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 
 /**
@@ -61,8 +69,8 @@ fun VideoCardItem(
     onClickVideosItem: (String) -> Unit,
     onLongClickVideosItem: (String, String) -> Unit,
 ) {
-    val textFontSize = dimensionResource(id = R.dimen.video_view_and_time_and_duration).value.sp
-    val iconSize = dimensionResource(id = R.dimen.view_view_and_time_icon_size)
+    val textFontSize = VideoMetaTextSize
+    val iconSize = VideoMetaIconSize
     val imageAspectRatio = if (isHorizontalCard) 16f / 9f else 3f / 4f
     Surface(
         modifier = modifier
@@ -91,8 +99,8 @@ fun VideoCardItem(
                     model = videoItem.coverUrl,
                     contentDescription = videoItem.title,
                     modifier = Modifier.fillMaxSize(),
-                    placeholder = painterResource(R.drawable.h_chan_loading),
-                    error = painterResource(R.drawable.h_chan_load_failed),
+                    placeholder = painterResource(Res.drawable.h_chan_loading),
+                    error = painterResource(Res.drawable.h_chan_load_failed),
                     contentScale = ContentScale.FillWidth,
                 )
 
@@ -108,7 +116,7 @@ fun VideoCardItem(
                             .padding(horizontal = 6.dp, vertical = 2.dp)
                     ) {
                         Text(
-                            text = stringResource(R.string.played),
+                            text = stringResource(Res.string.played),
                             color = Color.White,
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Bold,
@@ -135,7 +143,7 @@ fun VideoCardItem(
                 ) {
                     videoItem.views?.let {
                         Icon(
-                            painter = painterResource(id = R.drawable.ic_baseline_play_circle_outline_24),
+                            painter = painterResource(Res.drawable.ic_baseline_play_circle_outline_24),
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.size(iconSize),
@@ -151,7 +159,7 @@ fun VideoCardItem(
                     Spacer(modifier = Modifier.weight(1f))
                     videoItem.duration?.let {
                         Icon(
-                            painter = painterResource(id = R.drawable.ic_baseline_access_time_24),
+                            painter = painterResource(Res.drawable.ic_baseline_access_time_24),
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.size(iconSize),
@@ -182,14 +190,14 @@ fun VideoCardItem(
                                 .padding(horizontal = 12.dp, vertical = 6.dp)
                         ) {
                             Icon(
-                                painter = painterResource(id = R.drawable.ic_baseline_play_circle_outline_24),
+                                painter = painterResource(Res.drawable.ic_baseline_play_circle_outline_24),
                                 contentDescription = null,
                                 tint = MaterialTheme.colorScheme.onPrimary,
                                 modifier = Modifier.size(18.dp)
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
-                                text = stringResource(R.string.now_playing),
+                                text = stringResource(Res.string.now_playing),
                                 color = MaterialTheme.colorScheme.onPrimary,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold,
@@ -230,7 +238,7 @@ fun VideoCardItem(
             ) {
                 videoItem.reviews?.takeIf { it.isNotEmpty() }?.let { reviewsText ->
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_baseline_thumb_up_alt_24),
+                        painter = painterResource(Res.drawable.ic_baseline_thumb_up_alt_24),
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(iconSize),

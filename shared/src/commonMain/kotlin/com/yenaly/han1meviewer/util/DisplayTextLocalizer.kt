@@ -1,7 +1,6 @@
 package com.yenaly.han1meviewer.util
 
-import java.math.BigDecimal
-import java.util.Locale
+import androidx.compose.ui.text.intl.Locale
 
 object DisplayTextLocalizer {
 
@@ -88,9 +87,40 @@ object DisplayTextLocalizer {
         }
     }
 
-    private fun String.toKViews(): String {
-        return runCatching {
-            BigDecimal(this).multiply(BigDecimal.TEN).stripTrailingZeros().toPlainString() + "K"
-        }.getOrElse { "${this}0K" }
+    /**
+     * 「1.5 万次」里的 1.5 换算成 15K：十进制小数点右移一位。
+     *
+     * 原来用 `BigDecimal(this).multiply(TEN).stripTrailingZeros().toPlainString()`，
+     * commonMain 没有 BigDecimal，改成纯字符串移位——避开 Double 的精度问题，
+     * 输出与原实现逐例一致。解析不了就退回原来的兜底分支。
+     */
+    private fun String.toKViews(): String = shiftDecimalPointRight(trim())?.let { "${it}K" }
+        ?: "${this}0K"
+
+    private fun shiftDecimalPointRight(value: String): String? {
+        if (value.isEmpty()) return null
+        val negative = value.startsWith('-')
+        val digits = if (negative || value.startsWith('+')) value.substring(1) else value
+        val dot = digits.indexOf('.')
+        val intPart: String
+        val fracPart: String
+        if (dot < 0) {
+            intPart = digits
+            fracPart = ""
+        } else {
+            intPart = digits.substring(0, dot)
+            fracPart = digits.substring(dot + 1)
+            if (fracPart.contains('.')) return null
+        }
+        if (intPart.isEmpty() && fracPart.isEmpty()) return null
+        if (!intPart.all { it.isDigit() } || !fracPart.all { it.isDigit() }) return null
+
+        // 右移一位：小数第一位并进整数部分，没有小数位就补个 0
+        val shiftedInt = intPart + (fracPart.firstOrNull() ?: '0')
+        val shiftedFrac = fracPart.drop(1).trimEnd('0')
+
+        val normalizedInt = shiftedInt.trimStart('0').ifEmpty { "0" }
+        val body = if (shiftedFrac.isEmpty()) normalizedInt else "$normalizedInt.$shiftedFrac"
+        return if (negative && body != "0") "-$body" else body
     }
 }

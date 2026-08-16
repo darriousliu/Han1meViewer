@@ -1,7 +1,6 @@
 @file:Suppress("UNUSED")
 package com.yenaly.han1meviewer.ui.preview
 
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.entity.download.DownloadGroupEntity
 import com.yenaly.han1meviewer.logic.entity.download.HanimeDownloadEntity
 import com.yenaly.han1meviewer.logic.entity.download.VideoWithCategories
@@ -19,6 +18,11 @@ import com.yenaly.han1meviewer.logic.model.SubscriptionItem
 import com.yenaly.han1meviewer.logic.model.SubscriptionVideosItem
 import com.yenaly.han1meviewer.logic.model.VideoComments
 import com.yenaly.han1meviewer.ui.screen.home.homepage.HomeCategory
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.latest_hanime
+import han1meviewer.shared.generated.resources.latest_release
+import han1meviewer.shared.generated.resources.they_watched
+import kotlin.time.Clock
 import kotlinx.datetime.LocalDate
 
 
@@ -254,19 +258,19 @@ val fakeHomePageVideos = listOf(
 val fakeCategories = listOf(
     HomeCategory(
         key = "preview_latest",
-        titleRes = R.string.latest_hanime,
+        titleRes = Res.string.latest_hanime,
         genre = "裏番",
         videos = fakeHomePageVideos,
     ),
     HomeCategory(
         key = "preview_release",
-        titleRes = R.string.latest_release,
+        titleRes = Res.string.latest_release,
         sort = "最新上市",
         videos = fakeHomePageVideos.shuffled().take(4),
     ),
     HomeCategory(
         key = "preview_watched",
-        titleRes = R.string.they_watched,
+        titleRes = Res.string.they_watched,
         sort = "他們在看",
         videos = fakeHomePageVideos.shuffled().take(5),
     ),
@@ -387,7 +391,7 @@ val fakeDownloadedVideos = fakeHomePageVideos.take(3).mapIndexed { index, item -
             coverUrl = item.coverUrl,
             coverUri = null,
             title = item.title,
-            addDate = System.currentTimeMillis(),
+            addDate = Clock.System.now().toEpochMilliseconds(),
             videoCode = item.videoCode,
             videoUri = "test$index.mp4",
             quality = "720P",
