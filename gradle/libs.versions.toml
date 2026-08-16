@@ -133,6 +133,8 @@ compose-multiplatform-ui = { module = "org.jetbrains.compose.ui:ui", version.ref
 # CMP 1.12 的 ui 模块本身没有 backhandler 包，要单独引这个制品才有
 # androidx.compose.ui.backhandler.BackHandler。material3 会传递带进来，但直接用到的 API 显式声明。
 compose-multiplatform-ui-backhandler = { module = "org.jetbrains.compose.ui:ui-backhandler", version.ref = "composeMultiplatform" }
+# commonMain 里的 @Preview。注意 CMP 版是无参注解，没有 showBackground / showSystemUi。
+compose-multiplatform-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }
 compose-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity" }

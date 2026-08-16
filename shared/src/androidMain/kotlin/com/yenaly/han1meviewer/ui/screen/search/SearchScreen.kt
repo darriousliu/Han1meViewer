@@ -94,6 +94,9 @@ import com.yenaly.han1meviewer.ui.theme.SpacingNormal
 import com.yenaly.han1meviewer.ui.theme.VideoNormalCardMinWidth
 import com.yenaly.han1meviewer.ui.theme.VideoSimplifiedCardMinWidth
 import com.yenaly.han1meviewer.ui.viewmodel.SearchViewModel
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.h_chan_sad
+import han1meviewer.shared.generated.resources.h_chan_speechless
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -681,7 +684,7 @@ fun SearchStateIndicator(
 
         is PageLoadingState.NoMoreData -> if (resultCount == 0) EmptyContent(
             hint = stringResource(R.string.search_no_results),
-            picRes = R.drawable.h_chan_speechless
+            picRes = Res.drawable.h_chan_speechless
         )
 
         is PageLoadingState.Error -> EmptyContent(
@@ -689,12 +692,12 @@ fun SearchStateIndicator(
                 R.string.search_load_failed_with_reason,
                 state.throwable.message.orEmpty()
             ),
-            picRes = R.drawable.h_chan_sad
+            picRes = Res.drawable.h_chan_sad
         )
 
         is PageLoadingState.Success -> if (resultCount == 0) EmptyContent(
             hint = stringResource(R.string.search_no_results),
-            picRes = R.drawable.h_chan_speechless
+            picRes = Res.drawable.h_chan_speechless
         )
     }
 }

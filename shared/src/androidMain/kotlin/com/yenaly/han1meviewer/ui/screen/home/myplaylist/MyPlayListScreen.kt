@@ -42,6 +42,8 @@ import com.yenaly.han1meviewer.ui.component.content.EmptyContent
 import com.yenaly.han1meviewer.ui.viewmodel.MyPlayListViewModelV2
 import com.yenaly.han1meviewer.util.showAlertDialog
 import com.yenaly.han1meviewer.util.showShortToast
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.h_chan_sad
 
 /**
  * 播放列表页面 Screen 层。
@@ -182,7 +184,7 @@ fun PlaylistScreen(
                                 R.string.load_failed_with_reason,
                                 (state as WebsiteState.Error).throwable.message.orEmpty()
                             ),
-                            picRes = R.drawable.h_chan_sad
+                            picRes = Res.drawable.h_chan_sad
                         )
                     } else {
                         PlaylistContent(uiState = uiState, onEvent = handleEvent, rawState = state)

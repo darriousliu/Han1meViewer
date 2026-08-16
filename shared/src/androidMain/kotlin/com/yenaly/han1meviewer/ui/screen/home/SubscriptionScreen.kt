@@ -34,6 +34,8 @@ import com.yenaly.han1meviewer.ui.screen.home.subscription.SubscriptionContent
 import com.yenaly.han1meviewer.ui.screen.home.subscription.SubscriptionEvent
 import com.yenaly.han1meviewer.ui.screen.home.subscription.SubscriptionUiState
 import com.yenaly.han1meviewer.ui.viewmodel.MySubscriptionsViewModel
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.h_chan_sad
 
 /**
  * 订阅页面 Screen 层。
@@ -149,7 +151,7 @@ fun SubscriptionScreen(
                                 R.string.load_failed_with_reason,
                                 (state as WebsiteState.Error).throwable.message.orEmpty()
                             ),
-                            picRes = R.drawable.h_chan_sad
+                            picRes = Res.drawable.h_chan_sad
                         )
                     } else {
                         SubscriptionContent(

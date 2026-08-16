@@ -146,6 +146,7 @@ kotlin {
             implementation(libs.compose.resources)
             implementation(libs.jetbrains.compose.material3)
             implementation(libs.compose.multiplatform.ui.backhandler)
+            implementation(libs.compose.multiplatform.ui.tooling.preview)
             implementation(libs.jetbrains.compose.material.icons.core)
             implementation(libs.coil.compose)
             implementation(libs.lifecycle.viewmodel)

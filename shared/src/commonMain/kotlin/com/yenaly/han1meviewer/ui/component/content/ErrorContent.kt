@@ -12,12 +12,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.h_chan_sad
+import han1meviewer.shared.generated.resources.load_failed_retry
+import han1meviewer.shared.generated.resources.retry
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * 错误状态内容组件。
@@ -35,9 +38,9 @@ fun ErrorContent(
     title: String? = null,
     message: String? = null,
     onRetry: (() -> Unit)? = null,
-    retryText: String = stringResource(R.string.retry),
+    retryText: String = stringResource(Res.string.retry),
 ) {
-    val resolvedTitle = title ?: stringResource(R.string.load_failed_retry)
+    val resolvedTitle = title ?: stringResource(Res.string.load_failed_retry)
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -47,7 +50,7 @@ fun ErrorContent(
     ) {
         Image(
             modifier = Modifier.size(150.dp),
-            painter = painterResource(R.drawable.h_chan_sad),
+            painter = painterResource(Res.drawable.h_chan_sad),
             contentDescription = resolvedTitle
         )
         Text(
