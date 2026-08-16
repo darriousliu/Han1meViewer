@@ -55,7 +55,6 @@ object AppViewModel : ViewModel(), IHCsrfToken {
         WorkManager.getInstance(application).pruneWork()
 
         viewModelScope.launch(Dispatchers.IO) {
-            // HanimeDownloadManager.init()
             HanimeDownloadManagerV2.init()
         }
 

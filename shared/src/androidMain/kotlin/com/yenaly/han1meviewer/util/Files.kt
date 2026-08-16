@@ -11,7 +11,6 @@ import androidx.core.content.FileProvider
 import androidx.core.graphics.drawable.toBitmapOrNull
 import androidx.core.net.toUri
 import com.yenaly.han1meviewer.FILE_PROVIDER_AUTHORITY
-import com.yenaly.han1meviewer.HFileManager
 import com.yenaly.han1meviewer.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ensureActive
@@ -38,36 +37,6 @@ fun Drawable.saveTo(
 } catch (e: Exception) {
     Log.w("Files", "Failed to write drawable", e)
     false
-}
-
-@Deprecated(
-    "Use alternative",
-    ReplaceWith(
-        "HFileManager.createVideoName(title, quality, suffix)",
-        imports = ["com.yenaly.han1meviewer.HFileManager"]
-    )
-)
-fun createDownloadName(title: String, quality: String, suffix: String = HFileManager.DEF_VIDEO_TYPE) =
-    "${title}_${quality}.${suffix}"
-
-@Deprecated(
-    "Use alternative",
-    ReplaceWith(
-        "HFileManager.getDownloadVideoFile(videoCode, title, quality, suffix)",
-        imports = ["com.yenaly.han1meviewer.HFileManager"]
-    )
-)
-fun getDownloadedHanimeFile(title: String, quality: String, suffix: String = HFileManager.DEF_VIDEO_TYPE): File {
-    return File(HFileManager.getAppDownloadFolder(application),
-        HFileManager.createVideoName(title, quality, suffix)
-    )
-}
-
-@Deprecated("不用了")
-fun checkDownloadedHanimeFile(startsWith: String): Boolean {
-    return HFileManager.getAppDownloadFolder(application).let { folder ->
-        folder.listFiles()?.any { it.name.startsWith(startsWith) }
-    } == true
 }
 
 /**
