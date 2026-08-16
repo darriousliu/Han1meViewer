@@ -145,8 +145,13 @@ kotlin {
             implementation(libs.compose.multiplatform.foundation)
             implementation(libs.compose.resources)
             implementation(libs.jetbrains.compose.material3)
+            implementation(libs.compose.multiplatform.ui.backhandler)
+            implementation(libs.jetbrains.compose.material.icons.core)
+            implementation(libs.coil.compose)
             implementation(libs.lifecycle.viewmodel)
             implementation(libs.lifecycle.viewmodel.savedstate)
+            implementation(libs.lifecycle.runtime.compose)
+            implementation(libs.lifecycle.viewmodel.compose)
             implementation(libs.coroutines.core)
             implementation(libs.datetime)
             implementation(libs.serialization.json)
@@ -199,7 +204,7 @@ kotlin {
 
             implementation(libs.androidx.navigation.compose)
             implementation(libs.androidx.material.icons.core)
-            implementation(libs.coil.compose)
+            // coil-compose 已由 commonMain 提供，这里只留 Android 专属的 OkHttp 网络层
             implementation(libs.coil.network.okhttp)
             implementation(libs.aboutlibraries.compose.m3)
             implementation(libs.compose.avatar.cropper)

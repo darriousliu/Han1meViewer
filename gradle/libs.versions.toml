@@ -12,6 +12,8 @@ kotlin = "2.4.20-Beta2"
 composeMultiplatform = "1.12.0-rc01"
 material3 = "1.12.0-alpha03"
 materialIconsCore = "1.7.8"
+# KMP 版图标库。Android target 只是委托到 androidx 同名制品，不会重复打包。
+jetbrainsMaterialIconsCore = "1.7.3"
 ksp = "2.3.11"
 drawerlayout = "1.2.0"
 safeargs = "2.9.8"
@@ -95,6 +97,7 @@ coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutin
 coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintLayout" }
 jetbrains-compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "material3" }
+jetbrains-compose-material-icons-core = { module = "org.jetbrains.compose.material:material-icons-core", version.ref = "jetbrainsMaterialIconsCore" }
 recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerView" }
 drawerlayout = { module = "androidx.drawerlayout:drawerlayout", version.ref = "drawerlayout" }
 # Jetpack
@@ -102,6 +105,10 @@ lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmode
 lifecycle-viewmodel-savedstate = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-savedstate", version.ref = "lifecycle" }
 lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime", version.ref = "lifecycle" }
 lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata", version.ref = "lifecycle" }
+# 下面两个是 KMP 制品，给 commonMain 用（collectAsStateWithLifecycle / viewModel()），
+# 别加进 android-jetpack bundle。
+lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycle" }
+lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 fragment = { group = "androidx.fragment", name = "fragment", version.ref = "fragment" }
 room-runtime = { group = "androidx.room3", name = "room3-runtime", version.ref = "room" }
@@ -123,6 +130,9 @@ palette = { group = "androidx.palette", name = "palette", version.ref = "palette
 compose-multiplatform-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "composeMultiplatform" }
 compose-multiplatform-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "composeMultiplatform" }
 compose-multiplatform-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMultiplatform" }
+# CMP 1.12 的 ui 模块本身没有 backhandler 包，要单独引这个制品才有
+# androidx.compose.ui.backhandler.BackHandler。material3 会传递带进来，但直接用到的 API 显式声明。
+compose-multiplatform-ui-backhandler = { module = "org.jetbrains.compose.ui:ui-backhandler", version.ref = "composeMultiplatform" }
 compose-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity" }
