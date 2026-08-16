@@ -27,7 +27,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.ui.viewmodel.MonthlyStats
-import java.time.LocalDate
+import com.yenaly.han1meviewer.util.currentLocalDate
+import com.yenaly.han1meviewer.util.currentYearMonth
+import kotlinx.datetime.YearMonth
+import kotlinx.datetime.number
 
 /**
  * 成就展示区域。
@@ -48,12 +51,12 @@ fun AchievementSection(
     bestStreak: Int,
     stats: MonthlyStats,
     todayCount: Int = 0,
-    yearMonth: java.time.YearMonth = java.time.YearMonth.now(),
+    yearMonth: YearMonth = currentYearMonth(),
     onNavigateToVideo: (String) -> Unit = {},
 ) {
-    val today = LocalDate.now()
+    val today = currentLocalDate()
     val isSinglesDay =
-        today.monthValue == 11 && today.dayOfMonth == 11 && yearMonth.monthValue == 11 && todayCount == 0
+        today.month.number == 11 && today.day == 11 && yearMonth.month.number == 11 && todayCount == 0
 
     AnimatedVisibility(
         visible = checkedDays > 0 || isSinglesDay,

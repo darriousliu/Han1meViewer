@@ -119,6 +119,7 @@ fun SearchScreen(
     onOpenAdvancedSearch: () -> Unit,
     initialQuery: String? = null,
 ) {
+    val searchOptions by viewModel.searchOptions.collectAsStateWithLifecycle()
     val searchState by viewModel.searchStateFlow.collectAsStateWithLifecycle()
     val searchResults by viewModel.searchFlow.collectAsStateWithLifecycle()
 
@@ -351,7 +352,7 @@ fun SearchScreen(
         ) {
             ActiveSearchCriteria(
                 filter = filter,
-                viewModel = viewModel,
+                searchOptions = searchOptions,
                 onClearAll = {
                     clearSearchCriteria(
                         clearGenre = true,
@@ -720,7 +721,7 @@ data class SearchFilter(
 @Composable
 private fun ActiveSearchCriteria(
     filter: SearchFilter,
-    viewModel: SearchViewModel,
+    searchOptions: SearchViewModel.SearchOptionsState,
     onClearAll: () -> Unit,
     onClearGenre: () -> Unit,
     onClearSort: () -> Unit,
@@ -740,7 +741,7 @@ private fun ActiveSearchCriteria(
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         filter.genre?.let {
-            val label = viewModel.genres.find { option -> option.searchKey == it }?.name ?: it
+            val label = searchOptions.genres.find { option -> option.searchKey == it }?.name ?: it
             AssistChip(
                 onClick = onClearGenre,
                 label = { Text("${stringResource(R.string.type)}: $label") },
@@ -759,7 +760,7 @@ private fun ActiveSearchCriteria(
             )
         }
         filter.sort?.let {
-            val label = viewModel.sortOptions.find { option -> option.searchKey == it }?.name ?: it
+            val label = searchOptions.sortOptions.find { option -> option.searchKey == it }?.name ?: it
             AssistChip(
                 onClick = onClearSort,
                 label = { Text("${stringResource(R.string.sort_option)}: $label") },
@@ -778,7 +779,7 @@ private fun ActiveSearchCriteria(
             )
         }
         filter.duration?.let {
-            val label = viewModel.durations.find { option -> option.searchKey == it }?.name ?: it
+            val label = searchOptions.durations.find { option -> option.searchKey == it }?.name ?: it
             AssistChip(
                 onClick = onClearDuration,
                 label = { Text("${stringResource(R.string.duration)}: $label") },

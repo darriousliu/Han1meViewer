@@ -32,9 +32,9 @@ import com.yenaly.han1meviewer.logic.network.HanimeNetwork
 import com.yenaly.han1meviewer.logic.state.DownloadState
 import com.yenaly.han1meviewer.util.HImageMeower
 import com.yenaly.han1meviewer.util.SafFileManager
-import com.yenaly.yenaly_libs.utils.createFileIfNotExists
-import com.yenaly.yenaly_libs.utils.saveTo
-import com.yenaly.yenaly_libs.utils.showShortToast
+import com.yenaly.han1meviewer.util.createFileIfNotExists
+import com.yenaly.han1meviewer.util.saveTo
+import com.yenaly.han1meviewer.util.showShortToast
 import io.ktor.client.request.get
 import io.ktor.client.request.head
 import io.ktor.client.request.header

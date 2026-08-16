@@ -31,8 +31,8 @@ import com.yenaly.han1meviewer.logic.model.github.Latest
 import com.yenaly.han1meviewer.logic.network.injectUpdate
 import com.yenaly.han1meviewer.util.installApkPackage
 import com.yenaly.han1meviewer.util.runSuspendCatching
+import com.yenaly.han1meviewer.util.showShortToast
 import com.yenaly.han1meviewer.util.updateFile
-import com.yenaly.yenaly_libs.utils.showShortToast
 import java.io.File
 import java.util.Locale
 import kotlin.random.Random

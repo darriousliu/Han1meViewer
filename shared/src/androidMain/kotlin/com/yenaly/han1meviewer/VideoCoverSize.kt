@@ -3,8 +3,8 @@ package com.yenaly.han1meviewer
 import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.core.view.updateLayoutParams
-import com.yenaly.yenaly_libs.utils.applicationContext
-import com.yenaly.yenaly_libs.utils.dp
+import com.yenaly.han1meviewer.util.applicationContext
+import com.yenaly.han1meviewer.util.dpPx
 
 /**
  * 用于计算视频封面的大小动态调整！
@@ -33,12 +33,12 @@ object VideoCoverSize {
     /**
      * 自带的一个Margin
      */
-    private val margin = 4.dp
+    private val margin = 4.dpPx
 
     /**
      * 通常父View也会有一个Margin，所以这里也加上
      */
-    private val parentMargin = 8.dp
+    private val parentMargin = 8.dpPx
 
     object Normal {
 

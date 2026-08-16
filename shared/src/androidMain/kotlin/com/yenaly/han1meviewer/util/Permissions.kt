@@ -10,12 +10,6 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import com.yenaly.han1meviewer.R
-import com.yenaly.yenaly_libs.utils.awaitActivityResult
-import com.yenaly.yenaly_libs.utils.requestPermission
-import com.yenaly.yenaly_libs.utils.requireComponentActivity
-import com.yenaly.yenaly_libs.utils.showShortToast
-
-
 /**
  * 请求选择图片或视频
  */

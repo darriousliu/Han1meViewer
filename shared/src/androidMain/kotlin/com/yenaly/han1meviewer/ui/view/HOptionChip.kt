@@ -12,14 +12,14 @@ import androidx.core.graphics.ColorUtils
 import androidx.core.view.updatePadding
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.google.android.material.color.MaterialColors
-import com.yenaly.yenaly_libs.utils.dp
+import com.yenaly.han1meviewer.util.dpPx
 import kotlinx.parcelize.Parcelize
 
 class HOptionChip @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleRes: Int = 0
 ) : AppCompatTextView(context, attrs, defStyleRes), Checkable {
 
-    private val cornerRadius = 12.dp.toFloat()
+    private val cornerRadius = 12.dpPx.toFloat()
 //    private val unselectedColor = context.getColor(R.color.adv_search_unselected_color)
 //    private val selectedColor = context.getColor(R.color.adv_search_selected_color)
 
@@ -35,7 +35,7 @@ class HOptionChip @JvmOverloads constructor(
             setBackgroundResource(bgRes)
         }
         // Set default properties
-        updatePadding(top = 12.dp, bottom = 12.dp)
+        updatePadding(top = 12.dpPx, bottom = 12.dpPx)
         setTextColor(unselectedTextColor)
         // corner radius drawable
         background = GradientDrawable().apply {

@@ -20,6 +20,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.compose.runtime.getValue
@@ -43,12 +44,11 @@ import com.yenaly.han1meviewer.ui.navigation.main.VideoRoute
 import com.yenaly.han1meviewer.ui.navigation.navigateSafely
 import com.yenaly.han1meviewer.ui.screen.home.homepage.HomePageViewModel
 import com.yenaly.han1meviewer.ui.screen.main.MainActivityContent
+import com.yenaly.han1meviewer.util.restartApplication
 import com.yenaly.han1meviewer.util.showAlertDialog
+import com.yenaly.han1meviewer.util.showSnackBar
+import com.yenaly.han1meviewer.util.textFromClipboard
 import com.yenaly.han1meviewer.videoUrlRegex
-import com.yenaly.yenaly_libs.ActivityManager
-import com.yenaly.yenaly_libs.base.frame.FrameActivity
-import com.yenaly.yenaly_libs.utils.showSnackBar
-import com.yenaly.yenaly_libs.utils.textFromClipboard
 import kotlinx.coroutines.flow.MutableSharedFlow
 import java.util.Locale
 
@@ -57,7 +57,7 @@ import java.util.Locale
  * @author Yenaly Liew
  * @time 2022/06/08 008 17:35
  */
-class MainActivity : FrameActivity(), PermissionRequester {
+class MainActivity : AppCompatActivity(), PermissionRequester {
 
     val viewModel by viewModels<HomePageViewModel>()
 
@@ -276,7 +276,7 @@ class MainActivity : FrameActivity(), PermissionRequester {
                     Preferences.domainName = selectedBaseUrl
                 }
                 Handler(Looper.getMainLooper()).postDelayed({
-                    ActivityManager.restart(killProcess = true)
+                    restartApplication(killProcess = true)
                 }, 500)
             }
             setNegativeButton(R.string.no, null)

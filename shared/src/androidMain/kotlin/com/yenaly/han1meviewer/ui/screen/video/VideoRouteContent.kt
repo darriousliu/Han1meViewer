@@ -15,7 +15,7 @@ import com.yenaly.han1meviewer.logic.state.VideoLoadingState
 import com.yenaly.han1meviewer.ui.bridge.VideoPageHost
 import com.yenaly.han1meviewer.ui.viewmodel.CommentViewModel
 import com.yenaly.han1meviewer.ui.viewmodel.VideoViewModel
-import com.yenaly.yenaly_libs.utils.application
+import org.jetbrains.compose.resources.getString
 
 @Composable
 fun VideoRouteContent(
@@ -102,11 +102,7 @@ fun VideoRouteContent(
                     viewModel = commentViewModel,
                     reportMessages = remember { kotlinx.coroutines.flow.MutableSharedFlow() },
                     getMessageText = { message ->
-                        if (message.args.isNotEmpty()) {
-                            application.getString(message.resId, *message.args.toTypedArray())
-                        } else {
-                            application.getString(message.resId)
-                        }
+                        getString(message.resource, *message.args.toTypedArray())
                     },
                     pageHost = pageHost,
                 )

@@ -14,7 +14,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.Preferences.isAlreadyLogin
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.VIDEO_COMMENT_PREFIX
 import com.yenaly.han1meviewer.getHanimeShareText
 import com.yenaly.han1meviewer.logic.entity.CheckInRecordEntity
@@ -26,10 +25,13 @@ import com.yenaly.han1meviewer.ui.component.BottomSheetHandler
 import com.yenaly.han1meviewer.ui.theme.HanimeTheme
 import com.yenaly.han1meviewer.ui.viewmodel.CommentViewModel
 import com.yenaly.han1meviewer.ui.viewmodel.VideoViewModel
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.there_is_a_small_issue
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 
 @Composable
 fun RenderVideoIntroductionContent(
@@ -134,9 +136,10 @@ fun RenderVideoIntroductionContent(
 fun RenderVideoCommentContent(
     viewModel: CommentViewModel,
     reportMessages: MutableSharedFlow<CommentMessage>,
-    getMessageText: (CommentViewModel.Message) -> String,
+    getMessageText: suspend (CommentViewModel.Message) -> String,
     pageHost: VideoPageHost? = null,
 ) {
+    val reportReasons = viewModel.reportReasons.collectAsStateWithLifecycle().value
     val commentUiState = remember(viewModel.code) {
         viewModel.getCommentUiState(viewModel.code)
     }
@@ -181,14 +184,7 @@ fun RenderVideoCommentContent(
                 BottomSheetHandler()
                 val childReportFlow = remember(viewModel.reportMessage) {
                     viewModel.reportMessage.map { message ->
-                        val text = if (message.args.isNotEmpty()) {
-                            com.yenaly.yenaly_libs.utils.application.getString(
-                                message.resId,
-                                *message.args.toTypedArray()
-                            )
-                        } else {
-                            com.yenaly.yenaly_libs.utils.application.getString(message.resId)
-                        }
+                        val text = getString(message.resource, *message.args.toTypedArray())
                         CommentMessage(text)
                     }
                 }
@@ -198,7 +194,7 @@ fun RenderVideoCommentContent(
                     reportMessageFlow = childReportFlow,
                     postReplyStateFlow = viewModel.postReplyFlow,
                     commentLikeStateFlow = viewModel.commentLikeFlow,
-                    reportReasons = viewModel.reportReason,
+                    reportReasons = reportReasons,
                     isAlreadyLogin = isAlreadyLogin,
                     onRefresh = { viewModel.getCommentReply(currentCommentId) },
                     onReply = { _, text ->
@@ -245,7 +241,7 @@ fun RenderVideoCommentContent(
             commentStateFlow = viewModel.videoCommentStateFlow,
             reportMessageFlow = sharedReportFlow,
             currentSortType = viewModel.currentSortType,
-            reportReasons = viewModel.reportReason,
+            reportReasons = reportReasons,
             isPreviewCommentPrefetched = false,
             isAlreadyLogin = isAlreadyLogin,
             onRefresh = { viewModel.getComment(VIDEO_COMMENT_PREFIX, viewModel.code) },
@@ -254,7 +250,11 @@ fun RenderVideoCommentContent(
                 val replyTargetId = comment.replyTargetIdOrNull
                 if (replyTargetId == null) {
                     scope.launch {
-                        reportMessages.emit(CommentMessage(getMessageText(CommentViewModel.Message(R.string.there_is_a_small_issue))))
+                        reportMessages.emit(
+                            CommentMessage(
+                                getMessageText(CommentViewModel.Message(Res.string.there_is_a_small_issue))
+                            )
+                        )
                     }
                     return@CommentScreen
                 }
@@ -309,7 +309,11 @@ fun RenderVideoCommentContent(
                 val replyTargetId = comment.replyTargetIdOrNull
                 if (replyTargetId == null) {
                     scope.launch {
-                        reportMessages.emit(CommentMessage(getMessageText(CommentViewModel.Message(R.string.there_is_a_small_issue))))
+                        reportMessages.emit(
+                            CommentMessage(
+                                getMessageText(CommentViewModel.Message(Res.string.there_is_a_small_issue))
+                            )
+                        )
                     }
                     return@CommentScreen
                 }
@@ -321,7 +325,11 @@ fun RenderVideoCommentContent(
                 viewModel.currentUserId?.let { id ->
                     viewModel.postComment(id, viewModel.code, VIDEO_COMMENT_PREFIX, it)
                 } ?: scope.launch {
-                    reportMessages.emit(CommentMessage(getMessageText(CommentViewModel.Message(R.string.there_is_a_small_issue))))
+                    reportMessages.emit(
+                        CommentMessage(
+                            getMessageText(CommentViewModel.Message(Res.string.there_is_a_small_issue))
+                        )
+                    )
                 }
             },
             initialFirstVisibleItemIndex = commentUiState.firstVisibleItemIndex,

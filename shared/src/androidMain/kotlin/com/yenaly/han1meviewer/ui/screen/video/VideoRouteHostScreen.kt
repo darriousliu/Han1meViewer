@@ -71,19 +71,20 @@ import com.yenaly.han1meviewer.ui.view.video.HanimeDataSource
 import com.yenaly.han1meviewer.ui.view.video.VideoPlayerAppBarBehavior
 import com.yenaly.han1meviewer.ui.viewmodel.CommentViewModel
 import com.yenaly.han1meviewer.ui.viewmodel.VideoViewModel
+import com.yenaly.han1meviewer.util.OrientationManager
+import com.yenaly.han1meviewer.util.browse
 import com.yenaly.han1meviewer.util.checkBadGuy
-import com.yenaly.han1meviewer.util.loadAssetAs
+import com.yenaly.han1meviewer.util.copyToClipboard
+import com.yenaly.han1meviewer.util.dpPx
+import com.yenaly.han1meviewer.util.loadBundledJson
 import com.yenaly.han1meviewer.util.localizedTextOrNull
-import com.yenaly.yenaly_libs.utils.OrientationManager
-import com.yenaly.yenaly_libs.utils.browse
-import com.yenaly.yenaly_libs.utils.copyToClipboard
-import com.yenaly.yenaly_libs.utils.dp
-import com.yenaly.yenaly_libs.utils.shareText
-import com.yenaly.yenaly_libs.utils.showShortToast
-import com.yenaly.yenaly_libs.utils.startActivity
+import com.yenaly.han1meviewer.util.shareText
+import com.yenaly.han1meviewer.util.showShortToast
+import com.yenaly.han1meviewer.util.startActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.jetbrains.compose.resources.getString
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
@@ -97,13 +98,16 @@ fun VideoRouteHostScreen(
     val viewModel: VideoViewModel = viewModel()
     val commentViewModel: CommentViewModel = viewModel()
     val kernel = remember { HMediaKernel.Type.fromString(Preferences.switchPlayerKernel) }
-    val genres = remember(Preferences.baseUrl) {
-        loadAssetAs<List<SearchOption>>(
+    var genres by remember(Preferences.baseUrl) { mutableStateOf(emptyList<SearchOption>()) }
+    LaunchedEffect(Preferences.baseUrl) {
+        val genreFile =
             if (Preferences.baseUrl == com.yenaly.han1meviewer.HanimeConstants.HANIME_URL[3]) {
-                "search_options/genre_av.json"
+                "genre_av.json"
             } else {
-                "search_options/genre.json"
+                "genre.json"
             }
+        genres = loadBundledJson<List<SearchOption>>(
+            "files/search_options/$genreFile"
         ).orEmpty()
     }
     val player = remember(route.videoCode, route.localUri) {
@@ -250,9 +254,9 @@ fun VideoRouteHostScreen(
                 } else if (Preferences.tabletMode &&
                     activity.resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
                 ) {
-                    viewModel.setPlayerHeightDp(350.dp)
+                    viewModel.setPlayerHeightDp(350.dpPx)
                 } else {
-                    viewModel.setPlayerHeightDp(250.dp)
+                    viewModel.setPlayerHeightDp(250.dpPx)
                 }
                 setPlayerHeight(viewModel.videoHostUiStateFlow.value.playerHeightDp)
                 shell.setTabsVisible(!isInPip)
@@ -437,9 +441,9 @@ fun VideoRouteHostScreen(
         }
         shell.setExpanded(expanded = viewModel.isAppBarExpanded(route.videoCode), animate = false)
         val initialHeight = if (Preferences.tabletMode) {
-            350.dp
+            350.dpPx
         } else {
-            250.dp
+            250.dpPx
         }
         viewModel.setPlayerHeightDp(initialHeight)
         setPlayerHeight(initialHeight)
@@ -456,9 +460,9 @@ fun VideoRouteHostScreen(
     ) {
         if (hostUiState.isInPipMode) return@LaunchedEffect
         val height = if (Preferences.tabletMode) {
-            if (isSideRelatedCollapsed) 500.dp else 400.dp
+            if (isSideRelatedCollapsed) 500.dpPx else 400.dpPx
         } else {
-            250.dp
+            250.dpPx
         }
         if (hostUiState.playerHeightDp != height) {
             viewModel.setPlayerHeightDp(height)
@@ -540,8 +544,8 @@ fun VideoRouteHostScreen(
 
     LaunchedEffect(viewModel) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-            viewModel.modifyHKeyframeFlow.collect { (_, reason) ->
-                showShortToast(reason)
+            viewModel.modifyHKeyframeFlow.collect { (_, message) ->
+                showShortToast(getString(message.resource, *message.args.toTypedArray()))
             }
         }
     }
@@ -604,7 +608,7 @@ private fun createVideoPlayerView(activity: MainActivity): HJzvdStd {
     return HJzvdStd(ContextThemeWrapper(activity, activity.theme)).apply {
         layoutParams = CollapsingToolbarLayout.LayoutParams(
             MATCH_PARENT,
-            250.dp,
+            250.dpPx,
         ).apply {
             collapseMode = CollapsingToolbarLayout.LayoutParams.COLLAPSE_MODE_PARALLAX
             parallaxMultiplier = 0.7f
@@ -663,7 +667,7 @@ private class VideoRouteShell(
     }
 
     init {
-        videoPlayerHost.addView(playerView, ViewGroup.LayoutParams(MATCH_PARENT, 250.dp))
+        videoPlayerHost.addView(playerView, ViewGroup.LayoutParams(MATCH_PARENT, 250.dpPx))
         collapsingToolbarLayout.addView(videoPlayerHost)
         appBarLayout.addView(collapsingToolbarLayout)
         rootView.addView(videoTabsHost)

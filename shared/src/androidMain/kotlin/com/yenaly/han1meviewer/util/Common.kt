@@ -3,9 +3,7 @@ package com.yenaly.han1meviewer.util
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
-import android.util.Log
 import com.yenaly.han1meviewer.R
-import com.yenaly.yenaly_libs.utils.showShortToast
 import java.security.MessageDigest
 
 fun isLegalBuild(context: Context, sha: String): Boolean {

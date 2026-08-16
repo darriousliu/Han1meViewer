@@ -56,15 +56,14 @@ import com.yenaly.han1meviewer.ui.adapter.HKeyframeRvAdapter
 import com.yenaly.han1meviewer.ui.adapter.SuperResolutionAdapter
 import com.yenaly.han1meviewer.ui.adapter.VideoSpeedAdapter
 import com.yenaly.han1meviewer.ui.navigation.main.HomeRoute
+import com.yenaly.han1meviewer.util.OrientationManager
+import com.yenaly.han1meviewer.util.appScreenWidth
+import com.yenaly.han1meviewer.util.findActivityOrNull
+import com.yenaly.han1meviewer.util.navBarHeight
+import com.yenaly.han1meviewer.util.removeItself
 import com.yenaly.han1meviewer.util.setStateViewLayout
 import com.yenaly.han1meviewer.util.showAlertDialog
-import com.yenaly.yenaly_libs.utils.OrientationManager
-import com.yenaly.yenaly_libs.utils.appScreenWidth
-import com.yenaly.yenaly_libs.utils.findActivityOrNull
-import com.yenaly.yenaly_libs.utils.navBarHeight
-import com.yenaly.yenaly_libs.utils.statusBarHeight
-import com.yenaly.yenaly_libs.utils.unsafeLazy
-import com.yenaly.yenaly_libs.utils.view.removeItself
+import com.yenaly.han1meviewer.util.statusBarHeight
 import java.util.Timer
 import kotlin.math.absoluteValue
 
@@ -269,7 +268,8 @@ class HJzvdStd @JvmOverloads constructor(
 
     var videoCode: String? = null
 
-    private val hKeyframeAdapter: HKeyframeRvAdapter by unsafeLazy { initHKeyframeAdapter() }
+    private val hKeyframeAdapter: HKeyframeRvAdapter by
+        lazy(LazyThreadSafetyMode.NONE) { initHKeyframeAdapter() }
     private val switchPlayerKernel = Preferences.switchPlayerKernel
     var onVideoStateChanged: ((state: Int) -> Unit)? = null
 

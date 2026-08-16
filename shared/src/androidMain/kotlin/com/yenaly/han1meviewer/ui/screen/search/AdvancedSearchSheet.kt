@@ -86,6 +86,7 @@ fun AdvancedSearchSheet(
     viewModel: SearchViewModel,
     onDismiss: () -> Unit,
 ) {
+    val searchOptions by viewModel.searchOptions.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
     val histories by remember {
         DatabaseRepo.HanimeAdvancedSearchRepo.getSearchHistories()
@@ -104,7 +105,7 @@ fun AdvancedSearchSheet(
     val tagLabel = stringResource(R.string.tag)
     val releaseDateLabel = stringResource(R.string.release_date)
     val durationLabel = stringResource(R.string.duration)
-    val tagScopes = remember(viewModel.tags) { buildTagScopeSections(viewModel.tags) }
+    val tagScopes = remember(searchOptions.tags) { buildTagScopeSections(searchOptions.tags) }
 
     fun updateSelection(block: () -> Unit) {
         block()
@@ -115,12 +116,12 @@ fun AdvancedSearchSheet(
         return options.firstOrNull { it.searchKey == searchKey }?.value
     }
 
-    val genreTitle = remember(selectionVersion, typeLabel) {
-        selectedOptionValue(viewModel.genres, viewModel.genre)?.let { "$typeLabel: $it" }
+    val genreTitle = remember(selectionVersion, typeLabel, searchOptions.genres) {
+        selectedOptionValue(searchOptions.genres, viewModel.genre)?.let { "$typeLabel: $it" }
             ?: typeLabel
     }
-    val sortTitle = remember(selectionVersion, sortLabel) {
-        selectedOptionValue(viewModel.sortOptions, viewModel.sort)?.let { "$sortLabel: $it" }
+    val sortTitle = remember(selectionVersion, sortLabel, searchOptions.sortOptions) {
+        selectedOptionValue(searchOptions.sortOptions, viewModel.sort)?.let { "$sortLabel: $it" }
             ?: sortLabel
     }
     val selectedTagKeys = remember(selectionVersion) { viewModel.tagMap.flatten() }
@@ -136,8 +137,8 @@ fun AdvancedSearchSheet(
     val releaseDateTitle = remember(selectionVersion, releaseDateLabel) {
         viewModel.getSearchDate()?.let { "$releaseDateLabel: $it" } ?: releaseDateLabel
     }
-    val durationTitle = remember(selectionVersion, durationLabel) {
-        selectedOptionValue(viewModel.durations, viewModel.duration)?.let { "$durationLabel: $it" }
+    val durationTitle = remember(selectionVersion, durationLabel, searchOptions.durations) {
+        selectedOptionValue(searchOptions.durations, viewModel.duration)?.let { "$durationLabel: $it" }
             ?: durationLabel
     }
 
@@ -196,8 +197,8 @@ fun AdvancedSearchSheet(
                             dialogState = AdvancedSearchDialogState.SingleChoice(
                                 key = "genre",
                                 titleRes = R.string.type,
-                                options = viewModel.genres,
-                                selectedIndex = viewModel.genres.indexOfFirst { it.searchKey == viewModel.genre },
+                                options = searchOptions.genres,
+                                selectedIndex = searchOptions.genres.indexOfFirst { it.searchKey == viewModel.genre },
                                 onSelect = { option -> viewModel.genre = option.searchKey },
                                 onReset = { viewModel.genre = null },
                             )
@@ -209,8 +210,8 @@ fun AdvancedSearchSheet(
                             dialogState = AdvancedSearchDialogState.SingleChoice(
                                 key = "sort",
                                 titleRes = R.string.sort_option,
-                                options = viewModel.sortOptions,
-                                selectedIndex = viewModel.sortOptions.indexOfFirst { it.searchKey == viewModel.sort },
+                                options = searchOptions.sortOptions,
+                                selectedIndex = searchOptions.sortOptions.indexOfFirst { it.searchKey == viewModel.sort },
                                 onSelect = { option -> viewModel.sort = option.searchKey },
                                 onReset = { viewModel.sort = null },
                             )
@@ -228,7 +229,7 @@ fun AdvancedSearchSheet(
                                 onSave = { selected, broad ->
                                     viewModel.broad = broad
                                     viewModel.tagMap =
-                                        groupSelectedTagOptions(selected, viewModel.tags)
+                                        groupSelectedTagOptions(selected, searchOptions.tags)
                                 },
                                 onReset = { viewModel.tagMap.clear() },
                             )
@@ -246,7 +247,7 @@ fun AdvancedSearchSheet(
                         onOpenReleaseDate = {
                             dialogState = AdvancedSearchDialogState.ReleaseDate(
                                 key = "date",
-                                options = viewModel.timeList,
+                                options = searchOptions.timeList,
                                 initialApproximate = viewModel.approxTime,
                                 initialYear = viewModel.year,
                                 initialMonth = viewModel.month,
@@ -274,8 +275,8 @@ fun AdvancedSearchSheet(
                             dialogState = AdvancedSearchDialogState.SingleChoice(
                                 key = "duration",
                                 titleRes = R.string.duration,
-                                options = viewModel.durations,
-                                selectedIndex = viewModel.durations.indexOfFirst { it.searchKey == viewModel.duration },
+                                options = searchOptions.durations,
+                                selectedIndex = searchOptions.durations.indexOfFirst { it.searchKey == viewModel.duration },
                                 onSelect = { option -> viewModel.duration = option.searchKey },
                                 onReset = { viewModel.duration = null },
                             )

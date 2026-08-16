@@ -33,10 +33,10 @@ import com.yenaly.han1meviewer.ui.screen.settings.DelayResultUi
 import com.yenaly.han1meviewer.ui.screen.settings.DohTestResultUi
 import com.yenaly.han1meviewer.ui.screen.settings.NetworkSettingsScreen
 import com.yenaly.han1meviewer.ui.screen.settings.NetworkSettingsUiState
+import com.yenaly.han1meviewer.util.applicationContext
+import com.yenaly.han1meviewer.util.restartApplication
 import com.yenaly.han1meviewer.util.showAlertDialog
-import com.yenaly.yenaly_libs.ActivityManager
-import com.yenaly.yenaly_libs.utils.applicationContext
-import com.yenaly.yenaly_libs.utils.showShortToast
+import com.yenaly.han1meviewer.util.showShortToast
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import io.ktor.client.statement.request
@@ -343,7 +343,7 @@ fun NetworkSettingsRouteScreen() {
             Preferences.customMirrorSite = pendingCustomMirrorSite
             Preferences.appendCustomMirrorPath = pendingAppendCustomMirrorPath
             logout()
-            ActivityManager.restart(killProcess = true)
+            restartApplication(killProcess = true)
         },
         onDismiss = {
             pendingDomainValue = ""
@@ -374,7 +374,7 @@ fun NetworkSettingsRouteScreen() {
         confirmText = stringResource(R.string.confirm),
         dismissText = stringResource(R.string.cancel),
         cancelable = false,
-        onConfirm = { ActivityManager.restart(killProcess = true) },
+        onConfirm = { restartApplication(killProcess = true) },
         onDismiss = { showHostsRestartConfirm = false },
     )
 

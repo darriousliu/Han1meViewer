@@ -59,8 +59,9 @@ import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.entity.CheckInRecordEntity
 import com.yenaly.han1meviewer.logic.entity.CheckInType
 import com.yenaly.han1meviewer.logic.entity.WatchHistoryEntity
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.toJavaLocalDate
 import org.jetbrains.compose.resources.stringResource
-import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
@@ -135,7 +136,8 @@ fun CheckInDialog(
                 ) {
                     Column {
                         Text(
-                            text = date.format(DateTimeFormatter.ofPattern("yyyy\u5E74MM\u6708dd\u65E5")),
+                            text = date.toJavaLocalDate()
+                                .format(DateTimeFormatter.ofPattern("yyyy\u5E74MM\u6708dd\u65E5")),
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold
                         )

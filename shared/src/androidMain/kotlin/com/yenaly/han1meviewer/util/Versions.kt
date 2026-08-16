@@ -15,8 +15,6 @@ import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.model.github.Latest
 import com.yenaly.han1meviewer.worker.HUpdateWorker
-import com.yenaly.yenaly_libs.utils.dp
-import com.yenaly.yenaly_libs.utils.showShortToast
 import java.io.File
 import java.util.regex.Pattern
 
@@ -56,7 +54,7 @@ suspend fun Context.showUpdateDialog(latest: Latest) {
     val messageView = TextView(this).apply {
         text = spannable
         movementMethod = LinkMovementMethod.getInstance()
-        setPadding(32.dp, 16.dp, 32.dp, 0)
+        setPadding(32.dpPx, 16.dpPx, 32.dpPx, 0)
         setTextIsSelectable(true)
         Linkify.addLinks(this, webUrlPattern, null, null, transformFilter)
     }

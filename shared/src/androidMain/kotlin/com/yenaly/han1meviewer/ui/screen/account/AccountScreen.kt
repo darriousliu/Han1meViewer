@@ -45,7 +45,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -55,7 +54,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -75,10 +73,12 @@ import com.yenaly.han1meviewer.ui.component.content.ErrorContent
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
 import com.yenaly.han1meviewer.ui.screen.rememberRandomLoadingHint
 import com.yenaly.han1meviewer.ui.viewmodel.UserAccountViewModel
+import com.yenaly.han1meviewer.util.browse
 import com.yenaly.han1meviewer.util.pickVisualMedia
-import com.yenaly.yenaly_libs.utils.browse
-import com.yenaly.yenaly_libs.utils.showShortToast
+import com.yenaly.han1meviewer.util.showShortToast
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -102,7 +102,9 @@ fun AccountScreen(
 
     LaunchedEffect(pendingAvatarCropResult) {
         val filePath = pendingAvatarCropResult ?: return@LaunchedEffect
-        viewModel.updateAvatar(java.io.File(filePath))
+        val avatarFile = java.io.File(filePath)
+        val photoBytes = withContext(Dispatchers.IO) { avatarFile.readBytes() }
+        viewModel.updateAvatar(photoBytes, avatarFile.name)
         onAvatarCropResultConsumed()
     }
 

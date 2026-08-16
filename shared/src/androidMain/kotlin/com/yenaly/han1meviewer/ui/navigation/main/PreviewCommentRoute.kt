@@ -36,9 +36,11 @@ import com.yenaly.han1meviewer.ui.screen.video.CommentMessage
 import com.yenaly.han1meviewer.ui.screen.video.CommentScreen
 import com.yenaly.han1meviewer.ui.viewmodel.CommentViewModel
 import com.yenaly.han1meviewer.ui.viewmodel.PreviewCommentPrefetcher
-import com.yenaly.yenaly_libs.utils.application
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.there_is_a_small_issue
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,6 +71,7 @@ fun PreviewCommentRouteScreen(
         .value
     val hasPrefetchedComments = prefetchedComments.isNotEmpty()
     val reportMessages = remember { kotlinx.coroutines.flow.MutableSharedFlow<CommentMessage>() }
+    val reportReasons = viewModel.reportReasons.collectAsStateWithLifecycle().value
 
     LaunchedEffect(route.dateCode, hasPrefetchedComments, prefetchedComments) {
         viewModel.code = route.dateCode
@@ -121,11 +124,7 @@ fun PreviewCommentRouteScreen(
 
     LaunchedEffect(Unit) {
         viewModel.reportMessage.collect { msg ->
-            val text = if (msg.args.isNotEmpty()) {
-                activity.getString(msg.resId, *msg.args.toTypedArray())
-            } else {
-                activity.getString(msg.resId)
-            }
+            val text = getString(msg.resource, *msg.args.toTypedArray())
             reportMessages.emit(CommentMessage(text))
         }
     }
@@ -146,11 +145,7 @@ fun PreviewCommentRouteScreen(
             BottomSheetHandler()
             val mappedReportFlow = remember(viewModel.reportMessage) {
                 viewModel.reportMessage.map { message ->
-                    val text = if (message.args.isNotEmpty()) {
-                        application.getString(message.resId, *message.args.toTypedArray())
-                    } else {
-                        application.getString(message.resId)
-                    }
+                    val text = getString(message.resource, *message.args.toTypedArray())
                     CommentMessage(text)
                 }
             }
@@ -160,7 +155,7 @@ fun PreviewCommentRouteScreen(
                 reportMessageFlow = mappedReportFlow,
                 postReplyStateFlow = viewModel.postReplyFlow,
                 commentLikeStateFlow = viewModel.commentLikeFlow,
-                reportReasons = viewModel.reportReason,
+                reportReasons = reportReasons,
                 isAlreadyLogin = Preferences.isAlreadyLogin,
                 onRefresh = { viewModel.getCommentReply(currentCommentId) },
                 onReply = { _, text ->
@@ -217,7 +212,7 @@ fun PreviewCommentRouteScreen(
             commentStateFlow = commentState,
             reportMessageFlow = reportMessages,
             currentSortType = viewModel.currentSortType,
-            reportReasons = viewModel.reportReason,
+            reportReasons = reportReasons,
             isPreviewCommentPrefetched = hasPrefetchedComments,
             isAlreadyLogin = Preferences.isAlreadyLogin,
             onRefresh = { viewModel.getComment(PREVIEW_COMMENT_PREFIX, route.dateCode) },
@@ -226,7 +221,9 @@ fun PreviewCommentRouteScreen(
                 val replyTargetId = comment.replyTargetIdOrNull
                 if (replyTargetId == null) {
                     scope.launch {
-                        reportMessages.emit(CommentMessage(activity.getString(R.string.there_is_a_small_issue)))
+                        reportMessages.emit(
+                            CommentMessage(getString(Res.string.there_is_a_small_issue))
+                        )
                     }
                     return@CommentScreen
                 }
@@ -288,7 +285,9 @@ fun PreviewCommentRouteScreen(
                 viewModel.currentUserId?.let { id ->
                     viewModel.postComment(id, viewModel.code, PREVIEW_COMMENT_PREFIX, text)
                 } ?: scope.launch {
-                    reportMessages.emit(CommentMessage(activity.getString(R.string.there_is_a_small_issue)))
+                    reportMessages.emit(
+                        CommentMessage(getString(Res.string.there_is_a_small_issue))
+                    )
                 }
             },
             initialFirstVisibleItemIndex = commentUiState.firstVisibleItemIndex,

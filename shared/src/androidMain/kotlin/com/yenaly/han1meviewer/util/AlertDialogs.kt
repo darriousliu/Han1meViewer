@@ -11,8 +11,6 @@ import androidx.appcompat.app.AlertDialog
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.yenaly.han1meviewer.R
-import com.yenaly.yenaly_libs.utils.activity
-import com.yenaly.yenaly_libs.utils.dpF
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 

@@ -31,8 +31,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.yenaly.han1meviewer.R
-import java.time.LocalDate
-import java.time.YearMonth
+import com.yenaly.han1meviewer.util.currentLocalDate
+import com.yenaly.han1meviewer.util.currentYearMonth
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.YearMonth
+import kotlinx.datetime.isoDayNumber
 
 /**
  * 月历网格组件。展示指定月份的日期格，区分已打卡/今天/未来三种状态。
@@ -53,9 +56,9 @@ fun CalendarGrid(
     onDateLongClick: (LocalDate) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val firstDayOfMonth = yearMonth.atDay(1)
-    val daysInMonth = yearMonth.lengthOfMonth()
-    val firstDayOfWeek = firstDayOfMonth.dayOfWeek.value
+    val firstDayOfMonth = yearMonth.firstDay
+    val daysInMonth = yearMonth.numberOfDays
+    val firstDayOfWeek = firstDayOfMonth.dayOfWeek.isoDayNumber
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(7),
@@ -88,7 +91,7 @@ fun CalendarGrid(
         }
 
         items(daysInMonth) { day ->
-            val date = yearMonth.atDay(day + 1)
+            val date = LocalDate(yearMonth.year, yearMonth.month, day + 1)
             val count = records[date] ?: 0
             val isToday = date == today
             val transition = updateTransition(targetState = count > 0, label = "check")
@@ -154,9 +157,9 @@ fun CalendarGrid(
 @Composable
 private fun PreviewCalendarGrid() {
     CalendarGrid(
-        yearMonth = YearMonth.now(),
-        records = mapOf(LocalDate.now() to 3),
-        today = LocalDate.now(),
+        yearMonth = currentYearMonth(),
+        records = mapOf(currentLocalDate() to 3),
+        today = currentLocalDate(),
         onDateClick = {},
         onDateLongClick = {},
     )

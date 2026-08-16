@@ -4,24 +4,41 @@ import android.content.ActivityNotFoundException
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.util.Log
 import androidx.core.content.FileProvider
+import androidx.core.graphics.drawable.toBitmapOrNull
 import androidx.core.net.toUri
 import com.yenaly.han1meviewer.FILE_PROVIDER_AUTHORITY
 import com.yenaly.han1meviewer.HFileManager
-import com.yenaly.han1meviewer.HJson
 import com.yenaly.han1meviewer.R
-import com.yenaly.yenaly_libs.utils.application
-import com.yenaly.yenaly_libs.utils.applicationContext
-import com.yenaly.yenaly_libs.utils.showShortToast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.decodeFromStream
 import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
+
+fun File.createFileIfNotExists(): Boolean = if (!exists()) {
+    parentFile?.mkdirs()
+    createNewFile()
+} else {
+    isFile
+}
+
+fun Drawable.saveTo(
+    outputStream: OutputStream,
+    format: Bitmap.CompressFormat = Bitmap.CompressFormat.PNG,
+    quality: Int = 100,
+): Boolean = try {
+    outputStream.buffered().use { stream ->
+        toBitmapOrNull()?.compress(format, quality, stream) == true
+    }
+} catch (e: Exception) {
+    Log.w("Files", "Failed to write drawable", e)
+    false
+}
 
 @Deprecated(
     "Use alternative",
@@ -137,10 +154,3 @@ suspend fun InputStream.copyTo(
         }
     }
 }
-
-@OptIn(ExperimentalSerializationApi::class)
-inline fun <reified T> loadAssetAs(filePath: String): T? = runCatching {
-    applicationContext.assets.open(filePath).use { inputStream ->
-        HJson.decodeFromStream<T>(inputStream)
-    }
-}.getOrNull()

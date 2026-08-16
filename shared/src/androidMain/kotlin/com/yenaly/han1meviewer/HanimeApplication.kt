@@ -1,5 +1,6 @@
 package com.yenaly.han1meviewer
 
+import android.app.Application
 import android.content.ComponentName
 import android.content.pm.PackageManager
 import android.os.Process
@@ -23,10 +24,12 @@ import com.yenaly.han1meviewer.mmkv.initializeMMKV
 import com.yenaly.han1meviewer.mmkv.migrateSharedPreferencesToMMKV
 import com.yenaly.han1meviewer.ui.activity.MainActivity
 import com.yenaly.han1meviewer.ui.viewmodel.AppViewModel
+import com.yenaly.han1meviewer.ui.viewmodel.VideoPlatformBridge
+import com.yenaly.han1meviewer.util.AndroidAppContext
 import com.yenaly.han1meviewer.util.AnimeShaders
+import com.yenaly.han1meviewer.util.LanguageHelper
 import com.yenaly.han1meviewer.util.ThemeUtils
-import com.yenaly.yenaly_libs.base.YenalyApplication
-import com.yenaly.yenaly_libs.utils.LanguageHelper
+import com.yenaly.han1meviewer.util.dpPx
 import `is`.xyz.mpv.MPVLib
 import okhttp3.Cache
 import java.io.File
@@ -37,18 +40,13 @@ import java.net.ProxySelector
  * @author Yenaly Liew
  * @time 2022/06/08 008 17:32
  */
-class HanimeApplication : YenalyApplication() {
+class HanimeApplication : Application() {
 
     companion object {
         const val TAG = "HanimeApplication"
 
         private const val HTTP_CACHE_SIZE = 10L * 1024 * 1024
     }
-
-    /**
-     * 已在 [initCrashX] 中透過 CrashX 處理
-     */
-    override val isDefaultCrashHandlerEnabled: Boolean = false
 
     private fun initCrashX() {
         CrashConfig.Builder.create()
@@ -83,6 +81,11 @@ class HanimeApplication : YenalyApplication() {
 
     override fun onCreate() {
         super.onCreate()
+        AndroidAppContext.initialize(this)
+        VideoPlatformBridge.loadCachedVideo = { videoCode ->
+            HCacheManager.loadHanimeVideoInfo(this, videoCode)
+        }
+        VideoPlatformBridge.defaultPlayerHeightPx = { 250.dpPx }
         // MMKV 必须早于任何 Preferences 访问：Preferences 里的几个 StateFlow 一被碰到就会读盘。
         // 放在 isMainProcess() 判断之前，因为非主进程（下载 worker 等）同样会读 Preferences。
         initializeMMKV()

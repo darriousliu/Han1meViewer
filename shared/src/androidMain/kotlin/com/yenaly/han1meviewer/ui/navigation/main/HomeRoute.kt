@@ -14,16 +14,16 @@ import com.yenaly.han1meviewer.logic.DatabaseRepo
 import com.yenaly.han1meviewer.logic.entity.CheckInType
 import com.yenaly.han1meviewer.logic.model.Announcement
 import com.yenaly.han1meviewer.ui.activity.MainActivity
-import com.yenaly.han1meviewer.ui.screen.home.homepage.component.AnnouncementDialog
 import com.yenaly.han1meviewer.ui.component.TripleButtonDialog
 import com.yenaly.han1meviewer.ui.screen.home.homepage.HomePageScreen
 import com.yenaly.han1meviewer.ui.screen.home.homepage.HomeUiEvent
 import com.yenaly.han1meviewer.ui.screen.home.homepage.LocalSearchHistoryQuery
+import com.yenaly.han1meviewer.ui.screen.home.homepage.component.AnnouncementDialog
 import com.yenaly.han1meviewer.ui.viewmodel.CheckInCalendarViewModel
-import com.yenaly.yenaly_libs.utils.copyTextToClipboard
-import com.yenaly.yenaly_libs.utils.showShortToast
+import com.yenaly.han1meviewer.util.copyTextToClipboard
+import com.yenaly.han1meviewer.util.currentLocalDate
+import com.yenaly.han1meviewer.util.showShortToast
 import kotlinx.coroutines.flow.first
-import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
@@ -83,7 +83,7 @@ fun HomeRouteScreen(
             onNegative = { showExitDialog = false },
             onNeutral = {
                 checkInViewModel.addRecord(
-                    LocalDate.now(),
+                    currentLocalDate(),
                     LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")),
                     CheckInType.MASTURBATION.storeName, "", "",
                 )

@@ -28,9 +28,9 @@ import com.yenaly.han1meviewer.ui.screen.settings.HKeyframeSettingsUiState
 import com.yenaly.han1meviewer.ui.screen.settings.HKeyframesScreen
 import com.yenaly.han1meviewer.ui.screen.settings.SharedHKeyframesScreen
 import com.yenaly.han1meviewer.ui.viewmodel.SettingsViewModel
-import com.yenaly.yenaly_libs.utils.copyToClipboard
-import com.yenaly.yenaly_libs.utils.decodeFromStringByBase64
-import com.yenaly.yenaly_libs.utils.showShortToast
+import com.yenaly.han1meviewer.util.copyToClipboard
+import com.yenaly.han1meviewer.util.decodeFromStringByBase64
+import com.yenaly.han1meviewer.util.showShortToast
 import kotlinx.serialization.json.Json
 
 @Composable

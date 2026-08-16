@@ -12,9 +12,9 @@ import com.google.android.material.button.MaterialButton
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.entity.HKeyframeEntity
 import com.yenaly.han1meviewer.ui.activity.MainActivity
+import com.yenaly.han1meviewer.util.findActivityOrNull
 import com.yenaly.han1meviewer.util.showAlertDialog
-import com.yenaly.yenaly_libs.utils.findActivityOrNull
-import com.yenaly.yenaly_libs.utils.showShortToast
+import com.yenaly.han1meviewer.util.showShortToast
 
 /**
  * @project Han1meViewer

@@ -63,12 +63,12 @@ import com.yenaly.han1meviewer.ui.screen.settings.model.HomeSettingsUiState
 import com.yenaly.han1meviewer.ui.theme.ThemeColorPreset
 import com.yenaly.han1meviewer.ui.viewmodel.AppViewModel
 import com.yenaly.han1meviewer.util.ThemeUtils
+import com.yenaly.han1meviewer.util.applicationContext
+import com.yenaly.han1meviewer.util.browse
+import com.yenaly.han1meviewer.util.folderSize
+import com.yenaly.han1meviewer.util.restartApplication
+import com.yenaly.han1meviewer.util.showShortToast
 import com.yenaly.han1meviewer.util.showToast
-import com.yenaly.yenaly_libs.ActivityManager
-import com.yenaly.yenaly_libs.utils.applicationContext
-import com.yenaly.yenaly_libs.utils.browse
-import com.yenaly.yenaly_libs.utils.folderSize
-import com.yenaly.yenaly_libs.utils.showShortToast
 import io.github.vinceglb.filekit.PlatformFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -442,7 +442,7 @@ fun HomeSettingsRouteScreen(
         dismissText = stringResource(R.string.cancel),
         cancelable = false,
         onConfirm = {
-            ActivityManager.restart(killProcess = true)
+            restartApplication(killProcess = true)
         },
         onDismiss = { showRestartConfirmDialog = false },
     )

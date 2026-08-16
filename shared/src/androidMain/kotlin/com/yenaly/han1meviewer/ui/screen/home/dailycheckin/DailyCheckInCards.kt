@@ -35,7 +35,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.yenaly.han1meviewer.R
-import java.time.LocalDate
+import com.yenaly.han1meviewer.util.currentLocalDate
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.toJavaLocalDate
 import java.time.format.DateTimeFormatter
 
 /**
@@ -82,7 +84,8 @@ fun TodayCheckInCard(
             Spacer(modifier = Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = today.format(DateTimeFormatter.ofPattern("MM月dd日 EEEE")),
+                    text = today.toJavaLocalDate()
+                        .format(DateTimeFormatter.ofPattern("MM月dd日 EEEE")),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
@@ -219,7 +222,7 @@ fun RowScope.StatItem(
 @Composable
 private fun PreviewTodayCheckInCard() {
     TodayCheckInCard(
-        today = LocalDate.now(),
+        today = currentLocalDate(),
         count = 3,
         onCheckIn = {},
         onClear = {},
