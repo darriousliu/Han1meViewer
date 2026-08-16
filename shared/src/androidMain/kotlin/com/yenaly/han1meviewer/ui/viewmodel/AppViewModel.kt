@@ -8,7 +8,7 @@ import com.google.firebase.crashlytics.crashlytics
 import com.google.firebase.crashlytics.setCustomKeys
 import com.yenaly.han1meviewer.FirebaseConstants
 import com.yenaly.han1meviewer.Preferences
-import com.yenaly.han1meviewer.logic.NetworkRepo
+import com.yenaly.han1meviewer.logic.UpdateRepo
 import com.yenaly.han1meviewer.logic.model.github.Latest
 import com.yenaly.han1meviewer.logic.state.WebsiteState
 import com.yenaly.han1meviewer.worker.HUpdateWorker
@@ -94,7 +94,7 @@ object AppViewModel : YenalyViewModel(application), IHCsrfToken {
     }
 
     private suspend fun getLatestVersionSuspend(forceCheck: Boolean = true, forceShow: Boolean = false) {
-        NetworkRepo.getLatestVersion(forceCheck).collect {
+        UpdateRepo.getLatestVersion(forceCheck).collect {
             _versionFlow.value = it
             if (it is WebsiteState.Success && (forceShow || Preferences.isUpdateDialogVisible)) {
                 it.info?.let { info -> _pendingUpdateDialog.emit(info) }

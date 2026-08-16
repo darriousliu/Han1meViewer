@@ -1,3 +1,8 @@
 package com.yenaly.han1meviewer.logic.exception
 
-class LoginStateExpiredException(message: String) : IllegalStateException(message)
+import org.jetbrains.compose.resources.StringResource
+
+class LoginStateExpiredException(
+    override val messageRes: StringResource,
+    devMessage: String = "login state expired",
+) : IllegalStateException(devMessage), LocalizedException

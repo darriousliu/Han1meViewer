@@ -196,7 +196,7 @@ fun PreviewContent(
                         message = if (isPreviewEmpty) {
                             stringResource(R.string.preview_page_updating_getchu_hint)
                         } else {
-                            uiState.displayState.throwable.pienization.toString()
+                            uiState.displayState.throwable.pienization()
                         },
                         onRetry = {
                             onEvent(if (isPreviewEmpty) PreviewEvent.OnOpenGetchuPreview else PreviewEvent.OnRetryLoad)

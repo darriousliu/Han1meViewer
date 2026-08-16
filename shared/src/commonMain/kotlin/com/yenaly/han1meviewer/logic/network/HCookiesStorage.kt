@@ -35,7 +35,7 @@ object HCookiesStorage : CookiesStorage {
         cookies += Preferences.loginCookieStateFlow.value.toLoginCookieList(host)
         cookies += Preferences.cloudFlareCookieStateFlow.value.toLoginCookieList(host)
 
-        Logger.d("HCookiesStorage") { "get for $host: $cookies" }
+        Logger.d(tag = "HCookiesStorage") { "get for $host: $cookies" }
         return cookies
     }
 

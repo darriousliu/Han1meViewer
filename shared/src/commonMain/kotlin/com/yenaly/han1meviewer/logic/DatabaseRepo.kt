@@ -1,6 +1,7 @@
 package com.yenaly.han1meviewer.logic
 
-import android.util.Log
+import co.touchlab.kermit.Logger
+import com.yenaly.han1meviewer.HJson
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.logic.dao.DownloadDatabase
 import com.yenaly.han1meviewer.logic.dao.HistoryDatabase
@@ -14,14 +15,12 @@ import com.yenaly.han1meviewer.logic.entity.WatchHistoryEntity
 import com.yenaly.han1meviewer.logic.entity.download.DownloadGroupEntity
 import com.yenaly.han1meviewer.logic.entity.download.HanimeDownloadEntity
 import com.yenaly.han1meviewer.logic.model.SearchOption
-import com.yenaly.yenaly_libs.utils.applicationContext
+import han1meviewer.shared.generated.resources.Res
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.decodeFromStream
-import java.io.FileNotFoundException
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 /**
  * @project Hanime1
@@ -38,32 +37,32 @@ object DatabaseRepo {
             else hKeyframeDao.loadAll()
 
         // #issue-106: 剧集分类
-        @OptIn(ExperimentalSerializationApi::class)
+        //
+        // 迁移前是 `assets.list("h_keyframes")` 枚举目录，compose-resources 没有这个能力，
+        // 改成读构建期生成的 [SHARED_H_KEYFRAME_CODES]（见 :shared:generateSharedHKeyframeIndex）。
+        // 文件布局仍然是一个视频一个 json，贡献方式不变。
+        @OptIn(ExperimentalResourceApi::class)
         fun loadAllShared(): Flow<List<HKeyframeType>> = flow {
-            val res = applicationContext.assets.let { assets ->
-                assets.list("h_keyframes")?.asSequence()
-                    ?.filter { it.endsWith(".json") }
-                    ?.mapNotNull { fileName ->
-                        try {
-                            assets.open("h_keyframes/$fileName").use { inputStream ->
-                                Json.decodeFromStream<HKeyframeEntity>(inputStream)
-                            }
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                            null
-                        }
-                    }
-                    ?.sortedWith(
-                        compareBy<HKeyframeEntity> { it.group }.thenBy { it.episode }
-                    )
-                    ?.groupBy { it.group ?: "???" }
-                    ?.flatMap { (group, entities) ->
-                        listOf(HKeyframeHeader(title = group, attached = entities)) + entities
-                    }
-                    .orEmpty()
-            }
+            val res = SHARED_H_KEYFRAME_CODES
+                .mapNotNull { videoCode -> readSharedHKeyframe(videoCode) }
+                .sortedWith(compareBy<HKeyframeEntity> { it.group }.thenBy { it.episode })
+                .groupBy { it.group ?: "???" }
+                .flatMap { (group, entities) ->
+                    listOf(HKeyframeHeader(title = group, attached = entities)) + entities
+                }
             emit(res)
         }
+
+        /** 读打包在 composeResources 里的共享关键 H 帧，读不到或解析失败返回 null。 */
+        @OptIn(ExperimentalResourceApi::class)
+        private suspend fun readSharedHKeyframe(videoCode: String): HKeyframeEntity? =
+            runCatching {
+                HJson.decodeFromString<HKeyframeEntity>(
+                    Res.readBytes("files/h_keyframes/$videoCode.json").decodeToString()
+                )
+            }.onFailure { e ->
+                Logger.e(tag = "HKeyframe") { "读取关键帧失败: $videoCode.json, ${e.message}" }
+            }.getOrNull()
 
         suspend fun findBy(videoCode: String) =
             hKeyframeDao.findBy(videoCode)
@@ -74,20 +73,12 @@ object DatabaseRepo {
                 return flow t@{
                     val find = hKeyframeDao.findBy(videoCode)
                     if (find == null || Preferences.sharedHKeyframesUseFirst) {
-                        runCatching {
-                            applicationContext.assets
-                                .open("h_keyframes/$videoCode.json")
-                                .use { inputStream ->
-                                    val entity = Json.decodeFromStream<HKeyframeEntity>(inputStream)
-                                    this@t.emit(entity)
-                                }
-                        }.onFailure { e ->
-                            // 文件不存在或解析错误
-                            if (e is FileNotFoundException) {
-                                Log.w("HKeyframe", "未找到关键帧文件: $videoCode.json")
-                            } else {
-                                Log.e("HKeyframe", "读取关键帧失败: ${e.message}", e)
-                            }
+                        // 迁移前靠 FileNotFoundException 判断「没有这个共享帧」，
+                        // Res.readBytes 抛的是别的类型，改成先查索引。
+                        if (videoCode !in SHARED_H_KEYFRAME_CODES) {
+                            Logger.w(tag = "HKeyframe") { "未找到关键帧文件: $videoCode.json" }
+                        } else {
+                            readSharedHKeyframe(videoCode)?.let { this@t.emit(it) }
                         }
                     } else {
                         hKeyframeDao.observe(videoCode).collect {
@@ -130,7 +121,6 @@ object DatabaseRepo {
     object SearchHistory {
         private val searchHistoryDao = HistoryDatabase.instance.searchHistory
 
-        @JvmOverloads
         fun loadAll(keyword: String? = null) =
             if (keyword.isNullOrBlank()) searchHistoryDao.loadAll()
             else searchHistoryDao.loadAll(keyword)

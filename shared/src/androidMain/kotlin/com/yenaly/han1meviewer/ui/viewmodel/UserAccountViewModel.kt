@@ -95,10 +95,12 @@ class UserAccountViewModel(application: Application) : YenalyViewModel(applicati
         viewModelScope.launch {
             _submittingState.value = UserAccountSubmittingState.UpdatingAvatar
             _actionFlow.emit(UserAccountActionEvent(UserAccountAction.AvatarUpdated, WebsiteState.Loading))
+            // 文件读取留在这一侧：NetworkRepo 已经进 commonMain，拿不到 java.io.File
             NetworkRepo.updateUserAccountAvatar(
                 userId = account.userId,
                 csrfToken = account.csrfToken,
-                avatarFile = avatarFile,
+                photoBytes = avatarFile.readBytes(),
+                fileName = avatarFile.name,
             ).collect { state ->
                 _actionFlow.emit(UserAccountActionEvent(UserAccountAction.AvatarUpdated, state))
                 if (state is WebsiteState.Success) {

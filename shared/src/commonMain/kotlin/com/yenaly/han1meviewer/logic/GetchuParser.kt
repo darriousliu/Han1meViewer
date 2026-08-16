@@ -1,37 +1,38 @@
 package com.yenaly.han1meviewer.logic
 
-import android.util.Log
+import co.touchlab.kermit.Logger
+import com.fleeksoft.ksoup.Ksoup
+import com.fleeksoft.ksoup.nodes.Element
 import com.yenaly.han1meviewer.EMPTY_STRING
 import com.yenaly.han1meviewer.GETCHU_BASE_URL
+import com.yenaly.han1meviewer.HJson
 import com.yenaly.han1meviewer.logic.model.GetchuPreview
 import com.yenaly.han1meviewer.logic.model.GetchuPreviewDetail
 import com.yenaly.han1meviewer.logic.state.WebsiteState
-import org.json.JSONObject
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
-import java.util.regex.Pattern
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.contentOrNull
 
 object GetchuParser {
     fun getchuPreview(body: String, dateCode: String): WebsiteState<GetchuPreview> {
-        val parseBody = Jsoup.parse(body, GETCHU_BASE_URL).body()
-        Log.d(
-            "GetchuPreviewParser",
+        val parseBody = Ksoup.parse(body, GETCHU_BASE_URL).body()
+        Logger.d(tag = "GetchuPreviewParser") {
             "parse list date=$dateCode bodyLength=${body.length} title=${
                 parseBody.ownerDocument()?.title()
             } " +
                     "dateHeaders=${parseBody.select("div.category_anime_t2").size} " +
                     "products=${parseBody.select("div.div_product").size} " +
                     "softLinks=${parseBody.select("a[href*=/soft.phtml], a[href*=/item/]").size}"
-        )
+        }
         val groups = mutableListOf<GetchuPreview.Group>()
         parseBody.select("div.category_anime_t2").forEach { header ->
             val releaseDate = header.text().replace("発売タイトル", EMPTY_STRING).trim()
             val container = header.parent()?.nextCategoryAnimeBody()
-            Log.d(
-                "GetchuPreviewParser",
+            Logger.d(tag = "GetchuPreviewParser") {
                 "group header=${header.text().cleanGetchuText()} releaseDate=$releaseDate " +
                         "containerFound=${container != null} containerProducts=${container?.select("div.div_product")?.size ?: 0}"
-            )
+            }
             val items = container?.select("div.div_product")?.mapNotNull { product ->
                 val link =
                     product.selectFirst("td.dd > a[href*=/soft.phtml], td.dd > a[href*=/item/]")
@@ -65,18 +66,16 @@ object GetchuParser {
                 groups.add(GetchuPreview.Group(releaseDate = releaseDate, items = items))
             }
         }
-        Log.d(
-            "GetchuPreviewParser",
+        Logger.d(tag = "GetchuPreviewParser") {
             "parse list result date=$dateCode groups=${groups.size} totalItems=${groups.sumOf { it.items.size }}"
-        )
+        }
 
         return WebsiteState.Success(GetchuPreview(dateCode = dateCode, groups = groups))
     }
 
     fun getchuPreviewDetail(body: String, id: String): WebsiteState<GetchuPreviewDetail> {
-        val parseBody = Jsoup.parse(body, GETCHU_BASE_URL).body()
-        Log.d(
-            "GetchuPreviewParser",
+        val parseBody = Ksoup.parse(body, GETCHU_BASE_URL).body()
+        Logger.d(tag = "GetchuPreviewParser") {
             "parse detail id=$id bodyLength=${body.length} title=${
                 parseBody.ownerDocument()?.title()
             } " +
@@ -92,34 +91,33 @@ object GetchuParser {
                     "rawReleaseDate=${body.contains("_crelease_date")} " +
                     "samples=${parseBody.select("div.item-Samplecard a[href]").size} " +
                     "videos=${parseBody.select("video source[src], video[src]").size}"
-        )
+        }
         val productJson = parseBody.select("script[type*=ld+json]")
             .asSequence()
             .mapNotNull { script ->
                 val jsonText = script.data().ifBlank { script.html() }.trim()
-                runCatching { JSONObject(jsonText) }.getOrNull()
+                runCatching { HJson.parseToJsonElement(jsonText) as? JsonObject }.getOrNull()
             }
             .plus(body.extractGetchuJsonLdObjects())
             .flatMap { json ->
-                val graph = json.optJSONArray("@graph")
-                (0 until (graph?.length() ?: 0)).asSequence()
-                    .mapNotNull { graph?.optJSONObject(it) }
+                val graph = json.arr("@graph")
+                graph.orEmpty().asSequence().mapNotNull { it as? JsonObject }
             }
-            .firstOrNull { it.optString("@type") == "Product" }
+            .firstOrNull { it.str("@type") == "Product" }
 
-        val title = productJson?.optString("name")?.cleanGetchuText()?.takeIf { it.isNotBlank() }
+        val title = productJson?.str("name")?.cleanGetchuText()?.takeIf { it.isNotBlank() }
             ?: parseBody.getElementById("soft-title")?.text()?.cleanGetchuText()
                 ?.takeIf { it.isNotBlank() }
             ?: parseBody.selectFirst("meta[property=og:title]")?.attr("content")?.cleanGetchuText()
             ?: parseBody.ownerDocument()?.title()?.substringBefore(" | ")?.cleanGetchuText()
             ?: EMPTY_STRING
         val specMap = parseBody.extractGetchuSpecMap() + body.extractGetchuSpecMapFromRawHtml()
-        val brand = productJson?.optJSONObject("brand")?.optString("name")?.cleanGetchuText()
+        val brand = productJson?.obj("brand")?.str("name")?.cleanGetchuText()
             ?.takeIf { it.isNotBlank() }
             ?: parseBody.getElementById("brandsite")?.text()?.cleanGetchuText()
                 ?.takeIf { it.isNotBlank() }
             ?: specMap.firstValueContains("ブランド")
-        val coverUrl = productJson?.optJSONArray("image")?.optString(0)?.toGetchuAbsUrl()
+        val coverUrl = productJson?.arr("image")?.getOrNull(0)?.asString()?.toGetchuAbsUrl()
             ?: parseBody.selectFirst("meta[property=og:image]")?.attr("content")?.toGetchuAbsUrl()
             ?: body.extractMetaContent("og:image")?.toGetchuAbsUrl()
             ?: body.extractMetaContent("twitter:image:src")?.toGetchuAbsUrl()
@@ -128,18 +126,18 @@ object GetchuParser {
             ?: Regex("href=[\"']([^\"']*?/brandnew/$id/[^\"']*?package\\.jpg)[\"']")
                 .find(body)?.groupValues?.getOrNull(1)?.toGetchuAbsUrl()
         val metaDescription =
-            productJson?.optString("description")?.cleanGetchuText()?.takeIf { it.isNotBlank() }
+            productJson?.str("description")?.cleanGetchuText()?.takeIf { it.isNotBlank() }
                 ?: parseBody.selectFirst("meta[name=description]")?.attr("content")
                     ?.cleanGetchuText()
-        val offer = productJson?.optJSONObject("offers")
-        val price = offer?.optString("price")?.takeIf { it.isNotBlank() }?.let { "¥$it" }
+        val offer = productJson?.obj("offers")
+        val price = offer?.str("price")?.takeIf { it.isNotBlank() }?.let { "¥$it" }
             ?: parseBody.selectFirst("span.redb2")?.text()?.cleanGetchuText()
             ?: specMap.firstValueContains("価格")
             ?: parseBody.select("#soft_table tr").firstNotNullOfOrNull { row ->
                 row.text().cleanGetchuText()
                     .takeIf { text -> text.contains("¥") || text.contains("￥") || text.contains("円") }
             }
-        val productUrl = offer?.optString("url")?.takeIf { it.isNotBlank() }
+        val productUrl = offer?.str("url")?.takeIf { it.isNotBlank() }
             ?: "${GETCHU_BASE_URL}item/$id/"
 
         val releaseDateRegex =
@@ -181,9 +179,9 @@ object GetchuParser {
             .takeIf { it.isNotBlank() }
             ?: metaDescription
 
-        val jsonLdImages = productJson?.optJSONArray("image")?.let { images ->
-            (0 until images.length()).mapNotNull { index ->
-                images.optString(index).toGetchuAbsUrl()?.withGetchuGc()
+        val jsonLdImages = productJson?.arr("image")?.let { images ->
+            images.mapNotNull { image ->
+                image.asString()?.toGetchuAbsUrl()?.withGetchuGc()
             }
         }.orEmpty().drop(1)
         val sampleImages = (parseBody.select("div.item-Samplecard a[href]")
@@ -198,12 +196,11 @@ object GetchuParser {
             .distinctBy { it.id }
             .filterNot { it.id == id }
 
-        Log.d(
-            "GetchuPreviewParser",
+        Logger.d(tag = "GetchuPreviewParser") {
             "parse detail result id=$id title=${title.take(80)} sections=${sections.size} " +
                     "sectionTitles=${sections.joinToString { it.title }} brand=$brand releaseDate=$releaseDate price=$price samples=${sampleImages.size} " +
                     "videos=${videoUrls.size} series=${seriesItems.size} related=${seriesItems.size}"
-        )
+        }
 
         return WebsiteState.Success(
             GetchuPreviewDetail(
@@ -250,7 +247,7 @@ object GetchuParser {
     }
 
     fun getchuSeriesItems(body: String): List<GetchuPreview.Item> {
-        val parseBody = Jsoup.parse(body, GETCHU_BASE_URL).body()
+        val parseBody = Ksoup.parse(body, GETCHU_BASE_URL).body()
         return parseBody.select("div.item-series-content, div[class*=item-series]")
             .mapNotNull { it.toGetchuRelatedItem() }
             .distinctBy { it.id }
@@ -293,7 +290,7 @@ object GetchuParser {
             ),
         ).mapNotNull { (key, regex) ->
             val rawValue = regex.find(this)?.groupValues?.getOrNull(1) ?: return@mapNotNull null
-            val value = Jsoup.parse(rawValue).text().cleanGetchuText()
+            val value = Ksoup.parse(rawValue).text().cleanGetchuText()
             if (value.isBlank()) null else key to value
         }.toMap()
     }
@@ -342,17 +339,17 @@ object GetchuParser {
         )
     }
 
-    private fun String.extractGetchuJsonLdObjects(): Sequence<JSONObject> {
+    private fun String.extractGetchuJsonLdObjects(): Sequence<JsonObject> {
         return Regex(
             "<script[^>]*type=[\"'][^\"']*ld\\+json[^\"']*[\"'][^>]*>([\\s\\S]*?)</script>",
             RegexOption.IGNORE_CASE,
         ).findAll(this).mapNotNull { match ->
-            runCatching { JSONObject(match.groupValues[1].trim()) }.getOrNull()
+            runCatching { HJson.parseToJsonElement(match.groupValues[1].trim()) as? JsonObject }.getOrNull()
         }
     }
 
     private fun String.extractMetaContent(propertyOrName: String): String? {
-        val escaped = Pattern.quote(propertyOrName)
+        val escaped = Regex.escape(propertyOrName)
         val propertyFirst = Regex(
             "<meta[^>]*(?:property|name)=[\"']$escaped[\"'][^>]*content=[\"']([^\"']+)[\"'][^>]*>",
             RegexOption.IGNORE_CASE,
@@ -370,10 +367,10 @@ object GetchuParser {
             "<h3[^>]*class=[\"'][^\"']*tabletitle[^\"']*[\"'][^>]*>([\\s\\S]*?)</h3>\\s*<div[^>]*class=[\"'][^\"']*tablebody[^\"']*[\"'][^>]*>([\\s\\S]*?)</div>",
             RegexOption.IGNORE_CASE,
         ).findAll(this).mapNotNull { match ->
-            val title = Jsoup.parse(match.groupValues[1]).text()
+            val title = Ksoup.parse(match.groupValues[1]).text()
                 .replace("&nbsp;", EMPTY_STRING)
                 .cleanGetchuText()
-            val body = Jsoup.parse(match.groupValues[2].replace("<br>", "\n", ignoreCase = true))
+            val body = Ksoup.parse(match.groupValues[2].replace("<br>", "\n", ignoreCase = true))
                 .text()
                 .cleanGetchuText()
             if (title.isBlank() || body.isBlank()) return@mapNotNull null
@@ -399,7 +396,7 @@ object GetchuParser {
             RegexOption.IGNORE_CASE,
         ).findAll(this).toList()
         return titleMatches.mapIndexedNotNull { index, match ->
-            val title = Jsoup.parse(match.groupValues[1]).text()
+            val title = Ksoup.parse(match.groupValues[1]).text()
                 .replace("&nbsp;", EMPTY_STRING)
                 .cleanGetchuText()
             if (!title.contains("商品紹介") && !title.contains("ストーリー") && !title.contains("スタッフ")) {
@@ -412,7 +409,7 @@ object GetchuParser {
                 RegexOption.IGNORE_CASE,
             ).find(block)?.groupValues?.getOrNull(1) ?: block
             val body =
-                Jsoup.parse(tableBody.replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), "\n"))
+                Ksoup.parse(tableBody.replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), "\n"))
                     .text()
                     .cleanGetchuText()
             if (body.isBlank()) return@mapIndexedNotNull null
@@ -448,7 +445,7 @@ object GetchuParser {
                 RegexOption.IGNORE_CASE,
             ).find(block)?.groupValues?.getOrNull(1) ?: return@mapIndexedNotNull null
             val body =
-                Jsoup.parse(bodyHtml.replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), "\n"))
+                Ksoup.parse(bodyHtml.replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), "\n"))
                     .text()
                     .cleanGetchuText()
             if (body.length < 20) return@mapIndexedNotNull null
@@ -487,7 +484,7 @@ object GetchuParser {
         )
 
         return titleMatches.mapIndexedNotNull { index, match ->
-            val title = Jsoup.parse(match.groupValues[1])
+            val title = Ksoup.parse(match.groupValues[1])
                 .text()
                 .replace("&nbsp;", EMPTY_STRING)
                 .cleanGetchuText()
@@ -503,7 +500,7 @@ object GetchuParser {
                 }) return@mapIndexedNotNull null
 
             val body =
-                Jsoup.parse(block.replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), "\n"))
+                Ksoup.parse(block.replace(Regex("<br\\s*/?>", RegexOption.IGNORE_CASE), "\n"))
                     .text()
                     .cleanGetchuText()
             if (body.length < 20) return@mapIndexedNotNull null
@@ -556,4 +553,18 @@ object GetchuParser {
     private fun String.getGetchuId(): String? {
         return Regex("(?:id=|/item/)(\\d+)").find(this)?.groupValues?.getOrNull(1)
     }
+
+    // ---- org.json 的 opt* 对应物 ----
+    //
+    // kotlinx 的 jsonObject / jsonPrimitive 取不到会**抛异常**，而 org.json 的 opt* 是
+    // 「取不到返回 null」。这里统一用 `as?` 保持原来的宽松语义，别换成会抛的那套。
+
+    private fun JsonObject.str(key: String): String? = this[key]?.asString()
+
+    private fun JsonObject.obj(key: String): JsonObject? = this[key] as? JsonObject
+
+    private fun JsonObject.arr(key: String): JsonArray? = this[key] as? JsonArray
+
+    private fun kotlinx.serialization.json.JsonElement.asString(): String? =
+        (this as? JsonPrimitive)?.contentOrNull
 }

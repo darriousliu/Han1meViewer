@@ -1,6 +1,6 @@
 package com.yenaly.han1meviewer.logic
 
-import android.util.Log
+import co.touchlab.kermit.Logger
 import com.yenaly.han1meviewer.logic.NetworkRepo.handleException
 import com.yenaly.han1meviewer.logic.NetworkRepo.throwRequestException
 import com.yenaly.han1meviewer.logic.network.HanimeNetwork
@@ -11,6 +11,7 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.isSuccess
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -39,10 +40,9 @@ object GetchuNetworkRepo {
             if (!response.status.isSuccess()) return@runCatching emptyList()
             GetchuParser.getchuSeriesItems(response.getchuString())
         }.getOrDefault(emptyList()).let { seriesItems ->
-            Log.d(
-                "GetchuPreviewParser",
+            Logger.d(tag = "GetchuPreviewParser") {
                 "series ajax id=$id parentId=$parentId items=${seriesItems.size}"
-            )
+            }
             if (seriesItems.isEmpty()) {
                 detailState
             } else {

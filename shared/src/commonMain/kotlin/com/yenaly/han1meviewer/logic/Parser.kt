@@ -1,20 +1,23 @@
 package com.yenaly.han1meviewer.logic
 
-import android.annotation.SuppressLint
-import android.util.Log
+import co.touchlab.kermit.Logger
+import com.fleeksoft.ksoup.Ksoup
+import com.fleeksoft.ksoup.nodes.Comment
+import com.fleeksoft.ksoup.nodes.Element
+import com.fleeksoft.ksoup.select.Elements
 import com.yenaly.han1meviewer.EMPTY_STRING
+import com.yenaly.han1meviewer.HJson
 import com.yenaly.han1meviewer.HanimeConstants.HANIME_URL
 import com.yenaly.han1meviewer.HanimeResolution
 import com.yenaly.han1meviewer.LOCAL_DATE_FORMAT
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.Preferences.isAlreadyLogin
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.exception.LoginStateExpiredException
 import com.yenaly.han1meviewer.logic.exception.ParseException
+import com.yenaly.han1meviewer.logic.model.CreatorUploadingItem
 import com.yenaly.han1meviewer.logic.model.HanimeInfo
 import com.yenaly.han1meviewer.logic.model.HanimePreview
 import com.yenaly.han1meviewer.logic.model.HanimeVideo
-import com.yenaly.han1meviewer.logic.model.CreatorUploadingItem
 import com.yenaly.han1meviewer.logic.model.HomePage
 import com.yenaly.han1meviewer.logic.model.MyListItems
 import com.yenaly.han1meviewer.logic.model.MySubscriptions
@@ -27,12 +30,11 @@ import com.yenaly.han1meviewer.logic.state.PageLoadingState
 import com.yenaly.han1meviewer.logic.state.VideoLoadingState
 import com.yenaly.han1meviewer.logic.state.WebsiteState
 import com.yenaly.han1meviewer.toVideoCode
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.login_state_expired
 import kotlinx.datetime.LocalDate
-import org.json.JSONObject
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Comment
-import org.jsoup.nodes.Element
-import org.jsoup.select.Elements
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 
 /**
  * @project Han1meViewer
@@ -50,14 +52,14 @@ object Parser {
     }
 
     fun extractTokenFromLoginPage(body: String): String {
-        val parseBody = Jsoup.parse(body).body()
+        val parseBody = Ksoup.parse(body).body()
         return parseBody.selectFirst("input[name=_token]")?.attr("value")
             ?: throw ParseException("Can't find csrf token from login page.")
     }
 
     fun homePageVer2(body: String): WebsiteState<HomePage> {
         val isAVSite = Preferences.baseUrl == HANIME_URL[3]
-        val parseBody = Jsoup.parse(body).body()
+        val parseBody = Ksoup.parse(body).body()
         val csrfToken = parseBody.selectFirst("input[name=_token]")?.attr("value") // csrf token
         val homePageParse = parseBody.select("div[id=home-rows-wrapper] > div")
 
@@ -65,15 +67,15 @@ object Parser {
         val userInfo = parseBody.selectFirst("div[id=user-modal-dp-wrapper]")
         val avatarUrl: String? = userInfo?.selectFirst("img")?.absUrl("src")
         val username: String? = userInfo?.getElementById("user-modal-name")?.text()
-        val userHomePageLink = parseBody.getElementById("user-modal-trigger")?.attr("href")?:""
+        val userHomePageLink = parseBody.getElementById("user-modal-trigger")?.attr("href") ?: ""
 
         if (isAlreadyLogin && isLoginStateExpired(userHomePageLink, username)) {
-            return WebsiteState.Error(LoginStateExpiredException(getString(R.string.login_state_expired)))
+            return WebsiteState.Error(LoginStateExpiredException(Res.string.login_state_expired))
         }
 
         val userIdRegex = Regex("""/user/(\d+)""")
         val userId: String = userIdRegex.find(userHomePageLink)?.groupValues?.get(1) ?: ""
-        Log.i("userInfo","name:$username;id:$userId")
+        Logger.i(tag = "userInfo") { "name:$username;id:$userId" }
 
         // 头图及其描述
         val bannerCSS = parseBody.selectFirst("div[id=home-banner-wrapper]")
@@ -85,7 +87,7 @@ object Parser {
         }?.logIfParseNull(Parser::homePageVer2.name, "bannerPic")
         val bannerDesc = bannerCSS?.selectFirst("h4")?.ownText()
         val bannerVideoCodeScript = parseBody.select("script")
-            .firstOrNull{ it.data().contains("watch?v=")}
+            .firstOrNull { it.data().contains("watch?v=") }
             ?.data()
         val regex = Regex("""watch\?v=(\d+)""")
         var bannerVideoCode = bannerVideoCodeScript?.let { script ->
@@ -95,7 +97,7 @@ object Parser {
         if (bannerVideoCode == null) {
             bannerCSS?.traverse { node, _ ->
                 if (node is Comment) {
-                    node.data.toVideoCode()?.let {
+                    node.getData().toVideoCode()?.let {
                         bannerVideoCode = it
                         return@traverse
                     }
@@ -128,7 +130,7 @@ object Parser {
 
         val latestReleaseList = latestReleaseClass.extractHanimeInfo()
         val latestHanimeList = mutableListOf<HanimeInfo>()
-        if (isAVSite){
+        if (isAVSite) {
             latestHanimeList.addAll(latestUploadClass.extractHanimeInfo())
         } else {
             latestHanimeList.addAll(latestUploadClass.extractHanimeInfo())
@@ -139,7 +141,7 @@ object Parser {
         val threeDCGList = threeDCGClass.extractHanimeInfo()
         val twoPointFiveDAnimeList = twoPointFiveDAnimeClass.extractHanimeInfo()
         val twoDAnimeList = mutableListOf<HanimeInfo>()
-        if (isAVSite){
+        if (isAVSite) {
             twoDAnimeList.addAll(twoDAnimeClass.extractHanimeInfo())
         } else {
             twoDAnimeList.addAll(twoDAnimeClass.extractHanimeInfo())
@@ -151,7 +153,7 @@ object Parser {
         val watchingNowList = watchingNowClass.extractHanimeInfo()
 
         val newAnimeTrailerList = mutableListOf<HanimeInfo>()
-        if (isAVSite){
+        if (isAVSite) {
             newAnimeTrailerList.addAll(newAnimeTrailerClass.extractHanimeInfo())
         } else {
             val newAnimeTrailerItems =
@@ -205,7 +207,6 @@ object Parser {
         return userHomePageLink.contains("/login") || username.isNullOrBlank()
     }
 
-    private fun getString(resId: Int) = com.yenaly.yenaly_libs.utils.applicationContext.getString(resId)
     fun Element?.extractHanimeInfo(selector: String = "div[class^=horizontal-card]"): MutableList<HanimeInfo> {
         val resultList = mutableListOf<HanimeInfo>()
         this?.select(selector)?.forEach { item ->
@@ -217,7 +218,7 @@ object Parser {
     }
 
     fun hanimeSearch(body: String): PageLoadingState<MutableList<HanimeInfo>> {
-        val parseBody = Jsoup.parse(body).body()
+        val parseBody = Ksoup.parse(body).body()
         val allContentsClass =
             parseBody.getElementsByClass("content-padding-new").firstOrNull()
         val allSimplifiedContentsClass =
@@ -248,8 +249,8 @@ object Parser {
         val views = durationAndViews.select("div[class^=stat-item]").getOrNull(1)?.text()
         val subtitleElement = hanimeSearchItem.selectFirst("div.subtitle, div.video-meta-data")
         val artistAndUploadTime = subtitleElement?.text()?.trim().orEmpty()
-        var artist = ""
-        var uploadTime = ""
+        var artist: String
+        var uploadTime: String
         if (artistAndUploadTime.contains("•")) {
             val parts = artistAndUploadTime.split("•").map { it.trim() }
             artist = parts.getOrNull(0).orEmpty()
@@ -305,7 +306,7 @@ object Parser {
                 hanimeNormalItemVer2(hanimeSearchItem)?.let(hanimeSearchList::add)
             }
         }
-        Log.d("search_result", "$hanimeSearchList")
+        Logger.d(tag = "search_result") { "$hanimeSearchList" }
         return PageLoadingState.Success(hanimeSearchList)
     }
 
@@ -324,7 +325,7 @@ object Parser {
     }
 
     fun hanimeVideoVer2(body: String): VideoLoadingState<HanimeVideo> {
-        val parseBody = Jsoup.parse(body).body()
+        val parseBody = Ksoup.parse(body).body()
         val csrfToken = parseBody.selectFirst("input[name=_token]")?.attr("value") // csrf token
 
         val currentUserId =
@@ -335,7 +336,7 @@ object Parser {
 
         var likeStatus = parseBody.selectFirst("[name=like-status]")
             ?.attr("value")
-        Log.i("likeStatus", likeStatus.toString())
+        Logger.i(tag = "likeStatus") { likeStatus.toString() }
         if (!likeStatus.isNullOrEmpty()) {
             likeStatus = "1"
         }
@@ -455,12 +456,14 @@ object Parser {
                         val videoCode = parent.selectFirst("div > a")?.absUrl("href")?.toVideoCode()
                             .throwIfParseNull(Parser::hanimeVideoVer2.name, "videoCode")
                         val cardMobilePanel = parent.selectFirst("div[class^=card-mobile-panel]")
-                        val eachTitleCover = cardMobilePanel?.select("div > div > div > img")?.getOrNull(1)
+                        val eachTitleCover =
+                            cardMobilePanel?.select("div > div > div > img")?.getOrNull(1)
                         val eachIsPlaying = cardMobilePanel?.select("div > div > div > div")
                             ?.firstOrNull()
                             ?.text()
                             ?.contains("播放") == true
-                        val cardMobileDuration = cardMobilePanel?.select("div[class*=card-mobile-duration]")
+                        val cardMobileDuration =
+                            cardMobilePanel?.select("div[class*=card-mobile-duration]")
                         val eachDuration = cardMobileDuration?.firstOrNull()?.text()
                         val eachViews = cardMobileDuration?.getOrNull(2)?.text()
                         val playlistEachCoverUrl = eachTitleCover?.absUrl("src")
@@ -468,7 +471,8 @@ object Parser {
                         val playlistEachTitle = eachTitleCover?.attr("alt")
                             .throwIfParseNull(Parser::hanimeVideoVer2.name, "playlistEachTitle")
                         val artist = cardMobilePanel?.selectFirst("a.card-mobile-user")?.text()
-                        val infoBoxes = cardMobilePanel?.select("div.card-mobile-duration.card-playlist-large")
+                        val infoBoxes =
+                            cardMobilePanel?.select("div.card-mobile-duration.card-playlist-large")
                         val reviews = infoBoxes?.firstOrNull()?.ownText()?.trim()
                         playlistVideoList.add(
                             HanimeInfo(
@@ -530,14 +534,14 @@ object Parser {
             } else {
                 relatedAnimeList.addAll(relatedTabContent.extractHanimeInfo())
 //                children?.forEachStep2 { each ->
-//                    Log.i("children",each.toString())
+//                    Logger.i("children") { each.toString() }
 //                    relatedAnimeList.addAll(each.extractHanimeInfo())
 ////                    val item = each.select("div[class^=video-item-container]")[0]
 ////                    hanimeNormalItemVer2(item)?.let(relatedAnimeList::add)
 //                }
             }
         }
-        Log.d("related_anime_list", relatedAnimeList.toString())
+        Logger.d(tag = "related_anime_list") { relatedAnimeList.toString() }
 
         val hanimeResolution = HanimeResolution()
         val videoClass = parseBody.selectFirst("video[id=player]")
@@ -624,7 +628,7 @@ object Parser {
     }
 
     fun hanimePreview(body: String): WebsiteState<HanimePreview> {
-        val parseBody = Jsoup.parse(body).body()
+        val parseBody = Ksoup.parse(body).body()
 
         // latest hanime
         val latestHanimeList = mutableListOf<HanimeInfo>()
@@ -722,7 +726,7 @@ object Parser {
     }
 
     fun myListItems(body: String): PageLoadingState<MyListItems<HanimeInfo>> {
-        val parseBody = Jsoup.parse(body).body()
+        val parseBody = Ksoup.parse(body).body()
         val csrfToken = parseBody.selectFirst("input[name=_token]")?.attr("value")
         val desc = parseBody.getElementById("playlist-show-description")?.ownText()
         val allHanimeClass = parseBody.getElementsByClass("horizontal-row").firstOrNull()
@@ -738,7 +742,7 @@ object Parser {
     }
 
     fun myPlayListItems(body: String): PageLoadingState<MyListItems<HanimeInfo>> {
-        val parseBody = Jsoup.parse(body).body()
+        val parseBody = Ksoup.parse(body).body()
         val csrfToken = parseBody.selectFirst("input[name=_token]")?.attr("value")
         val desc = parseBody.select("p.playlist-description").first()?.text()
         val allHanimeClass = parseBody.getElementsByClass("playlist-video-list").firstOrNull()
@@ -754,7 +758,7 @@ object Parser {
     }
 
     fun onlineWatchHistoryItems(body: String): PageLoadingState<MyListItems<HanimeInfo>> {
-        val parseBody = Jsoup.parse(body).body()
+        val parseBody = Ksoup.parse(body).body()
         val csrfToken = parseBody.selectFirst("input[name=_token]")?.attr("value")
         val allHanimeClass = parseBody.getElementsByClass("horizontal-row").firstOrNull()
         val items = allHanimeClass.extractHanimeInfo("div[class^=user-tab-item-wrapper]")
@@ -766,7 +770,7 @@ object Parser {
     }
 
     fun userAccountPage(body: String): WebsiteState<UserAccount> {
-        val parseBody = Jsoup.parse(body).body()
+        val parseBody = Ksoup.parse(body).body()
         extractFormError(parseBody)?.let { errorMessage ->
             return WebsiteState.Error(IllegalStateException(errorMessage))
         }
@@ -805,7 +809,7 @@ object Parser {
     }
 
     fun creatorUploadedItems(body: String): PageLoadingState<MyListItems<HanimeInfo>> {
-        val parseBody = Jsoup.parse(body).body()
+        val parseBody = Ksoup.parse(body).body()
         val csrfToken = parseBody.selectFirst("input[name=_token]")?.attr("value")
         val allHanimeClass = parseBody.getElementsByClass("horizontal-row").firstOrNull()
         val items = allHanimeClass.extractHanimeInfo("div[class^=user-tab-item-wrapper]")
@@ -817,7 +821,7 @@ object Parser {
     }
 
     fun creatorUploadingItems(body: String): PageLoadingState<MyListItems<CreatorUploadingItem>> {
-        val parseBody = Jsoup.parse(body).body()
+        val parseBody = Ksoup.parse(body).body()
         val csrfToken = parseBody.selectFirst("input[name=_token]")?.attr("value")
         val wrappers = parseBody.select("div.user-tab-item-wrapper")
         if (wrappers.isEmpty()) return PageLoadingState.NoMoreData
@@ -876,7 +880,7 @@ object Parser {
 
 
     fun playlists(body: String): WebsiteState<Playlists> {
-        val parseBody = Jsoup.parse(body).body()
+        val parseBody = Ksoup.parse(body).body()
         val csrfToken = parseBody.selectFirst("input[name=_token]")?.attr("value")
         val lists = parseBody.getElementsByClass("user-tab-item-wrapper")
         val playlists = mutableListOf<Playlists.Playlist>()
@@ -895,11 +899,12 @@ object Parser {
         return WebsiteState.Success(Playlists(playlists = playlists, csrfToken = csrfToken))
     }
 
-    @SuppressLint("BuildListAdds")
     fun comments(body: String): WebsiteState<VideoComments> {
-        val jsonObject = JSONObject(body)
-        val commentBody = jsonObject.get("comments").toString()
-        val parseBody = Jsoup.parse(commentBody).body()
+        // ⚠️ 不能用 toString()：kotlinx 的 JsonPrimitive.toString() 给的是带引号的 JSON
+        // 表示，而 org.json 的 get().toString() 给的是字符串内容本身。要用 .content。
+        val jsonObject = HJson.parseToJsonElement(body).jsonObject
+        val commentBody = jsonObject.getValue("comments").jsonPrimitive.content
+        val parseBody = Ksoup.parse(commentBody).body()
         val csrfToken = parseBody.selectFirst("input[name=_token]")?.attr("value")
         val currentUserId = parseBody.selectFirst("input[name=comment-user-id]")?.attr("value")
         val commentList = mutableListOf<VideoComments.VideoComment>()
@@ -958,20 +963,28 @@ object Parser {
             val replyCount = regex.find(replyCountText)?.value?.toInt()
             val reportRedirectUrl = ""
             val reportableId = child.select("span.report-btn").first()?.attr("data-reportable-id")
-            val reportableType = child.select("span.report-btn").first()?.attr("data-reportable-type")
+            val reportableType =
+                child.select("span.report-btn").first()?.attr("data-reportable-type")
 
             commentList.add(
                 VideoComments.VideoComment(
-                    avatar = avatarUrl, username = username, date = date,
-                    content = content, hasMoreReplies = hasMoreReplies, replyCount = replyCount,
+                    avatar = avatarUrl,
+                    username = username,
+                    date = date,
+                    content = content,
+                    hasMoreReplies = hasMoreReplies,
+                    replyCount = replyCount,
                     thumbUp = thumbUp.logIfParseNull(Parser::comments.name, "thumbUp"),
                     id = id.logIfParseNull(Parser::comments.name, "id"),
-                    isChildComment = false, post = post,
-                    redirectUrl = reportRedirectUrl, reportableId = reportableId, reportableType = reportableType
+                    isChildComment = false,
+                    post = post,
+                    redirectUrl = reportRedirectUrl,
+                    reportableId = reportableId,
+                    reportableType = reportableType
                 )
             )
         }
-        Log.d("commentList", commentList.toString())
+        Logger.d(tag = "commentList") { commentList.toString() }
         return WebsiteState.Success(
             VideoComments(
                 commentList,
@@ -982,10 +995,10 @@ object Parser {
     }
 
     fun commentReply(body: String): WebsiteState<VideoComments> {
-        val jsonObject = JSONObject(body)
-        val replyBody = jsonObject.get("replies").toString()
+        val jsonObject = HJson.parseToJsonElement(body).jsonObject
+        val replyBody = jsonObject.getValue("replies").jsonPrimitive.content
         val replyList = mutableListOf<VideoComments.VideoComment>()
-        val parseBody = Jsoup.parse(replyBody).body()
+        val parseBody = Ksoup.parse(replyBody).body()
         val replyStart = parseBody.selectFirst("div[id^=reply-start]")
         replyStart?.let {
             val allRepliesClass = it.children()
@@ -1069,7 +1082,7 @@ object Parser {
 //        return if (body.contains("已成功檢舉該則評論")) {
 //            WebsiteState.Success("已成功檢舉該則評論，我們會儘快處理您的檢舉。")
 //        } else {
-//            val doc = Jsoup.parse(body)
+//            val doc = Ksoup.parse(body)
 //            val msg = doc.select("#error").text()
 //            if (msg.contains("已成功檢舉")) {
 //                WebsiteState.Success(msg)
@@ -1080,9 +1093,9 @@ object Parser {
     }
 
     fun getMySubscriptions(body: String): WebsiteState<MySubscriptions> {
-        val parseBody = Jsoup.parse(body).body()
+        val parseBody = Ksoup.parse(body).body()
         val maxPage = parseMaxPage(parseBody)
-        Log.i("getMySubscriptions", "MaxPageList=$maxPage")
+        Logger.i(tag = "getMySubscriptions") { "MaxPageList=$maxPage" }
         val subscriptionsRoot = parseBody.selectFirst("div.subscriptions-nav")
             ?: return WebsiteState.Error(IllegalStateException("找不到 subscriptions-nav"))
         val subscriptionsVideosRoot = parseBody.selectFirst("div.content-padding-new")
@@ -1110,25 +1123,31 @@ object Parser {
             .mapNotNull { videoCard ->
                 try {
                     val link =
-                        videoCard.selectFirst("a[class^=video-link]")?.absUrl("href") ?: return@mapNotNull null
+                        videoCard.selectFirst("a[class^=video-link]")?.absUrl("href")
+                            ?: return@mapNotNull null
                     val videoCode = Regex("""watch\?v=(\d+)""").find(link)?.groupValues?.get(1)
                         ?: return@mapNotNull null
-                    val coverUrl = videoCard.select("img[class^=main-thumb]").getOrNull(0)?.absUrl("src") ?: return@mapNotNull null
+                    val coverUrl =
+                        videoCard.select("img[class^=main-thumb]").getOrNull(0)?.absUrl("src")
+                            ?: return@mapNotNull null
                     val title = videoCard.attr("title").trim()
                     val durationAndViews = videoCard.select("div[class^=thumb-container]")
                     val duration = durationAndViews.select("div[class^=duration]").text()
-                    val views = durationAndViews.select("div[class^=stat-item]").getOrNull(1)?.text()
+                    val views =
+                        durationAndViews.select("div[class^=stat-item]").getOrNull(1)?.text()
                     val subtitleElement = videoCard.selectFirst("div.subtitle")
                     val artistAndUploadTime = subtitleElement?.text()?.trim().orEmpty()
-                    var artist = ""
-                    var uploadTime = ""
+                    var artist: String
+                    var uploadTime: String
                     if (artistAndUploadTime.contains("•")) {
                         val parts = artistAndUploadTime.split("•").map { it.trim() }
                         artist = parts.getOrNull(0).orEmpty()
                         uploadTime = parts.getOrNull(1).orEmpty()
                     } else {
                         artist = subtitleElement?.selectFirst("a")?.text()?.trim().orEmpty()
-                        uploadTime = subtitleElement?.selectFirst("span.subtitle-time, span")?.text()?.trim().orEmpty()
+                        uploadTime =
+                            subtitleElement?.selectFirst("span.subtitle-time, span")?.text()?.trim()
+                                .orEmpty()
                     }
                     val infoBoxes = videoCard.selectFirst(".stats-container .stat-item")
                     val reviews = infoBoxes?.ownText()?.trim() ?: ""
@@ -1172,7 +1191,7 @@ object Parser {
      * 這個網站的網頁結構真的很奇怪，所以我寫了一個 forEachStep2 來處理
      */
     private inline fun Elements.forEachStep2(action: (Element) -> Unit) {
-        for (i in 0 until size step 2) {
+        for (i in indices step 2) {
             action(get(i))
         }
     }
@@ -1212,10 +1231,10 @@ object Parser {
         if (it == null) {
             if (loginNeeded) {
                 if (isAlreadyLogin) {
-                    Log.d("Parse::$funcName", "[$varName] is null. 而且處於登入狀態，這有點不正常")
+                    Logger.d(tag = "Parse::$funcName") { "[$varName] is null. 而且處於登入狀態，這有點不正常" }
                 }
             } else {
-                Log.d("Parse::$funcName", "[$varName] is null. 這有點不正常")
+                Logger.d(tag = "Parse::$funcName") { "[$varName] is null. 這有點不正常" }
             }
         }
     }

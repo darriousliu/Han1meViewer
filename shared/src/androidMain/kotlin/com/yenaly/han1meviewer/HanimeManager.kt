@@ -1,18 +1,24 @@
 package com.yenaly.han1meviewer
 
 import android.webkit.CookieManager
+import androidx.compose.runtime.Composable
 import androidx.core.text.parseAsHtml
 import com.yenaly.han1meviewer.Preferences.isAlreadyLogin
 import com.yenaly.han1meviewer.Preferences.loginCookie
 import com.yenaly.han1meviewer.logic.network.HCookiesStorage
 import com.yenaly.han1meviewer.util.CookieString
+import com.yenaly.han1meviewer.util.localizedText
 
 /**
  * 给用户显示的错误信息
  *
  * ぴえん化
+ *
+ * 是 @Composable 而不是普通属性：数据层的异常现在只带 StringResource，
+ * 解析要有 composition 上下文，见 [localizedText]。
  */
-val Throwable.pienization: CharSequence get() = "🥺\n$localizedMessage"
+@Composable
+fun Throwable.pienization(): String = "🥺\n" + localizedText()
 
 // base
 
@@ -20,45 +26,6 @@ private const val HANIME_TITLE_HTML =
     """<span style="color: #FF0000;"><b>H</b></span><b>an1me</b>Viewer"""
 
 val hanimeSpannedTitle = HANIME_TITLE_HTML.parseAsHtml()
-
-/**
- * 獲取 Hanime 影片地址
- */
-fun getHanimeVideoLink(videoCode: String) = HANIME_BASE_URL + "watch?v=" + videoCode
-
-
-/**
- * 獲取 Hanime 搜索地址
- */
-fun getHanimeSearchLink(artist: String) = HANIME_BASE_URL + "search?query=" + artist
-/**
- * 獲取 Hanime 影片分享文本
- */
-fun getHanimeShareText(title: String, videoCode: String): String = buildString {
-    appendLine(title)
-    appendLine(getHanimeVideoLink(videoCode))
-    append("- From Han1meViewer -")
-}
-/**
- * 獲取 Hanime 影片分享文本
- */
-fun getHanimeSearchShareText(artist: String): String = buildString {
-    appendLine(artist)
-    appendLine(getHanimeSearchLink(artist))
-    append("- From Han1meViewer -")
-}
-
-/**
- * 獲取 Hanime 影片**官方**下載地址
- */
-fun getHanimeVideoDownloadLink(videoCode: String) =
-    HANIME_BASE_URL + "download?v=" + videoCode
-
-val videoUrlRegex = Regex(
-    """(?:(?:https?:)?//[^\s"'<>/]+|(?:hanime(?:1|one)|javchu)\.(?:com|me))?(?:/[^/?#\s"'<>]+)*/watch\?(?:[^#\s"'<>]*&)?v=(\d+)"""
-)
-
-fun String.toVideoCode() = videoUrlRegex.find(this)?.groupValues?.get(1)
 
 // log in and log out
 

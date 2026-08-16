@@ -1,4 +1,5 @@
 @file:Suppress("UnstableApiUsage")
+@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
 
 import Config.Version.createVersion
 import Config.Version.source
@@ -7,6 +8,7 @@ import Config.lastCommitSha
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.INT
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -39,14 +41,25 @@ buildkonfig {
     exposeObjectWithName = "BuildConfig"
 
     defaultConfigs {
-        buildConfigField(BOOLEAN, "DEBUG", (!releaseBuild).toString(), false, true)
-        buildConfigField(STRING, "APPLICATION_ID", applicationId, false, true)
-        buildConfigField(STRING, "COMMIT_SHA", commitSha, false, true)
-        buildConfigField(STRING, "VERSION_NAME", versionName, false, true)
-        buildConfigField(INT, "VERSION_CODE", versionCode.toString(), false, true)
-        buildConfigField(STRING, "HA_GITHUB_TOKEN", githubToken, false, true)
-        buildConfigField(STRING, "VERSION_SOURCE", source, false, true)
-        buildConfigField(INT, "SEARCH_YEAR_RANGE_END", Config.thisYear.toString(), false, true)
+        buildConfigField(
+            BOOLEAN, "DEBUG", (!releaseBuild).toString(),
+            nullable = false,
+            const = true
+        )
+        buildConfigField(STRING, "APPLICATION_ID", applicationId, nullable = false, const = true)
+        buildConfigField(STRING, "COMMIT_SHA", commitSha, nullable = false, const = true)
+        buildConfigField(STRING, "VERSION_NAME", versionName, nullable = false, const = true)
+        buildConfigField(
+            INT, "VERSION_CODE", versionCode.toString(),
+            nullable = false,
+            const = true
+        )
+        buildConfigField(STRING, "HA_GITHUB_TOKEN", githubToken, nullable = false, const = true)
+        buildConfigField(STRING, "VERSION_SOURCE", source, nullable = false, const = true)
+        buildConfigField(
+            INT, "SEARCH_YEAR_RANGE_END", Config.thisYear.toString(), nullable = false,
+            const = true
+        )
     }
 }
 
@@ -123,6 +136,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.io.core)
+            implementation(libs.ksoup)
             implementation(libs.mmkv.kotlin)
             implementation(libs.compose.multiplatform.runtime)
             implementation(libs.compose.multiplatform.ui)
@@ -188,7 +202,6 @@ kotlin {
             implementation(libs.compose.avatar.cropper)
             // parse
 
-            implementation(libs.jsoup)
 
             // network
 
@@ -272,6 +285,45 @@ dependencies {
 
 room3 {
     schemaDirectory("$projectDir/schemas")
+}
+
+// compose-resources 的 Res.readBytes 只能按名字读，**没有列目录的能力**，
+// 而共享关键 H 帧是「一个视频一个 json」的布局（README_TECH 第 15 节说明了这是为了
+// 方便贡献者直接丢一个文件进来，不要改成单个大数组）。所以在构建期扫一遍目录，
+// 生成一份 videoCode 清单给 DatabaseRepo.loadAllShared() 用。
+val sharedHKeyframeDir =
+    layout.projectDirectory.dir("src/commonMain/composeResources/files/h_keyframes")
+val generateSharedHKeyframeIndex = tasks.register("generateSharedHKeyframeIndex") {
+    description = "生成共享关键 H 帧的索引"
+    val srcDir = sharedHKeyframeDir
+    val outDir = layout.buildDirectory.dir("generated/sharedHKeyframeIndex/kotlin")
+    inputs.dir(srcDir).withPropertyName("sharedHKeyframes")
+    outputs.dir(outDir)
+    doLast {
+        val codes = srcDir.asFile.listFiles()
+            .orEmpty()
+            .filter { it.isFile && it.extension == "json" }
+            .map { it.nameWithoutExtension }
+            .sorted()
+        val target =
+            outDir.get().file("com/yenaly/han1meviewer/logic/SharedHKeyframeIndex.kt").asFile
+        target.parentFile.mkdirs()
+        target.writeText(
+            buildString {
+                appendLine("// 由 :shared:generateSharedHKeyframeIndex 生成，不要手改。")
+                appendLine("package com.yenaly.han1meviewer.logic")
+                appendLine()
+                appendLine("/** `composeResources/files/h_keyframes/` 下所有共享关键 H 帧的 videoCode。 */")
+                appendLine("internal val SHARED_H_KEYFRAME_CODES: List<String> = listOf(")
+                codes.forEach { appendLine("    \"$it\",") }
+                appendLine(")")
+            }
+        )
+    }
+}
+
+kotlin.sourceSets.commonMain {
+    kotlin.srcDir(generateSharedHKeyframeIndex)
 }
 
 // KSP 在 commonMain 上生成的代码要手动挂进源集，并保证所有编译任务都排在它后面。

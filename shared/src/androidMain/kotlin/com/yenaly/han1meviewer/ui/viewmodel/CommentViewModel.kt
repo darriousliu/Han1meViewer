@@ -14,6 +14,7 @@ import com.yenaly.han1meviewer.logic.state.WebsiteState
 import com.yenaly.han1meviewer.ui.screen.video.CommentSortType
 import com.yenaly.han1meviewer.ui.viewmodel.AppViewModel.csrfToken
 import com.yenaly.han1meviewer.util.loadAssetAs
+import com.yenaly.han1meviewer.util.localizedTextOrNull
 import com.yenaly.yenaly_libs.base.YenalyViewModel
 import com.yenaly.yenaly_libs.utils.showShortToast
 import com.yenaly.yenaly_libs.utils.unsafeLazy
@@ -289,7 +290,7 @@ class CommentViewModel(application: Application) : YenalyViewModel(application) 
                         _reportMessage.emit(
                             Message(
                                 R.string.report_failed,
-                                listOf(state.throwable.message ?: "unknown")
+                                listOf(state.throwable.localizedTextOrNull() ?: "unknown")
                             )
                         )
                     }

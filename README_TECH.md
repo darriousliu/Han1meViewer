@@ -483,12 +483,13 @@ Room 主要用于：
 
 ## 15. 共享关键 H 帧
 
-共享关键 H 帧仍使用 assets 中的 JSON 文件作为输入。
+共享关键 H 帧使用打包的 JSON 文件作为输入。**一个视频一个文件**，
+方便贡献者直接提交单个 JSON，不需要维护目录索引。
 
 关键文件：
 
-- `app/src/main/assets/h_keyframes/`
-- `app/src/main/assets/h_keyframes/README.md`
+- `shared/src/commonMain/composeResources/files/h_keyframes/`
+- `shared/src/commonMain/composeResources/files/h_keyframes/README.md`
 - `logic/entity/HKeyframeEntity.kt`
 - `logic/dao/HKeyframeDao.kt`
 - `logic/DatabaseRepo.kt`
@@ -498,7 +499,8 @@ Room 主要用于：
 读取思路：
 
 ```text
-assets/h_keyframes/*.json -> Json.decodeFromStream<HKeyframeEntity> -> sort/group/flatten -> UI
+composeResources/files/h_keyframes/*.json
+  -> Res.readBytes -> HJson.decodeFromString<HKeyframeEntity> -> sort/group/flatten -> UI
 ```
 
 分组扁平化示意：
@@ -512,7 +514,7 @@ entities
     }
 ```
 
-这种结构避免了在 assets 里维护复杂目录索引，也便于贡献者直接提交单个 JSON 文件。
+这种结构便于贡献者直接提交单个 JSON 文件；目录索引由构建期任务生成，不用手工维护。
 
 ## 16. Compose 列表封装
 

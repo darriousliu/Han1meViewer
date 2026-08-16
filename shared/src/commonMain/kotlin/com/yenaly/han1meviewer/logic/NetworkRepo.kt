@@ -1,13 +1,14 @@
 package com.yenaly.han1meviewer.logic
 
-import android.util.Log
+import co.touchlab.kermit.Logger
 import com.yenaly.han1meviewer.EMPTY_STRING
+import com.yenaly.han1meviewer.HJson
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.Preferences.isAlreadyLogin
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.exception.CloudFlareBlockedException
 import com.yenaly.han1meviewer.logic.exception.HanimeNotFoundException
 import com.yenaly.han1meviewer.logic.exception.IPBlockedException
+import com.yenaly.han1meviewer.logic.exception.LocalizedStateException
 import com.yenaly.han1meviewer.logic.exception.ParseException
 import com.yenaly.han1meviewer.logic.model.CommentPlace
 import com.yenaly.han1meviewer.logic.model.CreatorSort
@@ -16,12 +17,18 @@ import com.yenaly.han1meviewer.logic.model.MyListType
 import com.yenaly.han1meviewer.logic.model.OnlineWatchHistorySort
 import com.yenaly.han1meviewer.logic.model.VideoCommentArgs
 import com.yenaly.han1meviewer.logic.model.VideoComments
-import com.yenaly.han1meviewer.logic.network.HUpdater
 import com.yenaly.han1meviewer.logic.network.HanimeNetwork
 import com.yenaly.han1meviewer.logic.state.PageLoadingState
 import com.yenaly.han1meviewer.logic.state.VideoLoadingState
 import com.yenaly.han1meviewer.logic.state.WebsiteState
-import com.yenaly.yenaly_libs.utils.applicationContext
+import com.yenaly.han1meviewer.util.isSslHandshakeError
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.account_or_password_wrong
+import han1meviewer.shared.generated.resources.cloudflare_ip_block_warning
+import han1meviewer.shared.generated.resources.cloudflare_network_mismatch
+import han1meviewer.shared.generated.resources.not_logged_in_currently
+import han1meviewer.shared.generated.resources.ssl_handshake_error
+import han1meviewer.shared.generated.resources.video_might_not_exist
 import io.ktor.client.request.forms.FormDataContent
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.forms.formData
@@ -33,12 +40,14 @@ import io.ktor.http.Parameters
 import io.ktor.http.isSuccess
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import org.json.JSONObject
-import java.io.File
-import javax.net.ssl.SSLHandshakeException
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.booleanOrNull
+import kotlinx.serialization.json.contentOrNull
+import kotlinx.serialization.json.jsonObject
 
 /**
  * @project Hanime1
@@ -206,7 +215,8 @@ object NetworkRepo {
     fun updateUserAccountAvatar(
         userId: String,
         csrfToken: String?,
-        avatarFile: File,
+        photoBytes: ByteArray,
+        fileName: String,
     ) = websiteIOFlow(
         request = {
             val body = MultiPartFormDataContent(
@@ -216,12 +226,12 @@ object NetworkRepo {
                     append("type", "photo")
                     append(
                         key = "photo",
-                        value = avatarFile.readBytes(),
+                        value = photoBytes,
                         headers = Headers.build {
                             append(HttpHeaders.ContentType, "image/jpeg")
                             append(
                                 HttpHeaders.ContentDisposition,
-                                "filename=\"${avatarFile.name}\"",
+                                "filename=\"$fileName\"",
                             )
                         },
                     )
@@ -254,8 +264,8 @@ object NetworkRepo {
             )
         },
     ) {
-        val jsonObject = JSONObject(it)
-        val success = jsonObject.optBoolean("success", false)
+        val jsonObject = HJson.parseToJsonElement(it).jsonObject
+        val success = (jsonObject["success"] as? JsonPrimitive)?.booleanOrNull ?: false
         if (success) {
             WebsiteState.Success(position)
         } else {
@@ -288,8 +298,9 @@ object NetworkRepo {
             }
         }
     ) { deleteBody ->
-        val jsonObject = JSONObject(deleteBody)
-        val returnVideoCode = jsonObject.get("video_id").toString()
+        val jsonObject = HJson.parseToJsonElement(deleteBody).jsonObject
+        // ⚠️ 不是 toString()：JsonPrimitive.toString() 会带引号
+        val returnVideoCode = (jsonObject["video_id"] as? JsonPrimitive)?.contentOrNull.orEmpty()
         if (videoCode == returnVideoCode) {
             return@websiteIOFlow WebsiteState.Success(position)
         }
@@ -315,7 +326,7 @@ object NetworkRepo {
             )
         }
     ) {
-        Log.d("add_to_fav_body", it)
+        Logger.d(tag = "add_to_fav_body") { it }
         return@websiteIOFlow WebsiteState.Success(likeStatus)
     }
 
@@ -342,7 +353,7 @@ object NetworkRepo {
             )
         }
     ) {
-        Log.d("rate_video_body", it)
+        Logger.d(tag = "rate_video_body") { it }
         return@websiteIOFlow WebsiteState.Success(isPositive)
     }
 
@@ -359,7 +370,7 @@ object NetworkRepo {
         },
         permittedSuccessCode = intArrayOf(500)
     ) {
-        Log.d("create_playlist_body", it)
+        Logger.d(tag = "create_playlist_body") { it }
         return@websiteIOFlow WebsiteState.Success(Unit)
     }
 
@@ -376,7 +387,7 @@ object NetworkRepo {
             )
         }
     ) {
-        Log.d("add_to_playlist_body", it)
+        Logger.d(tag = "add_to_playlist_body") { it }
         return@websiteIOFlow WebsiteState.Success(position)
     }
 
@@ -396,7 +407,7 @@ object NetworkRepo {
         },
         permittedSuccessCode = intArrayOf(302)
     ) {
-        Log.d("modify_playlist_body", it)
+        Logger.d(tag = "modify_playlist_body") { it }
         return@websiteIOFlow WebsiteState.Success(
             ModifiedPlaylistArgs(
                 title = title, desc = description, isDeleted = delete,
@@ -432,7 +443,7 @@ object NetworkRepo {
             )
         }
     ) {
-        Log.d("post_comment_body", it)
+        Logger.d(tag = "post_comment_body") { it }
         return@websiteIOFlow WebsiteState.Success(Unit)
     }
 
@@ -447,7 +458,7 @@ object NetworkRepo {
             )
         }
     ) {
-        Log.d("post_comment_reply_body", it)
+        Logger.d(tag = "post_comment_reply_body") { it }
         return@websiteIOFlow WebsiteState.Success(Unit)
     }
 
@@ -473,7 +484,7 @@ object NetworkRepo {
             )
         }
     ) {
-        Log.d("like_comment_body", it)
+        Logger.d(tag = "like_comment_body") { it }
         return@websiteIOFlow WebsiteState.Success(
             VideoCommentArgs(
                 commentPosition, isPositive, comment
@@ -521,27 +532,13 @@ object NetworkRepo {
             )
         }
     ) {
-        Log.d("subscribe_artist_body", it)
+        Logger.d(tag = "subscribe_artist_body") { it }
         return@websiteIOFlow WebsiteState.Success(status)
     }
 
     //</editor-fold>
 
     //<editor-fold desc="Base">
-
-    fun getLatestVersion(forceCheck: Boolean = true) = flow {
-        emit(WebsiteState.Loading)
-        val versionInfo = HUpdater.checkForUpdate(forceCheck)
-        emit(WebsiteState.Success(versionInfo))
-    }.catch { e ->
-        when (e) {
-            is CancellationException -> throw e
-            else -> {
-                e.printStackTrace()
-                emit(WebsiteState.Error(e))
-            }
-        }
-    }.flowOn(Dispatchers.IO)
 
     fun login(email: String, password: String) = flow {
         emit(WebsiteState.Loading)
@@ -556,14 +553,14 @@ object NetworkRepo {
             if (loginPageAgain.status.value == 404) {
                 // Cookie 會返回 XSRF-TOKEN 和 hanime1_session，我們只需要後者
                 // 错误的，还需要 remember_web 字段！但我没找到！
-                Log.d("login_headers", req.headers.entries().toString())
+                Logger.d(tag = "login_headers") { req.headers.entries().toString() }
                 emit(WebsiteState.Success(req.headers.getAll(HttpHeaders.SetCookie).orEmpty()))
             } else {
-                emit(WebsiteState.Error(IllegalStateException(getString(R.string.account_or_password_wrong))))
+                emit(WebsiteState.Error(LocalizedStateException(Res.string.account_or_password_wrong)))
             }
         } else {
             // 雙重保險
-            emit(WebsiteState.Error(IllegalStateException(getString(R.string.account_or_password_wrong))))
+            emit(WebsiteState.Error(LocalizedStateException(Res.string.account_or_password_wrong)))
         }
     }.catch { e ->
         emit(WebsiteState.Error(handleException(e)))
@@ -628,23 +625,23 @@ object NetworkRepo {
     internal suspend fun HttpResponse.throwRequestException(): Nothing {
         val body = bodyAsText()
         when (val code = status.value) {
-            403 -> if (!body.isNullOrBlank()) {
+            403 -> if (body.isNotBlank()) {
                 when {
                     "you have been blocked" in body ->
-                        throw IPBlockedException(getString(R.string.cloudflare_ip_block_warning))
+                        throw IPBlockedException(Res.string.cloudflare_ip_block_warning)
 
                     "Just a moment" in body ->
-                        throw CloudFlareBlockedException(getString(R.string.cloudflare_network_mismatch))
+                        throw CloudFlareBlockedException(Res.string.cloudflare_network_mismatch)
 
                     else ->
-                        throw HanimeNotFoundException(getString(R.string.video_might_not_exist)) // 主要出現在影片界面，當你v數不大時會報403
+                        throw HanimeNotFoundException(Res.string.video_might_not_exist) // 主要出現在影片界面，當你v數不大時會報403
                 }
             } else throw IllegalStateException("$code ${status.description}")
 
-            500 -> throw HanimeNotFoundException(getString(R.string.video_might_not_exist)) // 主要出現在影片界面，當你v數很大時會報500
+            500 -> throw HanimeNotFoundException(Res.string.video_might_not_exist) // 主要出現在影片界面，當你v數很大時會報500
 
             404 -> if (!isAlreadyLogin) {
-                throw IllegalStateException(getString(R.string.not_logged_in_currently))
+                throw LocalizedStateException(Res.string.not_logged_in_currently)
             } else {
                 throw IllegalStateException("$code ${status.description}")
             }
@@ -654,16 +651,18 @@ object NetworkRepo {
     }
 
     internal fun handleException(e: Throwable): Throwable {
-        return when (e) {
-            is CancellationException -> throw e
-            is ParseException -> {
+        return when {
+            e is CancellationException -> throw e
+            e is ParseException -> {
                 e.printStackTrace()
-                ParseException(getString(R.string.parse_error_msg))
+                ParseException("parse failed")
             }
 
-            is SSLHandshakeException -> {
+            // SSLHandshakeException 是 JVM 专属类型，改用 expect/actual 判别，
+            // iOS 那边对应的是 NSURLErrorDomain 下的一组 TLS 错误码。
+            e.isSslHandshakeError() -> {
                 e.printStackTrace()
-                SSLHandshakeException(getString(R.string.ssl_handshake_error))
+                LocalizedStateException(Res.string.ssl_handshake_error, "ssl handshake failed")
             }
 
             else -> {
@@ -674,6 +673,4 @@ object NetworkRepo {
     }
 
     //</editor-fold>
-
-    private fun getString(resId: Int) = applicationContext.getString(resId)
 }

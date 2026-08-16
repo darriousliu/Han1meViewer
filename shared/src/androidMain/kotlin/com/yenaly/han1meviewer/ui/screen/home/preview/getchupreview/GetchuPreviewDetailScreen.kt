@@ -71,7 +71,7 @@ fun GetchuPreviewDetailScreen(
             isLoading = state.isFirstPageLoading,
             isError = state.isFirstPageError,
             isEmpty = state.isFirstPageEmpty,
-            errorMessage = (state as? PageState.Error)?.throwable?.pienization.toString(),
+            errorMessage = (state as? PageState.Error)?.throwable?.pienization().orEmpty(),
             onRetry = { viewModel.getDetail(id) },
             modifier = Modifier.fillMaxSize(),
             loadingMessage = loadingHint

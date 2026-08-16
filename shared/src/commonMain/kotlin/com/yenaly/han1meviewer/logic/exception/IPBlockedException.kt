@@ -1,5 +1,7 @@
 package com.yenaly.han1meviewer.logic.exception
 
+import org.jetbrains.compose.resources.StringResource
+
 /**
  * IP被封鎖
  *
@@ -7,4 +9,7 @@ package com.yenaly.han1meviewer.logic.exception
  * @author Yenaly Liew
  * @time 2023/08/07 007 12:40
  */
-class IPBlockedException(reason: String) : CloudFlareBlockedException(reason)
+class IPBlockedException(
+    messageRes: StringResource,
+    devMessage: String = "IP blocked",
+) : CloudFlareBlockedException(messageRes, devMessage)
