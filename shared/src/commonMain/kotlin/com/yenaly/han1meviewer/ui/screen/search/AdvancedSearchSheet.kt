@@ -40,11 +40,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.SEARCH_YEAR_RANGE_END
 import com.yenaly.han1meviewer.SEARCH_YEAR_RANGE_START
 import com.yenaly.han1meviewer.logic.DatabaseRepo
@@ -60,14 +57,34 @@ import com.yenaly.han1meviewer.ui.model.AdvancedSearchDialogState
 import com.yenaly.han1meviewer.ui.model.SearchScopeSection
 import com.yenaly.han1meviewer.ui.viewmodel.SearchViewModel
 import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.advanced_search
+import han1meviewer.shared.generated.resources.advanced_search_combination
 import han1meviewer.shared.generated.resources.appearance_and_figure
+import han1meviewer.shared.generated.resources.approximate_range
+import han1meviewer.shared.generated.resources.cancel
 import han1meviewer.shared.generated.resources.characteristics
+import han1meviewer.shared.generated.resources.duration
+import han1meviewer.shared.generated.resources.ic_baseline_search_24
+import han1meviewer.shared.generated.resources.pair_widely
+import han1meviewer.shared.generated.resources.pair_widely_alert
 import han1meviewer.shared.generated.resources.relationship
+import han1meviewer.shared.generated.resources.release_date
+import han1meviewer.shared.generated.resources.reset
+import han1meviewer.shared.generated.resources.save
+import han1meviewer.shared.generated.resources.search
+import han1meviewer.shared.generated.resources.search_options_tips
 import han1meviewer.shared.generated.resources.sex_position
+import han1meviewer.shared.generated.resources.sort_option
+import han1meviewer.shared.generated.resources.specific_y_m
 import han1meviewer.shared.generated.resources.story_location
 import han1meviewer.shared.generated.resources.story_plot
+import han1meviewer.shared.generated.resources.switch_to_year
+import han1meviewer.shared.generated.resources.switch_to_year_month
+import han1meviewer.shared.generated.resources.tag
+import han1meviewer.shared.generated.resources.type
 import han1meviewer.shared.generated.resources.video_attr
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 private val advancedSearchTagScopeResIds = listOf(
@@ -100,11 +117,11 @@ fun AdvancedSearchSheet(
             SheetValue.Expanded,
         ),
     )
-    val typeLabel = stringResource(R.string.type)
-    val sortLabel = stringResource(R.string.sort_option)
-    val tagLabel = stringResource(R.string.tag)
-    val releaseDateLabel = stringResource(R.string.release_date)
-    val durationLabel = stringResource(R.string.duration)
+    val typeLabel = stringResource(Res.string.type)
+    val sortLabel = stringResource(Res.string.sort_option)
+    val tagLabel = stringResource(Res.string.tag)
+    val releaseDateLabel = stringResource(Res.string.release_date)
+    val durationLabel = stringResource(Res.string.duration)
     val tagScopes = remember(searchOptions.tags) { buildTagScopeSections(searchOptions.tags) }
 
     fun updateSelection(block: () -> Unit) {
@@ -167,7 +184,7 @@ fun AdvancedSearchSheet(
             ) {
                 item {
                     Text(
-                        text = stringResource(R.string.advanced_search),
+                        text = stringResource(Res.string.advanced_search),
                         style = MaterialTheme.typography.headlineSmall,
                     )
                 }
@@ -196,7 +213,7 @@ fun AdvancedSearchSheet(
                         onOpenGenre = {
                             dialogState = AdvancedSearchDialogState.SingleChoice(
                                 key = "genre",
-                                titleRes = R.string.type,
+                                titleRes = Res.string.type,
                                 options = searchOptions.genres,
                                 selectedIndex = searchOptions.genres.indexOfFirst { it.searchKey == viewModel.genre },
                                 onSelect = { option -> viewModel.genre = option.searchKey },
@@ -209,7 +226,7 @@ fun AdvancedSearchSheet(
                         onOpenSort = {
                             dialogState = AdvancedSearchDialogState.SingleChoice(
                                 key = "sort",
-                                titleRes = R.string.sort_option,
+                                titleRes = Res.string.sort_option,
                                 options = searchOptions.sortOptions,
                                 selectedIndex = searchOptions.sortOptions.indexOfFirst { it.searchKey == viewModel.sort },
                                 onSelect = { option -> viewModel.sort = option.searchKey },
@@ -222,7 +239,7 @@ fun AdvancedSearchSheet(
                         onOpenTag = {
                             dialogState = AdvancedSearchDialogState.MultiChoice(
                                 key = "tag",
-                                titleRes = R.string.tag,
+                                titleRes = Res.string.tag,
                                 scopes = tagScopes,
                                 selected = selectedTagOptions,
                                 broad = viewModel.broad,
@@ -274,7 +291,7 @@ fun AdvancedSearchSheet(
                         onOpenDuration = {
                             dialogState = AdvancedSearchDialogState.SingleChoice(
                                 key = "duration",
-                                titleRes = R.string.duration,
+                                titleRes = Res.string.duration,
                                 options = searchOptions.durations,
                                 selectedIndex = searchOptions.durations.indexOfFirst { it.searchKey == viewModel.duration },
                                 onSelect = { option -> viewModel.duration = option.searchKey },
@@ -396,11 +413,11 @@ private fun AdvancedSearchMultiChoiceDialog(
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = stringResource(R.string.pair_widely),
+                            text = stringResource(Res.string.pair_widely),
                             style = MaterialTheme.typography.titleSmall,
                         )
                         Text(
-                            text = stringResource(R.string.pair_widely_alert),
+                            text = stringResource(Res.string.pair_widely_alert),
                             style = MaterialTheme.typography.bodySmall,
                         )
                     }
@@ -465,7 +482,7 @@ private fun AdvancedSearchMultiChoiceDialog(
                 updateSelection { state.onSave(selected.toSet(), broad) }
                 onDismiss()
             }) {
-                Text(stringResource(R.string.save))
+                Text(stringResource(Res.string.save))
             }
         },
         dismissButton = {
@@ -504,7 +521,7 @@ private fun AdvancedSearchReleaseDateDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.release_date)) },
+        title = { Text(stringResource(Res.string.release_date)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Row(
@@ -515,13 +532,13 @@ private fun AdvancedSearchReleaseDateDialog(
                         modifier = Modifier.weight(1f),
                         onClick = { selectedTab = 0 }
                     ) {
-                        Text(stringResource(R.string.specific_y_m))
+                        Text(stringResource(Res.string.specific_y_m))
                     }
                     FilledTonalButton(
                         modifier = Modifier.weight(1f),
                         onClick = { selectedTab = 1 }
                     ) {
-                        Text(stringResource(R.string.approximate_range))
+                        Text(stringResource(Res.string.approximate_range))
                     }
                 }
                 if (selectedTab == 0) {
@@ -531,7 +548,7 @@ private fun AdvancedSearchReleaseDateDialog(
                     ) {
                         Text(
                             stringResource(
-                                if (yearOnly) R.string.switch_to_year_month else R.string.switch_to_year
+                                if (yearOnly) Res.string.switch_to_year_month else Res.string.switch_to_year
                             )
                         )
                     }
@@ -585,7 +602,7 @@ private fun AdvancedSearchReleaseDateDialog(
                 }
                 onDismiss()
             }) {
-                Text(stringResource(R.string.save))
+                Text(stringResource(Res.string.save))
             }
         },
         dismissButton = {
@@ -607,10 +624,10 @@ private fun AdvancedSearchDialogDismissButtons(
 ) {
     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         TextButton(onClick = onReset) {
-            Text(stringResource(R.string.reset))
+            Text(stringResource(Res.string.reset))
         }
         TextButton(onClick = onDismiss) {
-            Text(stringResource(R.string.cancel))
+            Text(stringResource(Res.string.cancel))
         }
     }
 }
@@ -623,7 +640,7 @@ private fun AdvancedSearchHistorySection(
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text(
-            text = stringResource(R.string.advanced_search_combination),
+            text = stringResource(Res.string.advanced_search_combination),
             style = MaterialTheme.typography.titleMedium,
         )
         LazyColumn(
@@ -719,7 +736,7 @@ private fun AdvancedSearchActionSection(
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Text(
-            text = stringResource(R.string.search_options_tips),
+            text = stringResource(Res.string.search_options_tips),
             style = MaterialTheme.typography.bodyMedium,
         )
         FilledIconButton(
@@ -727,8 +744,8 @@ private fun AdvancedSearchActionSection(
             modifier = Modifier.size(60.dp),
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_baseline_search_24),
-                contentDescription = stringResource(R.string.search),
+                painter = painterResource(Res.drawable.ic_baseline_search_24),
+                contentDescription = stringResource(Res.string.search),
             )
         }
     }
