@@ -5,6 +5,7 @@ import com.yenaly.han1meviewer.logic.NetworkRepo.handleException
 import com.yenaly.han1meviewer.logic.NetworkRepo.throwRequestException
 import com.yenaly.han1meviewer.logic.network.HanimeNetwork
 import com.yenaly.han1meviewer.logic.state.WebsiteState
+import com.yenaly.han1meviewer.util.decodeEucJp
 import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
@@ -13,10 +14,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import java.nio.charset.Charset
 
 object GetchuNetworkRepo {
-    val GETCHU_CHARSET: Charset = Charset.forName("EUC-JP")
     fun getGetchuPreview(date: String) = websiteIOFlow(
         request = {
             HanimeNetwork.getchuService.getPreviewList(
@@ -78,17 +77,8 @@ object GetchuNetworkRepo {
         emit(WebsiteState.Error(handleException(e)))
     }.flowOn(Dispatchers.IO)
 
-    /**
-     * getchu 的页面是 EUC-JP 编码，Ktor 的 `bodyAsText()` 按 UTF-8 解会全是乱码，
-     * 所以拿原始字节自己解。
-     *
-     * ⚠️ 这一步是本次迁移里少数**没能进 commonMain** 的地方：Kotlin/Native 上 Ktor 的
-     * charset 支持只有 UTF-8，EUC-JP 得走 `NSString.create(data:encoding:)`。
-     * 等 iOS 真要接 getchu 时再补 expect/actual。
-     */
-    private suspend fun HttpResponse.getchuString(): String {
-        return body<ByteArray>().toString(GETCHU_CHARSET)
-    }
+    /** getchu 的页面是 EUC-JP，见 [decodeEucJp]。 */
+    private suspend fun HttpResponse.getchuString(): String = body<ByteArray>().decodeEucJp()
 
     private fun String.extractGetchuSeriesParentId(): String? {
         return Regex("[\"']parent_id_array[\"']\\s*:\\s*[\"']([^\"']+)[\"']", RegexOption.IGNORE_CASE)
