@@ -162,6 +162,7 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktorfit.lib.light)
             implementation(libs.kermit)
+            implementation(libs.mp.stools)
             implementation(libs.sonner)
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)

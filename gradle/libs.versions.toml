@@ -57,6 +57,7 @@ okhttp = "5.4.0"
 ktor = "3.5.2"
 ktorfit = "2.7.5"
 kermit = "2.1.0"
+mpStools = "1.6.3"
 sonner = "0.4.0"
 jiaoziVideoPlayer = "7.7.2.3300"
 junit = "4.13.2"
@@ -165,6 +166,10 @@ ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "kto
 ktorfit-lib-light = { module = "de.jensklingenberg.ktorfit:ktorfit-lib-light", version.ref = "ktorfit" }
 ktorfit-ksp = { module = "de.jensklingenberg.ktorfit:ktorfit-ksp", version.ref = "ktorfit" }
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
+# 跨平台 String.sprintf。CMP 的 stringResource(res, vararg) 只认 %N$d/%N$s，
+# 处理不了 %f，所以带小数格式化的地方要靠它。注意它不在 Maven Central，
+# 源在 settings.gradle.kts 里单独声明。
+mp-stools = { module = "net.sergeych:mp_stools", version.ref = "mpStools" }
 sonner = { module = "io.github.dokar3:sonner", version.ref = "sonner" }
 
 # Pic

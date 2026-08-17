@@ -1,41 +1,14 @@
 package com.yenaly.han1meviewer.util
 
+/*
+ * 文件大小格式化已经拆到 commonMain 的 `FileSizeFormat.kt`，
+ * 这里只剩两个真正离不开 Android/JVM 的：`folderSize` 要 java.io.File，
+ * `decodeFromStringByBase64` 要 android.util.Base64。
+ * 两者的调用点都在 settings 的 route 里，那些 route 不迁。
+ */
+
 import android.util.Base64
 import java.io.File
-import java.util.Locale
-
-private val siFileSizeUnits = arrayOf("B", "kB", "MB", "GB", "TB")
-private val iecFileSizeUnits = arrayOf("B", "KiB", "MiB", "GiB", "TiB")
-
-fun Long.formatFileSizeV2(
-    useSi: Boolean = false,
-    decimalPlaces: Int = 1,
-    stripTrailingZeros: Boolean = true,
-): String {
-    require(decimalPlaces >= 0) { "decimalPlaces must not be negative" }
-    val unit = if (useSi) 1000 else 1024
-    if (this < unit) return "$this B"
-
-    val units = if (useSi) siFileSizeUnits else iecFileSizeUnits
-    var value = toDouble()
-    var unitIndex = 0
-    while (value >= unit && unitIndex < units.lastIndex) {
-        value /= unit
-        unitIndex++
-    }
-
-    return if (decimalPlaces == 0 || (stripTrailingZeros && value % 1 == 0.0)) {
-        "%.0f %s".format(Locale.getDefault(), value, units[unitIndex])
-    } else {
-        "%.${decimalPlaces}f %s".format(Locale.getDefault(), value, units[unitIndex])
-    }
-}
-
-fun Long.formatBytesPerSecond(
-    useSi: Boolean = false,
-    decimalPlaces: Int = 1,
-    stripTrailingZeros: Boolean = true,
-): String = formatFileSizeV2(useSi, decimalPlaces, stripTrailingZeros) + "/s"
 
 val File?.folderSize: Long
     get() = this?.listFiles()?.sumOf { file ->
