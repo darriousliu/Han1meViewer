@@ -23,10 +23,12 @@ import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.exception.CloudFlareBlockedException
 import com.yenaly.han1meviewer.logic.model.github.Latest
+import com.yenaly.han1meviewer.logic.network.CloudflareNavBridge
 import com.yenaly.han1meviewer.logic.state.PageState
 import com.yenaly.han1meviewer.ui.activity.MainActivity
 import com.yenaly.han1meviewer.ui.component.UpdateDialog
 import com.yenaly.han1meviewer.ui.component.UsageNoticeDialog
+import com.yenaly.han1meviewer.ui.navigation.main.CloudflareRoute
 import com.yenaly.han1meviewer.ui.navigation.main.LoginRoute
 import com.yenaly.han1meviewer.ui.navigation.main.MainDestinationSpec
 import com.yenaly.han1meviewer.ui.navigation.main.MainNavHost
@@ -100,6 +102,15 @@ fun MainActivityContent(
         LaunchedEffect(viewModel) {
             viewModel.sessionExpiredMessage.collect { event ->
                 event.message?.let(::showShortToast) ?: showShortToast(getString(event.fallbackRes))
+            }
+        }
+        // 网络层撞上 Cloudflare challenge 时（CloudflareNavBridge.pending 非空）把过盾页推出来。
+        // 请求会一直挂在 pending 上等，App 从后台回前台时这里也会立刻补弹。
+        LaunchedEffect(composeNavController) {
+            CloudflareNavBridge.pending.collect { challenge ->
+                if (challenge != null) {
+                    composeNavController.navigateSafely(CloudflareRoute(challenge.url))
+                }
             }
         }
         LaunchedEffect(homeState) {

@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.navigation.NavHostController
 import com.yenaly.han1meviewer.ui.navigation.navigateSafely
 import com.yenaly.han1meviewer.ui.navigation.settings.HomeSettingsRoute
-import kotlinx.serialization.json.Json
 
 private val loginRequiredDrawerItems = setOf(
     MainDrawerDestination.FavVideo,
@@ -56,23 +55,6 @@ fun NavHostController.handleMainIntent(intent: Intent) {
         return
     }
 
-    intent.getStringExtra("startSearchFromTag")?.let { tag ->
-        intent.removeExtra("startSearchFromTag")
-        navigateSafely(SearchRoute(query = tag))
-        return
-    }
-
-    @Suppress("UNCHECKED_CAST", "DEPRECATION")
-    val map = intent.getSerializableExtra("startSearchFromMap") as? HashMap<String, String>
-    if (map != null) {
-        intent.removeExtra("startSearchFromMap")
-        navigateSafely(SearchRoute(advancedSearchJson = Json.encodeToString(map)))
-        return
-    }
-
-    val videoCode = intent.getStringExtra("startVideoCode")
-    if (!videoCode.isNullOrEmpty()) {
-        intent.removeExtra("startVideoCode")
-        navigateSafely(VideoRoute(videoCode))
-    }
+    // 原来这里还处理 startSearchFromTag / startSearchFromMap / startVideoCode 三个 extra，
+    // 全仓没有任何生产者（跨 Activity 时代的遗留），Step 17 合并 Activity 时一并删除。
 }

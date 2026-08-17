@@ -40,12 +40,6 @@
         android:theme="@style/Theme.Hanime"
         tools:targetApi="34">
 
-        <activity
-            android:name="com.yenaly.han1meviewer.ui.activity.CloudflareActivity"
-            android:theme="@style/Theme.Hanime"
-            android:exported="false"
-            android:launchMode="singleTask"/>
-
         <service
             android:name="androidx.work.impl.foreground.SystemForegroundService"
             android:foregroundServiceType="dataSync"

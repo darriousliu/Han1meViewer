@@ -8,6 +8,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,10 +20,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.toRoute
+import com.yenaly.han1meviewer.logic.network.CloudflareNavBridge
 import com.yenaly.han1meviewer.ui.activity.MainActivity
 import com.yenaly.han1meviewer.ui.navigation.navigateSafely
-import com.yenaly.han1meviewer.ui.screen.account.AvatarCropScreen
-import com.yenaly.han1meviewer.ui.screen.home.CreatorCenterScreen
 import com.yenaly.han1meviewer.ui.navigation.settings.DownloadSettingsRoute
 import com.yenaly.han1meviewer.ui.navigation.settings.DownloadSettingsRouteScreen
 import com.yenaly.han1meviewer.ui.navigation.settings.HKeyframeSettingsRoute
@@ -42,6 +42,9 @@ import com.yenaly.han1meviewer.ui.navigation.settings.SettingsScaffold
 import com.yenaly.han1meviewer.ui.navigation.settings.SharedHKeyframesRoute
 import com.yenaly.han1meviewer.ui.navigation.settings.SharedHKeyframesRouteScreen
 import com.yenaly.han1meviewer.ui.screen.account.AccountScreen
+import com.yenaly.han1meviewer.ui.screen.account.AvatarCropScreen
+import com.yenaly.han1meviewer.ui.screen.home.CreatorCenterScreen
+import com.yenaly.han1meviewer.ui.screen.web.CloudflareScreen
 import com.yenaly.han1meviewer.ui.viewmodel.CreatorCenterViewModel
 import com.yenaly.han1meviewer.ui.viewmodel.UserAccountViewModel
 import kotlinx.serialization.json.Json
@@ -337,6 +340,22 @@ fun MainNavHost(
                     // 对应原 loginDataLauncher 收到 RESULT_OK 后的刷新
                     activity.viewModel.getHomePage()
                 },
+            )
+        }
+
+        composable<CloudflareRoute> {
+            val route = it.toRoute<CloudflareRoute>()
+            // 死锁修复的关键：无论怎么离开这个页面（过完自动 pop / 用户按返回 / 被销毁），
+            // 等待中的网络请求都必须被放行，否则全局 mutex 会一直卡住后续撞盾请求
+            DisposableEffect(Unit) {
+                onDispose {
+                    CloudflareNavBridge.pending.value?.done?.complete(Unit)
+                }
+            }
+            CloudflareScreen(
+                url = route.url,
+                onSolved = onBack,
+                onClose = onBack,
             )
         }
 
