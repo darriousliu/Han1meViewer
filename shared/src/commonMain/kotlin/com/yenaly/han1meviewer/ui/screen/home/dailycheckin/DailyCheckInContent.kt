@@ -29,17 +29,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.util.currentYearMonth
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.checkin_calendar
+import han1meviewer.shared.generated.resources.checkin_tip
+import han1meviewer.shared.generated.resources.next_double_arrow_24
+import han1meviewer.shared.generated.resources.previous_double_arrow_24
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.YearMonth
 import kotlinx.datetime.plus
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * 打卡日历页面的纯 UI Content 层。
@@ -111,20 +115,20 @@ fun DailyCheckInContent(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = stringResource(R.string.checkin_calendar),
+                text = stringResource(Res.string.checkin_calendar),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(onClick = { onEvent(DailyCheckInEvent.OnPreviousMonth) }) {
-                    Icon(painterResource(R.drawable.previous_double_arrow_24), "previous")
+                    Icon(painterResource(Res.drawable.previous_double_arrow_24), "previous")
                 }
                 Text(
                     text = uiState.currentMonth.toString(),
                     style = MaterialTheme.typography.titleMedium
                 )
                 IconButton(onClick = { onEvent(DailyCheckInEvent.OnNextMonth) }) {
-                    Icon(painterResource(R.drawable.next_double_arrow_24), "next")
+                    Icon(painterResource(Res.drawable.next_double_arrow_24), "next")
                 }
             }
         }
@@ -188,7 +192,7 @@ fun DailyCheckInContent(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = stringResource(R.string.checkin_tip),
+            text = stringResource(Res.string.checkin_tip),
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.fillMaxWidth(),

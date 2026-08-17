@@ -25,17 +25,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.util.currentLocalDate
 import com.yenaly.han1meviewer.util.currentYearMonth
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.fri
+import han1meviewer.shared.generated.resources.mon
+import han1meviewer.shared.generated.resources.sat
+import han1meviewer.shared.generated.resources.sun
+import han1meviewer.shared.generated.resources.thu
+import han1meviewer.shared.generated.resources.tue
+import han1meviewer.shared.generated.resources.wed
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
 import kotlinx.datetime.isoDayNumber
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * 月历网格组件。展示指定月份的日期格，区分已打卡/今天/未来三种状态。
@@ -71,10 +78,10 @@ fun CalendarGrid(
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
                 listOf(
-                    stringResource(R.string.mon), stringResource(R.string.tue),
-                    stringResource(R.string.wed), stringResource(R.string.thu),
-                    stringResource(R.string.fri), stringResource(R.string.sat),
-                    stringResource(R.string.sun)
+                    stringResource(Res.string.mon), stringResource(Res.string.tue),
+                    stringResource(Res.string.wed), stringResource(Res.string.thu),
+                    stringResource(Res.string.fri), stringResource(Res.string.sat),
+                    stringResource(Res.string.sun)
                 ).forEach { day ->
                     Text(
                         text = day,

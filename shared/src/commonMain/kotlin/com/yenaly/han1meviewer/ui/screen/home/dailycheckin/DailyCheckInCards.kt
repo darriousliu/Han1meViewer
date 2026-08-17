@@ -28,17 +28,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.util.currentLocalDate
+import com.yenaly.han1meviewer.util.formatMonthDayWithWeekday
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.best_streak
+import han1meviewer.shared.generated.resources.checkin
+import han1meviewer.shared.generated.resources.clear_checkin
+import han1meviewer.shared.generated.resources.counts
+import han1meviewer.shared.generated.resources.day_unit
+import han1meviewer.shared.generated.resources.days
+import han1meviewer.shared.generated.resources.has_cum_days
+import han1meviewer.shared.generated.resources.not_checked_yet
+import han1meviewer.shared.generated.resources.this_month_checkin
+import han1meviewer.shared.generated.resources.times
+import han1meviewer.shared.generated.resources.today_checked
+import han1meviewer.shared.generated.resources.view_checkin
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.toJavaLocalDate
-import java.time.format.DateTimeFormatter
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * 今日打卡卡片。
@@ -84,18 +95,17 @@ fun TodayCheckInCard(
             Spacer(modifier = Modifier.width(12.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = today.toJavaLocalDate()
-                        .format(DateTimeFormatter.ofPattern("MM月dd日 EEEE")),
+                    text = formatMonthDayWithWeekday(today),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
                 Text(
-                    text = if (count > 0) "${stringResource(R.string.today_checked)} $count/$maxCount ${
+                    text = if (count > 0) "${stringResource(Res.string.today_checked)} $count/$maxCount ${
                         stringResource(
-                            R.string.times
+                            Res.string.times
                         )
                     }"
-                    else stringResource(R.string.not_checked_yet),
+                    else stringResource(Res.string.not_checked_yet),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
                 )
@@ -111,12 +121,12 @@ fun TodayCheckInCard(
                 ) {
                     Icon(Icons.Filled.Check, null, modifier = Modifier.size(18.dp))
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(if (count > 0) stringResource(R.string.view_checkin) else stringResource(R.string.checkin))
+                    Text(if (count > 0) stringResource(Res.string.view_checkin) else stringResource(Res.string.checkin))
                 }
                 if (count > 0) {
                     TextButton(onClick = onClear) {
                         Text(
-                            stringResource(R.string.clear_checkin),
+                            stringResource(Res.string.clear_checkin),
                             fontSize = 12.sp,
                             color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.6f)
                         )
@@ -152,8 +162,8 @@ fun StatsCard(
         ) {
             StatItem(
                 icon = Icons.Filled.Star,
-                label = stringResource(R.string.this_month_checkin),
-                value = stringResource(R.string.days, checkedDays)
+                label = stringResource(Res.string.this_month_checkin),
+                value = stringResource(Res.string.days, checkedDays)
             )
             HorizontalDivider(
                 modifier = Modifier
@@ -162,8 +172,8 @@ fun StatsCard(
             )
             StatItem(
                 icon = Icons.Filled.Favorite,
-                label = stringResource(R.string.has_cum_days),
-                value = stringResource(R.string.counts, monthlyTotal)
+                label = stringResource(Res.string.has_cum_days),
+                value = stringResource(Res.string.counts, monthlyTotal)
             )
             HorizontalDivider(
                 modifier = Modifier
@@ -172,8 +182,8 @@ fun StatsCard(
             )
             StatItem(
                 icon = Icons.Filled.Favorite,
-                label = stringResource(R.string.best_streak),
-                value = "${bestStreak}${stringResource(R.string.day_unit)}"
+                label = stringResource(Res.string.best_streak),
+                value = "${bestStreak}${stringResource(Res.string.day_unit)}"
             )
         }
     }
