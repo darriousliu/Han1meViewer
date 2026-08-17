@@ -1,21 +1,17 @@
 package com.yenaly.han1meviewer.ui.screen.home.preview.getchupreview
 
-import android.content.Context
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import coil3.ImageLoader
-import coil3.network.okhttp.OkHttpNetworkFetcherFactory
+import coil3.PlatformContext
+import coil3.compose.LocalPlatformContext
+import coil3.network.ktor3.KtorNetworkFetcherFactory
 import coil3.request.ImageRequest
-import com.yenaly.han1meviewer.DESKTOP_USER_AGENT
-import com.yenaly.han1meviewer.logic.network.HDns
-import com.yenaly.han1meviewer.logic.network.HProxySelector
-import okhttp3.OkHttpClient
-import java.time.LocalDate
-import java.util.concurrent.TimeUnit
+import com.yenaly.han1meviewer.logic.network.HanimeNetwork
+import com.yenaly.han1meviewer.util.currentLocalDate
 
 internal fun currentGetchuDateCode(): String {
-    val now = LocalDate.now()
-    return "%04d%02d".format(now.year, now.monthValue)
+    val now = currentLocalDate()
+    return formatGetchuMonthCode(now.year, now.monthNumber)
 }
 
 internal fun shiftGetchuMonthCode(code: String, delta: Int): String {
@@ -29,8 +25,12 @@ internal fun shiftGetchuMonthCode(code: String, delta: Int): String {
         month -= 12
         year += 1
     }
-    return "%04d%02d".format(year, month)
+    return formatGetchuMonthCode(year, month)
 }
+
+/** common stdlib 没有 `String.format`，自己拼。 */
+private fun formatGetchuMonthCode(year: Int, month: Int): String =
+    year.toString().padStart(4, '0') + month.toString().padStart(2, '0')
 
 internal fun getchuDateLabel(code: String): String {
     return "${code.substring(0, 4)}/${code.substring(4, 6).toInt()}"
@@ -42,33 +42,20 @@ internal fun getchuMonthOptions(centerCode: String): List<String> {
 
 @Composable
 internal fun getchuImageRequest(url: String?): ImageRequest {
-    val context = LocalContext.current
+    val context = LocalPlatformContext.current
     return ImageRequest.Builder(context)
         .data(url)
         .build()
 }
 
-internal fun createGetchuImageLoader(context: Context): ImageLoader {
-    val imageClient = OkHttpClient.Builder()
-        .connectTimeout(15, TimeUnit.SECONDS)
-        .dns(HDns())
-        .proxySelector(HProxySelector())
-        .addInterceptor { chain ->
-            val request = chain.request()
-            val url = request.url
-            val builder = request.newBuilder()
-            if (url.host == "www.getchu.com" && url.encodedPath.startsWith("/brandnew/")) {
-                builder
-                    .header("User-Agent", DESKTOP_USER_AGENT)
-                    .header("Referer", "https://www.getchu.com/")
-                    .header("Cookie", "getchu_adalt_flag=getchu.com; gc=gc")
-            }
-            chain.proceed(builder.build())
-        }
+/**
+ * getchu 的图片要带 Referer/Cookie 才取得到，而 HClientSpec.GETCHU 已经通过
+ * `defaultRequest` 配好了那三个头，直接复用，不用再写一遍 OkHttp 拦截器。
+ *
+ * 传 lambda 而不是 client 实例：用户改代理/DNS 会触发
+ * [HanimeNetwork.rebuildNetwork]，这样能自动用上重建后的 client。
+ */
+internal fun createGetchuImageLoader(context: PlatformContext): ImageLoader =
+    ImageLoader.Builder(context)
+        .components { add(KtorNetworkFetcherFactory(httpClient = { HanimeNetwork.getchuClient })) }
         .build()
-    return ImageLoader.Builder(context)
-        .components {
-            add(OkHttpNetworkFetcherFactory(callFactory = { imageClient }))
-        }
-        .build()
-}

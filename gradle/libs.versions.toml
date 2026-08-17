@@ -85,7 +85,10 @@ androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefre
 androidx-window = { module = "androidx.window:window", version.ref = "window" }
 androidx-window-java = { module = "androidx.window:window-java", version.ref = "window" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
-coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilCompose" }
+# coil3 的网络层走 Ktor 而不是 OkHttp：这样图片请求能复用 commonMain 已有的
+# HClientSpec client（getchu 图需要的 Referer/Cookie 那套就不用再写一遍），
+# 而且 ktor3 版有 android / jvm / iosArm64 / iosSimulatorArm64 四个变体，okhttp 版只有前两个。
+coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coilCompose" }
 compose-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "composeMultiplatform" }
 compose-avatar-cropper = { module = "cn.mucute:compose-avatar-cropper", version.ref = "composeAvatarCropper" }
 core = { group = "androidx.core", name = "core", version.ref = "core" }

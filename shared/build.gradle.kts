@@ -149,6 +149,7 @@ kotlin {
             implementation(libs.compose.multiplatform.ui.tooling.preview)
             implementation(libs.jetbrains.compose.material.icons.core)
             implementation(libs.coil.compose)
+            implementation(libs.coil.network.ktor3)
             implementation(libs.lifecycle.viewmodel)
             implementation(libs.lifecycle.viewmodel.savedstate)
             implementation(libs.lifecycle.runtime.compose)
@@ -205,8 +206,6 @@ kotlin {
 
             implementation(libs.androidx.navigation.compose)
             implementation(libs.androidx.material.icons.core)
-            // coil-compose 已由 commonMain 提供，这里只留 Android 专属的 OkHttp 网络层
-            implementation(libs.coil.network.okhttp)
             implementation(libs.aboutlibraries.compose.m3)
             implementation(libs.compose.avatar.cropper)
             // parse
@@ -214,8 +213,9 @@ kotlin {
 
             // network
 
-            // Coil 2 的 ImageLoader 还直接用 OkHttpClient（HImageMeower / GetchuPreviewUtils），
+            // Coil 2 的 ImageLoader 还直接用 OkHttpClient（HImageMeower），
             // 其余网络请求都走 commonMain 的 Ktor，okhttp 由 androidJvmMain 带下来。
+            // coil3 的图片请求也走 Ktor（commonMain 的 coil-network-ktor3）。
 
             // pic
 

@@ -34,7 +34,12 @@ object HanimeNetwork {
     var hClient: HttpClient = buildHttpClient(HClientSpec.HANIME)
         private set
 
-    private var getchuClient: HttpClient = buildHttpClient(HClientSpec.GETCHU)
+    /**
+     * getchu 的 client。除了 Ktorfit，getchu 图片的 coil3 ImageLoader 也用它
+     * —— 那些图必须带 [HClientSpec.GETCHU] 里配的 Referer/Cookie 才能取到。
+     */
+    var getchuClient: HttpClient = buildHttpClient(HClientSpec.GETCHU)
+        private set
 
     /**
      * GitHub API 的返回是 JSON，要装 ContentNegotiation 才能直接反序列化成 [HGitHubService]
