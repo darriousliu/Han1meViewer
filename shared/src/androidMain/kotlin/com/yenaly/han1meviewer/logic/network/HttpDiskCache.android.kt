@@ -5,8 +5,6 @@ import com.yenaly.han1meviewer.util.isMainProcess
 import okhttp3.Cache
 import java.io.File
 
-private const val HTTP_CACHE_SIZE = 10L * 1024 * 1024
-
 internal actual fun createHttpDiskCache(): Cache? {
     // DiskLruCache 带文件锁，多进程共用同一目录会损坏——子进程不用磁盘缓存
     if (!isMainProcess) return null

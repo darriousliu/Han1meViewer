@@ -15,6 +15,8 @@ import okhttp3.Protocol
  *
  * 放在 androidJvmMain 而不是 androidMain，是为了 android 和 jvm 两个目标共用同一份源码。
  */
+
+internal const val HTTP_CACHE_SIZE = 10L * 1024 * 1024
 /**
  * HANIME client 的 OkHttp 磁盘缓存；返回 null 就没有磁盘缓存。
  *
