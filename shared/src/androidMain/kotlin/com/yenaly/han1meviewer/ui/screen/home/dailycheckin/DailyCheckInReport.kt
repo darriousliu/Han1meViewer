@@ -290,8 +290,10 @@ fun YearContributionView(
     onYearChange: (Int) -> Unit,
 ) {
     val weeks = remember(year) { buildYearWeeks(year) }
-    val monthFormat = stringResource(R.string.report_month_format)
-    val monthLabels = remember(year) { buildMonthLabels(year, weeks, monthFormat) }
+    // buildMonthLabels 进了 commonMain，签名改收 12 个已格式化标签
+    // （common 没有 String.format；%1$d 是 CMP stringResource 认的形状）
+    val monthLabelTexts = (1..12).map { stringResource(R.string.report_month_format, it) }
+    val monthLabels = remember(year, monthLabelTexts) { buildMonthLabels(year, weeks, monthLabelTexts) }
     val dayLabels = listOf(
         stringResource(R.string.mon), stringResource(R.string.tue),
         stringResource(R.string.wed), stringResource(R.string.thu),

@@ -34,8 +34,8 @@ import com.yenaly.han1meviewer.ui.screen.home.dailycheckin.ContributionReportDia
 import com.yenaly.han1meviewer.ui.screen.home.dailycheckin.DailyCheckInContent
 import com.yenaly.han1meviewer.ui.screen.home.dailycheckin.DailyCheckInEvent
 import com.yenaly.han1meviewer.ui.screen.home.dailycheckin.DailyCheckInUiState
-import com.yenaly.han1meviewer.ui.screen.home.dailycheckin.createCalendarEvent
-import com.yenaly.han1meviewer.ui.screen.home.dailycheckin.updateReportWindowMode
+import com.yenaly.han1meviewer.ui.navigation.main.createCalendarEvent
+import com.yenaly.han1meviewer.ui.navigation.main.updateReportWindowMode
 import com.yenaly.han1meviewer.ui.viewmodel.CheckInCalendarViewModel
 import com.yenaly.han1meviewer.util.currentLocalDate
 import com.yenaly.han1meviewer.util.currentYearMonth
