@@ -194,6 +194,8 @@ kotlin {
             implementation(libs.sqlite.async)
             implementation(libs.filekit.core)
             implementation(libs.filekit.dialogs.compose)
+            implementation(libs.navigation3.ui.jb)
+            implementation(libs.lifecycle.viewmodel.navigation3)
         }
 
         getByName("androidHostTest").dependencies {
@@ -231,6 +233,7 @@ kotlin {
             implementation(libs.androidx.ui)
 
             implementation(libs.androidx.navigation.compose)
+            implementation(libs.navigation3.ui.androidx)
             implementation(libs.androidx.material.icons.core)
             // parse
 
