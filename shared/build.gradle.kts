@@ -185,6 +185,8 @@ kotlin {
             implementation(libs.ktorfit.lib.light)
             implementation(libs.kermit)
             implementation(libs.mp.stools)
+            implementation(libs.aboutlibraries.core)
+            implementation(libs.aboutlibraries.compose.m3)
             implementation(libs.sonner)
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
@@ -208,7 +210,6 @@ kotlin {
             implementation(libs.mmkv)
             implementation(libs.androidx.window)
             implementation(libs.androidx.window.java)
-            implementation(libs.aboutlibraries.core)
             implementation(libs.androidx.biometric)
             implementation(libs.androidx.core.splashscreen)
             implementation(libs.androidx.swiperefreshlayout)
@@ -229,7 +230,6 @@ kotlin {
 
             implementation(libs.androidx.navigation.compose)
             implementation(libs.androidx.material.icons.core)
-            implementation(libs.aboutlibraries.compose.m3)
             implementation(libs.compose.avatar.cropper)
             // parse
 

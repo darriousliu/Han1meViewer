@@ -20,14 +20,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import com.mikepenz.aboutlibraries.ui.compose.LibraryDefaults
-import com.mikepenz.aboutlibraries.ui.compose.android.produceLibraries
+import com.mikepenz.aboutlibraries.ui.compose.rememberLibraries
 import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
-import com.yenaly.han1meviewer.R
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.close
+import han1meviewer.shared.generated.resources.open_source_license
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,7 +51,7 @@ fun LicenseDialog(
                     modifier = Modifier.padding(vertical = 24.dp)
                 ) {
                     Text(
-                        text = stringResource(R.string.open_source_license),
+                        text = stringResource(Res.string.open_source_license),
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface,
@@ -64,7 +66,13 @@ fun LicenseDialog(
                             .clip(RoundedCornerShape(12.dp))
                             .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
                     ) {
-                        val libraries by produceLibraries(R.raw.aboutlibraries)
+                        // Android-only 的 produceLibraries(@RawRes Int) 换成 common 重载
+                        // rememberLibraries { suspend () -> String }。json 由 :shared 的
+                        // aboutLibraries { export } 生成到 composeResources/files/，
+                        // 见 build.gradle.kts 里的注释。
+                        val libraries by rememberLibraries {
+                            Res.readBytes("files/aboutlibraries.json").decodeToString()
+                        }
 
                         LibrariesContainer(
                             libraries = libraries,
@@ -89,7 +97,7 @@ fun LicenseDialog(
                     ) {
                         TextButton(onClick = onDismiss) {
                             Text(
-                                text = stringResource(R.string.close),
+                                text = stringResource(Res.string.close),
                                 style = MaterialTheme.typography.labelLarge,
                                 fontWeight = FontWeight.SemiBold
                             )

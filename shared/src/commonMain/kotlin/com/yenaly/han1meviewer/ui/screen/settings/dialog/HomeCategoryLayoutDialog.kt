@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn as ComposeLazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -35,15 +36,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.stringResource
-import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.ui.component.verticalScrollbar
 import com.yenaly.han1meviewer.ui.screen.settings.model.HomeSettingsUiState
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.cancel
+import han1meviewer.shared.generated.resources.confirm
+import han1meviewer.shared.generated.resources.home_category_layout
+import han1meviewer.shared.generated.resources.home_category_layout_dialog_summary
+import han1meviewer.shared.generated.resources.reset
 import kotlinx.coroutines.launch
-import androidx.compose.foundation.lazy.LazyColumn as ComposeLazyColumn
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun HomeCategoryLayoutDialog(
@@ -67,7 +71,7 @@ internal fun HomeCategoryLayoutDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.home_category_layout)) },
+        title = { Text(stringResource(Res.string.home_category_layout)) },
         text = {
             ComposeLazyColumn(
                 state = lazyListState,
@@ -78,7 +82,7 @@ internal fun HomeCategoryLayoutDialog(
             ) {
                 item(key = "summary") {
                     Text(
-                        text = stringResource(R.string.home_category_layout_dialog_summary),
+                        text = stringResource(Res.string.home_category_layout_dialog_summary),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -241,7 +245,7 @@ internal fun HomeCategoryLayoutDialog(
         },
         confirmButton = {
             TextButton(onClick = { onConfirm(order, hiddenKeys.toSet()) }) {
-                Text(stringResource(R.string.confirm))
+                Text(stringResource(Res.string.confirm))
             }
         },
         dismissButton = {
@@ -252,10 +256,10 @@ internal fun HomeCategoryLayoutDialog(
                         hiddenKeys = emptyList()
                     }
                 ) {
-                    Text(stringResource(R.string.reset))
+                    Text(stringResource(Res.string.reset))
                 }
                 TextButton(onClick = onDismiss) {
-                    Text(stringResource(R.string.cancel))
+                    Text(stringResource(Res.string.cancel))
                 }
             }
         },
