@@ -18,15 +18,19 @@ import androidx.compose.ui.unit.dp
  *
  *   curl --compressed -o <name>.kt \
  *     "https://fonts.gstatic.com/render/v1/Material+Symbols+Outlined/24dp/<name>.kt\
- *      ?var=opsz,wght,FILL,GRAD,ROND@24,400,0,0,50"
+ *      ?var=opsz,wght,FILL,GRAD,ROND@24,400,<FILL>,0,50"
  *
  * 拿到的是包名 com.example.test 下的顶层 `val <name>: ImageVector`，
  * 改成 Icons 的扩展属性放进来即可——调用点写法不用变，只多一行 import。
- * 注意 URL 里 FILL 是第三个数字：0 = 描边款，1 = 实心款。
+ * 注意 curl 要加 --compressed，否则拿到的是 gzip 字节流。
+ *
+ * URL 里 FILL 是第三个数字：0 = 描边款，1 = 实心款。要和被替代的
+ * Material Icons 原图标观感对齐，各图标用的值见下面每一项的注释。
  *
  * 以后再遇到 core 里没有的图标，照这个流程加。
  */
 
+/** Material Symbols `calendar_month`，FILL=1（实心款）。 */
 val Icons.Filled.CalendarMonth: ImageVector
   get() {
     if (_CalendarMonth != null) {
@@ -52,45 +56,7 @@ val Icons.Filled.CalendarMonth: ImageVector
             strokeLineMiter = 1f,
             pathFillType = PathFillType.Companion.NonZero,
           ) {
-            moveTo(5f, 22f)
-            quadTo(4.18f, 22f, 3.59f, 21.41f)
-            reflectiveQuadTo(3f, 20f)
-            verticalLineTo(6f)
-            quadTo(3f, 5.18f, 3.59f, 4.59f)
-            reflectiveQuadTo(5f, 4f)
-            horizontalLineTo(6f)
-            verticalLineTo(2f)
-            horizontalLineTo(8f)
-            verticalLineTo(4f)
-            horizontalLineToRelative(8f)
-            verticalLineTo(2f)
-            horizontalLineToRelative(2f)
-            verticalLineTo(4f)
-            horizontalLineToRelative(1f)
-            quadToRelative(0.83f, 0f, 1.41f, 0.59f)
-            quadTo(21f, 5.18f, 21f, 6f)
-            verticalLineTo(20f)
-            quadToRelative(0f, 0.82f, -0.59f, 1.41f)
-            reflectiveQuadTo(19f, 22f)
-            horizontalLineTo(5f)
-            close()
-            moveTo(5f, 20f)
-            horizontalLineTo(19f)
-            verticalLineTo(10f)
-            horizontalLineTo(5f)
-            verticalLineTo(20f)
-            close()
-            moveTo(5f, 8f)
-            horizontalLineTo(19f)
-            verticalLineTo(6f)
-            horizontalLineTo(5f)
-            verticalLineTo(8f)
-            close()
-            moveTo(5f, 8f)
-            verticalLineTo(6f)
-            verticalLineTo(8f)
-            close()
-            moveToRelative(7f, 6f)
+            moveTo(12f, 14f)
             quadToRelative(-0.42f, 0f, -0.71f, -0.29f)
             quadTo(11f, 13.43f, 11f, 13f)
             reflectiveQuadToRelative(0.29f, -0.71f)
@@ -150,6 +116,34 @@ val Icons.Filled.CalendarMonth: ImageVector
             reflectiveQuadToRelative(-0.29f, 0.71f)
             reflectiveQuadTo(16f, 18f)
             close()
+            moveTo(5f, 22f)
+            quadTo(4.18f, 22f, 3.59f, 21.41f)
+            reflectiveQuadTo(3f, 20f)
+            verticalLineTo(6f)
+            quadTo(3f, 5.18f, 3.59f, 4.59f)
+            reflectiveQuadTo(5f, 4f)
+            horizontalLineTo(6f)
+            verticalLineTo(2f)
+            horizontalLineTo(8f)
+            verticalLineTo(4f)
+            horizontalLineToRelative(8f)
+            verticalLineTo(2f)
+            horizontalLineToRelative(2f)
+            verticalLineTo(4f)
+            horizontalLineToRelative(1f)
+            quadToRelative(0.83f, 0f, 1.41f, 0.59f)
+            quadTo(21f, 5.18f, 21f, 6f)
+            verticalLineTo(20f)
+            quadToRelative(0f, 0.82f, -0.59f, 1.41f)
+            reflectiveQuadTo(19f, 22f)
+            horizontalLineTo(5f)
+            close()
+            moveTo(5f, 20f)
+            horizontalLineTo(19f)
+            verticalLineTo(10f)
+            horizontalLineTo(5f)
+            verticalLineTo(20f)
+            close()
           }
         }
         .build()
@@ -158,6 +152,7 @@ val Icons.Filled.CalendarMonth: ImageVector
 
 private var _CalendarMonth: ImageVector? = null
 
+/** Material Symbols `open_in_new`。这个字形没有实心变体，FILL=0 和 1 拿到的矢量完全一样。 */
 val Icons.AutoMirrored.Filled.OpenInNew: ImageVector
   get() {
     if (_OpenInNew != null) {
@@ -220,6 +215,7 @@ val Icons.AutoMirrored.Filled.OpenInNew: ImageVector
 
 private var _OpenInNew: ImageVector? = null
 
+/** Material Symbols `play_circle`，FILL=0（描边款）。 */
 val Icons.Filled.PlayCircleOutline: ImageVector
   get() {
     if (_PlayCircleOutline != null) {
