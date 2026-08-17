@@ -19,13 +19,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.state.PageLoadingState
 import com.yenaly.han1meviewer.ui.component.lazy.LazyColumn
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.load_complete
+import han1meviewer.shared.generated.resources.load_complete_with_pages
+import han1meviewer.shared.generated.resources.load_failed_retry
+import han1meviewer.shared.generated.resources.loading
 import kotlinx.coroutines.delay
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * 加载更多底部组件
@@ -59,7 +63,7 @@ fun LoadMoreFooter(
                         modifier = Modifier.size(20.dp),
                     )
                     Text(
-                        text = stringResource(R.string.loading),
+                        text = stringResource(Res.string.loading),
                         color = textColor,
                         style = MaterialTheme.typography.bodyMedium
                     )
@@ -69,9 +73,9 @@ fun LoadMoreFooter(
             state is PageLoadingState.NoMoreData -> {
                 Text(
                     text = if (loadedPage == null)
-                        stringResource(R.string.load_complete)
+                        stringResource(Res.string.load_complete)
                     else
-                        stringResource(R.string.load_complete_with_pages, loadedPage),
+                        stringResource(Res.string.load_complete_with_pages, loadedPage),
                     color = textColor.copy(alpha = 0.6f),
                     style = MaterialTheme.typography.bodyMedium
                 )
@@ -81,7 +85,7 @@ fun LoadMoreFooter(
 
             state is PageLoadingState.Error -> {
                 Text(
-                    text = stringResource(R.string.load_failed_retry),
+                    text = stringResource(Res.string.load_failed_retry),
                     color = MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.bodyMedium
                 )

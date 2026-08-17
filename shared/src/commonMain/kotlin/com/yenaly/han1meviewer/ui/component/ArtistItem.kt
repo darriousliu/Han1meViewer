@@ -14,15 +14,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.model.SubscriptionItem
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
 import com.yenaly.han1meviewer.ui.preview.fakeArtists
 import com.yenaly.han1meviewer.ui.screen.RetryableImage
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.h_chan_load_failed_small
+import han1meviewer.shared.generated.resources.h_chan_loading_small
+import org.jetbrains.compose.resources.painterResource
 
 
 /**
@@ -59,8 +61,8 @@ fun ArtistItem(
                 .size(56.dp)
                 .clip(CircleShape)
                 .border(4.dp, MaterialTheme.colorScheme.primaryContainer, CircleShape),
-            placeholder = painterResource(R.drawable.h_chan_loading_small),
-            error = painterResource(R.drawable.h_chan_load_failed_small),
+            placeholder = painterResource(Res.drawable.h_chan_loading_small),
+            error = painterResource(Res.drawable.h_chan_load_failed_small),
         )
         Spacer(Modifier.height(4.dp))
         Text(

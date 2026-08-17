@@ -10,12 +10,16 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.ui.component.content.EmptyContent
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.ic_baseline_pause_24
+import han1meviewer.shared.generated.resources.ic_baseline_play_arrow_24
+import han1meviewer.shared.generated.resources.pause_all
+import han1meviewer.shared.generated.resources.start_all
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,14 +68,14 @@ private fun HanimeScaffoldPreview() {
             actions = {
                 FilledIconButton(onClick = { }, enabled = true) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_baseline_play_arrow_24),
-                        contentDescription = stringResource(R.string.start_all),
+                        painter = painterResource(Res.drawable.ic_baseline_play_arrow_24),
+                        contentDescription = stringResource(Res.string.start_all),
                     )
                 }
                 FilledIconButton(onClick = { }, enabled = false) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_baseline_pause_24),
-                        contentDescription = stringResource(R.string.pause_all),
+                        painter = painterResource(Res.drawable.ic_baseline_pause_24),
+                        contentDescription = stringResource(Res.string.pause_all),
                     )
                 }
             }
