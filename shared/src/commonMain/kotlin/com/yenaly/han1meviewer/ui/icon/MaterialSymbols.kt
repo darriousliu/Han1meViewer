@@ -344,3 +344,43 @@ val Icons.AutoMirrored.Filled.DriveFileMove: ImageVector
   }
 
 private var _DriveFileMove: ImageVector? = null
+
+/** Material Symbols `remove`。纯减号横条，FILL 取值对它没有影响。 */
+val Icons.Filled.Remove: ImageVector
+  get() {
+    if (_Remove != null) {
+      return _Remove!!
+    }
+    _Remove =
+      ImageVector.Builder(
+          name = "remove",
+          defaultWidth = 24.dp,
+          defaultHeight = 24.dp,
+          viewportWidth = 24f,
+          viewportHeight = 24f,
+        )
+        .apply {
+          path(
+            fill = SolidColor(Color.Black),
+            fillAlpha = 1f,
+            stroke = null,
+            strokeAlpha = 1f,
+            strokeLineWidth = 1f,
+            strokeLineCap = StrokeCap.Butt,
+            strokeLineJoin = StrokeJoin.Bevel,
+            strokeLineMiter = 1f,
+            pathFillType = PathFillType.Companion.NonZero,
+          ) {
+            moveTo(5f, 13f)
+            verticalLineTo(11f)
+            horizontalLineTo(19f)
+            verticalLineToRelative(2f)
+            horizontalLineTo(5f)
+            close()
+          }
+        }
+        .build()
+    return _Remove!!
+  }
+
+private var _Remove: ImageVector? = null

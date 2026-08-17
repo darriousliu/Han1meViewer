@@ -753,7 +753,7 @@
     <string name="horizontal_card_count_summary">可調整首頁與影片詳情相關影片等橫向列表一次可見的卡片數量</string>
     <string name="horizontal_card_count_dialog_hint">依不同螢幕寬度設定橫向列表一次可見的卡片數量</string>
     <string name="horizontal_card_count_current_width_hint">目前容器寬度參考：約 %1$ddp</string>
-    <string name="horizontal_card_count_current_bucket_hint">目前命中檔位：%1$s = %2$.1f 張</string>
+    <string name="horizontal_card_count_current_bucket_hint">目前命中檔位：%1$s = %2$s 張</string>
     <string name="horizontal_card_count_range_narrow" translatable="false">&lt;350dp</string>
     <string name="horizontal_card_count_range_compact" translatable="false">350-599dp</string>
     <string name="horizontal_card_count_range_medium" translatable="false">600-839dp</string>

@@ -18,8 +18,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledIconButton
@@ -33,15 +33,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.yenaly.han1meviewer.R
+import com.yenaly.han1meviewer.ui.icon.Remove
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
 import com.yenaly.han1meviewer.ui.screen.settings.model.GridRangeOption
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.cancel
+import han1meviewer.shared.generated.resources.confirm
+import han1meviewer.shared.generated.resources.reset
+import net.sergeych.sprintf.sprintf
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun BaseGridConfigDialog(
@@ -106,7 +111,7 @@ fun BaseGridConfigDialog(
         },
         confirmButton = {
             TextButton(onClick = onConfirm, enabled = canConfirm) {
-                Text(stringResource(R.string.confirm))
+                Text(stringResource(Res.string.confirm))
             }
         },
         dismissButton = {
@@ -115,10 +120,10 @@ fun BaseGridConfigDialog(
                     onClick = onReset,
                     colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.tertiary)
                 ) {
-                    Text(stringResource(R.string.reset))
+                    Text(stringResource(Res.string.reset))
                 }
                 TextButton(onClick = onDismiss) {
-                    Text(stringResource(R.string.cancel))
+                    Text(stringResource(Res.string.cancel))
                 }
             }
         }
@@ -146,7 +151,7 @@ private fun GridConfigInputRow(option: GridRangeOption, isDecimal: Boolean) {
         val finalValue = newValue.coerceAtLeast(0f)
 
         val textValue = if (isDecimal) {
-            String.format(java.util.Locale.US, "%.1f", finalValue)
+            "%.1f".sprintf(finalValue)
         } else {
             finalValue.toInt().toString()
         }
@@ -220,7 +225,7 @@ private fun GridConfigInputRow(option: GridRangeOption, isDecimal: Boolean) {
                         )
                     ) {
                         Icon(
-                            imageVector = androidx.compose.material.icons.Icons.Default.Remove,
+                            imageVector = Icons.Default.Remove,
                             contentDescription = "减少",
                             modifier = Modifier.size(16.dp)
                         )

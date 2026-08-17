@@ -717,7 +717,7 @@ hanime1.me以外のドメインは、特定の時間帯にhanime1.meにリダイ
     <string name="horizontal_card_count_summary">ホームや関連動画など、横スクロール一覧で一度に見えるカード数を調整します</string>
     <string name="horizontal_card_count_dialog_hint">画面幅ごとに、横スクロール一覧で一度に見えるカード数を設定します</string>
     <string name="horizontal_card_count_current_width_hint">現在のコンテナ幅の目安：約 %1$ddp</string>
-    <string name="horizontal_card_count_current_bucket_hint">現在の適用範囲：%1$s = %2$.1f 枚</string>
+    <string name="horizontal_card_count_current_bucket_hint">現在の適用範囲：%1$s = %2$s 枚</string>
     <string name="video_group_error">動画グループ取得エラー：</string>
     <string name="video_group_empty">動画グループが空です</string>
     <string name="default_group_rename_not_allowed">デフォルトグループ（%1$s）は名前変更できません！</string>
