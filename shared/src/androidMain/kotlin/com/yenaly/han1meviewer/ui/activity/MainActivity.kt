@@ -38,8 +38,8 @@ import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logout
 import com.yenaly.han1meviewer.ui.bridge.VideoPageHost
-import com.yenaly.han1meviewer.ui.navigation.main.AccountRoute
-import com.yenaly.han1meviewer.ui.navigation.main.VideoRoute
+import com.yenaly.han1meviewer.ui.navigation.AccountRoute
+import com.yenaly.han1meviewer.ui.navigation.VideoRoute
 import com.yenaly.han1meviewer.ui.navigation.navigateSafely
 import com.yenaly.han1meviewer.ui.screen.home.homepage.HomePageViewModel
 import com.yenaly.han1meviewer.ui.screen.main.MainActivityContent
@@ -48,8 +48,8 @@ import com.yenaly.han1meviewer.util.showAlertDialog
 import com.yenaly.han1meviewer.util.showSnackBar
 import com.yenaly.han1meviewer.util.textFromClipboard
 import com.yenaly.han1meviewer.videoUrlRegex
-import kotlinx.coroutines.flow.MutableSharedFlow
 import java.util.Locale
+import kotlinx.coroutines.flow.MutableSharedFlow
 
 /**
  * @project Hanime1

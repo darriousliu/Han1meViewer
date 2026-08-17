@@ -2,6 +2,7 @@ package com.yenaly.han1meviewer.ui.navigation.main
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.yenaly.han1meviewer.ui.navigation.GetchuPreviewDetailRoute
 import com.yenaly.han1meviewer.ui.screen.home.preview.getchupreview.GetchuPreviewDetailScreen
 import com.yenaly.han1meviewer.ui.screen.home.preview.getchupreview.GetchuPreviewScreen
 import com.yenaly.han1meviewer.ui.screen.home.preview.getchupreview.GetchuPreviewViewModel

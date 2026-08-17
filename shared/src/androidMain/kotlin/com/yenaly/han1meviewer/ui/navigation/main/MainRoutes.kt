@@ -2,98 +2,36 @@ package com.yenaly.han1meviewer.ui.navigation.main
 
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
-import com.yenaly.han1meviewer.ui.navigation.settings.DownloadSettingsRoute
-import com.yenaly.han1meviewer.ui.navigation.settings.HKeyframeSettingsRoute
-import com.yenaly.han1meviewer.ui.navigation.settings.HKeyframesRoute
-import com.yenaly.han1meviewer.ui.navigation.settings.HomeSettingsRoute
-import com.yenaly.han1meviewer.ui.navigation.settings.MpvPlayerSettingsRoute
-import com.yenaly.han1meviewer.ui.navigation.settings.NetworkSettingsRoute
-import com.yenaly.han1meviewer.ui.navigation.settings.PlayerSettingsRoute
-import com.yenaly.han1meviewer.ui.navigation.settings.SharedHKeyframesRoute
-import kotlinx.serialization.Serializable
+import androidx.navigation3.runtime.NavKey
+import com.yenaly.han1meviewer.ui.navigation.AccountRoute
+import com.yenaly.han1meviewer.ui.navigation.AvatarCropRoute
+import com.yenaly.han1meviewer.ui.navigation.CloudflareRoute
+import com.yenaly.han1meviewer.ui.navigation.CreatorCenterRoute
+import com.yenaly.han1meviewer.ui.navigation.DailyCheckInRoute
+import com.yenaly.han1meviewer.ui.navigation.DownloadRoute
+import com.yenaly.han1meviewer.ui.navigation.DownloadSettingsRoute
+import com.yenaly.han1meviewer.ui.navigation.GetchuPreviewDetailRoute
+import com.yenaly.han1meviewer.ui.navigation.GetchuPreviewRoute
+import com.yenaly.han1meviewer.ui.navigation.HKeyframeSettingsRoute
+import com.yenaly.han1meviewer.ui.navigation.HKeyframesRoute
+import com.yenaly.han1meviewer.ui.navigation.HomeRoute
+import com.yenaly.han1meviewer.ui.navigation.HomeSettingsRoute
+import com.yenaly.han1meviewer.ui.navigation.LoginRoute
+import com.yenaly.han1meviewer.ui.navigation.ManualCookiesRoute
+import com.yenaly.han1meviewer.ui.navigation.MpvPlayerSettingsRoute
+import com.yenaly.han1meviewer.ui.navigation.MyFavVideoRoute
+import com.yenaly.han1meviewer.ui.navigation.MyPlaylistRoute
+import com.yenaly.han1meviewer.ui.navigation.MyWatchLaterRoute
+import com.yenaly.han1meviewer.ui.navigation.NetworkSettingsRoute
+import com.yenaly.han1meviewer.ui.navigation.PlayerSettingsRoute
+import com.yenaly.han1meviewer.ui.navigation.PreviewCommentRoute
+import com.yenaly.han1meviewer.ui.navigation.PreviewRoute
+import com.yenaly.han1meviewer.ui.navigation.SearchRoute
+import com.yenaly.han1meviewer.ui.navigation.SharedHKeyframesRoute
+import com.yenaly.han1meviewer.ui.navigation.SubscriptionRoute
+import com.yenaly.han1meviewer.ui.navigation.VideoRoute
+import com.yenaly.han1meviewer.ui.navigation.WatchHistoryRoute
 import kotlin.reflect.KClass
-
-@Serializable
-object HomeRoute
-
-@Serializable
-object WatchHistoryRoute
-
-@Serializable
-object MyFavVideoRoute
-
-@Serializable
-object MyWatchLaterRoute
-
-@Serializable
-object MyPlaylistRoute
-
-@Serializable
-object SubscriptionRoute
-
-@Serializable
-object DailyCheckInRoute
-
-@Serializable
-object DownloadRoute
-
-@Serializable
-object CreatorCenterRoute
-
-@Serializable
-object AccountRoute
-
-/**
- * @param sourceJson 待裁剪图片的 `PlatformFile`，序列化成字符串走路由参数。
- *   `PlatformFile` 在 commonMain 是 `@Serializable`（`PlatformFileSerializer`），
- *   这里照搬 [SearchRoute.advancedSearchJson] 的做法——比塞进 NavHost 层的
- *   `remember` 更抗配置变更。
- */
-@Serializable
-data class AvatarCropRoute(
-    val sourceJson: String,
-)
-
-@Serializable
-data class SearchRoute(
-    val query: String? = null,
-    val advancedSearchJson: String? = null,
-)
-
-@Serializable
-object PreviewRoute
-
-@Serializable
-object GetchuPreviewRoute
-
-@Serializable
-data class GetchuPreviewDetailRoute(
-    val id: String,
-)
-
-@Serializable
-data class PreviewCommentRoute(
-    val date: String,
-    val dateCode: String,
-)
-
-@Serializable
-data class VideoRoute(
-    val videoCode: String,
-    val localUri: String? = null,
-)
-
-/* 原来是三个独立 Activity（LoginActivity / ManualInputCookiesActivity /
- * CloudflareActivity），Step 17 合并进导航图。 */
-
-@Serializable
-data object LoginRoute
-
-@Serializable
-data object ManualCookiesRoute
-
-@Serializable
-data class CloudflareRoute(val url: String)
 
 enum class MainDestinationSpec(
     val drawerDestination: MainDrawerDestination?,
@@ -245,6 +183,12 @@ enum class MainDestinationSpec(
         fun fromDestination(destination: NavDestination?): MainDestinationSpec? {
             if (destination == null) return null
             return entries.firstOrNull { destination.hasRoute(it.routeClass) }
+        }
+
+        /** nav3 版：返回栈里直接就是路由实例，不再有 `NavDestination` 这层 */
+        fun fromKey(key: NavKey?): MainDestinationSpec? {
+            if (key == null) return null
+            return entries.firstOrNull { it.routeClass.isInstance(key) }
         }
     }
 }

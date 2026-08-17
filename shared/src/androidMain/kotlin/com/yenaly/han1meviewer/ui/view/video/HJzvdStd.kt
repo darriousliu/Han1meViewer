@@ -55,7 +55,7 @@ import com.yenaly.han1meviewer.ui.activity.MainActivity
 import com.yenaly.han1meviewer.ui.adapter.HKeyframeRvAdapter
 import com.yenaly.han1meviewer.ui.adapter.SuperResolutionAdapter
 import com.yenaly.han1meviewer.ui.adapter.VideoSpeedAdapter
-import com.yenaly.han1meviewer.ui.navigation.main.HomeRoute
+import com.yenaly.han1meviewer.ui.navigation.HomeRoute
 import com.yenaly.han1meviewer.util.OrientationManager
 import com.yenaly.han1meviewer.util.appScreenWidth
 import com.yenaly.han1meviewer.util.findActivityOrNull

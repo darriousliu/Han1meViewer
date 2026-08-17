@@ -63,7 +63,7 @@ import com.yenaly.han1meviewer.logic.state.VideoLoadingState
 import com.yenaly.han1meviewer.ui.activity.MainActivity
 import com.yenaly.han1meviewer.ui.bridge.VideoPageHost
 import com.yenaly.han1meviewer.ui.component.ConfirmDialog
-import com.yenaly.han1meviewer.ui.navigation.main.VideoRoute
+import com.yenaly.han1meviewer.ui.navigation.VideoRoute
 import com.yenaly.han1meviewer.ui.view.video.ExoMediaKernel
 import com.yenaly.han1meviewer.ui.view.video.HJzvdStd
 import com.yenaly.han1meviewer.ui.view.video.HMediaKernel
@@ -81,11 +81,11 @@ import com.yenaly.han1meviewer.util.localizedTextOrNull
 import com.yenaly.han1meviewer.util.shareText
 import com.yenaly.han1meviewer.util.showShortToast
 import com.yenaly.han1meviewer.util.startActivity
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.getString
-import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 @Composable

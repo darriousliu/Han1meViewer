@@ -2,8 +2,18 @@ package com.yenaly.han1meviewer.ui.navigation.main
 
 import android.content.Intent
 import androidx.navigation.NavHostController
+import com.yenaly.han1meviewer.ui.navigation.CreatorCenterRoute
+import com.yenaly.han1meviewer.ui.navigation.DailyCheckInRoute
+import com.yenaly.han1meviewer.ui.navigation.DownloadRoute
+import com.yenaly.han1meviewer.ui.navigation.HomeRoute
+import com.yenaly.han1meviewer.ui.navigation.HomeSettingsRoute
+import com.yenaly.han1meviewer.ui.navigation.MyFavVideoRoute
+import com.yenaly.han1meviewer.ui.navigation.MyPlaylistRoute
+import com.yenaly.han1meviewer.ui.navigation.MyWatchLaterRoute
+import com.yenaly.han1meviewer.ui.navigation.SubscriptionRoute
+import com.yenaly.han1meviewer.ui.navigation.VideoRoute
+import com.yenaly.han1meviewer.ui.navigation.WatchHistoryRoute
 import com.yenaly.han1meviewer.ui.navigation.navigateSafely
-import com.yenaly.han1meviewer.ui.navigation.settings.HomeSettingsRoute
 
 private val loginRequiredDrawerItems = setOf(
     MainDrawerDestination.FavVideo,

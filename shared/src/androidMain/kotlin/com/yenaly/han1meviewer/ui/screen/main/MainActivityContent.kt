@@ -28,8 +28,8 @@ import com.yenaly.han1meviewer.logic.state.PageState
 import com.yenaly.han1meviewer.ui.activity.MainActivity
 import com.yenaly.han1meviewer.ui.component.UpdateDialog
 import com.yenaly.han1meviewer.ui.component.UsageNoticeDialog
-import com.yenaly.han1meviewer.ui.navigation.main.CloudflareRoute
-import com.yenaly.han1meviewer.ui.navigation.main.LoginRoute
+import com.yenaly.han1meviewer.ui.navigation.CloudflareRoute
+import com.yenaly.han1meviewer.ui.navigation.LoginRoute
 import com.yenaly.han1meviewer.ui.navigation.main.MainDestinationSpec
 import com.yenaly.han1meviewer.ui.navigation.main.MainNavHost
 import com.yenaly.han1meviewer.ui.navigation.main.handleMainIntent
