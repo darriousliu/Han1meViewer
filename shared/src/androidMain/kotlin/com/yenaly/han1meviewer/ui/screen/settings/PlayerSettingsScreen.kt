@@ -19,6 +19,13 @@ import com.yenaly.han1meviewer.ui.component.SettingSliderItem
 import com.yenaly.han1meviewer.ui.component.SettingSwitchItem
 import com.yenaly.han1meviewer.ui.component.lazy.LazyColumn
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.baseline_atomic_24
+import han1meviewer.shared.generated.resources.baseline_player_24
+import han1meviewer.shared.generated.resources.baseline_seek_24
+import han1meviewer.shared.generated.resources.baseline_speed2_24
+import han1meviewer.shared.generated.resources.baseline_speed_24
+import han1meviewer.shared.generated.resources.baseline_touch_24
 
 data class PlayerSettingsUiState(
     val kernel: String,
@@ -100,7 +107,7 @@ fun PlayerSettingsScreen(
             SettingNavigationItem(
                 title = stringResource(R.string.switch_player_kernel),
                 valueText = state.kernelDisplay,
-                iconRes = R.drawable.baseline_atomic_24,
+                iconRes = Res.drawable.baseline_atomic_24,
                 onClick = { activeDialog = PlayerChoiceDialog.Kernel },
             )
         }
@@ -109,7 +116,7 @@ fun PlayerSettingsScreen(
             SettingNavigationItem(
                 title = stringResource(R.string.mpv_advanced_settings),
                 summary = state.mpvSettingsSummary,
-                iconRes = R.drawable.baseline_player_24,
+                iconRes = Res.drawable.baseline_player_24,
                 onClick = onOpenMpvSettings,
                 enabled = state.mpvSettingsEnabled,
                 valueText = null,
@@ -120,7 +127,7 @@ fun PlayerSettingsScreen(
             SettingSwitchItem(
                 title = stringResource(R.string.show_bottom_progress),
                 checked = state.showBottomProgress,
-                iconRes = R.drawable.baseline_seek_24,
+                iconRes = Res.drawable.baseline_seek_24,
                 onCheckedChange = onShowBottomProgressChange,
             )
         }
@@ -129,7 +136,7 @@ fun PlayerSettingsScreen(
             SettingNavigationItem(
                 title = stringResource(R.string.default_playback_speed),
                 valueText = state.playerSpeedLabel,
-                iconRes = R.drawable.baseline_speed2_24,
+                iconRes = Res.drawable.baseline_speed2_24,
                 onClick = { activeDialog = PlayerChoiceDialog.Speed },
             )
         }
@@ -138,7 +145,7 @@ fun PlayerSettingsScreen(
             SettingNavigationItem(
                 title = stringResource(R.string.long_press_speed_multiplier),
                 valueText = state.longPressSpeedTimesLabel,
-                iconRes = R.drawable.baseline_touch_24,
+                iconRes = Res.drawable.baseline_touch_24,
                 onClick = { activeDialog = PlayerChoiceDialog.LongPressSpeed },
             )
         }
@@ -149,7 +156,7 @@ fun PlayerSettingsScreen(
                 summary = state.slideSensitivitySummary,
                 value = state.slideSensitivity,
                 valueRange = 1..9,
-                iconRes = R.drawable.baseline_speed_24,
+                iconRes = Res.drawable.baseline_speed_24,
                 onValueChange = onSlideSensitivityChange,
             )
         }

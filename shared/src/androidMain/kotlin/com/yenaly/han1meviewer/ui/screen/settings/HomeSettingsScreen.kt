@@ -16,7 +16,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yenaly.han1meviewer.HorizontalCardCountConfig
@@ -34,6 +33,43 @@ import com.yenaly.han1meviewer.ui.screen.settings.dialog.HorizontalCardCountDial
 import com.yenaly.han1meviewer.ui.screen.settings.dialog.SearchGridColumnsDialog
 import com.yenaly.han1meviewer.ui.screen.settings.model.HomeSettingsUiState
 import com.yenaly.han1meviewer.ui.theme.ThemeColorPreset
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.baseline_add_link_24
+import han1meviewer.shared.generated.resources.baseline_backup_24
+import han1meviewer.shared.generated.resources.baseline_bug_report_24
+import han1meviewer.shared.generated.resources.baseline_data_usage_24
+import han1meviewer.shared.generated.resources.baseline_forum_24
+import han1meviewer.shared.generated.resources.baseline_grid_24
+import han1meviewer.shared.generated.resources.baseline_h_24
+import han1meviewer.shared.generated.resources.baseline_mobile_data_24
+import han1meviewer.shared.generated.resources.baseline_prohibit_24
+import han1meviewer.shared.generated.resources.baseline_restore_24
+import han1meviewer.shared.generated.resources.baseline_row_24
+import han1meviewer.shared.generated.resources.baseline_simp_to_trad_24
+import han1meviewer.shared.generated.resources.baseline_sort_24
+import han1meviewer.shared.generated.resources.ic_baseline_arrow_back_24
+import han1meviewer.shared.generated.resources.ic_baseline_clear_all_24
+import han1meviewer.shared.generated.resources.ic_baseline_download_24
+import han1meviewer.shared.generated.resources.ic_baseline_fold_24
+import han1meviewer.shared.generated.resources.ic_baseline_history_24
+import han1meviewer.shared.generated.resources.ic_baseline_info_24
+import han1meviewer.shared.generated.resources.ic_baseline_language_24
+import han1meviewer.shared.generated.resources.ic_baseline_mask
+import han1meviewer.shared.generated.resources.ic_baseline_moon_24
+import han1meviewer.shared.generated.resources.ic_baseline_play_circle_outline_24
+import han1meviewer.shared.generated.resources.ic_baseline_skip_24
+import han1meviewer.shared.generated.resources.ic_baseline_tablet_24
+import han1meviewer.shared.generated.resources.ic_baseline_theme_24
+import han1meviewer.shared.generated.resources.ic_baseline_update_24
+import han1meviewer.shared.generated.resources.ic_clock
+import han1meviewer.shared.generated.resources.ic_comments
+import han1meviewer.shared.generated.resources.ic_oss
+import han1meviewer.shared.generated.resources.ic_pip_mode
+import han1meviewer.shared.generated.resources.ic_setting_applock
+import han1meviewer.shared.generated.resources.ic_setting_ci
+import han1meviewer.shared.generated.resources.ic_setting_lang
+import han1meviewer.shared.generated.resources.ic_video_quilty
+import org.jetbrains.compose.resources.stringResource
 
 private enum class HomeSettingsChoiceDialog {
     VideoLanguage,
@@ -205,7 +241,7 @@ fun HomeSettingsScreen(
             SettingNavigationItem(
                 title = stringResource(R.string.video_language),
                 valueText = state.videoLanguageLabel,
-                iconRes = R.drawable.baseline_simp_to_trad_24,
+                iconRes = Res.drawable.baseline_simp_to_trad_24,
                 onClick = { activeDialog = HomeSettingsChoiceDialog.VideoLanguage },
             )
         }
@@ -213,7 +249,7 @@ fun HomeSettingsScreen(
             SettingNavigationItem(
                 title = stringResource(R.string.default_video_quilty),
                 valueText = state.defaultVideoQuality,
-                iconRes = R.drawable.ic_video_quilty,
+                iconRes = Res.drawable.ic_video_quilty,
                 onClick = { activeDialog = HomeSettingsChoiceDialog.VideoQuality },
             )
         }
@@ -222,7 +258,7 @@ fun HomeSettingsScreen(
                 title = stringResource(R.string.allow_pip_title),
                 summary = stringResource(R.string.allow_pip_disc),
                 checked = state.allowPipMode,
-                iconRes = R.drawable.ic_pip_mode,
+                iconRes = Res.drawable.ic_pip_mode,
                 onCheckedChange = onAllowPipModeChange,
             )
         }
@@ -231,7 +267,7 @@ fun HomeSettingsScreen(
                 title = stringResource(R.string.resume_playback_title),
                 summary = stringResource(R.string.resume_playback_summary),
                 checked = state.allowResumePlayback,
-                iconRes = R.drawable.ic_baseline_skip_24,
+                iconRes = Res.drawable.ic_baseline_skip_24,
                 onCheckedChange = onAllowResumePlaybackChange,
             )
         }
@@ -240,7 +276,7 @@ fun HomeSettingsScreen(
                 title = stringResource(R.string.show_played_indicator),
                 summary = stringResource(R.string.show_played_indicator_summary),
                 checked = state.showPlayedIndicator,
-                iconRes = R.drawable.ic_baseline_history_24,
+                iconRes = Res.drawable.ic_baseline_history_24,
                 onCheckedChange = onShowPlayedIndicatorChange,
             )
         }
@@ -249,7 +285,7 @@ fun HomeSettingsScreen(
                 title = stringResource(R.string.horizontal_card_count_title),
                 summary = stringResource(R.string.horizontal_card_count_summary),
                 valueText = state.horizontalCardCountSummary,
-                iconRes = R.drawable.baseline_row_24,
+                iconRes = Res.drawable.baseline_row_24,
                 onClick = { showHorizontalCardCountDialog = true },
             )
         }
@@ -258,7 +294,7 @@ fun HomeSettingsScreen(
                 title = stringResource(R.string.search_artist_ignore_video_type),
                 summary = stringResource(R.string.search_artist_ignore_video_type_summary),
                 checked = state.searchArtistIgnoreVideoType,
-                iconRes = R.drawable.baseline_prohibit_24,
+                iconRes = Res.drawable.baseline_prohibit_24,
                 onCheckedChange = onSearchArtistIgnoreVideoTypeChange,
             )
         }
@@ -267,7 +303,7 @@ fun HomeSettingsScreen(
                 title = stringResource(R.string.disable_mobile_data_warning),
                 summary = stringResource(R.string.disable_mobile_data_warning_summary),
                 checked = state.disableMobileDataWarning,
-                iconRes = R.drawable.baseline_mobile_data_24,
+                iconRes = Res.drawable.baseline_mobile_data_24,
                 onCheckedChange = onDisableMobileDataWarningChange,
             )
         }
@@ -276,7 +312,7 @@ fun HomeSettingsScreen(
                 title = stringResource(R.string.disable_predictive_back_title),
                 summary = "暂不可用 Temporarily unavailable",
                 checked = state.disablePredictiveBack,
-                iconRes = R.drawable.ic_baseline_arrow_back_24,
+                iconRes = Res.drawable.ic_baseline_arrow_back_24,
                 onCheckedChange = onDisablePredictiveBackChange,
                 enabled = false
             )
@@ -286,7 +322,7 @@ fun HomeSettingsScreen(
                 title = stringResource(R.string.tablet_mode),
                 summary = stringResource(R.string.tablet_mode_summary),
                 checked = state.tabletMode,
-                iconRes = R.drawable.ic_baseline_tablet_24,
+                iconRes = Res.drawable.ic_baseline_tablet_24,
                 onCheckedChange = onTabletModeChange,
             )
         }
@@ -296,7 +332,7 @@ fun HomeSettingsScreen(
                     title = stringResource(R.string.search_grid_columns_title),
                     summary = stringResource(R.string.search_grid_columns_summary),
                     valueText = state.searchGridColumnsSummary,
-                    iconRes = R.drawable.baseline_grid_24,
+                    iconRes = Res.drawable.baseline_grid_24,
                     onClick = { showSearchGridColumnsDialog = true },
                 )
             }
@@ -304,14 +340,14 @@ fun HomeSettingsScreen(
         item {
             SettingNavigationItem(
                 title = stringResource(R.string.player_settings),
-                iconRes = R.drawable.ic_baseline_play_circle_outline_24,
+                iconRes = Res.drawable.ic_baseline_play_circle_outline_24,
                 onClick = onOpenPlayerSettings,
             )
         }
         item {
             SettingNavigationItem(
                 title = stringResource(R.string.h_keyframe_settings),
-                iconRes = R.drawable.baseline_h_24,
+                iconRes = Res.drawable.baseline_h_24,
                 onClick = onOpenHKeyframeSettings,
             )
         }
@@ -320,7 +356,7 @@ fun HomeSettingsScreen(
                 title = stringResource(R.string.disable_comments_title),
                 summary = stringResource(R.string.disable_comments_sum),
                 checked = state.disableComments,
-                iconRes = R.drawable.ic_comments,
+                iconRes = Res.drawable.ic_comments,
                 onCheckedChange = onDisableCommentsChange,
             )
         }
@@ -329,7 +365,7 @@ fun HomeSettingsScreen(
         item {
             SettingNavigationItem(
                 title = stringResource(R.string.download_settings),
-                iconRes = R.drawable.ic_baseline_download_24,
+                iconRes = Res.drawable.ic_baseline_download_24,
                 onClick = onOpenDownloadSettings,
             )
         }
@@ -338,7 +374,7 @@ fun HomeSettingsScreen(
                 title = stringResource(R.string.collapse_downloaded_groups),
                 summary = stringResource(R.string.collapse_downloaded_groups_summary),
                 checked = state.collapseDownloadedGroup,
-                iconRes = R.drawable.ic_baseline_fold_24,
+                iconRes = Res.drawable.ic_baseline_fold_24,
                 onCheckedChange = onCollapseDownloadedGroupChange,
             )
         }
@@ -347,7 +383,7 @@ fun HomeSettingsScreen(
         item {
             SettingNavigationItem(
                 title = stringResource(R.string.network_settings),
-                iconRes = R.drawable.ic_baseline_language_24,
+                iconRes = Res.drawable.ic_baseline_language_24,
                 onClick = onOpenNetworkSettings,
             )
         }
@@ -355,7 +391,7 @@ fun HomeSettingsScreen(
             SettingNavigationItem(
                 title = stringResource(R.string.apply_deep_links),
                 summary = stringResource(R.string.apply_deep_links_summary),
-                iconRes = R.drawable.baseline_add_link_24,
+                iconRes = Res.drawable.baseline_add_link_24,
                 onClick = onOpenApplyDeepLinks,
             )
         }
@@ -365,7 +401,7 @@ fun HomeSettingsScreen(
             SettingNavigationItem(
                 title = stringResource(R.string.dark_theme),
                 valueText = state.darkModeLabel,
-                iconRes = R.drawable.ic_baseline_moon_24,
+                iconRes = Res.drawable.ic_baseline_moon_24,
                 onClick = { activeDialog = HomeSettingsChoiceDialog.DarkMode },
             )
         }
@@ -373,7 +409,7 @@ fun HomeSettingsScreen(
             SettingNavigationItem(
                 title = stringResource(R.string.theme_color),
                 valueText = state.themeColorName,
-                iconRes = R.drawable.ic_baseline_theme_24,
+                iconRes = Res.drawable.ic_baseline_theme_24,
                 onClick = { activeDialog = HomeSettingsChoiceDialog.ThemeColor },
             )
         }
@@ -385,7 +421,7 @@ fun HomeSettingsScreen(
                     state.homeCategoryItems.size - state.hiddenHomeCategoryKeys.size,
                     state.homeCategoryItems.size,
                 ),
-                iconRes = R.drawable.baseline_sort_24,
+                iconRes = Res.drawable.baseline_sort_24,
                 onClick = { showHomeCategoryDialog = true },
             )
         }
@@ -394,7 +430,7 @@ fun HomeSettingsScreen(
                 title = stringResource(R.string.app_lang),
                 summary = stringResource(R.string.app_lang_sum),
                 valueText = state.appLanguageLabel,
-                iconRes = R.drawable.ic_setting_lang,
+                iconRes = Res.drawable.ic_setting_lang,
                 onClick = { activeDialog = HomeSettingsChoiceDialog.AppLanguage },
             )
         }
@@ -404,7 +440,7 @@ fun HomeSettingsScreen(
             SettingNavigationItem(
                 title = stringResource(R.string.check_update),
                 summary = state.updateSummary,
-                iconRes = R.drawable.ic_baseline_update_24,
+                iconRes = Res.drawable.ic_baseline_update_24,
                 onClick = onCheckUpdate,
             )
         }
@@ -412,7 +448,7 @@ fun HomeSettingsScreen(
             SettingSwitchItem(
                 title = stringResource(R.string.use_ci_update_channel),
                 checked = state.useCIUpdateChannel,
-                iconRes = R.drawable.ic_setting_ci,
+                iconRes = Res.drawable.ic_setting_ci,
                 onCheckedChange = onUseCIUpdateChannelChange,
             )
         }
@@ -422,7 +458,7 @@ fun HomeSettingsScreen(
                 summary = state.updatePopupIntervalSummary,
                 value = state.updatePopupIntervalDays,
                 valueRange = 0..30,
-                iconRes = R.drawable.ic_clock,
+                iconRes = Res.drawable.ic_clock,
                 onValueChange = onUpdatePopupIntervalDaysChange,
             )
         }
@@ -433,7 +469,7 @@ fun HomeSettingsScreen(
                 title = stringResource(R.string.analytics_title),
                 summary = stringResource(R.string.analytics_summary),
                 checked = state.useAnalytics,
-                iconRes = R.drawable.baseline_data_usage_24,
+                iconRes = Res.drawable.baseline_data_usage_24,
                 onCheckedChange = onUseAnalyticsChange,
             )
         }
@@ -442,7 +478,7 @@ fun HomeSettingsScreen(
                 title = stringResource(R.string.use_lock_screen),
                 summary = stringResource(R.string.use_lock_screen_sum),
                 checked = state.useLockScreen,
-                iconRes = R.drawable.ic_setting_applock,
+                iconRes = Res.drawable.ic_setting_applock,
                 onCheckedChange = onUseLockScreenChange,
             )
         }
@@ -451,7 +487,7 @@ fun HomeSettingsScreen(
                 title = stringResource(R.string.fake_app_icon),
                 summary = stringResource(R.string.select_fake_icon),
                 valueText = state.fakeLauncherIconName,
-                iconRes = R.drawable.ic_baseline_mask,
+                iconRes = Res.drawable.ic_baseline_mask,
                 onClick = onOpenFakeLauncherIcon,
             )
         }
@@ -461,7 +497,7 @@ fun HomeSettingsScreen(
             SettingNavigationItem(
                 title = stringResource(R.string.backup_export_title),
                 summary = stringResource(R.string.backup_export_summary),
-                iconRes = R.drawable.baseline_backup_24,
+                iconRes = Res.drawable.baseline_backup_24,
                 onClick = onExportBackup,
             )
         }
@@ -469,7 +505,7 @@ fun HomeSettingsScreen(
             SettingNavigationItem(
                 title = stringResource(R.string.backup_import_title),
                 summary = stringResource(R.string.backup_import_summary),
-                iconRes = R.drawable.baseline_restore_24,
+                iconRes = Res.drawable.baseline_restore_24,
                 onClick = onImportBackup,
             )
         }
@@ -477,7 +513,7 @@ fun HomeSettingsScreen(
             SettingNavigationItem(
                 title = stringResource(R.string.clear_cache),
                 summary = state.cacheSummary,
-                iconRes = R.drawable.ic_baseline_clear_all_24,
+                iconRes = Res.drawable.ic_baseline_clear_all_24,
                 onClick = onClearCache,
             )
         }
@@ -485,7 +521,7 @@ fun HomeSettingsScreen(
             SettingNavigationItem(
                 title = stringResource(R.string.submit_bug),
                 summary = stringResource(R.string.submit_bug_summary),
-                iconRes = R.drawable.baseline_bug_report_24,
+                iconRes = Res.drawable.baseline_bug_report_24,
                 onClick = onSubmitBug,
             )
         }
@@ -493,14 +529,14 @@ fun HomeSettingsScreen(
             SettingNavigationItem(
                 title = stringResource(R.string.forum),
                 summary = stringResource(R.string.forum_summary),
-                iconRes = R.drawable.baseline_forum_24,
+                iconRes = Res.drawable.baseline_forum_24,
                 onClick = onOpenForum,
             )
         }
         item {
             SettingNavigationItem(
                 title = stringResource(R.string.open_source_license),
-                iconRes = R.drawable.ic_oss,
+                iconRes = Res.drawable.ic_oss,
                 onClick = onOpenOpenSourceLicense,
             )
         }
@@ -508,7 +544,7 @@ fun HomeSettingsScreen(
             SettingInfoItem(
                 title = stringResource(R.string.about),
                 summary = state.versionSummary,
-                iconRes = R.drawable.ic_baseline_info_24,
+                iconRes = Res.drawable.ic_baseline_info_24,
             )
         }
     }

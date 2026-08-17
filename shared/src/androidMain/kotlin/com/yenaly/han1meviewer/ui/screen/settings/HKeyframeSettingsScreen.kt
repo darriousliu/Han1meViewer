@@ -15,6 +15,14 @@ import com.yenaly.han1meviewer.ui.component.SettingSliderItem
 import com.yenaly.han1meviewer.ui.component.SettingSwitchItem
 import com.yenaly.han1meviewer.ui.component.lazy.LazyColumn
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.baseline_count_down_24
+import han1meviewer.shared.generated.resources.baseline_h_24
+import han1meviewer.shared.generated.resources.baseline_manage_24
+import han1meviewer.shared.generated.resources.baseline_online_manage_24
+import han1meviewer.shared.generated.resources.baseline_share_24
+import han1meviewer.shared.generated.resources.baseline_share_first_24
+import han1meviewer.shared.generated.resources.ic_baseline_alert_24
 
 data class HKeyframeSettingsUiState(
     val hKeyframesEnable: Boolean,
@@ -46,7 +54,7 @@ fun HKeyframeSettingsScreen(
                 title = stringResource(R.string.h_keyframes_enable),
                 summary = state.hKeyframesSummary,
                 checked = state.hKeyframesEnable,
-                iconRes = R.drawable.baseline_h_24,
+                iconRes = Res.drawable.baseline_h_24,
                 onCheckedChange = onHKeyframesEnableChange,
             )
         }
@@ -56,7 +64,7 @@ fun HKeyframeSettingsScreen(
             item {
                 SettingNavigationItem(
                     title = stringResource(R.string.h_keyframe_manage),
-                    iconRes = R.drawable.baseline_manage_24,
+                    iconRes = Res.drawable.baseline_manage_24,
                     onClick = onOpenHKeyframeManage,
                 )
             }
@@ -67,7 +75,7 @@ fun HKeyframeSettingsScreen(
                     title = stringResource(R.string.shared_h_keyframes_enable),
                     summary = stringResource(R.string.shared_h_keyframes_enable_tip),
                     checked = state.sharedHKeyframesEnable,
-                    iconRes = R.drawable.baseline_share_24,
+                    iconRes = Res.drawable.baseline_share_24,
                     onCheckedChange = onSharedHKeyframesEnableChange,
                 )
             }
@@ -78,7 +86,7 @@ fun HKeyframeSettingsScreen(
                         title = stringResource(R.string.shared_h_keyframes_use_first),
                         summary = stringResource(R.string.shared_h_keyframes_use_first_tip),
                         checked = state.sharedHKeyframesUseFirst,
-                        iconRes = R.drawable.baseline_share_first_24,
+                        iconRes = Res.drawable.baseline_share_first_24,
                         onCheckedChange = onSharedHKeyframesUseFirstChange,
                     )
                 }
@@ -86,7 +94,7 @@ fun HKeyframeSettingsScreen(
                     SettingNavigationItem(
                         title = stringResource(R.string.shared_h_keyframe_manage),
                         summary = stringResource(R.string.shared_h_keyframe_manage_tip),
-                        iconRes = R.drawable.baseline_online_manage_24,
+                        iconRes = Res.drawable.baseline_online_manage_24,
                         onClick = onOpenSharedHKeyframeManage,
                     )
                 }
@@ -97,7 +105,7 @@ fun HKeyframeSettingsScreen(
                 SettingSwitchItem(
                     title = stringResource(R.string.show_prompt_when_countdown),
                     checked = state.showCommentWhenCountdown,
-                    iconRes = R.drawable.baseline_count_down_24,
+                    iconRes = Res.drawable.baseline_count_down_24,
                     onCheckedChange = onShowCommentWhenCountdownChange,
                 )
             }
@@ -107,7 +115,7 @@ fun HKeyframeSettingsScreen(
                     summary = state.whenCountdownRemindSummary,
                     value = state.whenCountdownRemind,
                     valueRange = 5..30,
-                    iconRes = R.drawable.ic_baseline_alert_24,
+                    iconRes = Res.drawable.ic_baseline_alert_24,
                     onValueChange = onWhenCountdownRemindChange,
                 )
             }

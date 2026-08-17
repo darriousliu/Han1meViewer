@@ -23,6 +23,17 @@ import com.yenaly.han1meviewer.ui.component.SettingSliderItem
 import com.yenaly.han1meviewer.ui.component.SettingSwitchItem
 import com.yenaly.han1meviewer.ui.component.lazy.LazyColumn
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.baseline_cache_24
+import han1meviewer.shared.generated.resources.baseline_cert_24
+import han1meviewer.shared.generated.resources.baseline_chip_24
+import han1meviewer.shared.generated.resources.baseline_custom_24
+import han1meviewer.shared.generated.resources.baseline_deband_24
+import han1meviewer.shared.generated.resources.baseline_decoder_24
+import han1meviewer.shared.generated.resources.baseline_frame_inter_24
+import han1meviewer.shared.generated.resources.baseline_frame_jump_24
+import han1meviewer.shared.generated.resources.baseline_overtime_24
+import han1meviewer.shared.generated.resources.baseline_render_24
 
 data class MpvPlayerSettingsUiState(
     val profile: String,
@@ -104,7 +115,7 @@ fun MpvPlayerSettingsScreen(
             SettingNavigationItem(
                 title = stringResource(R.string.mpv_profile),
                 valueText = state.profileDisplay,
-                iconRes = R.drawable.baseline_render_24,
+                iconRes = Res.drawable.baseline_render_24,
                 onClick = onOpenProfileDialog,
             )
         }
@@ -114,7 +125,7 @@ fun MpvPlayerSettingsScreen(
                 title = stringResource(R.string.enable_gpu_next),
                 summary = stringResource(R.string.enable_gpu_next_summary),
                 checked = state.enableGpuNextRenderer,
-                iconRes = R.drawable.baseline_chip_24,
+                iconRes = Res.drawable.baseline_chip_24,
                 onCheckedChange = onEnableGpuNextRendererChange,
             )
         }
@@ -124,7 +135,7 @@ fun MpvPlayerSettingsScreen(
                 title = stringResource(R.string.mpv_interpolation),
                 summary = stringResource(R.string.mpv_interpolation_summary),
                 checked = state.interpolation,
-                iconRes = R.drawable.baseline_frame_inter_24,
+                iconRes = Res.drawable.baseline_frame_inter_24,
                 onCheckedChange = onInterpolationChange,
             )
         }
@@ -134,7 +145,7 @@ fun MpvPlayerSettingsScreen(
                 title = stringResource(R.string.mpv_deband),
                 summary = stringResource(R.string.mpv_deband_summary),
                 checked = state.deband,
-                iconRes = R.drawable.baseline_deband_24,
+                iconRes = Res.drawable.baseline_deband_24,
                 onCheckedChange = onDebandChange,
             )
         }
@@ -144,7 +155,7 @@ fun MpvPlayerSettingsScreen(
                 title = stringResource(R.string.mpv_framedrop),
                 summary = stringResource(R.string.mpv_framedrop_summary),
                 checked = state.framedrop,
-                iconRes = R.drawable.baseline_frame_jump_24,
+                iconRes = Res.drawable.baseline_frame_jump_24,
                 onCheckedChange = onFramedropChange,
             )
         }
@@ -153,7 +164,7 @@ fun MpvPlayerSettingsScreen(
             SettingNavigationItem(
                 title = stringResource(R.string.mpv_hwdec),
                 summary = state.hwdecDisplay,
-                iconRes = R.drawable.baseline_decoder_24,
+                iconRes = Res.drawable.baseline_decoder_24,
                 onClick = onOpenHwdecDialog,
             )
         }
@@ -167,7 +178,7 @@ fun MpvPlayerSettingsScreen(
                 value = state.cacheSecs,
                 valueRange = 10..120,
                 step = 5,
-                iconRes = R.drawable.baseline_cache_24,
+                iconRes = Res.drawable.baseline_cache_24,
                 onValueChange = onCacheSecsChange,
             )
         }
@@ -177,7 +188,7 @@ fun MpvPlayerSettingsScreen(
                 title = stringResource(R.string.mpv_tls_verify),
                 summary = stringResource(R.string.mpv_tls_verify_summary),
                 checked = state.tlsVerify,
-                iconRes = R.drawable.baseline_cert_24,
+                iconRes = Res.drawable.baseline_cert_24,
                 onCheckedChange = onTlsVerifyChange,
             )
         }
@@ -188,7 +199,7 @@ fun MpvPlayerSettingsScreen(
                 summary = state.networkTimeoutSummary,
                 value = state.networkTimeout,
                 valueRange = 5..30,
-                iconRes = R.drawable.baseline_overtime_24,
+                iconRes = Res.drawable.baseline_overtime_24,
                 onValueChange = onNetworkTimeoutChange,
             )
         }
@@ -199,7 +210,7 @@ fun MpvPlayerSettingsScreen(
             SettingNavigationItem(
                 title = stringResource(R.string.custom_parameters),
                 summary = state.customParams.ifBlank { stringResource(R.string.custom_parameters_summary) },
-                iconRes = R.drawable.baseline_custom_24,
+                iconRes = Res.drawable.baseline_custom_24,
                 onClick = onOpenCustomParamsDialog,
             )
         }

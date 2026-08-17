@@ -17,7 +17,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
@@ -30,7 +31,7 @@ fun SettingSwitchItem(
     onCheckedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     summary: String? = null,
-    iconRes: Int? = null,
+    iconRes: DrawableResource? = null,
     enabled: Boolean = true,
 ) {
     val contentAlpha = if (enabled) 1f else 0.38f
@@ -79,7 +80,7 @@ fun SettingNavigationItem(
     modifier: Modifier = Modifier,
     summary: String? = null,
     valueText: String? = null,
-    iconRes: Int? = null,
+    iconRes: DrawableResource? = null,
     enabled: Boolean = true,
 ) {
     Row(
@@ -129,7 +130,7 @@ fun SettingInfoItem(
     modifier: Modifier = Modifier,
     summary: String? = null,
     valueText: String? = null,
-    iconRes: Int? = null,
+    iconRes: DrawableResource? = null,
 ) {
     Row(
         modifier = modifier
@@ -179,7 +180,7 @@ fun SettingSliderItem(
     modifier: Modifier = Modifier,
     step: Int = 1,
     summary: String? = null,
-    iconRes: Int? = null,
+    iconRes: DrawableResource? = null,
 ) {
     val totalSteps = if (step > 0) {
         ((valueRange.last - valueRange.first) / step) - 1

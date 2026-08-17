@@ -11,6 +11,11 @@ import com.yenaly.han1meviewer.ui.component.SettingNavigationItem
 import com.yenaly.han1meviewer.ui.component.SettingSliderItem
 import com.yenaly.han1meviewer.ui.component.lazy.LazyColumn
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.baseline_count_24
+import han1meviewer.shared.generated.resources.baseline_export_24
+import han1meviewer.shared.generated.resources.baseline_path_24
+import han1meviewer.shared.generated.resources.baseline_speed2_24
 
 data class DownloadSettingsUiState(
     val downloadPathSummary: String,
@@ -39,7 +44,7 @@ fun DownloadSettingsScreen(
             SettingNavigationItem(
                 title = stringResource(R.string.download_path),
                 summary = state.downloadPathSummary,
-                iconRes = R.drawable.baseline_path_24,
+                iconRes = Res.drawable.baseline_path_24,
                 onClick = onOpenDownloadPath,
             )
         }
@@ -48,7 +53,7 @@ fun DownloadSettingsScreen(
             SettingNavigationItem(
                 title = stringResource(R.string.pref_export_downloads_title),
                 summary = stringResource(R.string.pref_export_downloads_summary),
-                iconRes = R.drawable.baseline_export_24,
+                iconRes = Res.drawable.baseline_export_24,
                 onClick = onImportDownloadedFiles,
             )
         }
@@ -59,7 +64,7 @@ fun DownloadSettingsScreen(
                 summary = state.downloadCountLimitSummary,
                 value = state.downloadCountLimit,
                 valueRange = 0..maxDownloadCountLimit,
-                iconRes = R.drawable.baseline_count_24,
+                iconRes = Res.drawable.baseline_count_24,
                 onValueChange = onDownloadCountLimitChange,
             )
         }
@@ -70,7 +75,7 @@ fun DownloadSettingsScreen(
                 summary = state.downloadSpeedLimitSummary,
                 value = state.downloadSpeedLimitIndex,
                 valueRange = 0..maxDownloadSpeedLimitIndex,
-                iconRes = R.drawable.baseline_speed2_24,
+                iconRes = Res.drawable.baseline_speed2_24,
                 onValueChange = onDownloadSpeedLimitChange,
             )
         }
