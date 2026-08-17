@@ -1,7 +1,5 @@
 package com.yenaly.han1meviewer.ui.navigation.main
 
-import androidx.navigation.NavDestination
-import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation3.runtime.NavKey
 import com.yenaly.han1meviewer.ui.navigation.AccountRoute
 import com.yenaly.han1meviewer.ui.navigation.AvatarCropRoute
@@ -180,11 +178,6 @@ enum class MainDestinationSpec(
     );
 
     companion object {
-        fun fromDestination(destination: NavDestination?): MainDestinationSpec? {
-            if (destination == null) return null
-            return entries.firstOrNull { destination.hasRoute(it.routeClass) }
-        }
-
         /** nav3 版：返回栈里直接就是路由实例，不再有 `NavDestination` 这层 */
         fun fromKey(key: NavKey?): MainDestinationSpec? {
             if (key == null) return null

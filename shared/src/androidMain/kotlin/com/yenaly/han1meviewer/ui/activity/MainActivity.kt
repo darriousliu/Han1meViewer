@@ -29,7 +29,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentActivity
-import androidx.navigation.NavHostController
+import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
 import com.google.android.material.snackbar.Snackbar
 import com.yenaly.han1meviewer.HanimeConstants.ANIME_URL
 import com.yenaly.han1meviewer.HanimeConstants.HANIME_URL
@@ -60,7 +61,7 @@ class MainActivity : AppCompatActivity(), PermissionRequester {
 
     val viewModel by viewModels<HomePageViewModel>()
 
-    lateinit var navController: NavHostController
+    lateinit var navBackStack: NavBackStack<NavKey>
     private var showAuthGuard by mutableStateOf(true)
     private val pendingNavigationRequests = MutableSharedFlow<Intent>(extraBufferCapacity = 1)
     private var currentVideoHost: VideoPageHost? = null
@@ -90,10 +91,10 @@ class MainActivity : AppCompatActivity(), PermissionRequester {
                 viewModel = viewModel,
                 pendingNavigationRequests = pendingNavigationRequests,
                 showAuthGuard = showAuthGuard,
-                onOpenAccount = { navController.navigateSafely(AccountRoute) },
+                onOpenAccount = { navBackStack.navigateSafely(AccountRoute) },
                 onLogoutClick = { showLogoutConfirmDialog() },
                 onSwitchSiteClick = { showSiteSwitchDialog() },
-                onNavigateControllerReady = { controller -> navController = controller },
+                onNavigateControllerReady = { stack -> navBackStack = stack },
             )
         }
     }
@@ -241,7 +242,16 @@ class MainActivity : AppCompatActivity(), PermissionRequester {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp() || super.onSupportNavigateUp()
+        // 既存崩溃点：initData() 只在生物识别通过后才跑，在那之前这里会
+        // UninitializedPropertyAccessException。nav3 也没有 navigateUp 的
+        // 「跨图上溯 parent」语义，退化成弹一层。
+        if (!::navBackStack.isInitialized) return super.onSupportNavigateUp()
+        return if (navBackStack.size > 1) {
+            navBackStack.removeLastOrNull()
+            true
+        } else {
+            super.onSupportNavigateUp()
+        }
     }
 
     private fun showFindRelatedLinkSnackBar(videoCode: String) {
@@ -279,7 +289,7 @@ class MainActivity : AppCompatActivity(), PermissionRequester {
             setTitle(R.string.sure_to_logout)
             setPositiveButton(R.string.sure) { _, _ ->
                 if (closeCurrentPageOnConfirm) {
-                    navController.popBackStack()
+                    navBackStack.removeLastOrNull()
                 }
                 logoutWithRefresh()
             }
@@ -293,7 +303,7 @@ class MainActivity : AppCompatActivity(), PermissionRequester {
     }
 
     fun showVideoDetailFragment(videoCode: String, fileUri: String? = null) {
-        navController.navigateSafely(VideoRoute(videoCode, fileUri))
+        navBackStack.navigateSafely(VideoRoute(videoCode, fileUri))
     }
 
     fun registerCurrentVideoHost(host: VideoPageHost?) {

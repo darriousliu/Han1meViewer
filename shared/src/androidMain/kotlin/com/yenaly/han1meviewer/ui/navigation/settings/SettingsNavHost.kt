@@ -15,35 +15,34 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.ui.activity.MainActivity
+import com.yenaly.han1meviewer.ui.navigation.HanimeRoute
 import com.yenaly.han1meviewer.util.findActivity
 import com.yenaly.han1meviewer.util.logScreenViewEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScaffold(
-    navController: NavController,
-    fallbackDestination: Any,
+    backStack: NavBackStack<NavKey>,
+    fallbackDestination: HanimeRoute,
     actions: @Composable () -> Unit = {},
     content: @Composable () -> Unit,
 ) {
     val context = LocalContext.current
     val activity = context.findActivity<MainActivity>()
-    val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = SettingsDestinationSpec.fromDestination(backStackEntry?.destination)
+    val currentDestination = SettingsDestinationSpec.fromKey(backStack.lastOrNull())
         ?: SettingsDestinationSpec.Home
 
     fun navigateBack() {
-        if (!navController.popBackStack()) {
-            navController.navigate(fallbackDestination)
-        }
+        // nav2 是 popBackStack() 返回 false（栈底、退无可退）才正向 navigate 到逻辑父页，
+        // size > 1 正好对上「栈里除了自己还有别人」
+        if (backStack.size > 1) backStack.removeLastOrNull() else backStack.add(fallbackDestination)
     }
 
     LaunchedEffect(currentDestination) {

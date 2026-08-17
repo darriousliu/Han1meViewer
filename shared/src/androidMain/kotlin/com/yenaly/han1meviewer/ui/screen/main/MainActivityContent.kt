@@ -17,8 +17,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.savedstate.serialization.SavedStateConfiguration
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.exception.CloudFlareBlockedException
@@ -29,9 +31,10 @@ import com.yenaly.han1meviewer.ui.activity.MainActivity
 import com.yenaly.han1meviewer.ui.component.UpdateDialog
 import com.yenaly.han1meviewer.ui.component.UsageNoticeDialog
 import com.yenaly.han1meviewer.ui.navigation.CloudflareRoute
+import com.yenaly.han1meviewer.ui.navigation.HomeRoute
 import com.yenaly.han1meviewer.ui.navigation.LoginRoute
 import com.yenaly.han1meviewer.ui.navigation.main.MainDestinationSpec
-import com.yenaly.han1meviewer.ui.navigation.main.MainNavHost
+import com.yenaly.han1meviewer.ui.navigation.main.MainNavDisplay
 import com.yenaly.han1meviewer.ui.navigation.main.handleMainIntent
 import com.yenaly.han1meviewer.ui.navigation.main.navigateDrawerDestination
 import com.yenaly.han1meviewer.ui.navigation.navigateSafely
@@ -58,17 +61,22 @@ fun MainActivityContent(
     onOpenAccount: () -> Unit,
     onLogoutClick: () -> Unit,
     onSwitchSiteClick: () -> Unit,
-    onNavigateControllerReady: (NavHostController) -> Unit,
+    onNavigateControllerReady: (NavBackStack<NavKey>) -> Unit,
 ) {
     HanimeTheme {
-        val composeNavController = rememberNavController()
+        // 路由类是 sealed @Serializable 层级，DEFAULT 配置下 kotlinx 自动多态，
+        // 进程死亡后返回栈能原样恢复
+        val backStack = rememberNavBackStack(SavedStateConfiguration.DEFAULT, HomeRoute)
         val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
         val scope = rememberCoroutineScope()
-        var currentMainDestination by remember { mutableStateOf(MainDestinationSpec.Home) }
         var pendingUpdate by remember { mutableStateOf<Latest?>(null) }
         var showUsageNotice by remember { mutableStateOf(!Preferences.usageNoticeAccepted) }
         val isDrawerOpen =
             drawerState.currentValue == DrawerValue.Open || drawerState.targetValue == DrawerValue.Open
+
+        // nav2 时代靠 MainNavHost 的 onDestinationChanged 回调反向推送，nav3 直接从栈顶派生
+        val currentMainDestination =
+            MainDestinationSpec.fromKey(backStack.lastOrNull()) ?: MainDestinationSpec.Home
 
         val homeState by viewModel.homePageFlow.collectAsStateWithLifecycle()
         val isLoggedIn by Preferences.loginStateFlow.collectAsStateWithLifecycle()
@@ -85,12 +93,12 @@ fun MainActivityContent(
         val headerIsLoading = isLoggedIn && homeState is PageState.Loading
         val selectedDrawerDestination = currentMainDestination.drawerDestination
 
-        LaunchedEffect(composeNavController) {
-            onNavigateControllerReady(composeNavController)
+        LaunchedEffect(backStack) {
+            onNavigateControllerReady(backStack)
         }
         LaunchedEffect(Unit) {
             pendingNavigationRequests.collect { intent ->
-                composeNavController.handleMainIntent(intent)
+                backStack.handleMainIntent(intent)
             }
         }
         LaunchedEffect(Unit) {
@@ -106,10 +114,10 @@ fun MainActivityContent(
         }
         // 网络层撞上 Cloudflare challenge 时（CloudflareNavBridge.pending 非空）把过盾页推出来。
         // 请求会一直挂在 pending 上等，App 从后台回前台时这里也会立刻补弹。
-        LaunchedEffect(composeNavController) {
+        LaunchedEffect(backStack) {
             CloudflareNavBridge.pending.collect { challenge ->
                 if (challenge != null) {
-                    composeNavController.navigateSafely(CloudflareRoute(challenge.url))
+                    backStack.navigateSafely(CloudflareRoute(challenge.url))
                 }
             }
         }
@@ -138,7 +146,7 @@ fun MainActivityContent(
                     // 原来是 gotoLoginActivity()（StartActivityForResult），
                     // Step 17 起登录是导航图内的目的地
                     scope.launch { drawerState.close() }
-                    composeNavController.navigateSafely(LoginRoute)
+                    backStack.navigateSafely(LoginRoute)
                 }
             },
             onAvatarLongClick = {
@@ -146,7 +154,7 @@ fun MainActivityContent(
             },
             onSwitchSiteClick = onSwitchSiteClick,
             onDrawerItemSelected = { destination ->
-                val handled = composeNavController.navigateDrawerDestination(
+                val handled = backStack.navigateDrawerDestination(
                     destination = destination,
                     isLoggedIn = isLoggedIn,
                     onRequireLogin = { showShortToast(R.string.login_first) },
@@ -158,17 +166,14 @@ fun MainActivityContent(
             },
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
-                MainNavHost(
+                MainNavDisplay(
                     activity = activity,
-                    navController = composeNavController,
+                    backStack = backStack,
                     isDrawerOpen = isDrawerOpen,
                     onOpenDrawer = {
                         if (currentMainDestination.drawerEnabled) {
                             scope.launch { drawerState.open() }
                         }
-                    },
-                    onDestinationChanged = { destination ->
-                        currentMainDestination = destination
                     },
                 )
                 if (showAuthGuard) {

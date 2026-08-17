@@ -154,8 +154,8 @@ fun VideoRouteHostScreen(
             onPendingDownloadPromptChange = { pendingDownloadPrompt = it },
             getCheckedQuality = { checkedQuality },
             setCheckedQuality = { checkedQuality = it },
-            onStoragePermissionDenied = { activity.navController.popBackStack() },
-            onDownloadPermissionDialogCancelled = { activity.navController.popBackStack() },
+            onStoragePermissionDenied = { activity.navBackStack.removeLastOrNull() },
+            onDownloadPermissionDialogCancelled = { activity.navBackStack.removeLastOrNull() },
         )
     }
 
@@ -395,7 +395,7 @@ fun VideoRouteHostScreen(
         player.orientationManager = orientationManager
         player.onGoHomeClickListener = {
             if (activity.resources.getBoolean(R.bool.isTablet)) {
-                activity.navController.popBackStack()
+                activity.navBackStack.removeLastOrNull()
             }
             activity.startActivity<MainActivity>()
         }

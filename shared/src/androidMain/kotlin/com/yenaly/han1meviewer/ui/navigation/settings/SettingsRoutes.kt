@@ -1,7 +1,5 @@
 package com.yenaly.han1meviewer.ui.navigation.settings
 
-import androidx.navigation.NavDestination
-import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation3.runtime.NavKey
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.ui.navigation.DownloadSettingsRoute
@@ -86,11 +84,6 @@ enum class SettingsDestinationSpec(
     companion object {
         fun fromRouteKey(routeKey: String?): SettingsDestinationSpec? =
             entries.firstOrNull { it.routeKey == routeKey }
-
-        fun fromDestination(destination: NavDestination?): SettingsDestinationSpec? {
-            if (destination == null) return null
-            return entries.firstOrNull { destination.hasRoute(it.routeClass) }
-        }
 
         /** nav3 版：返回栈里直接就是路由实例，不再有 `NavDestination` 这层 */
         fun fromKey(key: NavKey?): SettingsDestinationSpec? {
