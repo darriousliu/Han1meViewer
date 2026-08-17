@@ -39,8 +39,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -48,17 +46,48 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.entity.CheckInRecordEntity
 import com.yenaly.han1meviewer.ui.component.appbar.HanimeScaffold
 import com.yenaly.han1meviewer.ui.viewmodel.CheckInCalendarViewModel
 import com.yenaly.han1meviewer.ui.viewmodel.MonthlyStats
 import com.yenaly.han1meviewer.util.currentLocalDate
 import com.yenaly.han1meviewer.util.currentYearMonth
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.baseline_screen_rotation_24
+import han1meviewer.shared.generated.resources.checkin_count_format
+import han1meviewer.shared.generated.resources.checkin_report
+import han1meviewer.shared.generated.resources.fri
+import han1meviewer.shared.generated.resources.mon
+import han1meviewer.shared.generated.resources.next_double_arrow_24
+import han1meviewer.shared.generated.resources.next_month
+import han1meviewer.shared.generated.resources.next_year
+import han1meviewer.shared.generated.resources.previous_double_arrow_24
+import han1meviewer.shared.generated.resources.previous_month
+import han1meviewer.shared.generated.resources.previous_year
+import han1meviewer.shared.generated.resources.report_days
+import han1meviewer.shared.generated.resources.report_landscape
+import han1meviewer.shared.generated.resources.report_legend_less
+import han1meviewer.shared.generated.resources.report_legend_more
+import han1meviewer.shared.generated.resources.report_max_day
+import han1meviewer.shared.generated.resources.report_month
+import han1meviewer.shared.generated.resources.report_month_format
+import han1meviewer.shared.generated.resources.report_no_data
+import han1meviewer.shared.generated.resources.report_portrait
+import han1meviewer.shared.generated.resources.report_total
+import han1meviewer.shared.generated.resources.report_year
+import han1meviewer.shared.generated.resources.report_year_format
+import han1meviewer.shared.generated.resources.report_year_month_format
+import han1meviewer.shared.generated.resources.sat
+import han1meviewer.shared.generated.resources.sun
+import han1meviewer.shared.generated.resources.thu
+import han1meviewer.shared.generated.resources.tue
+import han1meviewer.shared.generated.resources.wed
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.YearMonth
 import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.number
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * 贡献报表弹窗。以日历热力图形式展示年/月打卡分布。
@@ -105,12 +134,12 @@ fun ContributionReportDialog(
     ) {
         HanimeScaffold(
             modifier = Modifier.fillMaxSize(),
-            title = stringResource(R.string.checkin_report),
+            title = stringResource(Res.string.checkin_report),
             onBack = onDismiss,
             actions = {
                 TextButton(onClick = { onViewModeChange("year") }) {
                     Text(
-                        stringResource(R.string.report_year),
+                        stringResource(Res.string.report_year),
                         fontWeight = if (viewMode == "year") FontWeight.Bold else FontWeight.Normal,
                         color = if (viewMode == "year") MaterialTheme.colorScheme.primary
                         else MaterialTheme.colorScheme.onSurface
@@ -118,7 +147,7 @@ fun ContributionReportDialog(
                 }
                 TextButton(onClick = { onViewModeChange("month") }) {
                     Text(
-                        stringResource(R.string.report_month),
+                        stringResource(Res.string.report_month),
                         fontWeight = if (viewMode == "month") FontWeight.Bold else FontWeight.Normal,
                         color = if (viewMode == "month") MaterialTheme.colorScheme.primary
                         else MaterialTheme.colorScheme.onSurface
@@ -126,11 +155,11 @@ fun ContributionReportDialog(
                 }
                 FilledIconButton(onClick = onToggleFullscreen) {
                     Icon(
-                        painter = painterResource(R.drawable.baseline_screen_rotation_24),
+                        painter = painterResource(Res.drawable.baseline_screen_rotation_24),
                         contentDescription = if (isFullscreen)
-                            stringResource(R.string.report_portrait)
+                            stringResource(Res.string.report_portrait)
                         else
-                            stringResource(R.string.report_landscape),
+                            stringResource(Res.string.report_landscape),
                         modifier = Modifier.size(24.dp)
                     )
                 }
@@ -184,7 +213,7 @@ fun ContributionReportDialog(
                         ) {
                             StatItem(
                                 icon = Icons.Filled.DateRange,
-                                label = stringResource(R.string.report_total),
+                                label = stringResource(Res.string.report_total),
                                 value = totalCount.toString()
                             )
                             HorizontalDivider(
@@ -194,7 +223,7 @@ fun ContributionReportDialog(
                             )
                             StatItem(
                                 icon = Icons.Filled.Star,
-                                label = stringResource(R.string.report_days),
+                                label = stringResource(Res.string.report_days),
                                 value = totalDays.toString()
                             )
                             HorizontalDivider(
@@ -204,7 +233,7 @@ fun ContributionReportDialog(
                             )
                             StatItem(
                                 icon = Icons.Filled.Favorite,
-                                label = stringResource(R.string.report_max_day),
+                                label = stringResource(Res.string.report_max_day),
                                 value = maxDay.toString()
                             )
                         }
@@ -212,7 +241,7 @@ fun ContributionReportDialog(
                 } else {
                     Spacer(modifier = Modifier.height(24.dp))
                     Text(
-                        text = stringResource(R.string.report_no_data),
+                        text = stringResource(Res.string.report_no_data),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.fillMaxWidth(),
@@ -292,13 +321,13 @@ fun YearContributionView(
     val weeks = remember(year) { buildYearWeeks(year) }
     // buildMonthLabels 进了 commonMain，签名改收 12 个已格式化标签
     // （common 没有 String.format；%1$d 是 CMP stringResource 认的形状）
-    val monthLabelTexts = (1..12).map { stringResource(R.string.report_month_format, it) }
+    val monthLabelTexts = (1..12).map { stringResource(Res.string.report_month_format, it) }
     val monthLabels = remember(year, monthLabelTexts) { buildMonthLabels(year, weeks, monthLabelTexts) }
     val dayLabels = listOf(
-        stringResource(R.string.mon), stringResource(R.string.tue),
-        stringResource(R.string.wed), stringResource(R.string.thu),
-        stringResource(R.string.fri), stringResource(R.string.sat),
-        stringResource(R.string.sun)
+        stringResource(Res.string.mon), stringResource(Res.string.tue),
+        stringResource(Res.string.wed), stringResource(Res.string.thu),
+        stringResource(Res.string.fri), stringResource(Res.string.sat),
+        stringResource(Res.string.sun)
     )
     val cellSize = 14.dp
     val cellPadding = 1.dp
@@ -314,12 +343,12 @@ fun YearContributionView(
         ) {
             IconButton(onClick = { onYearChange(year - 1) }) {
                 Icon(
-                    painterResource(R.drawable.previous_double_arrow_24),
-                    stringResource(R.string.previous_year)
+                    painterResource(Res.drawable.previous_double_arrow_24),
+                    stringResource(Res.string.previous_year)
                 )
             }
             Text(
-                text = stringResource(R.string.report_year_format, year),
+                text = stringResource(Res.string.report_year_format, year),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
@@ -328,8 +357,8 @@ fun YearContributionView(
                 enabled = year < today.year
             ) {
                 Icon(
-                    painterResource(R.drawable.next_double_arrow_24),
-                    stringResource(R.string.next_year)
+                    painterResource(Res.drawable.next_double_arrow_24),
+                    stringResource(Res.string.next_year)
                 )
             }
         }
@@ -419,10 +448,10 @@ fun MonthContributionView(
     val daysInMonth = yearMonth.numberOfDays
     val firstDayOfWeek = yearMonth.firstDay.dayOfWeek.isoDayNumber
     val dayLabels = listOf(
-        stringResource(R.string.mon), stringResource(R.string.tue),
-        stringResource(R.string.wed), stringResource(R.string.thu),
-        stringResource(R.string.fri), stringResource(R.string.sat),
-        stringResource(R.string.sun)
+        stringResource(Res.string.mon), stringResource(Res.string.tue),
+        stringResource(Res.string.wed), stringResource(Res.string.thu),
+        stringResource(Res.string.fri), stringResource(Res.string.sat),
+        stringResource(Res.string.sun)
     )
 
     Column {
@@ -440,12 +469,12 @@ fun MonthContributionView(
                 }
             }) {
                 Icon(
-                    painterResource(R.drawable.previous_double_arrow_24),
-                    stringResource(R.string.previous_month)
+                    painterResource(Res.drawable.previous_double_arrow_24),
+                    stringResource(Res.string.previous_month)
                 )
             }
             Text(
-                text = stringResource(R.string.report_year_month_format, year, month),
+                text = stringResource(Res.string.report_year_month_format, year, month),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
@@ -465,8 +494,8 @@ fun MonthContributionView(
                 enabled = YearMonth(year, month) < currentYearMonth()
             ) {
                 Icon(
-                    painterResource(R.drawable.next_double_arrow_24),
-                    stringResource(R.string.next_month)
+                    painterResource(Res.drawable.next_double_arrow_24),
+                    stringResource(Res.string.next_month)
                 )
             }
         }
@@ -532,7 +561,7 @@ fun MonthContributionView(
                         )
                         if (count > 0) {
                             Text(
-                                text = stringResource(R.string.checkin_count_format, count),
+                                text = stringResource(Res.string.checkin_count_format, count),
                                 fontSize = 10.sp,
                                 color = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f)
                             )
@@ -555,7 +584,7 @@ fun ContributionLegend() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = stringResource(R.string.report_legend_less),
+            text = stringResource(Res.string.report_legend_less),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -575,7 +604,7 @@ fun ContributionLegend() {
         }
         Spacer(modifier = Modifier.width(4.dp))
         Text(
-            text = stringResource(R.string.report_legend_more),
+            text = stringResource(Res.string.report_legend_more),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )

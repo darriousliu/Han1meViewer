@@ -46,7 +46,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -55,15 +54,36 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil3.compose.AsyncImage
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.entity.CheckInRecordEntity
 import com.yenaly.han1meviewer.logic.entity.CheckInType
 import com.yenaly.han1meviewer.logic.entity.WatchHistoryEntity
+import com.yenaly.han1meviewer.util.CHINESE_FULL_DATE_FORMAT
+import com.yenaly.han1meviewer.util.HOUR_MINUTE_FORMAT
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.add
+import han1meviewer.shared.generated.resources.delete
+import han1meviewer.shared.generated.resources.dialog_add_sidedish
+import han1meviewer.shared.generated.resources.dialog_cancel
+import han1meviewer.shared.generated.resources.dialog_confirm
+import han1meviewer.shared.generated.resources.dialog_existing_records
+import han1meviewer.shared.generated.resources.dialog_feeling_hint
+import han1meviewer.shared.generated.resources.dialog_feeling_label
+import han1meviewer.shared.generated.resources.dialog_max_reached
+import han1meviewer.shared.generated.resources.dialog_recent_watched
+import han1meviewer.shared.generated.resources.dialog_sidedish_hint
+import han1meviewer.shared.generated.resources.dialog_sidedish_label
+import han1meviewer.shared.generated.resources.dialog_type_label
+import han1meviewer.shared.generated.resources.egg_four
+import han1meviewer.shared.generated.resources.egg_god
+import han1meviewer.shared.generated.resources.egg_round
+import han1meviewer.shared.generated.resources.egg_three
+import han1meviewer.shared.generated.resources.remove
+import kotlin.time.Clock
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.toJavaLocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format
+import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 
 /**
  * 打卡弹窗。展示历史记录、添加新记录的表单。
@@ -136,8 +156,7 @@ fun CheckInDialog(
                 ) {
                     Column {
                         Text(
-                            text = date.toJavaLocalDate()
-                                .format(DateTimeFormatter.ofPattern("yyyy\u5E74MM\u6708dd\u65E5")),
+                            text = date.format(CHINESE_FULL_DATE_FORMAT),
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold
                         )
@@ -151,7 +170,7 @@ fun CheckInDialog(
 
                 if (existingRecords.isNotEmpty()) {
                     Text(
-                        text = stringResource(R.string.dialog_existing_records),
+                        text = stringResource(Res.string.dialog_existing_records),
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(start = 16.dp, top = 12.dp, bottom = 4.dp)
@@ -182,10 +201,10 @@ fun CheckInDialog(
                 }
 
                 if (canAddMore) {
-                    val eggSex = stringResource(R.string.egg_three)
-                    val eggNine = stringResource(R.string.egg_four)
-                    val eggGod = stringResource(R.string.egg_god, 6)
-                    val eggRoundTemplate = stringResource(R.string.egg_round)
+                    val eggSex = stringResource(Res.string.egg_three)
+                    val eggNine = stringResource(Res.string.egg_four)
+                    val eggGod = stringResource(Res.string.egg_god, 6)
+                    val eggRoundTemplate = stringResource(Res.string.egg_round)
                     AddCheckInForm(
                         watchHistory = watchHistory,
                         onNavigateToVideo = onNavigateToVideo,
@@ -213,7 +232,7 @@ fun CheckInDialog(
                     )
                 } else if (todayCount >= 20) {
                     Text(
-                        text = stringResource(R.string.dialog_max_reached),
+                        text = stringResource(Res.string.dialog_max_reached),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.padding(16.dp)
@@ -248,7 +267,7 @@ fun AddCheckInForm(
 
     Column(modifier = Modifier.padding(horizontal = 16.dp)) {
         Text(
-            text = stringResource(R.string.dialog_type_label),
+            text = stringResource(Res.string.dialog_type_label),
             style = MaterialTheme.typography.titleSmall,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 4.dp)
@@ -269,7 +288,7 @@ fun AddCheckInForm(
         Spacer(modifier = Modifier.height(12.dp))
 
         Text(
-            text = stringResource(R.string.dialog_sidedish_label),
+            text = stringResource(Res.string.dialog_sidedish_label),
             style = MaterialTheme.typography.titleSmall,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 4.dp)
@@ -290,7 +309,7 @@ fun AddCheckInForm(
                         trailingIcon = {
                             Icon(
                                 Icons.Filled.Close,
-                                contentDescription = stringResource(R.string.remove),
+                                contentDescription = stringResource(Res.string.remove),
                                 modifier = Modifier.size(16.dp)
                             )
                         }
@@ -308,7 +327,7 @@ fun AddCheckInForm(
                     value = sideDishInput,
                     onValueChange = { sideDishInput = it },
                     modifier = Modifier.weight(1f),
-                    placeholder = { Text(stringResource(R.string.dialog_sidedish_hint)) },
+                    placeholder = { Text(stringResource(Res.string.dialog_sidedish_hint)) },
                     singleLine = true
                 )
                 Button(
@@ -322,7 +341,7 @@ fun AddCheckInForm(
                     enabled = sideDishInput.trim().isNotEmpty() && sideDishes.size < 5,
                     modifier = Modifier.padding(start = 8.dp)
                 ) {
-                    Text(stringResource(R.string.add))
+                    Text(stringResource(Res.string.add))
                 }
             }
         }
@@ -330,7 +349,7 @@ fun AddCheckInForm(
         if (watchHistory.isNotEmpty() && sideDishes.size < 5) {
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = stringResource(R.string.dialog_recent_watched),
+                text = stringResource(Res.string.dialog_recent_watched),
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 4.dp)
@@ -352,7 +371,7 @@ fun AddCheckInForm(
         Spacer(modifier = Modifier.height(12.dp))
 
         Text(
-            text = stringResource(R.string.dialog_feeling_label),
+            text = stringResource(Res.string.dialog_feeling_label),
             style = MaterialTheme.typography.titleSmall,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 4.dp)
@@ -363,7 +382,7 @@ fun AddCheckInForm(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(80.dp),
-            placeholder = { Text(stringResource(R.string.dialog_feeling_hint)) },
+            placeholder = { Text(stringResource(Res.string.dialog_feeling_hint)) },
             maxLines = 3
         )
 
@@ -374,22 +393,24 @@ fun AddCheckInForm(
             horizontalArrangement = Arrangement.End
         ) {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.dialog_cancel))
+                Text(stringResource(Res.string.dialog_cancel))
             }
             Spacer(modifier = Modifier.width(8.dp))
             Button(
                 onClick = {
                     val dishes = sideDishes.joinToString(",")
-                    val now = LocalTime.now()
+                    val now = Clock.System.now()
+                        .toLocalDateTime(TimeZone.currentSystemDefault()).time
                     onAddRecord(
-                        now.format(DateTimeFormatter.ofPattern("HH:mm")),
+                        // 存库格式必须保持 HH:mm——时段成就统计靠 substringBefore(":")
+                        now.format(HOUR_MINUTE_FORMAT),
                         selectedType.storeName,
                         dishes,
                         feeling
                     )
                 }
             ) {
-                Text(stringResource(R.string.dialog_confirm))
+                Text(stringResource(Res.string.dialog_confirm))
             }
         }
 
@@ -495,7 +516,7 @@ fun ExistingRecordItem(
                 ) {
                     Icon(
                         Icons.Filled.Close,
-                        contentDescription = stringResource(R.string.delete),
+                        contentDescription = stringResource(Res.string.delete),
                         modifier = Modifier.size(16.dp),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
                     )
@@ -638,7 +659,7 @@ fun WatchHistoryItem(
                 )
             }
             Text(
-                text = stringResource(R.string.dialog_add_sidedish),
+                text = stringResource(Res.string.dialog_add_sidedish),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.clickable(onClick = onClick)
