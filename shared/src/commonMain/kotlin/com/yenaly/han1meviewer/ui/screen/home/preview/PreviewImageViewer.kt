@@ -37,16 +37,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
+import com.yenaly.han1meviewer.ui.component.fullScreenDialogProperties
 import coil3.ImageLoader
 import coil3.SingletonImageLoader
+import coil3.compose.LocalPlatformContext
 import coil3.compose.AsyncImage
-import com.yenaly.han1meviewer.R
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.back
+import han1meviewer.shared.generated.resources.ic_baseline_arrow_back_24
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * 预览图片查看器弹窗。支持翻页浏览、双击/双指缩放。
@@ -66,14 +68,11 @@ fun PreviewImageViewerDialog(
         initialPage = initialPage,
         pageCount = { imageUrls.size.coerceAtLeast(1) })
     var isCurrentImageZoomed by remember { mutableStateOf(false) }
-    val context = LocalContext.current
+    val context = LocalPlatformContext.current
     val resolvedImageLoader = imageLoader ?: SingletonImageLoader.get(context)
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(
-            usePlatformDefaultWidth = false,
-            decorFitsSystemWindows = false,
-        ),
+        properties = fullScreenDialogProperties(),
     ) {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -151,8 +150,8 @@ fun PreviewImageViewerDialog(
                         ),
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_baseline_arrow_back_24),
-                        contentDescription = stringResource(R.string.back),
+                        painter = painterResource(Res.drawable.ic_baseline_arrow_back_24),
+                        contentDescription = stringResource(Res.string.back),
                         tint = MaterialTheme.colorScheme.onSurface,
                     )
                 }

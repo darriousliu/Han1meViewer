@@ -27,7 +27,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,11 +42,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.exception.HanimeNotFoundException
 import com.yenaly.han1meviewer.logic.model.HanimePreview
 import com.yenaly.han1meviewer.logic.state.WebsiteState
@@ -56,7 +52,23 @@ import com.yenaly.han1meviewer.ui.component.content.EmptyContent
 import com.yenaly.han1meviewer.ui.component.content.ErrorContent
 import com.yenaly.han1meviewer.ui.component.content.LoadingContent
 import com.yenaly.han1meviewer.ui.component.lazy.LazyColumn
+import com.yenaly.han1meviewer.ui.icon.CalendarMonth
 import com.yenaly.han1meviewer.ui.screen.rememberRandomLoadingHint
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.back
+import han1meviewer.shared.generated.resources.comment
+import han1meviewer.shared.generated.resources.empty_content
+import han1meviewer.shared.generated.resources.getchu_preview
+import han1meviewer.shared.generated.resources.hanime_list
+import han1meviewer.shared.generated.resources.ic_baseline_arrow_back_24
+import han1meviewer.shared.generated.resources.ic_baseline_comment_24
+import han1meviewer.shared.generated.resources.latest_hanime_list_monthly
+import han1meviewer.shared.generated.resources.new_anime_trailers
+import han1meviewer.shared.generated.resources.preview_page_updating_getchu_hint
+import han1meviewer.shared.generated.resources.retry
+import han1meviewer.shared.generated.resources.view_getchu_preview
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -94,14 +106,14 @@ fun PreviewContent(
                     },
                     label = "preview_month_title",
                 ) { animatedDateLabel ->
-                    Text(stringResource(R.string.latest_hanime_list_monthly, animatedDateLabel))
+                    Text(stringResource(Res.string.latest_hanime_list_monthly, animatedDateLabel))
                 }
             },
             navigationIcon = {
                 FilledIconButton(onClick = { onEvent(PreviewEvent.OnBack) }) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_baseline_arrow_back_24),
-                        contentDescription = stringResource(R.string.back),
+                        painter = painterResource(Res.drawable.ic_baseline_arrow_back_24),
+                        contentDescription = stringResource(Res.string.back),
                     )
                 }
             },
@@ -109,7 +121,7 @@ fun PreviewContent(
                 FilledIconButton(onClick = { onEvent(PreviewEvent.OnOpenGetchuPreview) }) {
                     Icon(
                         imageVector = Icons.Default.CalendarMonth,
-                        contentDescription = stringResource(R.string.getchu_preview),
+                        contentDescription = stringResource(Res.string.getchu_preview),
                     )
                 }
                 FilledIconButton(onClick = {
@@ -126,8 +138,8 @@ fun PreviewContent(
                         }
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_baseline_comment_24),
-                            contentDescription = stringResource(R.string.comment),
+                            painter = painterResource(Res.drawable.ic_baseline_comment_24),
+                            contentDescription = stringResource(Res.string.comment),
                         )
                     }
                 }
@@ -192,16 +204,16 @@ fun PreviewContent(
                 is WebsiteState.Error -> item {
                     val isPreviewEmpty = uiState.displayState.throwable is HanimeNotFoundException
                     ErrorContent(
-                        title = stringResource(R.string.hanime_list),
+                        title = stringResource(Res.string.hanime_list),
                         message = if (isPreviewEmpty) {
-                            stringResource(R.string.preview_page_updating_getchu_hint)
+                            stringResource(Res.string.preview_page_updating_getchu_hint)
                         } else {
                             uiState.displayState.throwable.pienization()
                         },
                         onRetry = {
                             onEvent(if (isPreviewEmpty) PreviewEvent.OnOpenGetchuPreview else PreviewEvent.OnRetryLoad)
                         },
-                        retryText = stringResource(if (isPreviewEmpty) R.string.view_getchu_preview else R.string.retry),
+                        retryText = stringResource(if (isPreviewEmpty) Res.string.view_getchu_preview else Res.string.retry),
                         modifier = Modifier.padding(horizontal = 16.dp),
                     )
                 }
@@ -218,8 +230,8 @@ fun PreviewContent(
                     item {
                         if (previewInfoList.isEmpty()) {
                             EmptyContent(
-                                hint = stringResource(R.string.empty_content),
-                                subHint = stringResource(R.string.new_anime_trailers)
+                                hint = stringResource(Res.string.empty_content),
+                                subHint = stringResource(Res.string.new_anime_trailers)
                             )
                         } else {
                             HorizontalPager(

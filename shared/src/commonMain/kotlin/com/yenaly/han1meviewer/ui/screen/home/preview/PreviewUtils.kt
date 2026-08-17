@@ -1,6 +1,7 @@
 package com.yenaly.han1meviewer.ui.screen.home.preview
 
 import androidx.compose.foundation.lazy.LazyListState
+import com.yenaly.han1meviewer.util.currentLocalDate
 
 /**
  * 根据年份和月份生成日期码（yyyyMM 格式）。
@@ -9,7 +10,9 @@ import androidx.compose.foundation.lazy.LazyListState
  * @param month 月份 (1-12)
  * @return 日期码字符串，如 "202401"
  */
-internal fun currentCodeFrom(year: Int, month: Int): String = "%04d%02d".format(year, month)
+// common stdlib 没有 String.format，自己拼
+internal fun currentCodeFrom(year: Int, month: Int): String =
+    year.toString().padStart(4, '0') + month.toString().padStart(2, '0')
 
 /**
  * 获取当前月份对应的日期码。
@@ -17,8 +20,8 @@ internal fun currentCodeFrom(year: Int, month: Int): String = "%04d%02d".format(
  * @return 本月日期码字符串
  */
 internal fun currentDateCode(): String {
-    val now = java.time.LocalDate.now()
-    return currentCodeFrom(now.year, now.monthValue)
+    val now = currentLocalDate()
+    return currentCodeFrom(now.year, now.monthNumber)
 }
 
 /**

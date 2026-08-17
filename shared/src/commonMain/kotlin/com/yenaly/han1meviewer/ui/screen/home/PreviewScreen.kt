@@ -13,10 +13,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.SingletonImageLoader
+import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.yenaly.han1meviewer.PREVIEW_COMMENT_PREFIX
@@ -28,7 +28,6 @@ import com.yenaly.han1meviewer.ui.preview.fakeNewHanimeInfo
 import com.yenaly.han1meviewer.ui.viewmodel.CommentViewModel
 import com.yenaly.han1meviewer.ui.viewmodel.PreviewCommentPrefetcher
 import com.yenaly.han1meviewer.ui.viewmodel.PreviewViewModel
-import com.yenaly.han1meviewer.ui.navigation.main.shiftMonthCodeForPreview
 import com.yenaly.han1meviewer.ui.screen.home.preview.PreviewContent
 import com.yenaly.han1meviewer.ui.screen.home.preview.PreviewEvent
 import com.yenaly.han1meviewer.ui.screen.home.preview.PreviewImageViewerDialog
@@ -64,7 +63,7 @@ fun PreviewScreen(
     previewViewModel: PreviewViewModel,
     commentViewModel: CommentViewModel,
 ) {
-    val context = LocalContext.current
+    val context = LocalPlatformContext.current
     val imageLoader = remember(context) { SingletonImageLoader.get(context) }
     val previewState = previewViewModel.previewFlow.collectAsStateWithLifecycle().value
     val commentCount = PreviewCommentPrefetcher.here(commentViewModel)
@@ -210,8 +209,8 @@ fun PreviewScreen(
             PreviewEvent.OnRetryLoad -> {
                 val code = uiState.routeState.currentDateCode
                 previewViewModel.getHanimePreview(code)
-                previewViewModel.preloadPreview(shiftMonthCodeForPreview(code, -1))
-                previewViewModel.preloadPreview(shiftMonthCodeForPreview(code, 1))
+                previewViewModel.preloadPreview(shiftMonthCode(code, -1))
+                previewViewModel.preloadPreview(shiftMonthCode(code, 1))
                 PreviewCommentPrefetcher.here(commentViewModel).fetch(PREVIEW_COMMENT_PREFIX, code)
             }
         }
@@ -219,8 +218,8 @@ fun PreviewScreen(
 
     LaunchedEffect(currentDateCode) {
         previewViewModel.getHanimePreview(currentDateCode)
-        previewViewModel.preloadPreview(shiftMonthCodeForPreview(currentDateCode, -1))
-        previewViewModel.preloadPreview(shiftMonthCodeForPreview(currentDateCode, 1))
+        previewViewModel.preloadPreview(shiftMonthCode(currentDateCode, -1))
+        previewViewModel.preloadPreview(shiftMonthCode(currentDateCode, 1))
         PreviewCommentPrefetcher.here(commentViewModel).fetch(PREVIEW_COMMENT_PREFIX, currentDateCode)
         routeState = routeState.copy(selectedIndex = 0)
     }
