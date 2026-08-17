@@ -38,17 +38,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.entity.download.DownloadGroupEntity
 import com.yenaly.han1meviewer.logic.entity.download.VideoWithCategories
 import com.yenaly.han1meviewer.logic.model.DownloadHeaderNode
 import com.yenaly.han1meviewer.ui.component.ConfirmDialog
 import com.yenaly.han1meviewer.ui.component.lazy.LazyColumn
 import com.yenaly.han1meviewer.ui.component.verticalScrollbar
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.cancel
+import han1meviewer.shared.generated.resources.confirm
+import han1meviewer.shared.generated.resources.create_new_group
+import han1meviewer.shared.generated.resources.current_group_name
+import han1meviewer.shared.generated.resources.delete_group
+import han1meviewer.shared.generated.resources.delete_group_confirm
+import han1meviewer.shared.generated.resources.modify_video_group
+import han1meviewer.shared.generated.resources.new_group_name
+import han1meviewer.shared.generated.resources.rename_group
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * 新建/管理分组对话框。
@@ -75,10 +84,10 @@ fun CreateGroupDialog(
     if (pendingDeleteGroup != null) {
         ConfirmDialog(
             visible = true,
-            title = stringResource(R.string.delete_group),
-            message = stringResource(R.string.delete_group_confirm, pendingDeleteGroup!!.name),
-            confirmText = stringResource(R.string.confirm),
-            dismissText = stringResource(R.string.cancel),
+            title = stringResource(Res.string.delete_group),
+            message = stringResource(Res.string.delete_group_confirm, pendingDeleteGroup!!.name),
+            confirmText = stringResource(Res.string.confirm),
+            dismissText = stringResource(Res.string.cancel),
             onConfirm = {
                 pendingDeleteGroup?.let { onDeleteGroup(it) }
                 pendingDeleteGroup = null
@@ -94,7 +103,7 @@ fun CreateGroupDialog(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 Text(
-                    stringResource(R.string.create_new_group),
+                    stringResource(Res.string.create_new_group),
                     style = MaterialTheme.typography.titleLarge
                 )
                 if (groups.isNotEmpty()) {
@@ -138,7 +147,7 @@ fun CreateGroupDialog(
                                 ) {
                                     Icon(
                                         imageVector = Icons.Outlined.Delete,
-                                        contentDescription = stringResource(R.string.delete_group),
+                                        contentDescription = stringResource(Res.string.delete_group),
                                         modifier = Modifier.size(18.dp),
                                     )
                                 }
@@ -150,7 +159,7 @@ fun CreateGroupDialog(
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text(stringResource(R.string.new_group_name)) },
+                    label = { Text(stringResource(Res.string.new_group_name)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
@@ -165,13 +174,13 @@ fun CreateGroupDialog(
                     horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
                 ) {
                     TextButton(onClick = onDismiss) {
-                        Text(stringResource(R.string.cancel))
+                        Text(stringResource(Res.string.cancel))
                     }
                     TextButton(onClick = {
                         val trimmed = name.trim()
                         if (trimmed.isNotBlank()) onConfirm(trimmed)
                     }) {
-                        Text(stringResource(R.string.confirm))
+                        Text(stringResource(Res.string.confirm))
                     }
                 }
             }
@@ -208,18 +217,18 @@ fun GroupRenameDialog(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Text(
-                    stringResource(R.string.rename_group),
+                    stringResource(Res.string.rename_group),
                     style = MaterialTheme.typography.titleLarge
                 )
                 Text(
-                    stringResource(R.string.current_group_name, header.groupKey),
+                    stringResource(Res.string.current_group_name, header.groupKey),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text(stringResource(R.string.new_group_name)) },
+                    label = { Text(stringResource(Res.string.new_group_name)) },
                     singleLine = true,
                 )
                 Row(
@@ -229,11 +238,11 @@ fun GroupRenameDialog(
                     if (group != null && group.id != DownloadGroupEntity.DEFAULT_GROUP_ID) {
                         TextButton(onClick = { onDelete(header) }) {
                             Icon(Icons.Outlined.Delete, contentDescription = null)
-                            Text(stringResource(R.string.delete_group))
+                            Text(stringResource(Res.string.delete_group))
                         }
                     }
                     TextButton(onClick = onDismiss) {
-                        Text(stringResource(R.string.cancel))
+                        Text(stringResource(Res.string.cancel))
                     }
                     TextButton(onClick = {
                         val trimmed = name.trim()
@@ -242,7 +251,7 @@ fun GroupRenameDialog(
                         }
                     }) {
                         Icon(Icons.Outlined.Edit, contentDescription = null)
-                        Text(stringResource(R.string.confirm))
+                        Text(stringResource(Res.string.confirm))
                     }
                 }
             }
@@ -274,7 +283,7 @@ fun MoveGroupDialog(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 Text(
-                    text = stringResource(R.string.modify_video_group, video.video.title),
+                    text = stringResource(Res.string.modify_video_group, video.video.title),
                     style = MaterialTheme.typography.titleMedium,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
@@ -323,7 +332,7 @@ fun MoveGroupDialog(
                     onClick = onDismiss,
                     modifier = Modifier.align(Alignment.End)
                 ) {
-                    Text(stringResource(R.string.cancel))
+                    Text(stringResource(Res.string.cancel))
                 }
             }
         }

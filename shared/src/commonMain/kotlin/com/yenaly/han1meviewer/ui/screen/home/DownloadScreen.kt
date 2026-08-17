@@ -1,11 +1,11 @@
 package com.yenaly.han1meviewer.ui.screen.home
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.FilledIconButton
@@ -23,17 +23,14 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.entity.download.DownloadGroupEntity
 import com.yenaly.han1meviewer.logic.entity.download.HanimeDownloadEntity
 import com.yenaly.han1meviewer.logic.entity.download.VideoWithCategories
 import com.yenaly.han1meviewer.logic.model.DownloadHeaderNode
-import com.yenaly.han1meviewer.ui.component.appbar.HanimeScaffold
 import com.yenaly.han1meviewer.ui.component.ConfirmDialog
+import com.yenaly.han1meviewer.ui.component.appbar.HanimeScaffold
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
 import com.yenaly.han1meviewer.ui.screen.home.download.DownloadEvent
 import com.yenaly.han1meviewer.ui.screen.home.download.DownloadUiState
@@ -43,11 +40,31 @@ import com.yenaly.han1meviewer.ui.screen.home.download.MoveGroupDialog
 import com.yenaly.han1meviewer.ui.screen.home.download.toDisplayGroups
 import com.yenaly.han1meviewer.ui.screen.home.download.toFlatNodeList
 import com.yenaly.han1meviewer.ui.screen.home.download.toNodeList
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.baseline_add_24
+import han1meviewer.shared.generated.resources.baseline_format_list_bulleted_24
+import han1meviewer.shared.generated.resources.cancel
+import han1meviewer.shared.generated.resources.confirm
+import han1meviewer.shared.generated.resources.confirm_move_videos
+import han1meviewer.shared.generated.resources.create_new_group
+import han1meviewer.shared.generated.resources.download
+import han1meviewer.shared.generated.resources.downloaded
+import han1meviewer.shared.generated.resources.downloading
+import han1meviewer.shared.generated.resources.edit
+import han1meviewer.shared.generated.resources.ic_baseline_download_24
+import han1meviewer.shared.generated.resources.ic_baseline_pause_24
+import han1meviewer.shared.generated.resources.ic_baseline_play_arrow_24
+import han1meviewer.shared.generated.resources.move_group
+import han1meviewer.shared.generated.resources.pause_all
+import han1meviewer.shared.generated.resources.read_download_dir_title
+import han1meviewer.shared.generated.resources.start_all
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * 下载页面 Screen 层。
@@ -175,7 +192,7 @@ fun DownloadScreen(
     }
 
     HanimeScaffold(
-        title = stringResource(R.string.download),
+        title = stringResource(Res.string.download),
         onBack = onBack,
         actions = {
             if (uiState.currentPage == 0) {
@@ -184,8 +201,8 @@ fun DownloadScreen(
                     enabled = uiState.downloadingItems.isNotEmpty()
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_baseline_play_arrow_24),
-                        contentDescription = stringResource(R.string.start_all),
+                        painter = painterResource(Res.drawable.ic_baseline_play_arrow_24),
+                        contentDescription = stringResource(Res.string.start_all),
                     )
                 }
                 FilledIconButton(
@@ -193,8 +210,8 @@ fun DownloadScreen(
                     enabled = uiState.downloadingItems.isNotEmpty()
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_baseline_pause_24),
-                        contentDescription = stringResource(R.string.pause_all),
+                        painter = painterResource(Res.drawable.ic_baseline_pause_24),
+                        contentDescription = stringResource(Res.string.pause_all),
                     )
                 }
             } else {
@@ -203,24 +220,24 @@ fun DownloadScreen(
                         onClick = { handleEvent(DownloadEvent.OnToggleMultiSelect) }
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.baseline_format_list_bulleted_24),
-                            contentDescription = stringResource(R.string.edit),
+                            painter = painterResource(Res.drawable.baseline_format_list_bulleted_24),
+                            contentDescription = stringResource(Res.string.edit),
                         )
                     }
                     FilledIconButton(
                         onClick = { handleEvent(DownloadEvent.OnCreateGroupDialogChange(true)) }
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.baseline_add_24),
-                            contentDescription = stringResource(R.string.create_new_group),
+                            painter = painterResource(Res.drawable.baseline_add_24),
+                            contentDescription = stringResource(Res.string.create_new_group),
                         )
                     }
                     FilledIconButton(
                         onClick = { handleEvent(DownloadEvent.OnImportDownloaded) }
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_baseline_download_24),
-                            contentDescription = stringResource(R.string.read_download_dir_title),
+                            painter = painterResource(Res.drawable.ic_baseline_download_24),
+                            contentDescription = stringResource(Res.string.read_download_dir_title),
                         )
                     }
                 }
@@ -236,12 +253,12 @@ fun DownloadScreen(
                 Tab(
                     selected = uiState.currentPage == 0,
                     onClick = { handleEvent(DownloadEvent.OnPageChange(0)) },
-                    text = { Text(stringResource(R.string.downloading)) },
+                    text = { Text(stringResource(Res.string.downloading)) },
                 )
                 Tab(
                     selected = uiState.currentPage == 1,
                     onClick = { handleEvent(DownloadEvent.OnPageChange(1)) },
-                    text = { Text(stringResource(R.string.downloaded)) },
+                    text = { Text(stringResource(Res.string.downloaded)) },
                 )
             }
 
@@ -291,10 +308,10 @@ fun DownloadScreen(
         val groupName = displayGroups.find { it.id == groupId }?.name ?: "ID:$groupId"
         ConfirmDialog(
             visible = true,
-            title = stringResource(R.string.move_group),
-            message = stringResource(R.string.confirm_move_videos,videos.size,groupName),
-            confirmText = stringResource(R.string.confirm),
-            dismissText = stringResource(R.string.cancel),
+            title = stringResource(Res.string.move_group),
+            message = stringResource(Res.string.confirm_move_videos,videos.size,groupName),
+            confirmText = stringResource(Res.string.confirm),
+            dismissText = stringResource(Res.string.cancel),
             onConfirm = {
                 handleEvent(DownloadEvent.OnBatchMoveGroup(videos, groupId))
                 pendingBatchMoveConfirm = null

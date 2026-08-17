@@ -15,7 +15,6 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.DriveFileMove
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.ButtonDefaults
@@ -32,11 +31,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.entity.download.DownloadGroupEntity
 import com.yenaly.han1meviewer.logic.entity.download.VideoWithCategories
 import com.yenaly.han1meviewer.logic.model.DownloadHeaderNode
@@ -44,9 +41,22 @@ import com.yenaly.han1meviewer.logic.model.DownloadItemNode
 import com.yenaly.han1meviewer.ui.component.ConfirmDialog
 import com.yenaly.han1meviewer.ui.component.content.EmptyContent
 import com.yenaly.han1meviewer.ui.component.lazy.LazyColumn
+import com.yenaly.han1meviewer.ui.icon.DriveFileMove
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
 import com.yenaly.han1meviewer.ui.preview.fakeDownloadedGroups
 import com.yenaly.han1meviewer.ui.preview.fakeDownloadedNodes
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.cancel
+import han1meviewer.shared.generated.resources.close
+import han1meviewer.shared.generated.resources.confirm
+import han1meviewer.shared.generated.resources.confirm_delete_videos
+import han1meviewer.shared.generated.resources.delete
+import han1meviewer.shared.generated.resources.deselect_all
+import han1meviewer.shared.generated.resources.downloaded
+import han1meviewer.shared.generated.resources.empty_content
+import han1meviewer.shared.generated.resources.move_group
+import han1meviewer.shared.generated.resources.select_all
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * 已下载 Tab 页面（Content 层）。
@@ -107,8 +117,8 @@ fun DownloadedScreen(
     if (uiState.downloadedNodes.isEmpty()) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             EmptyContent(
-                hint = stringResource(R.string.empty_content),
-                subHint = stringResource(R.string.downloaded),
+                hint = stringResource(Res.string.empty_content),
+                subHint = stringResource(Res.string.downloaded),
             )
         }
         return
@@ -221,10 +231,10 @@ fun DownloadedScreen(
     pendingBatchDeleteVideos?.let { videos ->
         ConfirmDialog(
             visible = true,
-            title = stringResource(R.string.delete),
-            message = stringResource(R.string.confirm_delete_videos, videos.size),
-            confirmText = stringResource(R.string.confirm),
-            dismissText = stringResource(R.string.cancel),
+            title = stringResource(Res.string.delete),
+            message = stringResource(Res.string.confirm_delete_videos, videos.size),
+            confirmText = stringResource(Res.string.confirm),
+            dismissText = stringResource(Res.string.cancel),
             onConfirm = {
                 onEvent(DownloadEvent.OnBatchDelete(videos))
                 pendingBatchDeleteVideos = null
@@ -269,7 +279,7 @@ private fun BatchActionBar(
                 IconButton(onClick = onExitMultiSelect) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = stringResource(R.string.close),
+                        contentDescription = stringResource(Res.string.close),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -288,9 +298,9 @@ private fun BatchActionBar(
                 TextButton(onClick = onToggleSelectAll) {
                     Text(
                         text = if (isAllSelected) {
-                            stringResource(R.string.deselect_all)
+                            stringResource(Res.string.deselect_all)
                         } else {
-                            stringResource(R.string.select_all)
+                            stringResource(Res.string.select_all)
                         },
                         style = MaterialTheme.typography.labelLarge
                     )
@@ -310,7 +320,7 @@ private fun BatchActionBar(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = stringResource(R.string.move_group),
+                        text = stringResource(Res.string.move_group),
                         style = MaterialTheme.typography.labelLarge
                     )
                 }
@@ -329,7 +339,7 @@ private fun BatchActionBar(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = stringResource(R.string.delete),
+                        text = stringResource(Res.string.delete),
                         style = MaterialTheme.typography.labelLarge,
                         fontWeight = if (hasSelection) FontWeight.SemiBold else FontWeight.Normal
                     )
