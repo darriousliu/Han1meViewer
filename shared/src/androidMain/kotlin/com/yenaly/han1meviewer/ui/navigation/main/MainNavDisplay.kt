@@ -21,12 +21,15 @@ import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.runtime.result.LocalResultEventBus
+import androidx.navigation3.runtime.result.ResultEffect
 import androidx.navigation3.runtime.result.rememberResultEventBusNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.yenaly.han1meviewer.logic.network.CloudflareNavBridge
 import com.yenaly.han1meviewer.ui.activity.MainActivity
 import com.yenaly.han1meviewer.ui.navigation.AccountRoute
 import com.yenaly.han1meviewer.ui.navigation.AvatarCropRoute
+import com.yenaly.han1meviewer.ui.navigation.AvatarCropped
 import com.yenaly.han1meviewer.ui.navigation.CloudflareRoute
 import com.yenaly.han1meviewer.ui.navigation.CreatorCenterRoute
 import com.yenaly.han1meviewer.ui.navigation.DailyCheckInRoute
@@ -39,6 +42,7 @@ import com.yenaly.han1meviewer.ui.navigation.HKeyframesRoute
 import com.yenaly.han1meviewer.ui.navigation.HomeRoute
 import com.yenaly.han1meviewer.ui.navigation.HomeSettingsRoute
 import com.yenaly.han1meviewer.ui.navigation.LoginRoute
+import com.yenaly.han1meviewer.ui.navigation.LoginSucceeded
 import com.yenaly.han1meviewer.ui.navigation.ManualCookiesRoute
 import com.yenaly.han1meviewer.ui.navigation.MpvPlayerSettingsRoute
 import com.yenaly.han1meviewer.ui.navigation.MyFavVideoRoute
@@ -82,8 +86,6 @@ fun MainNavDisplay(
     isDrawerOpen: Boolean,
     onOpenDrawer: () -> Unit,
 ) {
-    var pendingAvatarCropResult by remember { mutableStateOf<ByteArray?>(null) }
-
     val onBack: () -> Unit = { backStack.removeLastOrNull() }
     val onNavigateToVideo: (String) -> Unit = { code -> backStack.navigateSafely(VideoRoute(code)) }
     val onNavigateToLocalVideo: (String, String?) -> Unit =
@@ -142,6 +144,10 @@ fun MainNavDisplay(
         },
         entryProvider = entryProvider {
             entry<HomeRoute> {
+                // 登录成功后刷新首页。原来是 LoginActivity 的 setResult(RESULT_OK)
+                // → loginDataLauncher → getHomePage()，Step 17 退化成回调透传，
+                // 现在走 nav3 的结果总线：登录页 pop 回来时这里收到
+                ResultEffect<LoginSucceeded> { activity.viewModel.getHomePage() }
                 HomeRouteScreen(
                     activity = activity,
                     isDrawerOpen = isDrawerOpen,
@@ -212,6 +218,9 @@ fun MainNavDisplay(
             }
             entry<AccountRoute> {
                 val accountViewModel: UserAccountViewModel = viewModel()
+                ResultEffect<AvatarCropped> { result ->
+                    accountViewModel.updateAvatar(result.jpeg, "avatar.jpg")
+                }
                 AccountScreen(
                     viewModel = accountViewModel,
                     onBack = onBack,
@@ -220,14 +229,13 @@ fun MainNavDisplay(
                             AvatarCropRoute(Json.encodeToString(PlatformFile.serializer(), file))
                         )
                     },
-                    pendingAvatarCropResult = pendingAvatarCropResult,
-                    onAvatarCropResultConsumed = { pendingAvatarCropResult = null },
                     onRefreshHome = { activity.viewModel.getHomePage() },
                     onMessage = ::showShortToast,
                     onLogout = { activity.showLogoutConfirmDialog(closeCurrentPageOnConfirm = true) },
                 )
             }
             entry<AvatarCropRoute> { route ->
+                val resultBus = LocalResultEventBus.current
                 val source = remember(route.sourceJson) {
                     runCatching {
                         Json.decodeFromString(PlatformFile.serializer(), route.sourceJson)
@@ -241,7 +249,7 @@ fun MainNavDisplay(
                         source = source,
                         onBack = onBack,
                         onConfirm = { jpegBytes ->
-                            pendingAvatarCropResult = jpegBytes
+                            resultBus.sendResult(AvatarCropped(jpegBytes))
                             onBack()
                         },
                     )
@@ -381,13 +389,13 @@ fun MainNavDisplay(
             }
 
             entry<LoginRoute> {
+                val resultBus = LocalResultEventBus.current
                 LoginRouteScreen(
                     onBack = onBack,
                     onOpenManualCookies = { backStack.navigateSafely(ManualCookiesRoute) },
                     onLoginFinished = {
+                        resultBus.sendResult(LoginSucceeded)
                         backStack.removeLastOrNull()
-                        // 对应原 loginDataLauncher 收到 RESULT_OK 后的刷新
-                        activity.viewModel.getHomePage()
                     },
                 )
             }
@@ -408,12 +416,13 @@ fun MainNavDisplay(
             }
 
             entry<ManualCookiesRoute> {
+                val resultBus = LocalResultEventBus.current
                 ManualCookiesRouteScreen(
                     onBack = onBack,
                     onLoginFinished = {
+                        resultBus.sendResult(LoginSucceeded)
                         // 把手动输入页和登录页一起退掉（原来是两层 Activity 各自 finish）
                         backStack.popTo(LoginRoute, inclusive = true)
-                        activity.viewModel.getHomePage()
                     },
                 )
             }

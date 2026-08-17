@@ -104,8 +104,6 @@ fun AccountScreen(
     viewModel: UserAccountViewModel,
     onBack: () -> Unit,
     onOpenAvatarCrop: (PlatformFile) -> Unit,
-    pendingAvatarCropResult: ByteArray?,
-    onAvatarCropResultConsumed: () -> Unit,
     onRefreshHome: () -> Unit,
     onMessage: (String) -> Unit,
     onLogout: () -> Unit,
@@ -116,13 +114,6 @@ fun AccountScreen(
     val modifySuccess = stringResource(Res.string.modify_success)
     LaunchedEffect(Unit) {
         viewModel.loadAccount()
-    }
-
-    // 裁剪页现在直接把 JPEG 字节回传，不再落临时文件、也不再靠路径往返
-    LaunchedEffect(pendingAvatarCropResult) {
-        val photoBytes = pendingAvatarCropResult ?: return@LaunchedEffect
-        viewModel.updateAvatar(photoBytes, "avatar.jpg")
-        onAvatarCropResultConsumed()
     }
 
     LaunchedEffect(viewModel) {
