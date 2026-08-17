@@ -24,9 +24,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.model.Playlists
 import com.yenaly.han1meviewer.logic.state.PageLoadingState
 import com.yenaly.han1meviewer.logic.state.WebsiteState
@@ -34,6 +32,11 @@ import com.yenaly.han1meviewer.ui.component.LoadMoreFooter
 import com.yenaly.han1meviewer.ui.component.content.EmptyContent
 import com.yenaly.han1meviewer.ui.component.lazy.LazyVerticalGrid
 import com.yenaly.han1meviewer.ui.screen.getColumnCount
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.empty_content
+import han1meviewer.shared.generated.resources.load_failed_with_reason
+import han1meviewer.shared.generated.resources.retry
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * 播放列表页 Content 层。纯 UI，不持有 ViewModel。
@@ -87,13 +90,13 @@ fun PlaylistContent(
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
                             stringResource(
-                                R.string.load_failed_with_reason,
+                                Res.string.load_failed_with_reason,
                                 target.throwable.message.orEmpty()
                             )
                         )
                         Spacer(Modifier.height(8.dp))
                         Button(onClick = { onEvent(PlaylistEvent.OnRefresh) }) {
-                            Text(stringResource(R.string.retry))
+                            Text(stringResource(Res.string.retry))
                         }
                     }
                 }
@@ -101,7 +104,7 @@ fun PlaylistContent(
 
             is WebsiteState.Success -> {
                 if (target.info.playlists.isEmpty() && uiState.playlists.isEmpty()) {
-                    EmptyContent(stringResource(R.string.empty_content))
+                    EmptyContent(stringResource(Res.string.empty_content))
                     return@AnimatedContent
                 }
                 LazyVerticalGrid(

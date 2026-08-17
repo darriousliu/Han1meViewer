@@ -19,16 +19,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.model.Playlists
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
 import com.yenaly.han1meviewer.ui.preview.fakePlaylists
 import com.yenaly.han1meviewer.ui.screen.RetryableImage
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.h_chan_load_failed
+import han1meviewer.shared.generated.resources.h_chan_loading
+import han1meviewer.shared.generated.resources.video_count
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * 播放列表项组件。
@@ -57,8 +60,8 @@ fun PlaylistItem(
                 RetryableImage(
                     model = playlist.coverUrl ?: "",
                     contentDescription = playlist.title,
-                    placeholder = painterResource(R.drawable.h_chan_loading),
-                    error = painterResource(R.drawable.h_chan_load_failed),
+                    placeholder = painterResource(Res.drawable.h_chan_loading),
+                    error = painterResource(Res.drawable.h_chan_load_failed),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize(),
                 )
@@ -73,7 +76,7 @@ fun PlaylistItem(
                         .padding(horizontal = 8.dp, vertical = 4.dp),
                 ) {
                     Text(
-                        text = stringResource(R.string.video_count, playlist.total),
+                        text = stringResource(Res.string.video_count, playlist.total),
                         style = MaterialTheme.typography.bodySmall.copy(color = Color.White),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
