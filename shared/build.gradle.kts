@@ -193,6 +193,7 @@ kotlin {
             implementation(libs.sqlite.bundled)
             implementation(libs.sqlite.async)
             implementation(libs.filekit.core)
+            implementation(libs.filekit.dialogs.compose)
         }
 
         getByName("androidHostTest").dependencies {
