@@ -1,7 +1,9 @@
 package com.yenaly.han1meviewer.util
 
+import android.app.ActivityManager
 import android.app.Application
 import android.content.Context
+import android.os.Process
 import android.content.res.Resources
 import kotlin.math.roundToInt
 
@@ -17,6 +19,20 @@ object AndroidAppContext {
 
 val application: Application
     get() = AndroidAppContext.application
+
+/**
+ * 当前进程是不是主进程（下载 worker 等子进程为 false）。
+ *
+ * 好几个平台能力只在主进程有意义：OkHttp 磁盘缓存的 DiskLruCache 不能多进程共用、
+ * Cloudflare 过盾要拉起 Activity。原来靠「HanimeApplication 只在主进程注入」表达，
+ * lambda 注入废弃后由各 actual 自己判断，统一用这一份。
+ */
+val isMainProcess: Boolean by lazy {
+    val app = AndroidAppContext.application
+    val pid = Process.myPid()
+    val am = app.getSystemService(ActivityManager::class.java)
+    am?.runningAppProcesses?.firstOrNull { it.pid == pid }?.processName == app.packageName
+}
 
 val applicationContext: Context
     get() = AndroidAppContext.application.applicationContext

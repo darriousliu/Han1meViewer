@@ -8,14 +8,10 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 /**
- * 公告的 Android 实现：Firebase Realtime Database。
- *
- * 在 `HanimeApplication.onCreate` 里注册到
- * [com.yenaly.han1meviewer.ui.screen.home.homepage.AnnouncementSource]。
- * 「24 小时内不重复弹」「按 priority 排序」「过滤 isActive」这些策略在 common 侧，
- * 这里只负责把原始列表取回来。
+ * 公告的 Android actual：Firebase Realtime Database。
+ * 策略（过滤/排序/24 小时冷却）在 common 侧，这里只取原始列表。
  */
-suspend fun fetchAnnouncementsFromFirebase(): List<Announcement> =
+actual suspend fun fetchPlatformAnnouncements(): List<Announcement> =
     suspendCancellableCoroutine { continuation ->
         FirebaseDatabase.getInstance(FIREBASE_REALTIME_DATABASE)
             .getReference("announcements").get()

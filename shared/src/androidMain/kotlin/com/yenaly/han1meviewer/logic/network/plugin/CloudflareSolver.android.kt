@@ -1,0 +1,15 @@
+package com.yenaly.han1meviewer.logic.network.plugin
+
+import com.yenaly.han1meviewer.logic.network.AndroidCloudflareSolver
+import com.yenaly.han1meviewer.util.application
+import com.yenaly.han1meviewer.util.isMainProcess
+
+/**
+ * 过盾要拉起 Activity 跑 WebView，只在主进程有意义；
+ * 子进程碰到 403 走插件的放行分支（和原来只在主进程注入的行为一致）。
+ */
+private val instance: CloudflareSolver? by lazy {
+    if (isMainProcess) AndroidCloudflareSolver(application) else null
+}
+
+internal actual fun platformCloudflareSolver(): CloudflareSolver? = instance

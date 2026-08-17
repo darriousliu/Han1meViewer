@@ -30,7 +30,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
@@ -40,12 +39,6 @@ import org.jetbrains.compose.resources.StringResource
 import kotlin.math.abs
 
 private val logger = Logger.withTag("VideoViewModel")
-
-/** 影片页仍需的平台能力；Android 在 Application 启动时注入。 */
-object VideoPlatformBridge {
-    var loadCachedVideo: (String) -> Flow<HanimeVideo?> = { flowOf(null) }
-    var defaultPlayerHeightPx: () -> Int = { 250 }
-}
 
 /**
  * @project Hanime1

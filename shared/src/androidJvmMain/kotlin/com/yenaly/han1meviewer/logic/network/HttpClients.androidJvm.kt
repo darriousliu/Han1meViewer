@@ -15,13 +15,17 @@ import okhttp3.Protocol
  *
  * 放在 androidJvmMain 而不是 androidMain，是为了 android 和 jvm 两个目标共用同一份源码。
  */
-object OkHttpNetworkConfig {
+/**
+ * HANIME client 的 OkHttp 磁盘缓存；返回 null 就没有磁盘缓存。
+ *
+ * 缓存目录要 `Context.cacheDir`（androidJvmMain 拿不到 Android 的 Context），
+ * 且 OkHttp 的 DiskLruCache **不能多进程共用**——Android actual 只在主进程返回实例，
+ * 下载 worker 等子进程和 jvm 侧都是 null。原来是 lambda 注入（只在主进程赋值来
+ * 表达这条约束），废弃后由 actual 自己判断。
+ */
+internal expect fun createHttpDiskCache(): Cache?
 
-    /**
-     * 磁盘缓存。androidMain 在启动时注入（缓存目录要 `Context.cacheDir`，
-     * 而 androidJvmMain 拿不到 Android 的 Context）；jvm 侧不注入就是没有磁盘缓存。
-     */
-    var cacheProvider: (() -> Cache?)? = null
+object OkHttpNetworkConfig {
 
     /**
      * 共用一个实例：[HDns] 内部缓存了 DoH client 和自定义 hosts 的解析结果，
@@ -46,7 +50,7 @@ internal actual fun createPlatformHttpClient(
                 HClientSpec.HANIME -> {
                     dns(OkHttpNetworkConfig.dns)
                     proxySelector(HProxySelector())
-                    OkHttpNetworkConfig.cacheProvider?.invoke()?.let(::cache)
+                    createHttpDiskCache()?.let(::cache)
                 }
 
                 HClientSpec.GETCHU -> {

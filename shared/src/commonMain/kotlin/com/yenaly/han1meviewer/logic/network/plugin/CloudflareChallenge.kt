@@ -20,12 +20,19 @@ fun interface CloudflareSolver {
 
 object CloudflareChallengeHandler {
     /**
-     * 由平台侧在启动时注册。没注册时插件直接放行 403，行为等同于没装这个插件。
+     * 平台的过盾实现。为 null 时插件直接放行 403，行为等同于没装这个插件。
+     * 原来是启动时往 var 里注入，废弃后改由 [platformCloudflareSolver] 提供。
      */
-    var solver: CloudflareSolver? = null
+    val solver: CloudflareSolver? get() = platformCloudflareSolver()
 
     internal val mutex = Mutex()
 }
+
+/**
+ * 各平台的 [CloudflareSolver]。Android 主进程拉起 WebView Activity；
+ * 没有实现的平台（以及 Android 的下载 worker 等子进程）返回 null。
+ */
+internal expect fun platformCloudflareSolver(): CloudflareSolver?
 
 private const val CF_MITIGATED_HEADER = "cf-mitigated"
 private const val CF_CHALLENGE = "challenge"

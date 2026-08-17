@@ -10,6 +10,7 @@ import com.yenaly.han1meviewer.logic.entity.HKeyframeEntity
 import com.yenaly.han1meviewer.logic.entity.WatchHistoryEntity
 import com.yenaly.han1meviewer.logic.exception.LoginStateExpiredException
 import com.yenaly.han1meviewer.logic.model.Announcement
+import com.yenaly.han1meviewer.logic.network.fetchPlatformAnnouncements
 import com.yenaly.han1meviewer.logic.state.PageState
 import com.yenaly.han1meviewer.logic.state.WebsiteState
 import com.yenaly.han1meviewer.logout
@@ -30,16 +31,6 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import org.jetbrains.compose.resources.StringResource
-
-/**
- * 公告的来源由平台侧在启动时注册（Android 走 Firebase Realtime Database）。
- *
- * 没注册就不显示公告——桌面 / iOS 目前没有对应实现，这是合理的默认行为。
- * 和 CloudflareChallengeHandler.solver 是同一套注入模式。
- */
-object AnnouncementSource {
-    var fetch: (suspend () -> List<Announcement>)? = null
-}
 
 private val logger = Logger.withTag("HomePageViewModel")
 
@@ -112,15 +103,14 @@ class HomePageViewModel: ViewModel() {
     }
     /**
      * 「关掉公告后 24 小时内不再弹」这条策略留在 common，平台侧只负责把公告取回来。
-     * 取不到（没注册 / 抛异常）一律当空列表——公告不该阻塞首页。
+     * 取不到（平台没有来源 / 抛异常）一律当空列表——公告不该阻塞首页。
      */
     private suspend fun fetchAnnouncements(): List<Announcement> {
         val lastDismissTime = Preferences.lastDismissTime
         val now = Clock.System.now().toEpochMilliseconds()
         if (now - lastDismissTime <= 24 * 60 * 60 * 1000L) return emptyList()
 
-        val fetch = AnnouncementSource.fetch ?: return emptyList()
-        return runCatching { fetch() }
+        return runCatching { fetchPlatformAnnouncements() }
             .onFailure { logger.e(it) { "公告读取失败" } }
             .getOrDefault(emptyList())
             .filter { it.isActive }

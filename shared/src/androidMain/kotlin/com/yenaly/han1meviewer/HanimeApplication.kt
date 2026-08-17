@@ -3,7 +3,6 @@ package com.yenaly.han1meviewer
 import android.app.Application
 import android.content.ComponentName
 import android.content.pm.PackageManager
-import android.os.Process
 import android.util.Log
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationManagerCompat
@@ -16,25 +15,17 @@ import com.google.firebase.crashlytics.setCustomKeys
 import com.google.firebase.database.database
 import com.google.firebase.remoteconfig.remoteConfig
 import com.google.firebase.remoteconfig.remoteConfigSettings
-import com.yenaly.han1meviewer.logic.network.AndroidCloudflareSolver
-import com.yenaly.han1meviewer.logic.network.fetchAnnouncementsFromFirebase
-import com.yenaly.han1meviewer.ui.screen.home.homepage.AnnouncementSource
 import com.yenaly.han1meviewer.logic.network.HProxySelector
-import com.yenaly.han1meviewer.logic.network.OkHttpNetworkConfig
-import com.yenaly.han1meviewer.logic.network.plugin.CloudflareChallengeHandler
 import com.yenaly.han1meviewer.mmkv.initializeMMKV
 import com.yenaly.han1meviewer.mmkv.migrateSharedPreferencesToMMKV
 import com.yenaly.han1meviewer.ui.activity.MainActivity
 import com.yenaly.han1meviewer.ui.viewmodel.AppViewModel
-import com.yenaly.han1meviewer.ui.viewmodel.VideoPlatformBridge
 import com.yenaly.han1meviewer.util.AndroidAppContext
+import com.yenaly.han1meviewer.util.isMainProcess
 import com.yenaly.han1meviewer.util.AnimeShaders
 import com.yenaly.han1meviewer.util.LanguageHelper
 import com.yenaly.han1meviewer.util.ThemeUtils
-import com.yenaly.han1meviewer.util.dpPx
 import `is`.xyz.mpv.MPVLib
-import okhttp3.Cache
-import java.io.File
 import java.net.ProxySelector
 
 /**
@@ -46,8 +37,6 @@ class HanimeApplication : Application() {
 
     companion object {
         const val TAG = "HanimeApplication"
-
-        private const val HTTP_CACHE_SIZE = 10L * 1024 * 1024
     }
 
     private fun initCrashX() {
@@ -75,35 +64,17 @@ class HanimeApplication : Application() {
             .apply()
     }
 
-    private fun isMainProcess(): Boolean {
-        val pid = Process.myPid()
-        val am = getSystemService(android.app.ActivityManager::class.java)
-        return am?.runningAppProcesses?.firstOrNull { it.pid == pid }?.processName == packageName
-    }
-
     override fun onCreate() {
         super.onCreate()
+        // 平台能力（视频缓存、公告、过盾、HTTP 磁盘缓存）都已改成 expect/actual，
+        // 这里不再做任何 lambda 注入；actual 侧经 AndroidAppContext 拿 Context。
         AndroidAppContext.initialize(this)
-        VideoPlatformBridge.loadCachedVideo = { videoCode ->
-            HCacheManager.loadHanimeVideoInfo(this, videoCode)
-        }
-        // 首页公告走 Firebase Realtime Database，只有 Android 有；
-        // 取回来之后的过滤、排序和「24 小时内不重复弹」都在 commonMain 的 VM 里。
-        AnnouncementSource.fetch = { fetchAnnouncementsFromFirebase() }
-        VideoPlatformBridge.defaultPlayerHeightPx = { 250.dpPx }
         // MMKV 必须早于任何 Preferences 访问：Preferences 里的几个 StateFlow 一被碰到就会读盘。
-        // 放在 isMainProcess() 判断之前，因为非主进程（下载 worker 等）同样会读 Preferences。
+        // 放在 isMainProcess 判断之前，因为非主进程（下载 worker 等）同样会读 Preferences。
         initializeMMKV()
-        if (!isMainProcess()) return
+        if (!isMainProcess) return
         // 迁移只在主进程做一次，读写旧 SharedPreferences 不适合多进程并发。
         migrateSharedPreferencesToMMKV(this)
-        // 过 Cloudflare 盾要拉起 Activity 跑 WebView，只有 Android 有；
-        // 检测和重发的逻辑在 commonMain 的 CloudflareChallenge 插件里。
-        CloudflareChallengeHandler.solver = AndroidCloudflareSolver(this)
-        // OkHttp 的磁盘缓存目录要 Context，androidJvmMain 拿不到，从这里注入。
-        OkHttpNetworkConfig.cacheProvider = {
-            Cache(directory = File(cacheDir, "http_cache"), maxSize = HTTP_CACHE_SIZE)
-        }
         initCrashX()
         ThemeUtils.applyDarkModeFromPreferences(this)
         if (Preferences.useDynamicColor){
