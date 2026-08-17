@@ -30,6 +30,9 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
 import com.yenaly.han1meviewer.ui.preview.fakeTagList2
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.collapse
+import han1meviewer.shared.generated.resources.expand
 import kotlin.random.Random
 
 /**
@@ -55,8 +58,8 @@ fun TagChipGroup(
         collapsible,
         collapsedMaxLines
     ) { mutableIntStateOf(0) }
-//    val collapseText = stringResource(R.string.collapse)
-//    val expandText = stringResource(R.string.expand)
+//    val collapseText = stringResource(Res.string.collapse)
+//    val expandText = stringResource(Res.string.expand)
     val arrowRotation by animateFloatAsState(
         targetValue = if (expanded) 180f else 0f,
         animationSpec = tween(durationMillis = 240),

@@ -52,15 +52,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
-import com.yenaly.han1meviewer.R
+import com.yenaly.han1meviewer.LOCAL_DATE_TIME_FORMAT
 import com.yenaly.han1meviewer.logic.entity.WatchHistoryEntity
 import com.yenaly.han1meviewer.logic.model.HanimeInfo
 import com.yenaly.han1meviewer.logic.model.OnlineWatchHistorySort
@@ -77,17 +75,57 @@ import com.yenaly.han1meviewer.ui.component.lazy.LazyColumn
 import com.yenaly.han1meviewer.ui.component.lazy.LazyVerticalGrid
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
 import com.yenaly.han1meviewer.ui.preview.fakeHomePageVideos
+import com.yenaly.han1meviewer.ui.screen.home.videogrid.canLoadMore
 import com.yenaly.han1meviewer.ui.screen.rememberVideoGridColumns
 import com.yenaly.han1meviewer.ui.theme.SpacingNormal
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.cancel
+import han1meviewer.shared.generated.resources.close
+import han1meviewer.shared.generated.resources.delete
+import han1meviewer.shared.generated.resources.delete_failed
+import han1meviewer.shared.generated.resources.delete_history
+import han1meviewer.shared.generated.resources.delete_success
+import han1meviewer.shared.generated.resources.help
+import han1meviewer.shared.generated.resources.ic_baseline_access_time_24
+import han1meviewer.shared.generated.resources.ic_baseline_delete_24
+import han1meviewer.shared.generated.resources.ic_baseline_help_24
+import han1meviewer.shared.generated.resources.ic_baseline_history_24
+import han1meviewer.shared.generated.resources.ic_baseline_play_circle_outline_24
+import han1meviewer.shared.generated.resources.load_failed_retry
+import han1meviewer.shared.generated.resources.local
+import han1meviewer.shared.generated.resources.long_press_to_delete_all_histories
+import han1meviewer.shared.generated.resources.ok
+import han1meviewer.shared.generated.resources.online
+import han1meviewer.shared.generated.resources.popular
+import han1meviewer.shared.generated.resources.sort_by_newest
+import han1meviewer.shared.generated.resources.sort_by_oldest
+import han1meviewer.shared.generated.resources.sure_to_delete_all_histories
+import han1meviewer.shared.generated.resources.sure_to_delete_s
+import han1meviewer.shared.generated.resources.watch_history
+import han1meviewer.shared.generated.resources.watch_history_clear_all
+import han1meviewer.shared.generated.resources.watch_history_delete_all_title
+import han1meviewer.shared.generated.resources.watch_history_empty_description
+import han1meviewer.shared.generated.resources.watch_history_empty_title
+import han1meviewer.shared.generated.resources.watch_history_minutes_short
+import han1meviewer.shared.generated.resources.watch_history_online_help
+import han1meviewer.shared.generated.resources.watch_history_released_at
+import han1meviewer.shared.generated.resources.watch_history_resume_watch
+import han1meviewer.shared.generated.resources.watch_history_total_count
+import han1meviewer.shared.generated.resources.watch_history_watched_at
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format
+import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 @Composable
 fun WatchHistoryTabScreen(
     localHistoriesFlow: Flow<List<WatchHistoryEntity>>,
@@ -119,9 +157,9 @@ fun WatchHistoryTabScreen(
     var showDeleteAllLocalDialog by rememberSaveable { mutableStateOf(false) }
 
     val helpMessage = if (pagerState.currentPage == 1) {
-        stringResource(R.string.watch_history_online_help)
+        stringResource(Res.string.watch_history_online_help)
     } else {
-        stringResource(R.string.long_press_to_delete_all_histories)
+        stringResource(Res.string.long_press_to_delete_all_histories)
     }
 
     LaunchedEffect(pagerState.currentPage) {
@@ -132,20 +170,20 @@ fun WatchHistoryTabScreen(
 
     ConfirmDialog(
         visible = showHelpDialog,
-        title = stringResource(R.string.help),
+        title = stringResource(Res.string.help),
         message = helpMessage,
-        confirmText = stringResource(R.string.ok),
-        dismissText = stringResource(R.string.close),
+        confirmText = stringResource(Res.string.ok),
+        dismissText = stringResource(Res.string.close),
         onConfirm = { showHelpDialog = false },
         onDismiss = { showHelpDialog = false },
     )
 
     ConfirmDialog(
         visible = showDeleteAllLocalDialog,
-        title = stringResource(R.string.watch_history_delete_all_title),
-        message = stringResource(R.string.sure_to_delete_all_histories),
-        confirmText = stringResource(R.string.watch_history_clear_all),
-        dismissText = stringResource(R.string.cancel),
+        title = stringResource(Res.string.watch_history_delete_all_title),
+        message = stringResource(Res.string.sure_to_delete_all_histories),
+        confirmText = stringResource(Res.string.watch_history_clear_all),
+        dismissText = stringResource(Res.string.cancel),
         onConfirm = {
             onDeleteAllLocalHistories()
             showDeleteAllLocalDialog = false
@@ -154,13 +192,13 @@ fun WatchHistoryTabScreen(
     )
 
     HanimeScaffold(
-        title = stringResource(R.string.watch_history),
+        title = stringResource(Res.string.watch_history),
         onBack = onBack,
         actions = {
             FilledIconButton(onClick = { showHelpDialog = true }) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_baseline_help_24),
-                    contentDescription = stringResource(R.string.help),
+                    painter = painterResource(Res.drawable.ic_baseline_help_24),
+                    contentDescription = stringResource(Res.string.help),
                 )
             }
             if (pagerState.currentPage == 0) {
@@ -169,8 +207,8 @@ fun WatchHistoryTabScreen(
                     enabled = localHistories.isNotEmpty(),
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_baseline_delete_24),
-                        contentDescription = stringResource(R.string.watch_history_clear_all),
+                        painter = painterResource(Res.drawable.ic_baseline_delete_24),
+                        contentDescription = stringResource(Res.string.watch_history_clear_all),
                     )
                 }
             }
@@ -185,12 +223,12 @@ fun WatchHistoryTabScreen(
                 Tab(
                     selected = pagerState.currentPage == 0,
                     onClick = { scope.launch { pagerState.animateScrollToPage(0) } },
-                    text = { Text(stringResource(R.string.local)) },
+                    text = { Text(stringResource(Res.string.local)) },
                 )
                 Tab(
                     selected = pagerState.currentPage == 1,
                     onClick = { scope.launch { pagerState.animateScrollToPage(1) } },
-                    text = { Text(stringResource(R.string.online)) },
+                    text = { Text(stringResource(Res.string.online)) },
                 )
             }
 
@@ -270,10 +308,10 @@ private fun WatchHistoryScreen(
 
     ConfirmDialog(
         visible = pendingDelete != null,
-        title = stringResource(R.string.delete_history),
-        message = stringResource(R.string.sure_to_delete_s, pendingDelete?.title.orEmpty()),
-        confirmText = stringResource(R.string.delete),
-        dismissText = stringResource(R.string.cancel),
+        title = stringResource(Res.string.delete_history),
+        message = stringResource(Res.string.sure_to_delete_s, pendingDelete?.title.orEmpty()),
+        confirmText = stringResource(Res.string.delete),
+        dismissText = stringResource(Res.string.cancel),
         onConfirm = {
             pendingDelete?.let(onDeleteHistory)
             pendingDelete = null
@@ -283,10 +321,10 @@ private fun WatchHistoryScreen(
 
     ConfirmDialog(
         visible = showDeleteAllDialog,
-        title = stringResource(R.string.watch_history_delete_all_title),
-        message = stringResource(R.string.sure_to_delete_all_histories),
-        confirmText = stringResource(R.string.watch_history_clear_all),
-        dismissText = stringResource(R.string.cancel),
+        title = stringResource(Res.string.watch_history_delete_all_title),
+        message = stringResource(Res.string.sure_to_delete_all_histories),
+        confirmText = stringResource(Res.string.watch_history_clear_all),
+        dismissText = stringResource(Res.string.cancel),
         onConfirm = {
             onDeleteAllHistories()
             showDeleteAllDialog = false
@@ -296,10 +334,10 @@ private fun WatchHistoryScreen(
 
     ConfirmDialog(
         visible = showHelpDialog,
-        title = stringResource(R.string.help),
-        message = stringResource(R.string.long_press_to_delete_all_histories),
-        confirmText = stringResource(R.string.ok),
-        dismissText = stringResource(R.string.close),
+        title = stringResource(Res.string.help),
+        message = stringResource(Res.string.long_press_to_delete_all_histories),
+        confirmText = stringResource(Res.string.ok),
+        dismissText = stringResource(Res.string.close),
         onConfirm = { showHelpDialog = false },
         onDismiss = { showHelpDialog = false },
     )
@@ -313,8 +351,8 @@ private fun WatchHistoryScreen(
                 contentAlignment = Alignment.Center,
             ) {
                 EmptyContent(
-                    hint = stringResource(R.string.watch_history_empty_title),
-                    subHint = stringResource(R.string.watch_history_empty_description),
+                    hint = stringResource(Res.string.watch_history_empty_title),
+                    subHint = stringResource(Res.string.watch_history_empty_description),
                 )
             }
         } else {
@@ -338,10 +376,10 @@ private fun WatchHistoryScreen(
 
     if (useScaffold) {
         HanimeScaffold(
-            title = stringResource(R.string.watch_history),
+            title = stringResource(Res.string.watch_history),
             subtitle = {
                 Text(
-                    text = stringResource(R.string.watch_history_total_count, histories.size),
+                    text = stringResource(Res.string.watch_history_total_count, histories.size),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -351,8 +389,8 @@ private fun WatchHistoryScreen(
                 if (showHelpAction) {
                     FilledIconButton(onClick = { showHelpDialog = true }) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_baseline_help_24),
-                            contentDescription = stringResource(R.string.help),
+                            painter = painterResource(Res.drawable.ic_baseline_help_24),
+                            contentDescription = stringResource(Res.string.help),
                         )
                     }
                 }
@@ -362,8 +400,8 @@ private fun WatchHistoryScreen(
                         enabled = histories.isNotEmpty()
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_baseline_delete_24),
-                            contentDescription = stringResource(R.string.watch_history_clear_all),
+                            painter = painterResource(Res.drawable.ic_baseline_delete_24),
+                            contentDescription = stringResource(Res.string.watch_history_clear_all),
                         )
                     }
                 }
@@ -399,8 +437,8 @@ private fun OnlineWatchHistoryScreen(
     val snackbarHostState = remember { androidx.compose.material3.SnackbarHostState() }
     var pendingDelete by remember { mutableStateOf<HanimeInfo?>(null) }
     var sortBarVisible by rememberSaveable { mutableStateOf(true) }
-    val deleteFailedText = stringResource(R.string.delete_failed)
-    val deleteSuccessText = stringResource(R.string.delete_success)
+    val deleteFailedText = stringResource(Res.string.delete_failed)
+    val deleteSuccessText = stringResource(Res.string.delete_success)
 
     LaunchedEffect(deleteStateFlow, deleteFailedText, deleteSuccessText) {
         deleteStateFlow.collect { deleteState ->
@@ -439,10 +477,10 @@ private fun OnlineWatchHistoryScreen(
 
     ConfirmDialog(
         visible = pendingDelete != null,
-        title = stringResource(R.string.delete_history),
-        message = stringResource(R.string.sure_to_delete_s, pendingDelete?.title.orEmpty()),
-        confirmText = stringResource(R.string.delete),
-        dismissText = stringResource(R.string.cancel),
+        title = stringResource(Res.string.delete_history),
+        message = stringResource(Res.string.sure_to_delete_s, pendingDelete?.title.orEmpty()),
+        confirmText = stringResource(Res.string.delete),
+        dismissText = stringResource(Res.string.cancel),
         onConfirm = {
             pendingDelete?.let(onDeleteVideo)
             pendingDelete = null
@@ -459,17 +497,17 @@ private fun OnlineWatchHistoryScreen(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 OnlineHistorySortChip(
-                    text = stringResource(R.string.sort_by_newest),
+                    text = stringResource(Res.string.sort_by_newest),
                     selected = sort == OnlineWatchHistorySort.Latest,
                     onClick = { onRefresh(OnlineWatchHistorySort.Latest) },
                 )
                 OnlineHistorySortChip(
-                    text = stringResource(R.string.popular),
+                    text = stringResource(Res.string.popular),
                     selected = sort == OnlineWatchHistorySort.Popular,
                     onClick = { onRefresh(OnlineWatchHistorySort.Popular) },
                 )
                 OnlineHistorySortChip(
-                    text = stringResource(R.string.sort_by_oldest),
+                    text = stringResource(Res.string.sort_by_oldest),
                     selected = sort == OnlineWatchHistorySort.Oldest,
                     onClick = { onRefresh(OnlineWatchHistorySort.Oldest) },
                 )
@@ -497,7 +535,7 @@ private fun OnlineWatchHistoryScreen(
                 error = {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         ErrorContent(
-                            title = stringResource(R.string.load_failed_retry),
+                            title = stringResource(Res.string.load_failed_retry),
                             onRetry = { onRefresh(sort) },
                         )
                     }
@@ -505,8 +543,8 @@ private fun OnlineWatchHistoryScreen(
                 empty = {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         EmptyContent(
-                            hint = stringResource(R.string.watch_history_empty_title),
-                            subHint = stringResource(R.string.watch_history_empty_description),
+                            hint = stringResource(Res.string.watch_history_empty_title),
+                            subHint = stringResource(Res.string.watch_history_empty_description),
                         )
                     }
                 },
@@ -549,7 +587,7 @@ private fun OnlineWatchHistoryGrid(
         ) {
             item(span = { GridItemSpan(maxLineSpan) }) {
                 Text(
-                    text = stringResource(R.string.watch_history_total_count, items.size),
+                    text = stringResource(Res.string.watch_history_total_count, items.size),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp),
@@ -579,18 +617,6 @@ private fun OnlineWatchHistoryGrid(
     }
 }
 
-private fun LazyGridState.canLoadMore(
-    items: List<HanimeInfo>,
-    state: PageLoadingState<*>,
-): Boolean {
-    if (items.isEmpty()) return false
-    if (state is PageLoadingState.Loading || state is PageLoadingState.NoMoreData || state is PageLoadingState.Error) {
-        return false
-    }
-    val lastVisible = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: return false
-    return lastVisible >= layoutInfo.totalItemsCount - 4
-}
-
 @Composable
 private fun OnlineHistorySortChip(
     text: String,
@@ -615,6 +641,18 @@ private fun OnlineHistorySortChip(
     )
 }
 
+/**
+ * 毫秒时间戳 -> `yyyy-MM-dd HH:mm`。
+ *
+ * 原来是 `SimpleDateFormat(..., Locale.getDefault())`，commonMain 没有；
+ * [LOCAL_DATE_TIME_FORMAT] 的格式与之完全一致，直接复用。
+ */
+@OptIn(ExperimentalTime::class)
+private fun formatWatchDate(epochMillis: Long): String =
+    Instant.fromEpochMilliseconds(epochMillis)
+        .toLocalDateTime(TimeZone.currentSystemDefault())
+        .format(LOCAL_DATE_TIME_FORMAT)
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun WatchHistoryCard(
@@ -623,11 +661,10 @@ private fun WatchHistoryCard(
     onLongClick: () -> Unit,
 ) {
     val fixTimestamp = { ts: Long -> if (ts < 9999999999L) ts * 1000 else ts }
-    val dateFormatter = remember { SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()) }
     val watchDate =
-        remember(history.watchDate) { dateFormatter.format(Date(fixTimestamp(history.watchDate))) }
+        remember(history.watchDate) { formatWatchDate(fixTimestamp(history.watchDate)) }
     val releaseDate =
-        remember(history.releaseDate) { dateFormatter.format(Date(fixTimestamp(history.releaseDate))) }
+        remember(history.releaseDate) { formatWatchDate(fixTimestamp(history.releaseDate)) }
     val progressMinutes = remember(history.progress) { history.progress / 60_000 }
 
     ElevatedCard(
@@ -664,7 +701,7 @@ private fun WatchHistoryCard(
                     ) {
                         Text(
                             text = stringResource(
-                                R.string.watch_history_minutes_short,
+                                Res.string.watch_history_minutes_short,
                                 progressMinutes
                             ),
                             style = MaterialTheme.typography.labelSmall,
@@ -697,18 +734,18 @@ private fun WatchHistoryCard(
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.Delete,
-                            contentDescription = stringResource(R.string.delete_history),
+                            contentDescription = stringResource(Res.string.delete_history),
                             modifier = Modifier.size(16.dp)
                         )
                     }
                 }
                 WatchHistoryMeta(
-                    iconRes = R.drawable.ic_baseline_access_time_24,
-                    label = stringResource(R.string.watch_history_watched_at, watchDate),
+                    iconRes = Res.drawable.ic_baseline_access_time_24,
+                    label = stringResource(Res.string.watch_history_watched_at, watchDate),
                 )
                 WatchHistoryMeta(
-                    iconRes = R.drawable.ic_baseline_play_circle_outline_24,
-                    label = stringResource(R.string.watch_history_released_at, releaseDate),
+                    iconRes = Res.drawable.ic_baseline_play_circle_outline_24,
+                    label = stringResource(Res.string.watch_history_released_at, releaseDate),
                 )
                 Row(
                     modifier = Modifier
@@ -720,13 +757,13 @@ private fun WatchHistoryCard(
                         onClick = onClick,
                         label = {
                             Text(
-                                stringResource(R.string.watch_history_resume_watch),
+                                stringResource(Res.string.watch_history_resume_watch),
                                 style = MaterialTheme.typography.labelMedium
                             )
                         },
                         leadingIcon = {
                             Icon(
-                                painter = painterResource(R.drawable.ic_baseline_history_24),
+                                painter = painterResource(Res.drawable.ic_baseline_history_24),
                                 contentDescription = null,
                                 modifier = Modifier.size(14.dp),
                             )
@@ -745,7 +782,7 @@ private fun WatchHistoryCard(
 
 @Composable
 private fun WatchHistoryMeta(
-    iconRes: Int,
+    iconRes: DrawableResource,
     label: String,
 ) {
     Row(
@@ -777,8 +814,8 @@ private fun WatchHistoryScreenPreview() {
             title = item.title,
             coverUrl = item.coverUrl,
             videoCode = item.videoCode,
-            releaseDate = System.currentTimeMillis() - (index + 10) * 86_400_000L,
-            watchDate = System.currentTimeMillis() - index * 3_600_000L,
+            releaseDate = Clock.System.now().toEpochMilliseconds() - (index + 10) * 86_400_000L,
+            watchDate = Clock.System.now().toEpochMilliseconds() - index * 3_600_000L,
             progress = (index + 1) * 12L * 60_000L,
         )
     }
