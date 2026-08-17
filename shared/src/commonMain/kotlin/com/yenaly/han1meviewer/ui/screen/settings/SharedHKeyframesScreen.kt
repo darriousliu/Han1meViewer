@@ -12,17 +12,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.entity.HKeyframeEntity
 import com.yenaly.han1meviewer.logic.entity.HKeyframeHeader
 import com.yenaly.han1meviewer.logic.entity.HKeyframeType
 import com.yenaly.han1meviewer.ui.component.content.EmptyContent
 import com.yenaly.han1meviewer.ui.component.lazy.LazyColumn
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
+import com.yenaly.han1meviewer.util.formatVideoTime
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.h_keyframe_title_prefix
+import han1meviewer.shared.generated.resources.here_is_empty
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun SharedHKeyframesScreen(
@@ -30,7 +33,7 @@ fun SharedHKeyframesScreen(
     onOpenVideo: (String) -> Unit,
 ) {
     if (items.isEmpty()) {
-        EmptyContent(hint = stringResource(R.string.here_is_empty))
+        EmptyContent(hint = stringResource(Res.string.here_is_empty))
         return
     }
 
@@ -78,7 +81,7 @@ private fun SharedEntityCard(
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = stringResource(R.string.h_keyframe_title_prefix) + entity.videoCode,
+                text = stringResource(Res.string.h_keyframe_title_prefix) + entity.videoCode,
                 color = MaterialTheme.colorScheme.primary,
             )
             Text(
@@ -89,7 +92,7 @@ private fun SharedEntityCard(
             entity.keyframes.forEach { keyframe ->
                 HorizontalDivider()
                 Text(
-                    text = cn.jzvd.JZUtils.stringForTime(keyframe.position),
+                    text = formatVideoTime(keyframe.position),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.SemiBold,
                 )

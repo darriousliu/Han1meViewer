@@ -24,18 +24,36 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import cn.jzvd.JZUtils
-import com.yenaly.han1meviewer.R
+import com.yenaly.han1meviewer.util.formatVideoTime
+import kotlin.io.encoding.Base64
+import kotlin.time.Clock
 import com.yenaly.han1meviewer.logic.entity.HKeyframeEntity
 import com.yenaly.han1meviewer.ui.component.ConfirmDialog
 import com.yenaly.han1meviewer.ui.component.content.EmptyContent
 import com.yenaly.han1meviewer.ui.component.lazy.LazyColumn
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.cancel
+import han1meviewer.shared.generated.resources.confirm
+import han1meviewer.shared.generated.resources.copy_
+import han1meviewer.shared.generated.resources.delete
+import han1meviewer.shared.generated.resources.edit
+import han1meviewer.shared.generated.resources.h_keyframe_title_prefix
+import han1meviewer.shared.generated.resources.here_is_empty
+import han1meviewer.shared.generated.resources.modify_h_keyframe
+import han1meviewer.shared.generated.resources.position_ms
+import han1meviewer.shared.generated.resources.prompt
+import han1meviewer.shared.generated.resources.share
+import han1meviewer.shared.generated.resources.share_to_others
+import han1meviewer.shared.generated.resources.share_to_others_tip
+import han1meviewer.shared.generated.resources.sure_to_delete
+import han1meviewer.shared.generated.resources.title
+import han1meviewer.shared.generated.resources.video_code
+import org.jetbrains.compose.resources.stringResource
 
 private enum class HKeyframeDialog {
     EditEntity,
@@ -77,10 +95,10 @@ fun HKeyframesScreen(
     selectedEntity?.takeIf { activeDialog == HKeyframeDialog.DeleteEntity }?.let { entity ->
         ConfirmDialog(
             visible = true,
-            title = stringResource(R.string.sure_to_delete),
+            title = stringResource(Res.string.sure_to_delete),
             message = entity.title,
-            confirmText = stringResource(R.string.confirm),
-            dismissText = stringResource(R.string.cancel),
+            confirmText = stringResource(Res.string.confirm),
+            dismissText = stringResource(Res.string.cancel),
             onDismiss = {
                 activeDialog = null
                 selectedEntity = null
@@ -128,10 +146,10 @@ fun HKeyframesScreen(
         ?.let { (videoCode, keyframe) ->
             ConfirmDialog(
                 visible = true,
-                title = stringResource(R.string.sure_to_delete),
-                message = JZUtils.stringForTime(keyframe.position),
-                confirmText = stringResource(R.string.confirm),
-                dismissText = stringResource(R.string.cancel),
+                title = stringResource(Res.string.sure_to_delete),
+                message = formatVideoTime(keyframe.position),
+                confirmText = stringResource(Res.string.confirm),
+                dismissText = stringResource(Res.string.cancel),
                 onDismiss = {
                     activeDialog = null
                     selectedKeyframe = null
@@ -145,7 +163,7 @@ fun HKeyframesScreen(
         }
 
     if (items.isEmpty()) {
-        EmptyContent(hint = stringResource(R.string.here_is_empty))
+        EmptyContent(hint = stringResource(Res.string.here_is_empty))
         return
     }
 
@@ -216,14 +234,14 @@ private fun HKeyframeEntityCard(
                     overflow = TextOverflow.Ellipsis,
                 )
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    TextButton(onClick = onEdit) { Text(stringResource(R.string.edit)) }
-                    TextButton(onClick = onDelete) { Text(stringResource(R.string.delete)) }
-                    TextButton(onClick = onShare) { Text(stringResource(R.string.share)) }
+                    TextButton(onClick = onEdit) { Text(stringResource(Res.string.edit)) }
+                    TextButton(onClick = onDelete) { Text(stringResource(Res.string.delete)) }
+                    TextButton(onClick = onShare) { Text(stringResource(Res.string.share)) }
                 }
             }
 
             Text(
-                text = stringResource(R.string.h_keyframe_title_prefix) + entity.videoCode,
+                text = stringResource(Res.string.h_keyframe_title_prefix) + entity.videoCode,
                 modifier = Modifier.clickable(onClick = onOpenVideo),
                 color = MaterialTheme.colorScheme.primary,
             )
@@ -255,7 +273,7 @@ private fun HKeyframeRow(
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = JZUtils.stringForTime(keyframe.position),
+                text = formatVideoTime(keyframe.position),
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.SemiBold,
             )
@@ -273,8 +291,8 @@ private fun HKeyframeRow(
             }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            TextButton(onClick = onEdit) { Text(stringResource(R.string.edit)) }
-            TextButton(onClick = onDelete) { Text(stringResource(R.string.delete)) }
+            TextButton(onClick = onEdit) { Text(stringResource(Res.string.edit)) }
+            TextButton(onClick = onDelete) { Text(stringResource(Res.string.delete)) }
         }
     }
 }
@@ -288,32 +306,32 @@ private fun EditEntityDialog(
     var title by remember(entity.title) { mutableStateOf(entity.title) }
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.modify_h_keyframe)) },
+        title = { Text(stringResource(Res.string.modify_h_keyframe)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 OutlinedTextField(
                     value = title,
                     onValueChange = { title = it },
-                    label = { Text(stringResource(R.string.title)) },
+                    label = { Text(stringResource(Res.string.title)) },
                     modifier = Modifier.fillMaxWidth(),
                 )
                 OutlinedTextField(
                     value = entity.videoCode,
                     onValueChange = {},
                     readOnly = true,
-                    label = { Text(stringResource(R.string.video_code)) },
+                    label = { Text(stringResource(Res.string.video_code)) },
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
         },
         confirmButton = {
             TextButton(onClick = { onConfirm(title) }) {
-                Text(stringResource(R.string.confirm))
+                Text(stringResource(Res.string.confirm))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.cancel))
+                Text(stringResource(Res.string.cancel))
             }
         },
     )
@@ -329,19 +347,19 @@ private fun EditKeyframeDialog(
     var prompt by remember(keyframe.prompt) { mutableStateOf(keyframe.prompt.orEmpty()) }
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.modify_h_keyframe)) },
+        title = { Text(stringResource(Res.string.modify_h_keyframe)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 OutlinedTextField(
                     value = positionText,
                     onValueChange = { positionText = it.filter(Char::isDigit) },
-                    label = { Text(stringResource(R.string.position_ms)) },
+                    label = { Text(stringResource(Res.string.position_ms)) },
                     modifier = Modifier.fillMaxWidth(),
                 )
                 OutlinedTextField(
                     value = prompt,
                     onValueChange = { prompt = it },
-                    label = { Text(stringResource(R.string.prompt)) },
+                    label = { Text(stringResource(Res.string.prompt)) },
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
@@ -355,12 +373,12 @@ private fun EditKeyframeDialog(
                     )
                 )
             }) {
-                Text(stringResource(R.string.confirm))
+                Text(stringResource(Res.string.confirm))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.cancel))
+                Text(stringResource(Res.string.cancel))
             }
         },
     )
@@ -374,28 +392,27 @@ private fun ShareEntityDialog(
 ) {
     val content = remember(entity) {
         val toJson = kotlinx.serialization.json.Json.encodeToString(entity)
-        val toBase64 = toJson.encodeToByteArray().let {
-            android.util.Base64.encodeToString(it, android.util.Base64.NO_WRAP)
-        }
+        // NO_WRAP 等价于 kotlin 的 Base64.Default：标准字母表、带 padding、不插换行
+        val toBase64 = Base64.Default.encode(toJson.encodeToByteArray())
         ">>>${toBase64}<<<"
     }
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.share_to_others)) },
+        title = { Text(stringResource(Res.string.share_to_others)) },
         text = {
             Text(
-                text = stringResource(R.string.share_to_others_tip, content),
+                text = stringResource(Res.string.share_to_others_tip, content),
                 modifier = Modifier.heightIn(max = 260.dp),
             )
         },
         confirmButton = {
             TextButton(onClick = { onCopy(content) }) {
-                Text(stringResource(R.string.copy_))
+                Text(stringResource(Res.string.copy_))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.cancel))
+                Text(stringResource(Res.string.cancel))
             }
         },
     )
@@ -414,7 +431,7 @@ private fun HKeyframesScreenPreview() {
                         HKeyframeEntity.Keyframe(12_000, "进入正题"),
                         HKeyframeEntity.Keyframe(36_000, "高能部分"),
                     ),
-                    createdTime = System.currentTimeMillis(),
+                    createdTime = Clock.System.now().toEpochMilliseconds(),
                 )
             ),
             onOpenVideo = {},
