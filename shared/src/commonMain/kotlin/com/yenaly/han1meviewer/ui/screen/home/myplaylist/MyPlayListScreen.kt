@@ -1,7 +1,5 @@
 package com.yenaly.han1meviewer.ui.screen.home.myplaylist
 
-import android.view.View
-import android.widget.EditText
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,7 +16,6 @@ import androidx.compose.material3.pulltorefresh.pullToRefresh
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -29,21 +26,25 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import com.yenaly.han1meviewer.R
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.yenaly.han1meviewer.logic.state.WebsiteState
 import com.yenaly.han1meviewer.ui.component.PullRefreshOverlay
+import com.yenaly.han1meviewer.ui.component.TextInputDialog
 import com.yenaly.han1meviewer.ui.component.appbar.HanimeScaffold
 import com.yenaly.han1meviewer.ui.component.content.EmptyContent
 import com.yenaly.han1meviewer.ui.viewmodel.MyPlayListViewModelV2
-import com.yenaly.han1meviewer.util.showAlertDialog
-import com.yenaly.han1meviewer.util.showShortToast
 import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.add_failed
+import han1meviewer.shared.generated.resources.add_success
+import han1meviewer.shared.generated.resources.cancel
+import han1meviewer.shared.generated.resources.confirm
+import han1meviewer.shared.generated.resources.create_new_playlist
 import han1meviewer.shared.generated.resources.h_chan_sad
+import han1meviewer.shared.generated.resources.load_failed_with_reason
+import han1meviewer.shared.generated.resources.my_list
+import han1meviewer.shared.generated.resources.playlist_description
+import han1meviewer.shared.generated.resources.playlist_title
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * 播放列表页面 Screen 层。
@@ -63,14 +64,14 @@ fun PlaylistScreen(
     navigateBack: () -> Unit,
     onClickItem: (String) -> Unit,
     onLongClickItem: (String, String) -> Unit,
+    onUiEvent: (PlaylistUiEvent) -> Unit,
 ) {
     val state by viewModel.myPlaylistsFlow.collectAsState()
     val uiState by viewModel.mainUiState.collectAsState()
     val scrollBehavior = pinnedScrollBehavior(rememberTopAppBarState())
     var isRefreshing by remember { mutableStateOf(false) }
     val refreshState = rememberPullToRefreshState()
-    val context = LocalContext.current
-    val lifecycleOwner = LocalLifecycleOwner.current
+    var showCreateDialog by remember { mutableStateOf(false) }
     var temporarilyHideSheetForNavigation by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
@@ -81,23 +82,21 @@ fun PlaylistScreen(
         if (uiState.playlists.isEmpty()) viewModel.loadMyPlayList()
     }
 
-    DisposableEffect(lifecycleOwner, uiState.showSheet) {
-        val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_RESUME && uiState.showSheet) {
-                temporarilyHideSheetForNavigation = false
-            }
-        }
-        lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    // 原来是 DisposableEffect + LifecycleEventObserver 监听 ON_RESUME，
+    // 那正好是 LifecycleResumeEffect 的语义（lifecycle-runtime-compose，KMP）。
+    LifecycleResumeEffect(uiState.showSheet) {
+        if (uiState.showSheet) temporarilyHideSheetForNavigation = false
+        onPauseOrDispose { }
     }
 
     LaunchedEffect(Unit) {
         viewModel.createPlaylistFlow.collect { result ->
             when (result) {
-                is WebsiteState.Error -> showShortToast(R.string.add_failed)
+                is WebsiteState.Error ->
+                    onUiEvent(PlaylistUiEvent.ShowMessage(Res.string.add_failed))
                 is WebsiteState.Loading -> Unit
                 is WebsiteState.Success -> {
-                    showShortToast(R.string.add_success)
+                    onUiEvent(PlaylistUiEvent.ShowMessage(Res.string.add_success))
                     viewModel.loadMyPlayList()
                 }
             }
@@ -128,32 +127,14 @@ fun PlaylistScreen(
 
     HanimeScaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        title = stringResource(R.string.my_list),
+        title = stringResource(Res.string.my_list),
         onBack = navigateBack,
         scrollBehavior = scrollBehavior,
         actions = {
-            FilledIconButton(onClick = {
-                context.showAlertDialog {
-                    setTitle(R.string.create_new_playlist)
-                    val etView =
-                        View.inflate(context, R.layout.dialog_playlist_modify_edit_text, null)
-                    val etTitle = etView.findViewById<EditText>(R.id.et_title)
-                    val etDesc = etView.findViewById<EditText>(R.id.et_desc)
-                    setView(etView)
-                    setPositiveButton(R.string.confirm) { _, _ ->
-                        handleEvent(
-                            PlaylistEvent.OnCreatePlaylist(
-                                etTitle.text.toString(),
-                                etDesc.text.toString()
-                            )
-                        )
-                    }
-                    setNegativeButton(R.string.cancel, null)
-                }
-            }) {
+            FilledIconButton(onClick = { showCreateDialog = true }) {
                 Icon(
                     Icons.Default.Add,
-                    contentDescription = stringResource(R.string.create_new_playlist)
+                    contentDescription = stringResource(Res.string.create_new_playlist)
                 )
             }
         },
@@ -181,7 +162,7 @@ fun PlaylistScreen(
                     if (uiState.playlists.isEmpty()) {
                         EmptyContent(
                             hint = stringResource(
-                                R.string.load_failed_with_reason,
+                                Res.string.load_failed_with_reason,
                                 (state as WebsiteState.Error).throwable.message.orEmpty()
                             ),
                             picRes = Res.drawable.h_chan_sad
@@ -209,7 +190,20 @@ fun PlaylistScreen(
                     },
                     onLongClickItem = onLongClickItem,
                     vm = viewModel,
-                    context = context,
+                    onUiEvent = onUiEvent,
+                )
+            }
+
+            if (showCreateDialog) {
+                TextInputDialog(
+                    title = stringResource(Res.string.create_new_playlist),
+                    firstLabel = stringResource(Res.string.playlist_title),
+                    secondLabel = stringResource(Res.string.playlist_description),
+                    onConfirm = { title, desc ->
+                        showCreateDialog = false
+                        handleEvent(PlaylistEvent.OnCreatePlaylist(title, desc))
+                    },
+                    onDismiss = { showCreateDialog = false },
                 )
             }
         }

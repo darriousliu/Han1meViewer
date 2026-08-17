@@ -1,6 +1,7 @@
 package com.yenaly.han1meviewer.ui.screen.home.myplaylist
 
 import com.yenaly.han1meviewer.logic.model.Playlists
+import org.jetbrains.compose.resources.StringResource
 
 /**
  * 播放列表页面的跨平台 UI 状态。
@@ -46,4 +47,16 @@ sealed interface PlaylistEvent {
 
     /** 创建新播放列表 */
     data class OnCreatePlaylist(val title: String, val desc: String) : PlaylistEvent
+}
+
+/**
+ * 屏幕 -> 平台副作用方向的事件。
+ *
+ * 和 [PlaylistEvent] 分开：那个是「用户交互 -> ViewModel」，这个是
+ * 「屏幕请求平台做点什么」，首页的 `HomeUiEvent` 也是这么分的。
+ * 目前只有「显示一条提示」一种——原来那 8 处 `showShortToast` 直接埋在屏幕里，
+ * commonMain 没有 Toast，只能交给 route。
+ */
+sealed interface PlaylistUiEvent {
+    data class ShowMessage(val messageRes: StringResource) : PlaylistUiEvent
 }

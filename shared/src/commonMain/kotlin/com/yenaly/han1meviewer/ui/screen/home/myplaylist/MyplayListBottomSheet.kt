@@ -1,8 +1,5 @@
 package com.yenaly.han1meviewer.ui.screen.home.myplaylist
 
-import android.content.Context
-import android.view.LayoutInflater
-import android.widget.EditText
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.background
@@ -47,16 +44,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.model.HanimeInfo
 import com.yenaly.han1meviewer.logic.state.PageLoadingState
 import com.yenaly.han1meviewer.logic.state.WebsiteState
 import com.yenaly.han1meviewer.ui.component.BottomSheetHandler
 import com.yenaly.han1meviewer.ui.component.ConfirmDialog
+import com.yenaly.han1meviewer.ui.component.TextInputDialog
 import com.yenaly.han1meviewer.ui.component.VideoCardItem
 import com.yenaly.han1meviewer.ui.component.content.EmptyContent
 import com.yenaly.han1meviewer.ui.component.lazy.LazyVerticalGrid
@@ -64,8 +59,32 @@ import com.yenaly.han1meviewer.ui.screen.RetryableImage
 import com.yenaly.han1meviewer.ui.theme.SpacingNormal
 import com.yenaly.han1meviewer.ui.theme.VideoNormalCardMinWidth
 import com.yenaly.han1meviewer.ui.viewmodel.MyPlayListViewModelV2
-import com.yenaly.han1meviewer.util.showAlertDialog
-import com.yenaly.han1meviewer.util.showShortToast
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.baseline_edit_24
+import han1meviewer.shared.generated.resources.cancel
+import han1meviewer.shared.generated.resources.confirm
+import han1meviewer.shared.generated.resources.delete
+import han1meviewer.shared.generated.resources.delete_failed
+import han1meviewer.shared.generated.resources.delete_playlist
+import han1meviewer.shared.generated.resources.delete_success
+import han1meviewer.shared.generated.resources.delete_the_playlist
+import han1meviewer.shared.generated.resources.edit
+import han1meviewer.shared.generated.resources.empty_content
+import han1meviewer.shared.generated.resources.h_chan_load_failed
+import han1meviewer.shared.generated.resources.h_chan_loading
+import han1meviewer.shared.generated.resources.ic_baseline_delete_24
+import han1meviewer.shared.generated.resources.load_complete_with_pages
+import han1meviewer.shared.generated.resources.load_failed_retry
+import han1meviewer.shared.generated.resources.modify_failed
+import han1meviewer.shared.generated.resources.modify_success
+import han1meviewer.shared.generated.resources.modify_title_or_desc
+import han1meviewer.shared.generated.resources.playlist_description
+import han1meviewer.shared.generated.resources.playlist_title
+import han1meviewer.shared.generated.resources.sure_to_delete
+import han1meviewer.shared.generated.resources.sure_to_delete_s
+import han1meviewer.shared.generated.resources.unknown_error
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * 播放列表详情底部弹窗。
@@ -76,7 +95,7 @@ import com.yenaly.han1meviewer.util.showShortToast
  * @param onClickItem 点击视频项回调
  * @param onLongClickItem 长按视频项回调
  * @param vm 播放列表 ViewModel（弹窗内需要直接观察 ViewModel StateFlow）
- * @param context Android Context
+ * @param onUiEvent 屏幕请求平台做的事（这里只有显示提示）
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -87,7 +106,7 @@ fun PlaylistBottomSheet(
     onClickItem: (String) -> Unit,
     onLongClickItem: (String, String) -> Unit,
     vm: MyPlayListViewModelV2,
-    context: Context,
+    onUiEvent: (PlaylistUiEvent) -> Unit,
 ) {
     val playlistState by vm.playlistStateFlow.collectAsState()
     val playlist by vm.playlistFlow.collectAsState()
@@ -118,7 +137,7 @@ fun PlaylistBottomSheet(
                 vm.getPlaylistItems(1, currentCode, true)
             }
         } else {
-            showShortToast(R.string.unknown_error)
+            onUiEvent(PlaylistUiEvent.ShowMessage(Res.string.unknown_error))
         }
     }
 
@@ -140,7 +159,7 @@ fun PlaylistBottomSheet(
             Box(Modifier
                 .fillMaxSize()
                 .height(200.dp), contentAlignment = Alignment.Center) {
-                Text(stringResource(R.string.load_failed_retry))
+                Text(stringResource(Res.string.load_failed_retry))
             }
         } else {
             AnimatedVisibility(visible = true, enter = fadeIn()) {
@@ -155,10 +174,10 @@ fun PlaylistBottomSheet(
                     onClickItem = onClickItem,
                     onLongClickItem = onLongClickItem,
                     vm = vm,
-                    context = context,
+                    onUiEvent = onUiEvent,
                 )
                 if (playlist.isEmpty()) {
-                    EmptyContent(stringResource(R.string.empty_content))
+                    EmptyContent(stringResource(Res.string.empty_content))
                 }
             }
         }
@@ -167,17 +186,17 @@ fun PlaylistBottomSheet(
     LaunchedEffect(Unit) {
         vm.modifyPlaylistFlow.collect { result ->
             when (result) {
-                is WebsiteState.Error -> showShortToast(R.string.modify_failed)
+                is WebsiteState.Error -> onUiEvent(PlaylistUiEvent.ShowMessage(Res.string.modify_failed))
                 WebsiteState.Loading -> {}
                 is WebsiteState.Success -> {
                     if (result.info.isDeleted) {
                         sheetState.hide()
                         onDismiss()
-                        showShortToast(R.string.delete_success)
+                        onUiEvent(PlaylistUiEvent.ShowMessage(Res.string.delete_success))
                         vm.loadMyPlayList()
                         return@collect
                     }
-                    showShortToast(R.string.modify_success)
+                    onUiEvent(PlaylistUiEvent.ShowMessage(Res.string.modify_success))
                     vm.getPlaylistItems(1, currentCode, true)
                     vm.loadMyPlayList()
                 }
@@ -188,10 +207,10 @@ fun PlaylistBottomSheet(
     LaunchedEffect(Unit) {
         vm.deleteFromPlaylistFlow.collect { result ->
             when (result) {
-                is WebsiteState.Error -> showShortToast(R.string.delete_failed)
+                is WebsiteState.Error -> onUiEvent(PlaylistUiEvent.ShowMessage(Res.string.delete_failed))
                 is WebsiteState.Loading -> {}
                 is WebsiteState.Success -> {
-                    showShortToast(R.string.delete_success)
+                    onUiEvent(PlaylistUiEvent.ShowMessage(Res.string.delete_success))
                     vm.loadMyPlayList()
                 }
             }
@@ -212,10 +231,11 @@ private fun PlaylistSheetContent(
     onClickItem: (String) -> Unit,
     onLongClickItem: (String, String) -> Unit,
     vm: MyPlayListViewModelV2,
-    context: Context,
+    onUiEvent: (PlaylistUiEvent) -> Unit,
 ) {
     var showDeletePlaylistConfirm by remember { mutableStateOf(false) }
     var showDeleteItemConfirm by remember { mutableStateOf<Triple<String, String, Int>?>(null) }
+    var showModifyDialog by remember { mutableStateOf(false) }
     val desc by playlistDesc.collectAsState()
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -228,8 +248,8 @@ private fun PlaylistSheetContent(
                 RetryableImage(
                     model = playlist.first().coverUrl,
                     contentDescription = playlist.first().title,
-                    placeholder = painterResource(R.drawable.h_chan_loading),
-                    error = painterResource(R.drawable.h_chan_load_failed),
+                    placeholder = painterResource(Res.drawable.h_chan_loading),
+                    error = painterResource(Res.drawable.h_chan_load_failed),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
                 )
@@ -282,41 +302,21 @@ private fun PlaylistSheetContent(
                         contentPadding = PaddingValues(0.dp)
                     ) {
                         Icon(
-                            painterResource(R.drawable.ic_baseline_delete_24),
-                            stringResource(R.string.delete),
+                            painterResource(Res.drawable.ic_baseline_delete_24),
+                            stringResource(Res.string.delete),
                             tint = Color.White
                         )
                     }
                     Spacer(Modifier.width(8.dp))
                     Button(
-                        onClick = {
-                            context.showAlertDialog {
-                                setTitle(R.string.modify_title_or_desc)
-                                val etView = LayoutInflater.from(context)
-                                    .inflate(R.layout.dialog_playlist_modify_edit_text, null)
-                                val etTitle = etView.findViewById<EditText>(R.id.et_title)
-                                val etDesc = etView.findViewById<EditText>(R.id.et_desc)
-                                etTitle.setText(playListTitle)
-                                etDesc.setText(desc)
-                                setView(etView)
-                                setPositiveButton(R.string.confirm) { _, _ ->
-                                    vm.modifyPlaylist(
-                                        listCode,
-                                        etTitle.text.toString(),
-                                        etDesc.text.toString(),
-                                        false
-                                    )
-                                }
-                                setNegativeButton(R.string.cancel, null)
-                            }
-                        },
+                        onClick = { showModifyDialog = true },
                         colors = ButtonDefaults.buttonColors(containerColor = Color.White.copy(alpha = 0.7f)),
                         modifier = Modifier.size(40.dp),
                         contentPadding = PaddingValues(0.dp)
                     ) {
                         Icon(
-                            painterResource(R.drawable.baseline_edit_24),
-                            stringResource(R.string.edit),
+                            painterResource(Res.drawable.baseline_edit_24),
+                            stringResource(Res.string.edit),
                             tint = Color.Red
                         )
                     }
@@ -369,7 +369,7 @@ private fun PlaylistSheetContent(
                         ) {
                             Text(
                                 stringResource(
-                                    R.string.load_complete_with_pages,
+                                    Res.string.load_complete_with_pages,
                                     vm.currentPage - 1
                                 ),
                                 style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -399,10 +399,10 @@ private fun PlaylistSheetContent(
                 val item = playlist.find { it.videoCode == videoCode }
                 ConfirmDialog(
                     visible = true,
-                    title = context.getString(R.string.delete_playlist),
-                    message = context.getString(R.string.sure_to_delete_s, item?.title ?: ""),
-                    confirmText = context.getString(R.string.confirm),
-                    dismissText = context.getString(R.string.cancel),
+                    title = stringResource(Res.string.delete_playlist),
+                    message = stringResource(Res.string.sure_to_delete_s, item?.title ?: ""),
+                    confirmText = stringResource(Res.string.confirm),
+                    dismissText = stringResource(Res.string.cancel),
                     onConfirm = {
                         vm.deleteFromPlaylist(
                             code,
@@ -416,10 +416,10 @@ private fun PlaylistSheetContent(
 
             ConfirmDialog(
                 visible = showDeletePlaylistConfirm,
-                title = context.getString(R.string.delete_the_playlist),
-                message = context.getString(R.string.sure_to_delete),
-                confirmText = context.getString(R.string.confirm),
-                dismissText = context.getString(R.string.cancel),
+                title = stringResource(Res.string.delete_the_playlist),
+                message = stringResource(Res.string.sure_to_delete),
+                confirmText = stringResource(Res.string.confirm),
+                dismissText = stringResource(Res.string.cancel),
                 onConfirm = {
                     vm.modifyPlaylist(
                         listCode,
@@ -430,6 +430,22 @@ private fun PlaylistSheetContent(
                 },
                 onDismiss = { showDeletePlaylistConfirm = false },
             )
+
+            if (showModifyDialog) {
+                TextInputDialog(
+                    title = stringResource(Res.string.modify_title_or_desc),
+                    firstLabel = stringResource(Res.string.playlist_title),
+                    secondLabel = stringResource(Res.string.playlist_description),
+                    firstInitial = playListTitle,
+                    // desc 是 String?，null 时要是空框而不是 "null"
+                    secondInitial = desc.orEmpty(),
+                    onConfirm = { title, newDesc ->
+                        showModifyDialog = false
+                        vm.modifyPlaylist(listCode, title, newDesc, false)
+                    },
+                    onDismiss = { showModifyDialog = false },
+                )
+            }
         }
     }
 }
