@@ -24,8 +24,6 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -45,16 +43,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -62,7 +57,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
-import com.yenaly.han1meviewer.R
+import com.yenaly.han1meviewer.HANIME_BASE_URL
 import com.yenaly.han1meviewer.logic.model.UserAccount
 import com.yenaly.han1meviewer.logic.model.UserAccountAction
 import com.yenaly.han1meviewer.logic.model.UserAccountSubmittingState
@@ -70,50 +65,71 @@ import com.yenaly.han1meviewer.logic.state.WebsiteState
 import com.yenaly.han1meviewer.ui.component.PageContent
 import com.yenaly.han1meviewer.ui.component.appbar.HanimeScaffold
 import com.yenaly.han1meviewer.ui.component.content.ErrorContent
+import com.yenaly.han1meviewer.ui.icon.Visibility
+import com.yenaly.han1meviewer.ui.icon.VisibilityOff
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
 import com.yenaly.han1meviewer.ui.screen.rememberRandomLoadingHint
 import com.yenaly.han1meviewer.ui.viewmodel.UserAccountViewModel
-import com.yenaly.han1meviewer.util.browse
-import com.yenaly.han1meviewer.util.pickVisualMedia
-import com.yenaly.han1meviewer.util.showShortToast
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.account_stats_summary
+import han1meviewer.shared.generated.resources.bg_default_header
+import han1meviewer.shared.generated.resources.change_avatar
+import han1meviewer.shared.generated.resources.change_password
+import han1meviewer.shared.generated.resources.changing
+import han1meviewer.shared.generated.resources.confirm_new_password
+import han1meviewer.shared.generated.resources.edit_profile
+import han1meviewer.shared.generated.resources.email
+import han1meviewer.shared.generated.resources.forgot_password
+import han1meviewer.shared.generated.resources.ic_baseline_edit_24
+import han1meviewer.shared.generated.resources.load_failed_retry
+import han1meviewer.shared.generated.resources.logout
+import han1meviewer.shared.generated.resources.modify_failed
+import han1meviewer.shared.generated.resources.modify_success
+import han1meviewer.shared.generated.resources.my_account
+import han1meviewer.shared.generated.resources.new_password
+import han1meviewer.shared.generated.resources.old_password
+import han1meviewer.shared.generated.resources.password_not_match
+import han1meviewer.shared.generated.resources.update_profile
+import han1meviewer.shared.generated.resources.updating
+import han1meviewer.shared.generated.resources.username
+import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.dialogs.FileKitType
+import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun AccountScreen(
     viewModel: UserAccountViewModel,
     onBack: () -> Unit,
-    onOpenAvatarCrop: (String) -> Unit,
-    pendingAvatarCropResult: String?,
+    onOpenAvatarCrop: (PlatformFile) -> Unit,
+    pendingAvatarCropResult: ByteArray?,
     onAvatarCropResultConsumed: () -> Unit,
     onRefreshHome: () -> Unit,
+    onMessage: (String) -> Unit,
     onLogout: () -> Unit,
 ) {
-    val context = LocalContext.current
     val state by viewModel.accountState.collectAsStateWithLifecycle()
     val submittingState by viewModel.submittingState.collectAsStateWithLifecycle()
-    val modifyFailed = stringResource(R.string.modify_failed)
-    val modifySuccess = stringResource(R.string.modify_success)
+    val modifyFailed = stringResource(Res.string.modify_failed)
+    val modifySuccess = stringResource(Res.string.modify_success)
     LaunchedEffect(Unit) {
         viewModel.loadAccount()
     }
 
+    // 裁剪页现在直接把 JPEG 字节回传，不再落临时文件、也不再靠路径往返
     LaunchedEffect(pendingAvatarCropResult) {
-        val filePath = pendingAvatarCropResult ?: return@LaunchedEffect
-        val avatarFile = java.io.File(filePath)
-        val photoBytes = withContext(Dispatchers.IO) { avatarFile.readBytes() }
-        viewModel.updateAvatar(photoBytes, avatarFile.name)
+        val photoBytes = pendingAvatarCropResult ?: return@LaunchedEffect
+        viewModel.updateAvatar(photoBytes, "avatar.jpg")
         onAvatarCropResultConsumed()
     }
 
     LaunchedEffect(viewModel) {
-
         viewModel.actionFlow.collect { event ->
             when (event.state) {
                 is WebsiteState.Error -> {
-                    showShortToast(event.state.throwable.message ?: modifyFailed)
+                    onMessage(event.state.throwable.message ?: modifyFailed)
                 }
 
                 is WebsiteState.Success -> {
@@ -127,7 +143,7 @@ fun AccountScreen(
                         UserAccountAction.PasswordUpdated -> modifySuccess
                         UserAccountAction.AvatarUpdated -> modifySuccess
                     }
-                    showShortToast(message)
+                    onMessage(message)
                 }
 
                 WebsiteState.Loading -> Unit
@@ -135,8 +151,14 @@ fun AccountScreen(
         }
     }
 
+    // 迁移前是 androidMain 的 Context.pickVisualMedia(PickVisualMedia.ImageOnly)，
+    // FileKit 的 FileKitType.Image 在 Android 上底层就是同一个 PickVisualMedia 契约
+    val avatarPicker = rememberFilePickerLauncher(type = FileKitType.Image) { file ->
+        if (file != null) onOpenAvatarCrop(file)
+    }
+
     HanimeScaffold(
-        title = stringResource(R.string.my_account),
+        title = stringResource(Res.string.my_account),
         onBack = onBack,
     ) { paddingValues ->
         val loadingHint = rememberRandomLoadingHint()
@@ -154,7 +176,7 @@ fun AccountScreen(
                     contentAlignment = Alignment.Center,
                 ) {
                     ErrorContent(
-                        title = stringResource(R.string.load_failed_retry),
+                        title = stringResource(Res.string.load_failed_retry),
                         onRetry = { viewModel.loadAccount(forceReload = true) },
                     )
                 }
@@ -167,12 +189,8 @@ fun AccountScreen(
                 contentPadding = paddingValues,
                 onUpdateProfile = viewModel::updateProfile,
                 onUpdatePassword = viewModel::updatePassword,
-                onPickAvatar = {
-                    val pickedUri = context.pickVisualMedia(androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageOnly)
-                    if (pickedUri != null) {
-                        onOpenAvatarCrop(pickedUri.toString())
-                    }
-                },
+                onPickAvatar = avatarPicker::launch,
+                onMessage = onMessage,
                 onLogout = onLogout,
             )
         }
@@ -187,12 +205,13 @@ private fun AccountContent(
     contentPadding: PaddingValues,
     onUpdateProfile: (String, String) -> Unit,
     onUpdatePassword: (String, String, String) -> Unit,
-    onPickAvatar: suspend () -> Unit,
+    onPickAvatar: () -> Unit,
+    onMessage: (String) -> Unit,
     onLogout: () -> Unit,
 ) {
-    val context = LocalContext.current
+    val uriHandler = LocalUriHandler.current
     val scrollState = rememberScrollState()
-    val scope = rememberCoroutineScope()
+    val passwordNotMatch = stringResource(Res.string.password_not_match)
 
     var name by rememberSaveable(account.username) { mutableStateOf(account.username) }
     var email by rememberSaveable(account.email) { mutableStateOf(account.email) }
@@ -229,7 +248,7 @@ private fun AccountContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Box(contentAlignment = Alignment.Center) {
-                    val defaultPlaceholder = painterResource(R.drawable.bg_default_header)
+                    val defaultPlaceholder = painterResource(Res.drawable.bg_default_header)
                     AsyncImage(
                         model = account.avatarUrl,
                         contentDescription = account.username,
@@ -245,7 +264,7 @@ private fun AccountContent(
                     )
 
                     SmallFloatingActionButton(
-                        onClick = { scope.launch { onPickAvatar() } },
+                        onClick = onPickAvatar,
                         modifier = Modifier
                             .align(Alignment.BottomEnd)
                             .offset(x = 4.dp, y = 4.dp),
@@ -257,8 +276,8 @@ private fun AccountContent(
                             LoadingIndicator(modifier = Modifier.size(16.dp))
                         } else {
                             Icon(
-                                painter = painterResource(R.drawable.ic_baseline_edit_24),
-                                contentDescription = stringResource(R.string.change_avatar),
+                                painter = painterResource(Res.drawable.ic_baseline_edit_24),
+                                contentDescription = stringResource(Res.string.change_avatar),
                                 modifier = Modifier.size(18.dp)
                             )
                         }
@@ -291,7 +310,7 @@ private fun AccountContent(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Text(
-                    text = stringResource(R.string.account_stats_summary, account.subscriberCount, account.videoCount),
+                    text = stringResource(Res.string.account_stats_summary, account.subscriberCount, account.videoCount),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -316,7 +335,7 @@ private fun AccountContent(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
-                    text = stringResource(R.string.edit_profile),
+                    text = stringResource(Res.string.edit_profile),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface
@@ -325,7 +344,7 @@ private fun AccountContent(
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text(stringResource(R.string.username)) },
+                    label = { Text(stringResource(Res.string.username)) },
                     leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
@@ -335,7 +354,7 @@ private fun AccountContent(
                 OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
-                    label = { Text(stringResource(R.string.email)) },
+                    label = { Text(stringResource(Res.string.email)) },
                     leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
@@ -351,9 +370,9 @@ private fun AccountContent(
                         LoadingIndicator(
                             modifier = Modifier.size(18.dp).padding(end = 8.dp)
                         )
-                        Text(stringResource(R.string.updating))
+                        Text(stringResource(Res.string.updating))
                     } else {
-                        Text(stringResource(R.string.update_profile))
+                        Text(stringResource(Res.string.update_profile))
                     }
                 }
             }
@@ -368,7 +387,7 @@ private fun AccountContent(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
-                    text = stringResource(R.string.change_password),
+                    text = stringResource(Res.string.change_password),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface
@@ -377,7 +396,7 @@ private fun AccountContent(
                 OutlinedTextField(
                     value = oldPassword,
                     onValueChange = { oldPassword = it },
-                    label = { Text(stringResource(R.string.old_password)) },
+                    label = { Text(stringResource(Res.string.old_password)) },
                     leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
                     trailingIcon = {
                         IconButton(onClick = { oldPasswordVisible = !oldPasswordVisible }) {
@@ -396,7 +415,7 @@ private fun AccountContent(
                 OutlinedTextField(
                     value = newPassword,
                     onValueChange = { newPassword = it },
-                    label = { Text(stringResource(R.string.new_password)) },
+                    label = { Text(stringResource(Res.string.new_password)) },
                     leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
                     trailingIcon = {
                         IconButton(onClick = { newPasswordVisible = !newPasswordVisible }) {
@@ -415,7 +434,7 @@ private fun AccountContent(
                 OutlinedTextField(
                     value = newPasswordConfirm,
                     onValueChange = { newPasswordConfirm = it },
-                    label = { Text(stringResource(R.string.confirm_new_password)) },
+                    label = { Text(stringResource(Res.string.confirm_new_password)) },
                     leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
                     trailingIcon = {
                         IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
@@ -432,14 +451,14 @@ private fun AccountContent(
                 )
 
                 TextButton(
-                    onClick = { context.browse("${com.yenaly.han1meviewer.HANIME_BASE_URL}password/reset") },
+                    onClick = { uriHandler.openUri("${HANIME_BASE_URL}password/reset") },
                     modifier = Modifier.align(Alignment.Start),
                     contentPadding = PaddingValues(horizontal = 0.dp)
                 ) {
                     Icon(Icons.Default.Info, contentDescription = null, modifier = Modifier.size(16.dp))
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = stringResource(R.string.forgot_password),
+                        text = stringResource(Res.string.forgot_password),
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
@@ -447,7 +466,7 @@ private fun AccountContent(
                 Button(
                     onClick = {
                         if (newPassword != newPasswordConfirm) {
-                            showShortToast(R.string.password_not_match)
+                            onMessage(passwordNotMatch)
                         } else {
                             onUpdatePassword(oldPassword, newPassword, newPasswordConfirm)
                             oldPassword = ""
@@ -462,9 +481,9 @@ private fun AccountContent(
                         LoadingIndicator(
                             modifier = Modifier.size(18.dp).padding(end = 8.dp)
                         )
-                        Text(stringResource(R.string.changing))
+                        Text(stringResource(Res.string.changing))
                     } else {
-                        Text(stringResource(R.string.change_password))
+                        Text(stringResource(Res.string.change_password))
                     }
                 }
             }
@@ -483,7 +502,7 @@ private fun AccountContent(
         ) {
             Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = null, modifier = Modifier.size(18.dp))
             Spacer(modifier = Modifier.width(8.dp))
-            Text(stringResource(R.string.logout), fontWeight = FontWeight.Medium)
+            Text(stringResource(Res.string.logout), fontWeight = FontWeight.Medium)
         }
     }
 }
@@ -507,6 +526,7 @@ private fun AccountScreenPreview() {
             onUpdateProfile = { _, _ -> },
             onUpdatePassword = { _, _, _ -> },
             onPickAvatar = {},
+            onMessage = {},
             onLogout = {},
             submittingState = UserAccountSubmittingState.Idle,
         )

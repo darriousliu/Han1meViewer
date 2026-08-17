@@ -5,7 +5,6 @@ androidGradle = "9.3.1"
 biometric = "1.1.0"
 buildKonfig = "0.22.0"
 coilCompose = "3.5.0"
-composeAvatarCropper = "1.0.0"
 coreSplashscreen = "1.2.0"
 crashx = "7.0.1"
 kotlin = "2.4.20-Beta2"
@@ -94,7 +93,6 @@ coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.r
 compose-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "composeMultiplatform" }
 # CMP WebView（Android=WebView / iOS=WKWebView / desktop=Nucleus Tao）。登录页和过盾页用。
 composewebview = { module = "dev.nucleusframework:composewebview", version.ref = "composewebview" }
-compose-avatar-cropper = { module = "cn.mucute:compose-avatar-cropper", version.ref = "composeAvatarCropper" }
 core = { group = "androidx.core", name = "core", version.ref = "core" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 crashx = { module = "io.github.tutorialsandroid:crashx", version.ref = "crashx" }

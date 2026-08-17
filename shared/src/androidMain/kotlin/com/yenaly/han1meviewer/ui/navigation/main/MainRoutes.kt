@@ -43,9 +43,15 @@ object CreatorCenterRoute
 @Serializable
 object AccountRoute
 
+/**
+ * @param sourceJson 待裁剪图片的 `PlatformFile`，序列化成字符串走路由参数。
+ *   `PlatformFile` 在 commonMain 是 `@Serializable`（`PlatformFileSerializer`），
+ *   这里照搬 [SearchRoute.advancedSearchJson] 的做法——比塞进 NavHost 层的
+ *   `remember` 更抗配置变更。
+ */
 @Serializable
 data class AvatarCropRoute(
-    val sourceUri: String,
+    val sourceJson: String,
 )
 
 @Serializable

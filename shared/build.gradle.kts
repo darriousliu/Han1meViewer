@@ -232,7 +232,6 @@ kotlin {
 
             implementation(libs.androidx.navigation.compose)
             implementation(libs.androidx.material.icons.core)
-            implementation(libs.compose.avatar.cropper)
             // parse
 
 

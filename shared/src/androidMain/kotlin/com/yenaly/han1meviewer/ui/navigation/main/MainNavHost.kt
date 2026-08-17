@@ -47,6 +47,8 @@ import com.yenaly.han1meviewer.ui.screen.home.CreatorCenterScreen
 import com.yenaly.han1meviewer.ui.screen.web.CloudflareScreen
 import com.yenaly.han1meviewer.ui.viewmodel.CreatorCenterViewModel
 import com.yenaly.han1meviewer.ui.viewmodel.UserAccountViewModel
+import com.yenaly.han1meviewer.util.showShortToast
+import io.github.vinceglb.filekit.PlatformFile
 import kotlinx.serialization.json.Json
 
 @Composable
@@ -59,7 +61,7 @@ fun MainNavHost(
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val destinationSpec = MainDestinationSpec.fromDestination(backStackEntry?.destination)
-    var pendingAvatarCropResult by remember { mutableStateOf<String?>(null) }
+    var pendingAvatarCropResult by remember { mutableStateOf<ByteArray?>(null) }
 
     val onBack: () -> Unit = { navController.popBackStack() }
     val onNavigateToVideo: (String) -> Unit = { code -> navController.navigateSafely(VideoRoute(code)) }
@@ -178,25 +180,38 @@ fun MainNavHost(
             AccountScreen(
                 viewModel = accountViewModel,
                 onBack = onBack,
-                onOpenAvatarCrop = { sourceUri ->
-                    navController.navigateSafely(AvatarCropRoute(sourceUri))
+                onOpenAvatarCrop = { file ->
+                    navController.navigateSafely(
+                        AvatarCropRoute(Json.encodeToString(PlatformFile.serializer(), file))
+                    )
                 },
                 pendingAvatarCropResult = pendingAvatarCropResult,
                 onAvatarCropResultConsumed = { pendingAvatarCropResult = null },
                 onRefreshHome = { activity.viewModel.getHomePage() },
+                onMessage = ::showShortToast,
                 onLogout = { activity.showLogoutConfirmDialog(closeCurrentPageOnConfirm = true) },
             )
         }
         composable<AvatarCropRoute> {
             val route = it.toRoute<AvatarCropRoute>()
-            AvatarCropScreen(
-                sourceUri = route.sourceUri,
-                onBack = onBack,
-                onConfirm = { file ->
-                    pendingAvatarCropResult = file.absolutePath
-                    onBack()
-                },
-            )
+            val source = remember(route.sourceJson) {
+                runCatching {
+                    Json.decodeFromString(PlatformFile.serializer(), route.sourceJson)
+                }.getOrNull()
+            }
+            // 反序列化不出来只可能是路由参数被外部改坏，直接退回去
+            if (source == null) {
+                LaunchedEffect(Unit) { onBack() }
+            } else {
+                AvatarCropScreen(
+                    source = source,
+                    onBack = onBack,
+                    onConfirm = { jpegBytes ->
+                        pendingAvatarCropResult = jpegBytes
+                        onBack()
+                    },
+                )
+            }
         }
         composable<HomeSettingsRoute> {
             SettingsScaffold(

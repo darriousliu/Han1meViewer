@@ -6,19 +6,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import com.yenaly.han1meviewer.R
-/**
- * 请求选择图片或视频
- */
-suspend fun Context.pickVisualMedia(type: ActivityResultContracts.PickVisualMedia.VisualMediaType): Uri? =
-    awaitActivityResult(
-        ActivityResultContracts.PickVisualMedia(),
-        PickVisualMediaRequest.Builder().setMediaType(type).build()
-    )
-
 /**
  * 獲得發送通知權限
  */
