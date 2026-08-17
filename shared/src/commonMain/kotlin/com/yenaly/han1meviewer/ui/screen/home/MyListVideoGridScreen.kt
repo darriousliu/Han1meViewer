@@ -22,10 +22,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.model.HanimeInfo
 import com.yenaly.han1meviewer.logic.state.PageLoadingState
 import com.yenaly.han1meviewer.logic.state.WebsiteState
@@ -39,8 +36,27 @@ import com.yenaly.han1meviewer.ui.preview.fakeHomePageVideos
 import com.yenaly.han1meviewer.ui.screen.home.videogrid.VideoGridContent
 import com.yenaly.han1meviewer.ui.screen.home.videogrid.VideoGridUiState
 import com.yenaly.han1meviewer.ui.screen.home.videogrid.canLoadMore
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.cancel
+import han1meviewer.shared.generated.resources.close
+import han1meviewer.shared.generated.resources.delete
+import han1meviewer.shared.generated.resources.delete_failed
+import han1meviewer.shared.generated.resources.delete_fav
+import han1meviewer.shared.generated.resources.delete_success
+import han1meviewer.shared.generated.resources.empty_content
+import han1meviewer.shared.generated.resources.fav_video
+import han1meviewer.shared.generated.resources.help
+import han1meviewer.shared.generated.resources.ic_baseline_help_24
+import han1meviewer.shared.generated.resources.load_failed_retry
+import han1meviewer.shared.generated.resources.long_press_to_cancel_fav
+import han1meviewer.shared.generated.resources.ok
+import han1meviewer.shared.generated.resources.sure_to_delete_s
+import han1meviewer.shared.generated.resources.video_count
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * 通用视频网格页面 Screen 层。
@@ -53,9 +69,9 @@ import kotlinx.coroutines.flow.flowOf
  * @param deleteStateFlow 删除操作结果流
  * @param loadedPageCount 已加载页数
  * @param isLoadingMore 是否正在加载更多
- * @param titleRes 标题资源 ID
- * @param helpMessageRes 帮助信息资源 ID
- * @param deleteTitleRes 删除确认标题资源 ID
+ * @param titleRes 标题字符串资源
+ * @param helpMessageRes 帮助信息字符串资源
+ * @param deleteTitleRes 删除确认标题字符串资源
  * @param onBack 返回回调
  * @param onOpenVideo 打开视频详情回调
  * @param onDeleteItem 删除视频回调
@@ -70,9 +86,9 @@ fun VideoGridScreen(
     deleteStateFlow: Flow<WebsiteState<Boolean>>,
     loadedPageCount: Int,
     isLoadingMore: Boolean,
-    titleRes: Int,
-    helpMessageRes: Int,
-    deleteTitleRes: Int,
+    titleRes: StringResource,
+    helpMessageRes: StringResource,
+    deleteTitleRes: StringResource,
     onBack: () -> Unit,
     onOpenVideo: (HanimeInfo) -> Unit,
     onDeleteItem: (HanimeInfo) -> Unit,
@@ -84,8 +100,8 @@ fun VideoGridScreen(
     var pendingDelete by remember { mutableStateOf<HanimeInfo?>(null) }
     var showHelpDialog by rememberSaveable { mutableStateOf(false) }
     var pendingRefresh by rememberSaveable { mutableStateOf(false) }
-    val deleteFailedText = stringResource(R.string.delete_failed)
-    val deleteSuccessText = stringResource(R.string.delete_success)
+    val deleteFailedText = stringResource(Res.string.delete_failed)
+    val deleteSuccessText = stringResource(Res.string.delete_success)
 
     val refreshing = state is PageLoadingState.Loading && pendingRefresh
     val refreshingState = rememberPullToRefreshState()
@@ -125,9 +141,9 @@ fun VideoGridScreen(
     ConfirmDialog(
         visible = pendingDelete != null,
         title = stringResource(deleteTitleRes),
-        message = stringResource(R.string.sure_to_delete_s, pendingDelete?.title.orEmpty()),
-        confirmText = stringResource(R.string.delete),
-        dismissText = stringResource(R.string.cancel),
+        message = stringResource(Res.string.sure_to_delete_s, pendingDelete?.title.orEmpty()),
+        confirmText = stringResource(Res.string.delete),
+        dismissText = stringResource(Res.string.cancel),
         onConfirm = {
             pendingDelete?.let(onDeleteItem)
             pendingDelete = null
@@ -137,10 +153,10 @@ fun VideoGridScreen(
 
     ConfirmDialog(
         visible = showHelpDialog,
-        title = stringResource(R.string.help),
+        title = stringResource(Res.string.help),
         message = stringResource(helpMessageRes),
-        confirmText = stringResource(R.string.ok),
-        dismissText = stringResource(R.string.close),
+        confirmText = stringResource(Res.string.ok),
+        dismissText = stringResource(Res.string.close),
         onConfirm = { showHelpDialog = false },
         onDismiss = { showHelpDialog = false },
     )
@@ -159,7 +175,7 @@ fun VideoGridScreen(
         title = stringResource(titleRes),
         subtitle = {
             Text(
-                text = stringResource(R.string.video_count, items.size),
+                text = stringResource(Res.string.video_count, items.size),
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -168,8 +184,8 @@ fun VideoGridScreen(
         actions = {
             FilledIconButton(onClick = { showHelpDialog = true }) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_baseline_help_24),
-                    contentDescription = stringResource(R.string.help),
+                    painter = painterResource(Res.drawable.ic_baseline_help_24),
+                    contentDescription = stringResource(Res.string.help),
                 )
             }
         },
@@ -203,7 +219,7 @@ fun VideoGridScreen(
                 },
                 error = {
                     ErrorContent(
-                        title = stringResource(R.string.load_failed_retry),
+                        title = stringResource(Res.string.load_failed_retry),
                         onRetry = {
                             pendingRefresh = true
                             onRefresh()
@@ -212,7 +228,7 @@ fun VideoGridScreen(
                     )
                 },
                 empty = {
-                    EmptyContent(hint = stringResource(R.string.empty_content))
+                    EmptyContent(hint = stringResource(Res.string.empty_content))
                 },
             ) {
                 VideoGridContent(
@@ -236,9 +252,9 @@ private fun VideoGridScreenPreview() {
             deleteStateFlow = flowOf(WebsiteState.Success(true)),
             loadedPageCount = 2,
             isLoadingMore = false,
-            titleRes = R.string.fav_video,
-            helpMessageRes = R.string.long_press_to_cancel_fav,
-            deleteTitleRes = R.string.delete_fav,
+            titleRes = Res.string.fav_video,
+            helpMessageRes = Res.string.long_press_to_cancel_fav,
+            deleteTitleRes = Res.string.delete_fav,
             onBack = {},
             onOpenVideo = {},
             onDeleteItem = {},
