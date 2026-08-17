@@ -232,7 +232,6 @@ kotlin {
             implementation(libs.compose.ui.ui.tooling.preview)
             implementation(libs.androidx.ui)
 
-            implementation(libs.androidx.navigation.compose)
             implementation(libs.navigation3.ui.androidx)
             implementation(libs.androidx.material.icons.core)
             // parse

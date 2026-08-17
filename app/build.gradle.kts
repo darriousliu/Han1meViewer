@@ -13,7 +13,6 @@ plugins {
     alias(libs.plugins.com.google.firebase.crashlytics)
     alias(libs.plugins.com.google.firebase.firebase.pref)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.navigation.safeargs)
 }
 
 android {
