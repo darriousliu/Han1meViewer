@@ -18,7 +18,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
@@ -71,13 +70,6 @@ class MainActivity : AppCompatActivity(), PermissionRequester {
         const val ACTION_TOGGLE_PLAY = "com.yenaly.han1meviewer.ACTION_TOGGLE_PLAY"
     }
 
-    // 登錄完了後讓activity刷新主頁
-    private val loginDataLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                viewModel.getHomePage()
-            }
-        }
     private var hasAuthenticated = false
     private val pipActionReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -100,7 +92,6 @@ class MainActivity : AppCompatActivity(), PermissionRequester {
                 showAuthGuard = showAuthGuard,
                 onOpenAccount = { navController.navigateSafely(AccountRoute) },
                 onLogoutClick = { showLogoutConfirmDialog() },
-                onRequireLogin = { gotoLoginActivity() },
                 onSwitchSiteClick = { showSiteSwitchDialog() },
                 onNavigateControllerReady = { controller -> navController = controller },
             )
@@ -281,11 +272,6 @@ class MainActivity : AppCompatActivity(), PermissionRequester {
             }
             setNegativeButton(R.string.no, null)
         }
-    }
-
-    fun gotoLoginActivity() {
-        val intent = Intent(this, LoginActivity::class.java)
-        loginDataLauncher.launch(intent)
     }
 
     fun showLogoutConfirmDialog(closeCurrentPageOnConfirm: Boolean = false) {

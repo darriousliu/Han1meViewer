@@ -327,5 +327,28 @@ fun MainNavHost(
                 route = it.toRoute(),
             )
         }
+
+        composable<LoginRoute> {
+            LoginRouteScreen(
+                onBack = onBack,
+                onOpenManualCookies = { navController.navigateSafely(ManualCookiesRoute) },
+                onLoginFinished = {
+                    navController.popBackStack()
+                    // 对应原 loginDataLauncher 收到 RESULT_OK 后的刷新
+                    activity.viewModel.getHomePage()
+                },
+            )
+        }
+
+        composable<ManualCookiesRoute> {
+            ManualCookiesRouteScreen(
+                onBack = onBack,
+                onLoginFinished = {
+                    // 把手动输入页和登录页一起退掉（原来是两层 Activity 各自 finish）
+                    navController.popBackStack(LoginRoute, inclusive = true)
+                    activity.viewModel.getHomePage()
+                },
+            )
+        }
     }
 }

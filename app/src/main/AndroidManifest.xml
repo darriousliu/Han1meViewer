@@ -39,11 +39,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Hanime"
         tools:targetApi="34">
-        <activity
-            android:name="com.yenaly.han1meviewer.ui.activity.ManualInputCookiesActivity"
-            android:exported="false"
-            android:label="@string/title_activity_qrcode_scanner"
-            android:theme="@style/Theme.Hanime" />
 
         <activity
             android:name="com.yenaly.han1meviewer.ui.activity.CloudflareActivity"
@@ -150,12 +145,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity-alias>
-        <activity
-            android:name="com.yenaly.han1meviewer.ui.activity.LoginActivity"
-            android:configChanges="screenSize|orientation"
-            android:exported="true">
-
-        </activity>
 
         <receiver
             android:name="com.yenaly.han1meviewer.ui.widget.CheckInWidgetProvider"

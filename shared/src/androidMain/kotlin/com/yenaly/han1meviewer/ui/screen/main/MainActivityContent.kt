@@ -27,10 +27,12 @@ import com.yenaly.han1meviewer.logic.state.PageState
 import com.yenaly.han1meviewer.ui.activity.MainActivity
 import com.yenaly.han1meviewer.ui.component.UpdateDialog
 import com.yenaly.han1meviewer.ui.component.UsageNoticeDialog
+import com.yenaly.han1meviewer.ui.navigation.main.LoginRoute
 import com.yenaly.han1meviewer.ui.navigation.main.MainDestinationSpec
 import com.yenaly.han1meviewer.ui.navigation.main.MainNavHost
 import com.yenaly.han1meviewer.ui.navigation.main.handleMainIntent
 import com.yenaly.han1meviewer.ui.navigation.main.navigateDrawerDestination
+import com.yenaly.han1meviewer.ui.navigation.navigateSafely
 import com.yenaly.han1meviewer.ui.screen.home.homepage.HomePageViewModel
 import com.yenaly.han1meviewer.ui.theme.HanimeTheme
 import com.yenaly.han1meviewer.ui.viewmodel.AppViewModel
@@ -53,7 +55,6 @@ fun MainActivityContent(
     showAuthGuard: Boolean,
     onOpenAccount: () -> Unit,
     onLogoutClick: () -> Unit,
-    onRequireLogin: () -> Unit,
     onSwitchSiteClick: () -> Unit,
     onNavigateControllerReady: (NavHostController) -> Unit,
 ) {
@@ -123,7 +124,10 @@ fun MainActivityContent(
                     scope.launch { drawerState.close() }
                     onOpenAccount()
                 } else {
-                    onRequireLogin()
+                    // 原来是 gotoLoginActivity()（StartActivityForResult），
+                    // Step 17 起登录是导航图内的目的地
+                    scope.launch { drawerState.close() }
+                    composeNavController.navigateSafely(LoginRoute)
                 }
             },
             onAvatarLongClick = {
