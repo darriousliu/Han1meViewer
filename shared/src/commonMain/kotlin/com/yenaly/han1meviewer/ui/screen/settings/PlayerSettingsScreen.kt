@@ -9,10 +9,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.ui.component.ChoiceDialog
 import com.yenaly.han1meviewer.ui.component.SettingNavigationItem
 import com.yenaly.han1meviewer.ui.component.SettingSliderItem
@@ -26,6 +24,16 @@ import han1meviewer.shared.generated.resources.baseline_seek_24
 import han1meviewer.shared.generated.resources.baseline_speed2_24
 import han1meviewer.shared.generated.resources.baseline_speed_24
 import han1meviewer.shared.generated.resources.baseline_touch_24
+import han1meviewer.shared.generated.resources.current_slide_sensitivity
+import han1meviewer.shared.generated.resources.default_playback_speed
+import han1meviewer.shared.generated.resources.long_press_speed_multiplier
+import han1meviewer.shared.generated.resources.moderate
+import han1meviewer.shared.generated.resources.mpv_advanced_settings
+import han1meviewer.shared.generated.resources.mpv_settings_disabled_summary
+import han1meviewer.shared.generated.resources.show_bottom_progress
+import han1meviewer.shared.generated.resources.slide_sensitivity
+import han1meviewer.shared.generated.resources.switch_player_kernel
+import org.jetbrains.compose.resources.stringResource
 
 data class PlayerSettingsUiState(
     val kernel: String,
@@ -64,7 +72,7 @@ fun PlayerSettingsScreen(
 
     ChoiceDialog(
         visible = activeDialog == PlayerChoiceDialog.Kernel,
-        title = stringResource(R.string.switch_player_kernel),
+        title = stringResource(Res.string.switch_player_kernel),
         options = kernelOptions,
         selectedValue = state.kernel,
         onDismiss = { activeDialog = null },
@@ -76,7 +84,7 @@ fun PlayerSettingsScreen(
 
     ChoiceDialog(
         visible = activeDialog == PlayerChoiceDialog.Speed,
-        title = stringResource(R.string.default_playback_speed),
+        title = stringResource(Res.string.default_playback_speed),
         options = speedOptions,
         selectedValue = state.playerSpeed,
         onDismiss = { activeDialog = null },
@@ -88,7 +96,7 @@ fun PlayerSettingsScreen(
 
     ChoiceDialog(
         visible = activeDialog == PlayerChoiceDialog.LongPressSpeed,
-        title = stringResource(R.string.long_press_speed_multiplier),
+        title = stringResource(Res.string.long_press_speed_multiplier),
         options = longPressSpeedOptions,
         selectedValue = state.longPressSpeedTimes,
         onDismiss = { activeDialog = null },
@@ -105,7 +113,7 @@ fun PlayerSettingsScreen(
     ) {
         item {
             SettingNavigationItem(
-                title = stringResource(R.string.switch_player_kernel),
+                title = stringResource(Res.string.switch_player_kernel),
                 valueText = state.kernelDisplay,
                 iconRes = Res.drawable.baseline_atomic_24,
                 onClick = { activeDialog = PlayerChoiceDialog.Kernel },
@@ -114,7 +122,7 @@ fun PlayerSettingsScreen(
 
         item {
             SettingNavigationItem(
-                title = stringResource(R.string.mpv_advanced_settings),
+                title = stringResource(Res.string.mpv_advanced_settings),
                 summary = state.mpvSettingsSummary,
                 iconRes = Res.drawable.baseline_player_24,
                 onClick = onOpenMpvSettings,
@@ -125,7 +133,7 @@ fun PlayerSettingsScreen(
 
         item {
             SettingSwitchItem(
-                title = stringResource(R.string.show_bottom_progress),
+                title = stringResource(Res.string.show_bottom_progress),
                 checked = state.showBottomProgress,
                 iconRes = Res.drawable.baseline_seek_24,
                 onCheckedChange = onShowBottomProgressChange,
@@ -134,7 +142,7 @@ fun PlayerSettingsScreen(
 
         item {
             SettingNavigationItem(
-                title = stringResource(R.string.default_playback_speed),
+                title = stringResource(Res.string.default_playback_speed),
                 valueText = state.playerSpeedLabel,
                 iconRes = Res.drawable.baseline_speed2_24,
                 onClick = { activeDialog = PlayerChoiceDialog.Speed },
@@ -143,7 +151,7 @@ fun PlayerSettingsScreen(
 
         item {
             SettingNavigationItem(
-                title = stringResource(R.string.long_press_speed_multiplier),
+                title = stringResource(Res.string.long_press_speed_multiplier),
                 valueText = state.longPressSpeedTimesLabel,
                 iconRes = Res.drawable.baseline_touch_24,
                 onClick = { activeDialog = PlayerChoiceDialog.LongPressSpeed },
@@ -152,7 +160,7 @@ fun PlayerSettingsScreen(
 
         item {
             SettingSliderItem(
-                title = stringResource(R.string.slide_sensitivity),
+                title = stringResource(Res.string.slide_sensitivity),
                 summary = state.slideSensitivitySummary,
                 value = state.slideSensitivity,
                 valueRange = 1..9,
@@ -172,7 +180,7 @@ private fun PlayerSettingsScreenPreview() {
                 kernel = "ExoPlayer",
                 kernelDisplay = "ExoPlayer",
                 mpvSettingsEnabled = false,
-                mpvSettingsSummary = stringResource(R.string.mpv_settings_disabled_summary),
+                mpvSettingsSummary = stringResource(Res.string.mpv_settings_disabled_summary),
                 showBottomProgress = true,
                 playerSpeed = "1.0",
                 playerSpeedLabel = "1.0x",
@@ -180,8 +188,8 @@ private fun PlayerSettingsScreenPreview() {
                 longPressSpeedTimesLabel = "2.5倍",
                 slideSensitivity = 5,
                 slideSensitivitySummary = stringResource(
-                    R.string.current_slide_sensitivity,
-                    stringResource(R.string.moderate)
+                    Res.string.current_slide_sensitivity,
+                    stringResource(Res.string.moderate)
                 ),
             ),
             kernelOptions = listOf(

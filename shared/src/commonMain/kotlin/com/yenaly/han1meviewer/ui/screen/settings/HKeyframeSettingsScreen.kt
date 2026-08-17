@@ -6,10 +6,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.ui.component.SettingNavigationItem
 import com.yenaly.han1meviewer.ui.component.SettingSliderItem
 import com.yenaly.han1meviewer.ui.component.SettingSwitchItem
@@ -22,7 +20,21 @@ import han1meviewer.shared.generated.resources.baseline_manage_24
 import han1meviewer.shared.generated.resources.baseline_online_manage_24
 import han1meviewer.shared.generated.resources.baseline_share_24
 import han1meviewer.shared.generated.resources.baseline_share_first_24
+import han1meviewer.shared.generated.resources.custom
+import han1meviewer.shared.generated.resources.h_keyframe_manage
+import han1meviewer.shared.generated.resources.h_keyframes_enable
 import han1meviewer.shared.generated.resources.ic_baseline_alert_24
+import han1meviewer.shared.generated.resources.manage
+import han1meviewer.shared.generated.resources.shared
+import han1meviewer.shared.generated.resources.shared_h_keyframe_manage
+import han1meviewer.shared.generated.resources.shared_h_keyframe_manage_tip
+import han1meviewer.shared.generated.resources.shared_h_keyframes_enable
+import han1meviewer.shared.generated.resources.shared_h_keyframes_enable_tip
+import han1meviewer.shared.generated.resources.shared_h_keyframes_use_first
+import han1meviewer.shared.generated.resources.shared_h_keyframes_use_first_tip
+import han1meviewer.shared.generated.resources.show_prompt_when_countdown
+import han1meviewer.shared.generated.resources.when_countdown_remind
+import org.jetbrains.compose.resources.stringResource
 
 data class HKeyframeSettingsUiState(
     val hKeyframesEnable: Boolean,
@@ -51,7 +63,7 @@ fun HKeyframeSettingsScreen(
     ) {
         item {
             SettingSwitchItem(
-                title = stringResource(R.string.h_keyframes_enable),
+                title = stringResource(Res.string.h_keyframes_enable),
                 summary = state.hKeyframesSummary,
                 checked = state.hKeyframesEnable,
                 iconRes = Res.drawable.baseline_h_24,
@@ -60,20 +72,20 @@ fun HKeyframeSettingsScreen(
         }
 
         if (state.hKeyframesEnable) {
-            item { HKeyframeGroupTitle(stringResource(R.string.manage)) }
+            item { HKeyframeGroupTitle(stringResource(Res.string.manage)) }
             item {
                 SettingNavigationItem(
-                    title = stringResource(R.string.h_keyframe_manage),
+                    title = stringResource(Res.string.h_keyframe_manage),
                     iconRes = Res.drawable.baseline_manage_24,
                     onClick = onOpenHKeyframeManage,
                 )
             }
 
-            item { HKeyframeGroupTitle(stringResource(R.string.shared)) }
+            item { HKeyframeGroupTitle(stringResource(Res.string.shared)) }
             item {
                 SettingSwitchItem(
-                    title = stringResource(R.string.shared_h_keyframes_enable),
-                    summary = stringResource(R.string.shared_h_keyframes_enable_tip),
+                    title = stringResource(Res.string.shared_h_keyframes_enable),
+                    summary = stringResource(Res.string.shared_h_keyframes_enable_tip),
                     checked = state.sharedHKeyframesEnable,
                     iconRes = Res.drawable.baseline_share_24,
                     onCheckedChange = onSharedHKeyframesEnableChange,
@@ -83,8 +95,8 @@ fun HKeyframeSettingsScreen(
             if (state.sharedHKeyframesEnable) {
                 item {
                     SettingSwitchItem(
-                        title = stringResource(R.string.shared_h_keyframes_use_first),
-                        summary = stringResource(R.string.shared_h_keyframes_use_first_tip),
+                        title = stringResource(Res.string.shared_h_keyframes_use_first),
+                        summary = stringResource(Res.string.shared_h_keyframes_use_first_tip),
                         checked = state.sharedHKeyframesUseFirst,
                         iconRes = Res.drawable.baseline_share_first_24,
                         onCheckedChange = onSharedHKeyframesUseFirstChange,
@@ -92,18 +104,18 @@ fun HKeyframeSettingsScreen(
                 }
                 item {
                     SettingNavigationItem(
-                        title = stringResource(R.string.shared_h_keyframe_manage),
-                        summary = stringResource(R.string.shared_h_keyframe_manage_tip),
+                        title = stringResource(Res.string.shared_h_keyframe_manage),
+                        summary = stringResource(Res.string.shared_h_keyframe_manage_tip),
                         iconRes = Res.drawable.baseline_online_manage_24,
                         onClick = onOpenSharedHKeyframeManage,
                     )
                 }
             }
 
-            item { HKeyframeGroupTitle(stringResource(R.string.custom)) }
+            item { HKeyframeGroupTitle(stringResource(Res.string.custom)) }
             item {
                 SettingSwitchItem(
-                    title = stringResource(R.string.show_prompt_when_countdown),
+                    title = stringResource(Res.string.show_prompt_when_countdown),
                     checked = state.showCommentWhenCountdown,
                     iconRes = Res.drawable.baseline_count_down_24,
                     onCheckedChange = onShowCommentWhenCountdownChange,
@@ -111,7 +123,7 @@ fun HKeyframeSettingsScreen(
             }
             item {
                 SettingSliderItem(
-                    title = stringResource(R.string.when_countdown_remind),
+                    title = stringResource(Res.string.when_countdown_remind),
                     summary = state.whenCountdownRemindSummary,
                     value = state.whenCountdownRemind,
                     valueRange = 5..30,

@@ -3,10 +3,8 @@ package com.yenaly.han1meviewer.ui.screen.settings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.ui.component.SettingNavigationItem
 import com.yenaly.han1meviewer.ui.component.SettingSliderItem
 import com.yenaly.han1meviewer.ui.component.lazy.LazyColumn
@@ -16,6 +14,12 @@ import han1meviewer.shared.generated.resources.baseline_count_24
 import han1meviewer.shared.generated.resources.baseline_export_24
 import han1meviewer.shared.generated.resources.baseline_path_24
 import han1meviewer.shared.generated.resources.baseline_speed2_24
+import han1meviewer.shared.generated.resources.download_count_limit
+import han1meviewer.shared.generated.resources.download_path
+import han1meviewer.shared.generated.resources.download_speed_limit
+import han1meviewer.shared.generated.resources.pref_export_downloads_summary
+import han1meviewer.shared.generated.resources.pref_export_downloads_title
+import org.jetbrains.compose.resources.stringResource
 
 data class DownloadSettingsUiState(
     val downloadPathSummary: String,
@@ -42,7 +46,7 @@ fun DownloadSettingsScreen(
     ) {
         item {
             SettingNavigationItem(
-                title = stringResource(R.string.download_path),
+                title = stringResource(Res.string.download_path),
                 summary = state.downloadPathSummary,
                 iconRes = Res.drawable.baseline_path_24,
                 onClick = onOpenDownloadPath,
@@ -51,8 +55,8 @@ fun DownloadSettingsScreen(
 
         item {
             SettingNavigationItem(
-                title = stringResource(R.string.pref_export_downloads_title),
-                summary = stringResource(R.string.pref_export_downloads_summary),
+                title = stringResource(Res.string.pref_export_downloads_title),
+                summary = stringResource(Res.string.pref_export_downloads_summary),
                 iconRes = Res.drawable.baseline_export_24,
                 onClick = onImportDownloadedFiles,
             )
@@ -60,7 +64,7 @@ fun DownloadSettingsScreen(
 
         item {
             SettingSliderItem(
-                title = stringResource(R.string.download_count_limit),
+                title = stringResource(Res.string.download_count_limit),
                 summary = state.downloadCountLimitSummary,
                 value = state.downloadCountLimit,
                 valueRange = 0..maxDownloadCountLimit,
@@ -71,7 +75,7 @@ fun DownloadSettingsScreen(
 
         item {
             SettingSliderItem(
-                title = stringResource(R.string.download_speed_limit),
+                title = stringResource(Res.string.download_speed_limit),
                 summary = state.downloadSpeedLimitSummary,
                 value = state.downloadSpeedLimitIndex,
                 valueRange = 0..maxDownloadSpeedLimitIndex,
