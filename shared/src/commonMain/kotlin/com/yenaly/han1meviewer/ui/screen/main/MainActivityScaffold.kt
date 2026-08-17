@@ -1,6 +1,5 @@
 package com.yenaly.han1meviewer.ui.screen.main
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -26,18 +25,24 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.ui.navigation.main.MainDrawerDestination
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.my_list
+import han1meviewer.shared.generated.resources.video
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun MainActivityScaffold(
     drawerState: DrawerState,
@@ -85,7 +90,7 @@ fun MainActivityScaffold(
                 ) {
                     MainDrawerPrimaryItems(selectedDestination, onDrawerItemSelected)
                     MainDrawerSection(
-                        titleRes = R.string.my_list,
+                        titleRes = Res.string.my_list,
                         items = listOf(
                             MainDrawerDestination.WatchLater,
                             MainDrawerDestination.FavVideo,
@@ -101,7 +106,7 @@ fun MainActivityScaffold(
                         },
                     )
                     MainDrawerSection(
-                        titleRes = R.string.video,
+                        titleRes = Res.string.video,
                         items = listOf(
                             MainDrawerDestination.WatchHistory,
                             MainDrawerDestination.Download,
@@ -182,7 +187,7 @@ private fun MainDrawerPrimaryItems(
 
 @Composable
 private fun MainDrawerSection(
-    titleRes: Int,
+    titleRes: StringResource,
     items: List<MainDrawerDestination>,
     selectedDestination: MainDrawerDestination?,
     onItemClick: (MainDrawerDestination) -> Unit,
