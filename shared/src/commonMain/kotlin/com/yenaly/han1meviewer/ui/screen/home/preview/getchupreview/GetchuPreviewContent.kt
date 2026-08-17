@@ -8,7 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import coil3.compose.LocalPlatformContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -55,7 +55,7 @@ internal fun GetchuPreviewContent(
 @Composable
 private fun GetchuPreviewContentPreview() {
     ComponentPreview {
-        val context = LocalContext.current
+        val context = LocalPlatformContext.current
         GetchuPreviewContent(
             preview = fakeGetchuPreview,
             onOpenDetail = {},

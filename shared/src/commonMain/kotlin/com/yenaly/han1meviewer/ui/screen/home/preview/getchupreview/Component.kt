@@ -16,20 +16,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
+import coil3.compose.LocalPlatformContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.ImageLoader
 import coil3.compose.AsyncImage
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.model.GetchuPreview
 import com.yenaly.han1meviewer.logic.model.GetchuPreviewDetail
 import com.yenaly.han1meviewer.ui.component.lazy.LazyRow
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
 import com.yenaly.han1meviewer.ui.preview.fakeGetchuPreviewItem
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.brand
+import han1meviewer.shared.generated.resources.getchu_product_intro
+import han1meviewer.shared.generated.resources.getchu_staff
+import han1meviewer.shared.generated.resources.getchu_story
+import han1meviewer.shared.generated.resources.h_chan_load_failed
+import han1meviewer.shared.generated.resources.h_chan_loading
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun GetchuPreviewItemCard(
@@ -55,8 +61,8 @@ internal fun GetchuPreviewItemCard(
                     .size(width = 108.dp, height = 148.dp)
                     .clip(androidx.compose.foundation.shape.RoundedCornerShape(14.dp)),
                 contentScale = ContentScale.Crop,
-                placeholder = painterResource(R.drawable.h_chan_loading),
-                error = painterResource(R.drawable.h_chan_load_failed)
+                placeholder = painterResource(Res.drawable.h_chan_loading),
+                error = painterResource(Res.drawable.h_chan_load_failed)
             )
             Column(
                 modifier = Modifier.weight(1f),
@@ -69,7 +75,7 @@ internal fun GetchuPreviewItemCard(
                 )
                 item.brand?.let {
                     Text(
-                        "${stringResource(R.string.brand)}: $it",
+                        "${stringResource(Res.string.brand)}: $it",
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
@@ -106,9 +112,9 @@ internal fun GetchuTextSection(section: GetchuPreviewDetail.TextSection) {
 @Composable
 internal fun getchuTextSectionTitle(title: String): String {
     return when {
-        title.contains("商品紹介") -> stringResource(R.string.getchu_product_intro)
-        title.contains("ストーリー") -> stringResource(R.string.getchu_story)
-        title.contains("スタッフ") -> stringResource(R.string.getchu_staff)
+        title.contains("商品紹介") -> stringResource(Res.string.getchu_product_intro)
+        title.contains("ストーリー") -> stringResource(Res.string.getchu_story)
+        title.contains("スタッフ") -> stringResource(Res.string.getchu_staff)
         else -> title
     }
 }
@@ -149,7 +155,7 @@ internal fun GetchuRelatedRow(
 @Composable
 private fun GetchuPreviewItemCardPreview() {
     ComponentPreview {
-        val context = LocalContext.current
+        val context = LocalPlatformContext.current
         GetchuPreviewItemCard(
             item = fakeGetchuPreviewItem,
             onClick = {},
@@ -162,7 +168,7 @@ private fun GetchuPreviewItemCardPreview() {
 @Composable
 private fun GetchuRelatedRowPreview() {
     ComponentPreview {
-        val context = LocalContext.current
+        val context = LocalPlatformContext.current
         GetchuRelatedRow(
             title = "标题",
             items = listOf(fakeGetchuPreviewItem),

@@ -16,11 +16,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
+import coil3.compose.LocalPlatformContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.state.PageState
 import com.yenaly.han1meviewer.logic.state.dataOrNull
 import com.yenaly.han1meviewer.pienization
@@ -31,6 +28,12 @@ import com.yenaly.han1meviewer.ui.component.isFirstPageLoading
 import com.yenaly.han1meviewer.ui.screen.home.preview.PreviewImageViewerDialog
 import com.yenaly.han1meviewer.ui.screen.home.preview.PreviewImageViewerState
 import com.yenaly.han1meviewer.ui.screen.rememberRandomLoadingHint
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.back
+import han1meviewer.shared.generated.resources.getchu_preview_detail
+import han1meviewer.shared.generated.resources.ic_baseline_arrow_back_24
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,7 +48,7 @@ fun GetchuPreviewDetailScreen(
     val state = detailState.collectAsStateWithLifecycle().value
     var imageViewerState by remember { mutableStateOf<PreviewImageViewerState?>(null) }
     val loadingHint = rememberRandomLoadingHint()
-    val context = LocalContext.current
+    val context = LocalPlatformContext.current
     val imageLoader = remember {
         createGetchuImageLoader(context)
     }
@@ -57,12 +60,12 @@ fun GetchuPreviewDetailScreen(
             .background(MaterialTheme.colorScheme.background)
     ) {
         TopAppBar(
-            title = { Text(stringResource(R.string.getchu_preview_detail)) },
+            title = { Text(stringResource(Res.string.getchu_preview_detail)) },
             navigationIcon = {
                 FilledIconButton(onClick = onBack) {
                     Icon(
-                        painterResource(R.drawable.ic_baseline_arrow_back_24),
-                        stringResource(R.string.back)
+                        painterResource(Res.drawable.ic_baseline_arrow_back_24),
+                        stringResource(Res.string.back)
                     )
                 }
             },

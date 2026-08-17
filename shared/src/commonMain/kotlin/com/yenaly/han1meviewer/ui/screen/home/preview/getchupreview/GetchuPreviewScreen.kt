@@ -1,6 +1,5 @@
 package com.yenaly.han1meviewer.ui.screen.home.preview.getchupreview
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,15 +31,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import org.jetbrains.compose.resources.stringResource
-import androidx.compose.ui.text.style.TextOverflow
+import coil3.compose.LocalPlatformContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.state.PageState
 import com.yenaly.han1meviewer.logic.state.dataOrNull
 import com.yenaly.han1meviewer.ui.component.PageContent
@@ -50,6 +46,10 @@ import com.yenaly.han1meviewer.ui.component.isFirstPageLoading
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
 import com.yenaly.han1meviewer.ui.screen.rememberRandomLoadingHint
 import com.yenaly.han1meviewer.util.toNetworkErrorMessage
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.back
+import han1meviewer.shared.generated.resources.getchu_preview_title
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,7 +65,7 @@ fun GetchuPreviewScreen(
     val dateLabel = remember(dateCode) { getchuDateLabel(dateCode) }
     val monthOptions = remember(currentMonthCode) { getchuMonthOptions(currentMonthCode) }
     val loadingHint = rememberRandomLoadingHint()
-    val context = LocalContext.current
+    val context = LocalPlatformContext.current
     val imageLoader = remember {
         createGetchuImageLoader(context)
     }
@@ -82,7 +82,7 @@ fun GetchuPreviewScreen(
                     TextButton(onClick = { monthMenuExpanded = true }) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
-                                text = stringResource(R.string.getchu_preview_title, dateLabel),
+                                text = stringResource(Res.string.getchu_preview_title, dateLabel),
                                 modifier = Modifier.weight(1f, fill = false),
                                 style = MaterialTheme.typography.titleLarge,
                                 fontWeight = FontWeight.SemiBold,
@@ -115,7 +115,7 @@ fun GetchuPreviewScreen(
             },
             navigationIcon = {
                 FilledIconButton(onClick = onBack) {
-                    Icon(Icons.AutoMirrored.Default.ArrowBack, stringResource(R.string.back))
+                    Icon(Icons.AutoMirrored.Default.ArrowBack, stringResource(Res.string.back))
                 }
             },
             actions = {
@@ -149,8 +149,6 @@ fun GetchuPreviewScreen(
         }
     }
 }
-
-@SuppressLint("ViewModelConstructorInComposable")
 @Preview
 @Composable
 private fun GetchuPreviewScreenPreview() {

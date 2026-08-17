@@ -15,9 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.PlayCircleOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedCard
@@ -33,21 +31,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.ImageLoader
 import coil3.compose.AsyncImage
-import com.yenaly.han1meviewer.R
+import coil3.compose.LocalPlatformContext
 import com.yenaly.han1meviewer.logic.model.GetchuPreviewDetail
 import com.yenaly.han1meviewer.ui.component.lazy.LazyColumn
 import com.yenaly.han1meviewer.ui.component.lazy.LazyRow
+import com.yenaly.han1meviewer.ui.icon.OpenInNew
+import com.yenaly.han1meviewer.ui.icon.PlayCircleOutline
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
 import com.yenaly.han1meviewer.ui.preview.fakeGetchuPreviewDetail
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.brand
+import han1meviewer.shared.generated.resources.getchu_series
+import han1meviewer.shared.generated.resources.h_chan_load_failed
+import han1meviewer.shared.generated.resources.h_chan_loading
+import han1meviewer.shared.generated.resources.jump_to_webpage
+import han1meviewer.shared.generated.resources.play_trailer
+import han1meviewer.shared.generated.resources.release_date
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun GetchuPreviewDetailContent(
@@ -83,8 +90,8 @@ internal fun GetchuPreviewDetailContent(
                             modifier = Modifier.fillMaxSize(),
                             contentScale = ContentScale.Crop,
                             alignment = Alignment.TopCenter,
-                            placeholder = painterResource(R.drawable.h_chan_loading),
-                            error = painterResource(R.drawable.h_chan_load_failed)
+                            placeholder = painterResource(Res.drawable.h_chan_loading),
+                            error = painterResource(Res.drawable.h_chan_load_failed)
                         )
 
                         Box(
@@ -123,14 +130,14 @@ internal fun GetchuPreviewDetailContent(
                         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                             detail.brand?.let {
                                 Text(
-                                    text = "${stringResource(R.string.brand)}: $it",
+                                    text = "${stringResource(Res.string.brand)}: $it",
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
                             detail.releaseDate?.let {
                                 Text(
-                                    text = "${stringResource(R.string.release_date)}: $it",
+                                    text = "${stringResource(Res.string.release_date)}: $it",
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -159,7 +166,7 @@ internal fun GetchuPreviewDetailContent(
                                 ) {
                                     Icon(Icons.Default.PlayArrow, contentDescription = null)
                                     Spacer(Modifier.width(4.dp))
-                                    Text(stringResource(R.string.play_trailer))
+                                    Text(stringResource(Res.string.play_trailer))
                                 }
                             }
 
@@ -170,7 +177,7 @@ internal fun GetchuPreviewDetailContent(
                             ) {
                                 Icon(Icons.AutoMirrored.Filled.OpenInNew, contentDescription = null)
                                 Spacer(Modifier.width(4.dp))
-                                Text(stringResource(R.string.jump_to_webpage))
+                                Text(stringResource(Res.string.jump_to_webpage))
                             }
                         }
 
@@ -186,7 +193,7 @@ internal fun GetchuPreviewDetailContent(
                                     ) {
                                         Icon(Icons.Default.PlayCircleOutline, contentDescription = null)
                                         Spacer(Modifier.width(8.dp))
-                                        Text("${stringResource(R.string.play_trailer)} ${index + 2}")
+                                        Text("${stringResource(Res.string.play_trailer)} ${index + 2}")
                                     }
                                 }
                             }
@@ -244,7 +251,7 @@ internal fun GetchuPreviewDetailContent(
         if (relatedItems.isNotEmpty()) {
             item {
                 GetchuRelatedRow(
-                    title = stringResource(R.string.getchu_series),
+                    title = stringResource(Res.string.getchu_series),
                     items = relatedItems,
                     onNavigateToDetail = onNavigateToDetail,
                     imageLoader = imageLoader
@@ -259,7 +266,7 @@ internal fun GetchuPreviewDetailContent(
 @Composable
 private fun GetchuPreviewDetailContentPreview() {
     ComponentPreview {
-        val context = LocalContext.current
+        val context = LocalPlatformContext.current
         GetchuPreviewDetailContent(
             detail = fakeGetchuPreviewDetail,
             onOpenImage = { _, _ -> },
