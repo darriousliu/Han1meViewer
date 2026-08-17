@@ -1,14 +1,27 @@
 package com.yenaly.han1meviewer.ui.screen.home.download
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.entity.download.DownloadGroupEntity
 import com.yenaly.han1meviewer.logic.entity.download.VideoWithCategories
 import com.yenaly.han1meviewer.logic.model.DownloadHeaderNode
 import com.yenaly.han1meviewer.logic.model.DownloadItemNode
 import com.yenaly.han1meviewer.logic.model.DownloadedNode
 import com.yenaly.han1meviewer.logic.state.DownloadState
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.already_in_queue
+import han1meviewer.shared.generated.resources.baseline_error_outline_24
+import han1meviewer.shared.generated.resources.download_complete
+import han1meviewer.shared.generated.resources.download_failed_tap_retry
+import han1meviewer.shared.generated.resources.download_progress_percent
+import han1meviewer.shared.generated.resources.ic_baseline_check_circle_24
+import han1meviewer.shared.generated.resources.ic_baseline_download_24
+import han1meviewer.shared.generated.resources.ic_baseline_pause_24
+import han1meviewer.shared.generated.resources.ic_baseline_play_arrow_24
+import han1meviewer.shared.generated.resources.loading
+import han1meviewer.shared.generated.resources.paused
+import han1meviewer.shared.generated.resources.ungrouped
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * 将已下载视频列表按分组 ID 转换为 [DownloadHeaderNode] 列表。
@@ -21,7 +34,9 @@ fun List<VideoWithCategories>.toNodeList(
     groupIdToNameMap: Map<Int, String>,
     collapseDownloadedGroup: Boolean,
 ): List<DownloadHeaderNode> {
-    val groupedData = this.groupBy { it.video.groupId }.toSortedMap()
+    // toSortedMap 是 JVM-only 的 stdlib 扩展（返回 java.util.SortedMap），
+    // 换成显式按 key 排序，遍历顺序与原来的自然序一致。
+    val groupedData = this.groupBy { it.video.groupId }.entries.sortedBy { it.key }
     return buildList {
         for ((groupId, videos) in groupedData) {
             add(
@@ -62,7 +77,7 @@ fun List<DownloadHeaderNode>.toFlatNodeList(): List<DownloadedNode> {
 @Composable
 fun List<DownloadGroupEntity>.toDisplayGroups(): List<DownloadGroupEntity> = map { group ->
     if (group.id == DownloadGroupEntity.DEFAULT_GROUP_ID) {
-        group.copy(name = stringResource(R.string.ungrouped))
+        group.copy(name = stringResource(Res.string.ungrouped))
     } else {
         group
     }
@@ -77,25 +92,25 @@ fun List<DownloadGroupEntity>.toDisplayGroups(): List<DownloadGroupEntity> = map
  */
 @Composable
 fun downloadStateText(state: DownloadState, progress: Int): String = when (state) {
-    DownloadState.Queued -> stringResource(R.string.already_in_queue)
-    DownloadState.Downloading -> stringResource(R.string.download_progress_percent, progress)
-    DownloadState.Paused -> stringResource(R.string.paused)
-    DownloadState.Failed -> stringResource(R.string.download_failed_tap_retry)
-    DownloadState.Finished -> stringResource(R.string.download_complete)
-    DownloadState.Unknown -> stringResource(R.string.loading)
+    DownloadState.Queued -> stringResource(Res.string.already_in_queue)
+    DownloadState.Downloading -> stringResource(Res.string.download_progress_percent, progress)
+    DownloadState.Paused -> stringResource(Res.string.paused)
+    DownloadState.Failed -> stringResource(Res.string.download_failed_tap_retry)
+    DownloadState.Finished -> stringResource(Res.string.download_complete)
+    DownloadState.Unknown -> stringResource(Res.string.loading)
 }
 
 /**
  * 下载状态对应的图标资源 ID。
  *
  * @param state 下载状态
- * @return 图标 drawable 资源 ID
+ * @return 图标 drawable 资源
  */
-fun downloadStateIcon(state: DownloadState): Int = when (state) {
-    DownloadState.Queued -> R.drawable.ic_baseline_play_arrow_24
-    DownloadState.Downloading -> R.drawable.ic_baseline_pause_24
-    DownloadState.Paused -> R.drawable.ic_baseline_play_arrow_24
-    DownloadState.Failed -> R.drawable.baseline_error_outline_24
-    DownloadState.Finished -> R.drawable.ic_baseline_check_circle_24
-    DownloadState.Unknown -> R.drawable.ic_baseline_download_24
+fun downloadStateIcon(state: DownloadState): DrawableResource = when (state) {
+    DownloadState.Queued -> Res.drawable.ic_baseline_play_arrow_24
+    DownloadState.Downloading -> Res.drawable.ic_baseline_pause_24
+    DownloadState.Paused -> Res.drawable.ic_baseline_play_arrow_24
+    DownloadState.Failed -> Res.drawable.baseline_error_outline_24
+    DownloadState.Finished -> Res.drawable.ic_baseline_check_circle_24
+    DownloadState.Unknown -> Res.drawable.ic_baseline_download_24
 }

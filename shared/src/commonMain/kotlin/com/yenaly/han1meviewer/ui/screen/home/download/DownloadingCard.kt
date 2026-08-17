@@ -33,19 +33,28 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.entity.download.HanimeDownloadEntity
 import com.yenaly.han1meviewer.logic.state.DownloadState
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
 import com.yenaly.han1meviewer.ui.preview.fakeHomePageVideos
 import com.yenaly.han1meviewer.util.formatFileSizeV2
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.cancel_download
+import han1meviewer.shared.generated.resources.continues
+import han1meviewer.shared.generated.resources.download_progress_size
+import han1meviewer.shared.generated.resources.h_chan_load_failed
+import han1meviewer.shared.generated.resources.h_chan_loading
+import han1meviewer.shared.generated.resources.ic_baseline_pause_24
+import han1meviewer.shared.generated.resources.pause_all
+import han1meviewer.shared.generated.resources.retry
+import kotlin.time.Clock
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * 下载中任务卡片。
@@ -85,8 +94,8 @@ fun DownloadingItemCard(
                 AsyncImage(
                     model = item.coverUri ?: item.coverUrl,
                     contentDescription = item.title,
-                    placeholder = painterResource(R.drawable.h_chan_loading),
-                    error = painterResource(R.drawable.h_chan_load_failed),
+                    placeholder = painterResource(Res.drawable.h_chan_loading),
+                    error = painterResource(Res.drawable.h_chan_load_failed),
                     modifier = Modifier
                         .width(136.dp)
                         .aspectRatio(16f / 9f)
@@ -146,7 +155,7 @@ fun DownloadingItemCard(
 
                     Text(
                         text = stringResource(
-                            R.string.download_progress_size,
+                            Res.string.download_progress_size,
                             item.downloadedLength.formatFileSizeV2(),
                             item.length.formatFileSizeV2(),
                         ),
@@ -165,7 +174,7 @@ fun DownloadingItemCard(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,
-                            contentDescription = stringResource(R.string.cancel_download),
+                            contentDescription = stringResource(Res.string.cancel_download),
                             modifier = Modifier.size(20.dp),
                             tint = MaterialTheme.colorScheme.outline
                         )
@@ -178,8 +187,8 @@ fun DownloadingItemCard(
                                 modifier = Modifier.size(36.dp)
                             ) {
                                 Icon(
-                                    painter = painterResource(R.drawable.ic_baseline_pause_24),
-                                    contentDescription = stringResource(R.string.pause_all),
+                                    painter = painterResource(Res.drawable.ic_baseline_pause_24),
+                                    contentDescription = stringResource(Res.string.pause_all),
                                     modifier = Modifier.size(20.dp)
                                 )
                             }
@@ -194,7 +203,7 @@ fun DownloadingItemCard(
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.PlayArrow,
-                                    contentDescription = stringResource(R.string.continues),
+                                    contentDescription = stringResource(Res.string.continues),
                                     modifier = Modifier.size(20.dp)
                                 )
                             }
@@ -207,7 +216,7 @@ fun DownloadingItemCard(
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Refresh,
-                                    contentDescription = stringResource(R.string.retry),
+                                    contentDescription = stringResource(Res.string.retry),
                                     modifier = Modifier.size(20.dp)
                                 )
                             }
@@ -239,7 +248,7 @@ private fun PreviewDownloadingItemCard() {
                 coverUrl = fakeHomePageVideos.first().coverUrl,
                 coverUri = null,
                 title = fakeHomePageVideos.first().title,
-                addDate = System.currentTimeMillis(),
+                addDate = Clock.System.now().toEpochMilliseconds(),
                 videoCode = fakeHomePageVideos.first().videoCode,
                 videoUri = "sample.mp4",
                 quality = "720P",
