@@ -37,6 +37,28 @@ val githubToken = System.getenv("HA_GITHUB_TOKEN") ?: rootProject
 val (versionCode, versionName) = createVersion(major = 1, minor = 0, patch = 2)
 val applicationId = "com.yenaly.han1meviewer${if (releaseBuild) "" else ".debug"}"
 
+// plugin 是跟着「app 逻辑搬进 shared」那次带过来的，但配置块没带过来，
+// 结果 :shared 产出的 aboutlibraries.json 一直是空的
+// （{"libraries":[],"licenses":{}}，30 字节），开源许可列表什么都不显示。
+// app/build 下那份 148KB 是 plugin 还在 :app 时的陈旧产物，现在不会再生成。
+//
+// 导到 composeResources 而不是 androidMain/res/raw：LicenseDialog 在 commonMain 里
+// 用 Res.readBytes 读它。**plugin 生成的那份 androidMain/res/raw/aboutlibraries.json
+// 在 KMP 模块下收集不到东西，仍然是 30 字节的空壳，别再依赖它。**
+//
+// ⚠️ exportLibraryDefinitions 不参与常规构建，是手动任务。依赖有增减之后要重跑：
+//     ./gradlew :shared:exportLibraryDefinitions
+// 生成的 json 是提交进版本库的，不重跑就会过期。
+aboutLibraries {
+    collect {
+        all = true
+    }
+    export {
+        outputFile = file("src/commonMain/composeResources/files/aboutlibraries.json")
+        prettyPrint = false
+    }
+}
+
 buildkonfig {
     packageName = "com.yenaly.han1meviewer"
     exposeObjectWithName = "BuildConfig"
