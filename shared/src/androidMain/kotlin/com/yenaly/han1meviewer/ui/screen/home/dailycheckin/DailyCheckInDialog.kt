@@ -196,10 +196,14 @@ fun CheckInDialog(
                                     newCount + 1 == 3 -> onEasterEgg(eggSex)
                                     newCount + 1 == 4 -> onEasterEgg(eggNine)
                                     newCount + 1 == 6 -> onEasterEgg(eggGod)
-                                    newCount + 1 % 10 == 0 -> onEasterEgg(
-                                        eggRoundTemplate.format(
-                                            newCount
-                                        )
+                                    // 原来写的是 newCount + 1 % 10 == 0，按优先级等于
+                                    // newCount + 1 == 0，永远为假——这个彩蛋从没触发过。
+                                    // 实参也统一成和其它分支一致的 newCount + 1，
+                                    // 否则第 10 次会显示「9 次達成」。
+                                    // 不用 String.format：这段要进 commonMain，
+                                    // 资源是单参数 %1$d 模板，直接替换。
+                                    (newCount + 1) % 10 == 0 -> onEasterEgg(
+                                        eggRoundTemplate.replace("%1\$d", (newCount + 1).toString())
                                     )
                                 }
                                 onDismiss()

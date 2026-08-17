@@ -49,7 +49,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.yenaly.han1meviewer.R
+import com.yenaly.han1meviewer.logic.entity.CheckInRecordEntity
 import com.yenaly.han1meviewer.ui.component.appbar.HanimeScaffold
+import com.yenaly.han1meviewer.ui.viewmodel.CheckInCalendarViewModel
 import com.yenaly.han1meviewer.ui.viewmodel.MonthlyStats
 import com.yenaly.han1meviewer.util.currentLocalDate
 import com.yenaly.han1meviewer.util.currentYearMonth
@@ -66,6 +68,7 @@ import kotlinx.datetime.number
  * @param selectedMonth 当前选择的月份
  * @param yearRecords 年度打卡记录
  * @param yearStats 年度统计数据
+ * @param yearRecordEntities 年度原始打卡记录（月视图按月重算统计用）
  * @param onYearChange 年份变更回调
  * @param onViewModeChange 视图模式变更回调
  * @param onMonthChange 月份变更回调
@@ -81,6 +84,7 @@ fun ContributionReportDialog(
     selectedMonth: Int,
     yearRecords: Map<LocalDate, Int>,
     yearStats: MonthlyStats,
+    yearRecordEntities: List<CheckInRecordEntity>,
     onYearChange: (Int) -> Unit,
     onViewModeChange: (String) -> Unit,
     onMonthChange: (Int) -> Unit,
@@ -218,7 +222,18 @@ fun ContributionReportDialog(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                val stats = if (viewMode == "year") yearStats else yearStats
+                // 原来两个分支都是 yearStats，月视图一直显示的是年度统计。
+                // 月视图按 selectedMonth 过滤原始实体重算——过滤逻辑和上面
+                // 热力图的 filteredRecords 同构，computeStats 是 VM 伴生对象的公开函数。
+                val stats = remember(viewMode, selectedYear, selectedMonth, yearRecordEntities, yearStats) {
+                    if (viewMode == "year") yearStats
+                    else CheckInCalendarViewModel.computeStats(
+                        yearRecordEntities.filter {
+                            val d = LocalDate.parse(it.date)
+                            d.year == selectedYear && d.month.number == selectedMonth
+                        }
+                    )
+                }
                 if (stats.typeCounts.isNotEmpty()) {
                     Card(modifier = Modifier.fillMaxWidth()) {
                         Row(

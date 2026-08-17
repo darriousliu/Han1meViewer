@@ -84,6 +84,7 @@ fun DailyCheckInScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val yearRecords by viewModel.yearRecords.collectAsStateWithLifecycle()
     val yearStats by viewModel.yearStats.collectAsStateWithLifecycle()
+    val yearRecordEntities by viewModel.yearRecordEntities.collectAsStateWithLifecycle()
 
     val today = remember { currentLocalDate() }
 
@@ -292,6 +293,7 @@ fun DailyCheckInScreen(
             selectedMonth = reportSelectedMonth,
             yearRecords = yearRecords,
             yearStats = yearStats,
+            yearRecordEntities = yearRecordEntities,
             onYearChange = { reportSelectedYear = it },
             onViewModeChange = { reportViewMode = it },
             onMonthChange = { reportSelectedMonth = it },

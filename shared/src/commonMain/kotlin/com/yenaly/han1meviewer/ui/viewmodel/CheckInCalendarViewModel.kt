@@ -35,6 +35,9 @@ class CheckInCalendarViewModel : ViewModel() {
     private val _monthlyStats = MutableStateFlow(MonthlyStats())
     private val _yearStats = MutableStateFlow(MonthlyStats())
 
+    /** [loadYearRecords] 拿到的原始实体。报表月视图要按月重算统计，光有计数图不够。 */
+    private val _yearRecordEntities = MutableStateFlow<List<CheckInRecordEntity>>(emptyList())
+
     /** 对外暴露的唯一 UI 状态流。 */
     val uiState: StateFlow<DailyCheckInUiState> = combine(
         _currentMonth, _records, _checkedDays, _monthTotal, _monthlyStats,
@@ -71,6 +74,7 @@ class CheckInCalendarViewModel : ViewModel() {
 
     val yearRecords: StateFlow<Map<LocalDate, Int>> = _yearRecords.asStateFlow()
     val yearStats: StateFlow<MonthlyStats> = _yearStats.asStateFlow()
+    val yearRecordEntities: StateFlow<List<CheckInRecordEntity>> = _yearRecordEntities.asStateFlow()
 
     private val database = CheckInRecordDatabase.instance
     private val dao = database.checkInDao()
@@ -180,6 +184,7 @@ class CheckInCalendarViewModel : ViewModel() {
             }
             _yearRecords.value = countMap
             _yearStats.value = computeStats(allRecords)
+            _yearRecordEntities.value = allRecords
         }
     }
 
