@@ -77,6 +77,18 @@ data class VideoRoute(
     val localUri: String? = null,
 )
 
+/* 原来是三个独立 Activity（LoginActivity / ManualInputCookiesActivity /
+ * CloudflareActivity），Step 17 合并进导航图。 */
+
+@Serializable
+data object LoginRoute
+
+@Serializable
+data object ManualCookiesRoute
+
+@Serializable
+data class CloudflareRoute(val url: String)
+
 enum class MainDestinationSpec(
     val drawerDestination: MainDrawerDestination?,
     val routeClass: KClass<*>,
@@ -205,6 +217,21 @@ enum class MainDestinationSpec(
     Video(
         drawerDestination = null,
         routeClass = VideoRoute::class,
+        drawerEnabled = false,
+    ),
+    Login(
+        drawerDestination = null,
+        routeClass = LoginRoute::class,
+        drawerEnabled = false,
+    ),
+    ManualCookies(
+        drawerDestination = null,
+        routeClass = ManualCookiesRoute::class,
+        drawerEnabled = false,
+    ),
+    Cloudflare(
+        drawerDestination = null,
+        routeClass = CloudflareRoute::class,
         drawerEnabled = false,
     );
 
