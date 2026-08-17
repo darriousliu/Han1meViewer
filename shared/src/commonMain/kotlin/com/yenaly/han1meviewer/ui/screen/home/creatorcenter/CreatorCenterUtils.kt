@@ -4,9 +4,13 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.state.PageLoadingState
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.creator_status_pending
+import han1meviewer.shared.generated.resources.creator_status_queued
+import han1meviewer.shared.generated.resources.creator_status_transcoding
+import han1meviewer.shared.generated.resources.creator_status_uploaded
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * 判断网格是否需要加载更多。
@@ -36,19 +40,19 @@ fun LazyGridState.canLoadMore(state: PageLoadingState<*>): Boolean {
 @Composable
 fun String.toReviewStatusInfo(): ReviewStatusInfo = when {
     contains("已上傳") -> ReviewStatusInfo(
-        text = stringResource(R.string.creator_status_uploaded),
+        text = stringResource(Res.string.creator_status_uploaded),
         color = Color(0xFF27C93F)
     )
     contains("排隊") -> ReviewStatusInfo(
-        text = stringResource(R.string.creator_status_queued),
+        text = stringResource(Res.string.creator_status_queued),
         color = Color(0xFFF9A825)
     )
     contains("待處理") -> ReviewStatusInfo(
-        text = stringResource(R.string.creator_status_pending),
+        text = stringResource(Res.string.creator_status_pending),
         color = Color(0xFFFF9800)
     )
     contains("轉檔") -> ReviewStatusInfo(
-        text = stringResource(R.string.creator_status_transcoding),
+        text = stringResource(Res.string.creator_status_transcoding),
         color = Color(0xFF42A5F5)
     )
     else -> ReviewStatusInfo(

@@ -18,10 +18,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.model.CreatorTab
 import com.yenaly.han1meviewer.logic.model.CreatorUploadingItem
 import com.yenaly.han1meviewer.logic.model.HanimeInfo
@@ -32,7 +29,18 @@ import com.yenaly.han1meviewer.ui.screen.home.creatorcenter.CreatorCenterEvent
 import com.yenaly.han1meviewer.ui.screen.home.creatorcenter.CreatorUploadedPage
 import com.yenaly.han1meviewer.ui.screen.home.creatorcenter.CreatorUploadingPage
 import com.yenaly.han1meviewer.ui.viewmodel.CreatorCenterViewModel
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.close
+import han1meviewer.shared.generated.resources.creator_center
+import han1meviewer.shared.generated.resources.creator_center_help
+import han1meviewer.shared.generated.resources.help
+import han1meviewer.shared.generated.resources.ic_baseline_help_24
+import han1meviewer.shared.generated.resources.ok
+import han1meviewer.shared.generated.resources.uploaded_videos
+import han1meviewer.shared.generated.resources.uploading_videos
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * 创作者中心页面 Screen 层。
@@ -98,22 +106,22 @@ fun CreatorCenterScreen(
 
     ConfirmDialog(
         visible = showHelpDialog,
-        title = stringResource(R.string.help),
-        message = stringResource(R.string.creator_center_help),
-        confirmText = stringResource(R.string.ok),
-        dismissText = stringResource(R.string.close),
+        title = stringResource(Res.string.help),
+        message = stringResource(Res.string.creator_center_help),
+        confirmText = stringResource(Res.string.ok),
+        dismissText = stringResource(Res.string.close),
         onConfirm = { showHelpDialog = false },
         onDismiss = { showHelpDialog = false },
     )
 
     HanimeScaffold(
-        title = stringResource(R.string.creator_center),
+        title = stringResource(Res.string.creator_center),
         onBack = onBack,
         actions = {
             FilledIconButton(onClick = { showHelpDialog = true }) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_baseline_help_24),
-                    contentDescription = stringResource(R.string.help),
+                    painter = painterResource(Res.drawable.ic_baseline_help_24),
+                    contentDescription = stringResource(Res.string.help),
                 )
             }
         }
@@ -125,11 +133,11 @@ fun CreatorCenterScreen(
                 Tab(
                     selected = pagerState.currentPage == 0,
                     onClick = { scope.launch { pagerState.animateScrollToPage(0) } },
-                    text = { Text(stringResource(R.string.uploaded_videos)) })
+                    text = { Text(stringResource(Res.string.uploaded_videos)) })
                 Tab(
                     selected = pagerState.currentPage == 1,
                     onClick = { scope.launch { pagerState.animateScrollToPage(1) } },
-                    text = { Text(stringResource(R.string.uploading_videos)) })
+                    text = { Text(stringResource(Res.string.uploading_videos)) })
             }
             HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { page ->
                 when (page) {

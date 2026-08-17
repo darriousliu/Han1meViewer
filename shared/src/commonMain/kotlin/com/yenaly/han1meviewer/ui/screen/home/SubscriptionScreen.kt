@@ -21,9 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.model.SubscriptionItem
 import com.yenaly.han1meviewer.logic.model.SubscriptionVideosItem
 import com.yenaly.han1meviewer.logic.state.WebsiteState
@@ -36,6 +34,9 @@ import com.yenaly.han1meviewer.ui.screen.home.subscription.SubscriptionUiState
 import com.yenaly.han1meviewer.ui.viewmodel.MySubscriptionsViewModel
 import han1meviewer.shared.generated.resources.Res
 import han1meviewer.shared.generated.resources.h_chan_sad
+import han1meviewer.shared.generated.resources.load_failed_with_reason
+import han1meviewer.shared.generated.resources.my_subscribe
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * 订阅页面 Screen 层。
@@ -116,7 +117,7 @@ fun SubscriptionScreen(
 
     HanimeScaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        title = stringResource(R.string.my_subscribe),
+        title = stringResource(Res.string.my_subscribe),
         onBack = navigateBack,
         scrollBehavior = scrollBehavior,
     ) { innerPadding ->
@@ -148,7 +149,7 @@ fun SubscriptionScreen(
                     if (cachedArtists.value.isEmpty()) {
                         EmptyContent(
                             hint = stringResource(
-                                R.string.load_failed_with_reason,
+                                Res.string.load_failed_with_reason,
                                 (state as WebsiteState.Error).throwable.message.orEmpty()
                             ),
                             picRes = Res.drawable.h_chan_sad

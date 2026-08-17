@@ -23,8 +23,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.model.CreatorTab
 import com.yenaly.han1meviewer.logic.state.PageLoadingState
 import com.yenaly.han1meviewer.ui.component.LoadMoreFooter
@@ -35,7 +33,15 @@ import com.yenaly.han1meviewer.ui.component.content.ErrorContent
 import com.yenaly.han1meviewer.ui.component.lazy.LazyVerticalGrid
 import com.yenaly.han1meviewer.ui.screen.rememberVideoGridColumns
 import com.yenaly.han1meviewer.ui.theme.SpacingNormal
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.creator_uploaded_empty_description
+import han1meviewer.shared.generated.resources.creator_uploaded_empty_title
+import han1meviewer.shared.generated.resources.creator_uploaded_load_failed
+import han1meviewer.shared.generated.resources.creator_uploading_empty_description
+import han1meviewer.shared.generated.resources.creator_uploading_empty_title
+import han1meviewer.shared.generated.resources.creator_uploading_load_failed
 import kotlinx.coroutines.flow.distinctUntilChanged
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * 已上传视频 Tab 页面。
@@ -117,7 +123,7 @@ fun CreatorUploadedPage(
                 error = {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         ErrorContent(
-                            title = stringResource(R.string.creator_uploaded_load_failed),
+                            title = stringResource(Res.string.creator_uploaded_load_failed),
                             onRetry = { onEvent(CreatorCenterEvent.OnRefresh(CreatorTab.Uploaded)) }
                         )
                     }
@@ -125,8 +131,8 @@ fun CreatorUploadedPage(
                 empty = {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         EmptyContent(
-                            hint = stringResource(R.string.creator_uploaded_empty_title),
-                            subHint = stringResource(R.string.creator_uploaded_empty_description),
+                            hint = stringResource(Res.string.creator_uploaded_empty_title),
+                            subHint = stringResource(Res.string.creator_uploaded_empty_description),
                         )
                     }
                 },
@@ -247,7 +253,7 @@ fun CreatorUploadingPage(
                 error = {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         ErrorContent(
-                            title = stringResource(R.string.creator_uploading_load_failed),
+                            title = stringResource(Res.string.creator_uploading_load_failed),
                             onRetry = { onEvent(CreatorCenterEvent.OnRefresh(CreatorTab.Uploading)) }
                         )
                     }
@@ -255,8 +261,8 @@ fun CreatorUploadingPage(
                 empty = {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         EmptyContent(
-                            hint = stringResource(R.string.creator_uploading_empty_title),
-                            subHint = stringResource(R.string.creator_uploading_empty_description),
+                            hint = stringResource(Res.string.creator_uploading_empty_title),
+                            subHint = stringResource(Res.string.creator_uploading_empty_description),
                         )
                     }
                 },
