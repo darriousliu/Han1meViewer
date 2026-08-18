@@ -24,4 +24,14 @@ object PlayerDefaults {
      * 那个枚举带 `Class<out JZMediaInterface>`，进不了 commonMain，所以这里只留名字。
      */
     const val PLAYER_KERNEL = "ExoPlayer"
+
+    /**
+     * Step 25 新增的第四个内核：Media3 + Compose 的播放器。
+     *
+     * 它**不是** `HMediaKernel.Type` 的成员——那个枚举每一项都要带一个
+     * `Class<out JZMediaInterface>`，而这条路根本不经过 jzvd。
+     * `HMediaKernel.Type.fromString` 对未知名字已经回落到 `ExoPlayer`，
+     * 所以万一哪条分支漏了，走的是原来的 jzvd 路径，不会崩。
+     */
+    const val KERNEL_EXO_COMPOSE = "ExoPlayer (Compose)"
 }

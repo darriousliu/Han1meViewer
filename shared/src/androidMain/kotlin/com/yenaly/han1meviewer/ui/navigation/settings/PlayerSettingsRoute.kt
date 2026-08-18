@@ -26,7 +26,10 @@ fun PlayerSettingsRouteScreen(
 
     PlayerSettingsScreen(
         state = uiState,
-        kernelOptions = HMediaKernel.Type.entries.map { it.name to it.name },
+        // 第四项不是 HMediaKernel.Type 的成员——那个枚举每项都要带一个
+        // Class<out JZMediaInterface>，而 Compose 播放器根本不经过 jzvd。
+        kernelOptions = HMediaKernel.Type.entries.map { it.name to it.name } +
+                (PlayerDefaults.KERNEL_EXO_COMPOSE to PlayerDefaults.KERNEL_EXO_COMPOSE),
         speedOptions = HJzvdStd.speedStringArray.zip(HJzvdStd.speedArray.map { it.toString() }),
         longPressSpeedOptions = listOf(
             stringResource(R.string.d_speed_times, 1f) to "1",
