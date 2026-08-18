@@ -85,7 +85,22 @@ object Preferences {
 
     var appLanguage: String by SettingsStore.mmkvString("system")
 
-    var useDarkMode: String by SettingsStore.mmkvString("always_off")
+    /**
+     * 深色模式偏好：`follow_system` / `always_on` / `always_off`。
+     *
+     * 做成 StateFlow 是为了让 `HanimeTheme` 能直接观察它——原来主题只看
+     * `isSystemInDarkTheme()`，靠 Android 的 `AppCompatDelegate.setDefaultNightMode`
+     * 改 configuration 间接生效，所以每次切换都得重建 Activity，
+     * 而且这个偏好在 desktop/iOS 上完全是死的。
+     */
+    val useDarkModeStateFlow: MutableStateFlow<String>
+            by SettingsStore.mmkvString("always_off", key = "useDarkMode").asMutableStateFlow()
+
+    var useDarkMode: String
+        get() = useDarkModeStateFlow.value
+        set(value) {
+            useDarkModeStateFlow.value = value
+        }
 
     var useDynamicColor: Boolean by SettingsStore.mmkvBool(false)
 

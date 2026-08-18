@@ -35,9 +35,15 @@ private class AndroidHomeSettingsActions(
     private val activity: Activity?,
 ) : HomeSettingsActions {
 
+    /**
+     * Compose 主题现在直接观察 `Preferences.useDarkModeStateFlow`（见 `HanimeTheme`），
+     * 所以**不再 `recreate()`**。
+     *
+     * `setDefaultNightMode` 仍然要调：XML 主题的 `values-night` 和系统栏图标配色
+     * 还靠它，只是它不再负责驱动 Compose 那半。
+     */
     override fun applyDarkMode() {
         ThemeUtils.applyDarkModeFromPreferences(context)
-        recreate()
     }
 
     override fun applyThemeColor() = recreate()
