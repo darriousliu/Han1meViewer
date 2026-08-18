@@ -1,0 +1,18 @@
+*.DS_Store
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.xcuserstate
+*.xcworkspace/
+project.xcworkspace/
+xcuserdata/
+
+# Keep the shared SwiftPM resolution while ignoring local Xcode workspace state.
+!iosApp.xcodeproj/project.xcworkspace/
+iosApp.xcodeproj/project.xcworkspace/contents.xcworkspacedata
+!iosApp.xcodeproj/project.xcworkspace/xcshareddata/
+!iosApp.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/
+!iosApp.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
+
+*/GoogleService-Info.plist
