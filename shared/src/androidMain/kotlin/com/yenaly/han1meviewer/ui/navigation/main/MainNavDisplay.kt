@@ -322,6 +322,7 @@ fun MainNavDisplay(
                         onOpenVideo = onNavigateToVideo,
                         showImportDialog = showImportDialog,
                         onImportDialogDismiss = { showImportDialog = false },
+                        onCopy = ::copyTextToClipboard,
                     )
                 }
             }

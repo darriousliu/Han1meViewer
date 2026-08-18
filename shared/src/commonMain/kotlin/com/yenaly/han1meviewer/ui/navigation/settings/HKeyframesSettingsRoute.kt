@@ -1,6 +1,7 @@
+@file:OptIn(ExperimentalTime::class)
+
 package com.yenaly.han1meviewer.ui.navigation.settings
 
-import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.AlertDialog
@@ -15,34 +16,43 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yenaly.han1meviewer.Preferences
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.entity.HKeyframeEntity
 import com.yenaly.han1meviewer.ui.component.ConfirmDialog
+import com.yenaly.han1meviewer.ui.component.LocalToaster
+import com.yenaly.han1meviewer.ui.component.showShort
 import com.yenaly.han1meviewer.ui.screen.settings.HKeyframeSettingsScreen
 import com.yenaly.han1meviewer.ui.screen.settings.HKeyframeSettingsUiState
 import com.yenaly.han1meviewer.ui.screen.settings.HKeyframesScreen
 import com.yenaly.han1meviewer.ui.screen.settings.SharedHKeyframesScreen
 import com.yenaly.han1meviewer.ui.viewmodel.SettingsViewModel
-import com.yenaly.han1meviewer.util.copyToClipboard
-import com.yenaly.han1meviewer.util.decodeFromStringByBase64
-import com.yenaly.han1meviewer.util.showShortToast
-import org.jetbrains.compose.resources.stringResource
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.cancel
+import han1meviewer.shared.generated.resources.confirm
+import han1meviewer.shared.generated.resources.copy_to_clipboard
+import han1meviewer.shared.generated.resources.delete_success
 import han1meviewer.shared.generated.resources.h_keyframes_disable_tip
 import han1meviewer.shared.generated.resources.h_keyframes_enable_tip
-import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.h_keyframes_import_shared
+import han1meviewer.shared.generated.resources.h_keyframes_import_shared_hint
+import han1meviewer.shared.generated.resources.h_keyframes_shared_by_other_detected
+import han1meviewer.shared.generated.resources.h_keyframes_shared_by_other_not_detected
+import han1meviewer.shared.generated.resources.modify_success
+import han1meviewer.shared.generated.resources.shared_h_keyframe_detected_msg
+import kotlin.io.encoding.Base64
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 import kotlinx.serialization.json.Json
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun HKeyframesTopBarActions(onImportClick: () -> Unit) {
     FilledIconButton(onClick = onImportClick) {
         Icon(
             imageVector = Icons.Filled.Add,
-            contentDescription = stringResource(R.string.h_keyframes_import_shared),
+            contentDescription = stringResource(Res.string.h_keyframes_import_shared),
         )
     }
 }
@@ -52,8 +62,15 @@ fun HKeyframesRouteScreen(
     onOpenVideo: (String) -> Unit,
     showImportDialog: Boolean,
     onImportDialogDismiss: () -> Unit,
+    onCopy: (String) -> Unit,
 ) {
     val viewModel: SettingsViewModel = viewModel()
+    val toaster = LocalToaster.current
+    // stringResource 是 composable，下面那些回调里用不了，先解开
+    val notDetected = stringResource(Res.string.h_keyframes_shared_by_other_not_detected)
+    val modifySuccess = stringResource(Res.string.modify_success)
+    val deleteSuccess = stringResource(Res.string.delete_success)
+    val copiedHint = stringResource(Res.string.copy_to_clipboard)
     val items by viewModel.loadAllHKeyframes()
         .collectAsStateWithLifecycle(initialValue = emptyList())
     var sharedHKeyframeEntity by remember { mutableStateOf<HKeyframeEntity?>(null) }
@@ -67,7 +84,7 @@ fun HKeyframesRouteScreen(
                     sharedHKeyframeEntity = entity
                     onImportDialogDismiss()
                 } else {
-                    showShortToast(R.string.h_keyframes_shared_by_other_not_detected)
+                    toaster.showShort(notDetected)
                 }
             },
         )
@@ -81,36 +98,36 @@ fun HKeyframesRouteScreen(
         },
         onUpdateEntityTitle = { entity, newTitle ->
             viewModel.updateHKeyframes(entity.copy(title = newTitle))
-            showShortToast(R.string.modify_success)
+            toaster.showShort(modifySuccess)
         },
         onDeleteKeyframe = { videoCode, keyframe ->
             viewModel.removeHKeyframe(videoCode, keyframe)
-            showShortToast(R.string.delete_success)
+            toaster.showShort(deleteSuccess)
         },
         onUpdateKeyframe = { videoCode, oldKeyframe, newKeyframe ->
             viewModel.modifyHKeyframe(videoCode, oldKeyframe, newKeyframe)
-            showShortToast(R.string.modify_success)
+            toaster.showShort(modifySuccess)
         },
         onCopyShareContent = {
-            it.copyToClipboard()
-            showShortToast(R.string.copy_to_clipboard)
+            onCopy(it)
+            toaster.showShort(copiedHint)
         },
     )
 
     sharedHKeyframeEntity?.let { entity ->
         ConfirmDialog(
             visible = true,
-            title = stringResource(R.string.h_keyframes_shared_by_other_detected),
+            title = stringResource(Res.string.h_keyframes_shared_by_other_detected),
             message = stringResource(
-                R.string.shared_h_keyframe_detected_msg,
+                Res.string.shared_h_keyframe_detected_msg,
                 entity.title,
                 entity.videoCode,
                 entity.keyframes.size,
             ).trimIndent(),
-            confirmText = stringResource(R.string.confirm),
-            dismissText = stringResource(R.string.cancel),
+            confirmText = stringResource(Res.string.confirm),
+            dismissText = stringResource(Res.string.cancel),
             onConfirm = {
-                viewModel.insertHKeyframes(entity.copy(lastModifiedTime = System.currentTimeMillis()))
+                viewModel.insertHKeyframes(entity.copy(lastModifiedTime = Clock.System.now().toEpochMilliseconds()))
                 sharedHKeyframeEntity = null
             },
             onDismiss = { sharedHKeyframeEntity = null },
@@ -124,7 +141,7 @@ private fun parseSharedHKeyframe(content: String): HKeyframeEntity? {
     return runCatching {
         val matchResult = shareRegex.find(content) ?: return@runCatching null
         val (toBase64) = matchResult.destructured
-        val toJson = toBase64.decodeFromStringByBase64()
+        val toJson = Base64.Default.decode(toBase64).decodeToString()
         Json.decodeFromString<HKeyframeEntity>(toJson)
     }.getOrNull()
 }
@@ -137,22 +154,22 @@ private fun ImportSharedHKeyframeDialog(
     var content by remember { mutableStateOf("") }
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.h_keyframes_import_shared)) },
+        title = { Text(stringResource(Res.string.h_keyframes_import_shared)) },
         text = {
             OutlinedTextField(
                 value = content,
                 onValueChange = { content = it },
-                label = { Text(stringResource(R.string.h_keyframes_import_shared_hint)) },
+                label = { Text(stringResource(Res.string.h_keyframes_import_shared_hint)) },
             )
         },
         confirmButton = {
             TextButton(onClick = { onConfirm(content) }) {
-                Text(stringResource(R.string.confirm))
+                Text(stringResource(Res.string.confirm))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.cancel))
+                Text(stringResource(Res.string.cancel))
             }
         },
     )
@@ -177,7 +194,6 @@ fun HKeyframeSettingsRouteScreen(
     onNavigateToHKeyframes: () -> Unit,
     onNavigateToSharedHKeyframes: () -> Unit,
 ) {
-    val context = LocalContext.current
     var refreshKey by remember { mutableIntStateOf(0) }
     val uiState = buildHKeyframeSettingsUiState(refreshKey)
 
