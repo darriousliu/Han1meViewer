@@ -16,7 +16,13 @@ fun PreviewRouteScreen(
     onNavigateToVideo: (String) -> Unit,
 ) {
     val previewViewModel: PreviewViewModel = viewModel()
-    val commentViewModel: CommentViewModel = viewModel(viewModelStoreOwner = activity)
+    // 预览页这个实例只是 PreviewCommentPrefetcher 的预取缓冲，拉哪个月由 fetch() 显式传，
+    // 自身 code 不参与逻辑，所以用 prefetchFactory()。
+    val commentViewModel: CommentViewModel = viewModel(
+        viewModelStoreOwner = activity,
+        key = CommentViewModel.PREFETCH_KEY,
+        factory = CommentViewModel.prefetchFactory(),
+    )
 
     PreviewScreen(
         onBack = onBack,

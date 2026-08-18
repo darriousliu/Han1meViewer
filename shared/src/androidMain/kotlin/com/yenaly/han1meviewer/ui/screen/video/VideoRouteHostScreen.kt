@@ -81,11 +81,11 @@ import com.yenaly.han1meviewer.util.localizedTextOrNull
 import com.yenaly.han1meviewer.util.shareText
 import com.yenaly.han1meviewer.util.showShortToast
 import com.yenaly.han1meviewer.util.startActivity
-import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.getString
+import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 @Composable
@@ -96,7 +96,9 @@ fun VideoRouteHostScreen(
     val lifecycleOwner = LocalLifecycleOwner.current
     val scope = rememberCoroutineScope()
     val viewModel: VideoViewModel = viewModel()
-    val commentViewModel: CommentViewModel = viewModel()
+    val commentViewModel: CommentViewModel = viewModel(
+        factory = CommentViewModel.factory(route.videoCode),
+    )
     val kernel = remember { HMediaKernel.Type.fromString(Preferences.switchPlayerKernel) }
     var genres by remember(Preferences.baseUrl) { mutableStateOf(emptyList<SearchOption>()) }
     LaunchedEffect(Preferences.baseUrl) {
@@ -123,7 +125,6 @@ fun VideoRouteHostScreen(
         activity.getString(R.string.long_press_share_to_copy)
     }
 
-    commentViewModel.code = route.videoCode
     player.videoCode = route.videoCode
     viewModel.fromDownload = route.videoCode == "-1" || route.localUri != null
 

@@ -1,7 +1,10 @@
 package com.yenaly.han1meviewer.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import co.touchlab.kermit.Logger
 import com.yenaly.han1meviewer.logic.NetworkRepo
 import com.yenaly.han1meviewer.logic.model.CommentPlace
@@ -35,15 +38,16 @@ private val logger = Logger.withTag("CommentViewModel")
  * @author Yenaly Liew
  * @time 2022/06/28 028 14:18
  */
-class CommentViewModel : ViewModel() {
+class CommentViewModel(
+    /** 本实例服务的评论目标：视频页是 videoCode，预览评论页是 dateCode。 */
+    val code: String,
+) : ViewModel() {
 
     data class CommentUiState(
         val firstVisibleItemIndex: Int = 0,
         val firstVisibleItemScrollOffset: Int = 0,
         val childCommentId: String? = null,
     )
-
-    lateinit var code: String
 
     private val commentUiStateMap = mutableMapOf<String, CommentUiState>()
 
@@ -317,4 +321,34 @@ class CommentViewModel : ViewModel() {
         }
     }
     fun clearVideoReplyList() { _videoReplyFlow.value = emptyList() }
+
+    companion object {
+
+        /**
+         * 预览页那个「预取缓冲」实例在 Activity store 里的 key。
+         *
+         * 必须和预览评论页的实例区分开：同一个 store 里 key 相同的话
+         * `viewModel()` 会直接返回已有实例、**静默忽略 factory**，
+         * code 就会是先创建的那个实例的值。
+         */
+        const val PREFETCH_KEY = "CommentViewModel:preview-prefetch"
+
+        /**
+         * 一个页面一个实例，[code] 在构造时定死。
+         *
+         * 之所以不做成 `lateinit var` 在组合里赋值：评论页会被
+         * `HorizontalPager(beyondViewportPageCount = 1)` 在首帧预组合，
+         * 组合期就要读 [code]，而任何「稍后赋值」的写法都赶不上这一帧。
+         */
+        fun factory(code: String): ViewModelProvider.Factory = viewModelFactory {
+            initializer { CommentViewModel(code) }
+        }
+
+        /**
+         * 预览页只把它当预取缓冲用——真正拉哪个月由
+         * [PreviewCommentPrefetcher.fetch] 每次显式传 code，
+         * 这个实例的 [code] 不参与任何逻辑，故留空。
+         */
+        fun prefetchFactory(): ViewModelProvider.Factory = factory(code = "")
+    }
 }

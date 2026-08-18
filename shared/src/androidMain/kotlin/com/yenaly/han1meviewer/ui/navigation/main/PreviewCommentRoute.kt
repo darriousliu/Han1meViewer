@@ -50,7 +50,13 @@ fun PreviewCommentRouteScreen(
     route: PreviewCommentRoute,
     onBack: () -> Unit,
 ) {
-    val viewModel: CommentViewModel = viewModel(viewModelStoreOwner = activity)
+    // 仍挂 Activity scope（离开再回来评论滚动位置不丢），但按 dateCode 分 key：
+    // 和预览页那个预取缓冲实例共用一个 store，key 撞了 factory 就会被静默忽略。
+    val viewModel: CommentViewModel = viewModel(
+        viewModelStoreOwner = activity,
+        key = "CommentViewModel:preview:${route.dateCode}",
+        factory = CommentViewModel.factory(route.dateCode),
+    )
     val comments = viewModel.videoCommentFlow
     val commentState = viewModel.videoCommentStateFlow
     val commentUiState = remember(route.dateCode) {
@@ -75,7 +81,6 @@ fun PreviewCommentRouteScreen(
     val reportReasons = viewModel.reportReasons.collectAsStateWithLifecycle().value
 
     LaunchedEffect(route.dateCode, hasPrefetchedComments, prefetchedComments) {
-        viewModel.code = route.dateCode
         if (hasPrefetchedComments) {
             viewModel.updateComments(prefetchedComments)
         } else {
