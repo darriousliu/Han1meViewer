@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import io.github.darriousliu.han1meviewer.core.common.EMPTY_STRING
 import io.github.darriousliu.han1meviewer.core.storage.Preferences
-import io.github.darriousliu.han1meviewer.logic.NetworkRepo
+import io.github.darriousliu.han1meviewer.core.repository.NetworkRepo
 import io.github.darriousliu.han1meviewer.core.model.HanimeInfo
 import io.github.darriousliu.han1meviewer.core.model.ModifiedPlaylistArgs
 import io.github.darriousliu.han1meviewer.core.model.MyListItems

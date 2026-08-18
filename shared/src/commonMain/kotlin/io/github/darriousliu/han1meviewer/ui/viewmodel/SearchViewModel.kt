@@ -6,9 +6,9 @@ import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import io.github.darriousliu.han1meviewer.core.common.HanimeConstants.HANIME_URL
 import io.github.darriousliu.han1meviewer.core.storage.Preferences
-import io.github.darriousliu.han1meviewer.logic.DatabaseRepo
-import io.github.darriousliu.han1meviewer.logic.DatabaseRepo.HanimeAdvancedSearchRepo.toSearchOptionSet
-import io.github.darriousliu.han1meviewer.logic.NetworkRepo
+import io.github.darriousliu.han1meviewer.core.repository.DatabaseRepo
+import io.github.darriousliu.han1meviewer.core.repository.DatabaseRepo.HanimeAdvancedSearchRepo.toSearchOptionSet
+import io.github.darriousliu.han1meviewer.core.repository.NetworkRepo
 import io.github.darriousliu.han1meviewer.core.storage.entity.HanimeAdvancedSearchHistoryEntity
 import io.github.darriousliu.han1meviewer.core.storage.entity.SearchHistoryEntity
 import io.github.darriousliu.han1meviewer.core.model.HanimeInfo

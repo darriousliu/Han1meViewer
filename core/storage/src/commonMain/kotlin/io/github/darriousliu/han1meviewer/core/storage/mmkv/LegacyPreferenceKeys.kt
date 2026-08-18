@@ -6,7 +6,7 @@ package io.github.darriousliu.han1meviewer.core.storage.mmkv
  *
  * 表本身是纯数据，所以放 commonMain：除了 androidMain 的
  * [migrateSharedPreferencesToMMKV] 之外，
- * [BackupManager][io.github.darriousliu.han1meviewer.logic.BackupManager] 恢复旧备份文件时也要用，
+ * [BackupManager][io.github.darriousliu.han1meviewer.core.repository.BackupManager] 恢复旧备份文件时也要用，
  * 而备份文件是可以从 Android 拷到别的平台去导入的。
  *
  * 等某个版本确认所有用户都升上来了，这个文件连同 androidMain 的 `MmkvMigration.kt`

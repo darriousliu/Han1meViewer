@@ -2,7 +2,7 @@ package io.github.darriousliu.han1meviewer.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.darriousliu.han1meviewer.logic.DatabaseRepo
+import io.github.darriousliu.han1meviewer.core.repository.DatabaseRepo
 import io.github.darriousliu.han1meviewer.core.storage.entity.download.DownloadGroupEntity
 import io.github.darriousliu.han1meviewer.core.storage.entity.download.HanimeDownloadEntity
 import io.github.darriousliu.han1meviewer.core.storage.entity.download.VideoWithCategories

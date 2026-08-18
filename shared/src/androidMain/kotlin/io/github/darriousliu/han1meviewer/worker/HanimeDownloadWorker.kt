@@ -26,7 +26,7 @@ import io.github.darriousliu.han1meviewer.core.common.EMPTY_STRING
 import io.github.darriousliu.han1meviewer.HFileManager
 import io.github.darriousliu.han1meviewer.HFileManager.createVideoName
 import io.github.darriousliu.han1meviewer.R
-import io.github.darriousliu.han1meviewer.logic.DatabaseRepo
+import io.github.darriousliu.han1meviewer.core.repository.DatabaseRepo
 import io.github.darriousliu.han1meviewer.core.storage.entity.download.HanimeDownloadEntity
 import io.github.darriousliu.han1meviewer.core.network.HanimeNetwork
 import io.github.darriousliu.han1meviewer.core.common.state.DownloadState

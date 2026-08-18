@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.logic
+package io.github.darriousliu.han1meviewer.core.repository
 
 import co.touchlab.kermit.Logger
 import io.github.darriousliu.han1meviewer.core.common.HJson

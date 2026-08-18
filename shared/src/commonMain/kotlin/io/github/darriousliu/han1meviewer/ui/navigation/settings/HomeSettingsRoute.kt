@@ -21,7 +21,7 @@ import io.github.darriousliu.han1meviewer.core.common.HA1_GITHUB_FORUM_URL
 import io.github.darriousliu.han1meviewer.core.common.HA1_GITHUB_ISSUE_URL
 import io.github.darriousliu.han1meviewer.core.common.HanimeConstants
 import io.github.darriousliu.han1meviewer.core.storage.Preferences
-import io.github.darriousliu.han1meviewer.logic.BackupManager
+import io.github.darriousliu.han1meviewer.core.repository.BackupManager
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog
 import io.github.darriousliu.han1meviewer.ui.component.LocalToaster

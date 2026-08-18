@@ -3,7 +3,7 @@ package io.github.darriousliu.han1meviewer.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
-import io.github.darriousliu.han1meviewer.logic.NetworkRepo
+import io.github.darriousliu.han1meviewer.core.repository.NetworkRepo
 import io.github.darriousliu.han1meviewer.core.model.MySubscriptions
 import io.github.darriousliu.han1meviewer.core.model.SubscriptionItem
 import io.github.darriousliu.han1meviewer.core.model.SubscriptionVideosItem

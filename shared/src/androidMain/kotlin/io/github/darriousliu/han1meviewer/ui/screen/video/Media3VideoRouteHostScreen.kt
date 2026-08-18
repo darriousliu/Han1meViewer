@@ -20,7 +20,7 @@ import io.github.darriousliu.han1meviewer.PermissionRequester
 import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.R
 import io.github.darriousliu.han1meviewer.core.common.ResolutionLinkMap
-import io.github.darriousliu.han1meviewer.logic.DatabaseRepo
+import io.github.darriousliu.han1meviewer.core.repository.DatabaseRepo
 import io.github.darriousliu.han1meviewer.core.storage.dao.CheckInRecordDatabase
 import io.github.darriousliu.han1meviewer.core.model.SearchOption
 import io.github.darriousliu.han1meviewer.core.common.state.VideoLoadingState

@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.logic
+package io.github.darriousliu.han1meviewer.core.repository
 
 import io.github.darriousliu.han1meviewer.core.network.HUpdater
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState

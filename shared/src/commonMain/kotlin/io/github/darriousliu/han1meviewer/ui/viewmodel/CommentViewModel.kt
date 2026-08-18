@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import co.touchlab.kermit.Logger
-import io.github.darriousliu.han1meviewer.logic.NetworkRepo
+import io.github.darriousliu.han1meviewer.core.repository.NetworkRepo
 import io.github.darriousliu.han1meviewer.core.model.CommentPlace
 import io.github.darriousliu.han1meviewer.core.model.ReportReason
 import io.github.darriousliu.han1meviewer.core.model.VideoCommentArgs

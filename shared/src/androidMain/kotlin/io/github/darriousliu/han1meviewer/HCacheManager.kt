@@ -5,7 +5,7 @@ import android.os.Looper
 import android.util.Log
 import androidx.annotation.WorkerThread
 import androidx.appcompat.app.AlertDialog
-import io.github.darriousliu.han1meviewer.logic.DatabaseRepo
+import io.github.darriousliu.han1meviewer.core.repository.DatabaseRepo
 import io.github.darriousliu.han1meviewer.core.model.HanimeVideo
 import io.github.darriousliu.han1meviewer.util.SafFileManager
 import kotlinx.coroutines.Dispatchers

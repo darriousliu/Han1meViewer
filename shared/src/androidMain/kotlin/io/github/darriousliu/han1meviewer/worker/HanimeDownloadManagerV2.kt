@@ -9,7 +9,7 @@ import androidx.work.await
 import androidx.work.workDataOf
 import io.github.darriousliu.han1meviewer.core.common.DownloadDefaults
 import io.github.darriousliu.han1meviewer.core.storage.Preferences
-import io.github.darriousliu.han1meviewer.logic.DatabaseRepo
+import io.github.darriousliu.han1meviewer.core.repository.DatabaseRepo
 import io.github.darriousliu.han1meviewer.core.storage.dao.DownloadDatabase
 import io.github.darriousliu.han1meviewer.core.storage.entity.download.HanimeDownloadEntity
 import io.github.darriousliu.han1meviewer.core.common.state.DownloadState

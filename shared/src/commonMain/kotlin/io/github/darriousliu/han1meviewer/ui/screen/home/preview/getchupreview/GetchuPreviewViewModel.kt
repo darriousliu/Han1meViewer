@@ -3,8 +3,8 @@ package io.github.darriousliu.han1meviewer.ui.screen.home.preview.getchupreview
 import co.touchlab.kermit.Logger
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.darriousliu.han1meviewer.logic.GetchuNetworkRepo.getGetchuPreview
-import io.github.darriousliu.han1meviewer.logic.GetchuNetworkRepo.getGetchuPreviewDetail
+import io.github.darriousliu.han1meviewer.core.repository.GetchuNetworkRepo.getGetchuPreview
+import io.github.darriousliu.han1meviewer.core.repository.GetchuNetworkRepo.getGetchuPreviewDetail
 import io.github.darriousliu.han1meviewer.core.model.GetchuPreview
 import io.github.darriousliu.han1meviewer.core.model.GetchuPreviewDetail
 import io.github.darriousliu.han1meviewer.core.common.state.PageState

@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import io.github.darriousliu.han1meviewer.core.storage.Preferences
-import io.github.darriousliu.han1meviewer.logic.DatabaseRepo
-import io.github.darriousliu.han1meviewer.logic.NetworkRepo
+import io.github.darriousliu.han1meviewer.core.repository.DatabaseRepo
+import io.github.darriousliu.han1meviewer.core.repository.NetworkRepo
 import io.github.darriousliu.han1meviewer.core.storage.entity.HKeyframeEntity
 import io.github.darriousliu.han1meviewer.core.storage.entity.WatchHistoryEntity
 import io.github.darriousliu.han1meviewer.core.common.exception.LoginStateExpiredException

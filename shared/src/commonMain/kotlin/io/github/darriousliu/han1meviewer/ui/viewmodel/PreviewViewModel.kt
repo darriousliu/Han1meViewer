@@ -2,7 +2,7 @@ package io.github.darriousliu.han1meviewer.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.darriousliu.han1meviewer.logic.NetworkRepo
+import io.github.darriousliu.han1meviewer.core.repository.NetworkRepo
 import io.github.darriousliu.han1meviewer.core.model.HanimePreview
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.core.model.TagLocalizer

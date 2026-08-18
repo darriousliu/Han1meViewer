@@ -8,8 +8,8 @@ import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import io.github.darriousliu.han1meviewer.core.common.EMPTY_STRING
 import io.github.darriousliu.han1meviewer.core.common.HanimeResolution
-import io.github.darriousliu.han1meviewer.logic.DatabaseRepo
-import io.github.darriousliu.han1meviewer.logic.NetworkRepo
+import io.github.darriousliu.han1meviewer.core.repository.DatabaseRepo
+import io.github.darriousliu.han1meviewer.core.repository.NetworkRepo
 import io.github.darriousliu.han1meviewer.core.storage.entity.HKeyframeEntity
 import io.github.darriousliu.han1meviewer.core.storage.entity.WatchHistoryEntity
 import io.github.darriousliu.han1meviewer.core.storage.entity.download.HanimeDownloadEntity

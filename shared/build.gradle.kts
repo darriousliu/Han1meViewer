@@ -113,6 +113,8 @@ kotlin {
             api(project(":core:firebase"))
             // HttpClient / 各 service 接口遍布公开签名
             api(project(":core:network"))
+            // 各 Repo 遍布 ViewModel 的公开签名
+            api(project(":core:repository"))
             implementation(libs.kotlinx.io.core)
             implementation(libs.ksoup)
             implementation(libs.htmlconverter)

@@ -1,7 +1,7 @@
 package io.github.darriousliu.han1meviewer.ui.viewmodel.mylist
 
 import io.github.darriousliu.han1meviewer.core.storage.Preferences
-import io.github.darriousliu.han1meviewer.logic.NetworkRepo
+import io.github.darriousliu.han1meviewer.core.repository.NetworkRepo
 import io.github.darriousliu.han1meviewer.core.model.HanimeInfo
 import io.github.darriousliu.han1meviewer.core.model.MyListItems
 import io.github.darriousliu.han1meviewer.core.model.MyListType
