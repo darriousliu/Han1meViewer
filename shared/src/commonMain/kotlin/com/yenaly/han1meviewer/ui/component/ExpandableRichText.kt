@@ -26,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
@@ -36,9 +35,12 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
 import com.yenaly.han1meviewer.ui.preview.longText
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.collapse
+import han1meviewer.shared.generated.resources.expand
+import org.jetbrains.compose.resources.stringResource
 
 private const val UrlAnnotationTag = "url"
 private val UrlRegex = Regex("""(https?://\S+)""")
@@ -103,7 +105,7 @@ fun ExpandableRichText(
             }
             if (!expanded && hasOverflow) {
                 Text(
-                    text = stringResource(R.string.expand),
+                    text = stringResource(Res.string.expand),
                     color = linkColor,
                     fontWeight = FontWeight.Medium,
                     style = MaterialTheme.typography.bodyMedium,
@@ -117,7 +119,7 @@ fun ExpandableRichText(
 
             if (expanded) {
                 Text(
-                    text = stringResource(R.string.collapse),
+                    text = stringResource(Res.string.collapse),
                     color = linkColor,
                     fontWeight = FontWeight.Medium,
                     style = MaterialTheme.typography.bodyMedium,

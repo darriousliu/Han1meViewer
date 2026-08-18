@@ -15,7 +15,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
@@ -27,9 +26,14 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.model.github.Latest
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.cancel
+import han1meviewer.shared.generated.resources.new_version_found
+import han1meviewer.shared.generated.resources.update
+import han1meviewer.shared.generated.resources.update_content
+import org.jetbrains.compose.resources.stringResource
 
 private val urlPattern =
     Regex("(https?://[\\w-]+(\\.[\\w-]+)+([\\w.,@?^=%&:/~+#-]*[\\w@?^=%&/~+#-])?)")
@@ -50,7 +54,7 @@ fun UpdateDialog(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
 ) {
-    val updateContentLabel = stringResource(R.string.update_content)
+    val updateContentLabel = stringResource(Res.string.update_content)
     val linkColor = MaterialTheme.colorScheme.primary
     val changelog = remember(latest, linkColor) {
         buildAnnotatedString {
@@ -89,7 +93,7 @@ fun UpdateDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.new_version_found)) },
+        title = { Text(stringResource(Res.string.new_version_found)) },
         text = {
             Column(
                 modifier = Modifier
@@ -105,12 +109,12 @@ fun UpdateDialog(
         },
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                Text(stringResource(R.string.update))
+                Text(stringResource(Res.string.update))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.cancel))
+                Text(stringResource(Res.string.cancel))
             }
         },
     )

@@ -22,17 +22,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.model.VideoComments
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
 import com.yenaly.han1meviewer.util.DisplayTextLocalizer
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.ic_baseline_reply_24
+import han1meviewer.shared.generated.resources.ic_baseline_report_24
+import han1meviewer.shared.generated.resources.ic_baseline_thumb_down_alt_24
+import han1meviewer.shared.generated.resources.ic_baseline_thumb_down_off_alt_24
+import han1meviewer.shared.generated.resources.ic_baseline_thumb_up_alt_24
+import han1meviewer.shared.generated.resources.ic_baseline_thumb_up_off_alt_24
+import han1meviewer.shared.generated.resources.reply
+import han1meviewer.shared.generated.resources.report_reason_hint
+import han1meviewer.shared.generated.resources.view_more_replies
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * 视频评论卡片组件。
@@ -102,8 +111,8 @@ fun VideoCommentCard(
 
                 IconButton(onClick = onReport, modifier = Modifier.size(36.dp)) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_baseline_report_24),
-                        contentDescription = stringResource(R.string.report_reason_hint),
+                        painter = painterResource(Res.drawable.ic_baseline_report_24),
+                        contentDescription = stringResource(Res.string.report_reason_hint),
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
@@ -122,9 +131,9 @@ fun VideoCommentCard(
                     Icon(
                         painter = painterResource(
                             if (comment.post.likeCommentStatus) {
-                                R.drawable.ic_baseline_thumb_up_alt_24
+                                Res.drawable.ic_baseline_thumb_up_alt_24
                             } else {
-                                R.drawable.ic_baseline_thumb_up_off_alt_24
+                                Res.drawable.ic_baseline_thumb_up_off_alt_24
                             }
                         ),
                         contentDescription = null,
@@ -136,9 +145,9 @@ fun VideoCommentCard(
                     Icon(
                         painter = painterResource(
                             if (comment.post.unlikeCommentStatus) {
-                                R.drawable.ic_baseline_thumb_down_alt_24
+                                Res.drawable.ic_baseline_thumb_down_alt_24
                             } else {
-                                R.drawable.ic_baseline_thumb_down_off_alt_24
+                                Res.drawable.ic_baseline_thumb_down_off_alt_24
                             }
                         ),
                         contentDescription = null,
@@ -147,16 +156,16 @@ fun VideoCommentCard(
 
                 TextButton(onClick = onReply) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_baseline_reply_24),
+                        painter = painterResource(Res.drawable.ic_baseline_reply_24),
                         contentDescription = null,
                     )
-                    Text(stringResource(R.string.reply))
+                    Text(stringResource(Res.string.reply))
                 }
             }
 
             if (comment.hasMoreReplies && onViewMoreReplies != null) {
                 TextButton(onClick = onViewMoreReplies) {
-                    Text(stringResource(R.string.view_more_replies, comment.replyCount ?: 0))
+                    Text(stringResource(Res.string.view_more_replies, comment.replyCount ?: 0))
                 }
             }
         }
