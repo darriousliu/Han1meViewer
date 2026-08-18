@@ -1,6 +1,5 @@
 package com.yenaly.han1meviewer.ui.screen.video
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -46,17 +45,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalWindowInfo
-import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.model.ReportReason
 import com.yenaly.han1meviewer.logic.model.VideoComments
 import com.yenaly.han1meviewer.logic.state.WebsiteState
@@ -67,16 +64,36 @@ import com.yenaly.han1meviewer.ui.component.VideoCommentCard
 import com.yenaly.han1meviewer.ui.component.content.EmptyContent
 import com.yenaly.han1meviewer.ui.component.content.ErrorContent
 import com.yenaly.han1meviewer.ui.component.lazy.LazyColumn
+import com.yenaly.han1meviewer.ui.component.rememberHostNestedScrollConnection
 import com.yenaly.han1meviewer.ui.preview.fakeCommentList
 import com.yenaly.han1meviewer.util.parseTimeStrToMinutes
 import com.yenaly.han1meviewer.util.safeSortedBy
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.comment
+import han1meviewer.shared.generated.resources.comment_not_found
+import han1meviewer.shared.generated.resources.comment_too_short
+import han1meviewer.shared.generated.resources.ic_baseline_reply_24
+import han1meviewer.shared.generated.resources.load_failed_retry
+import han1meviewer.shared.generated.resources.login_first
+import han1meviewer.shared.generated.resources.sort_by_newest
+import han1meviewer.shared.generated.resources.sort_by_oldest
+import han1meviewer.shared.generated.resources.sort_by_replies
+import han1meviewer.shared.generated.resources.sort_comment
+import han1meviewer.shared.generated.resources.sort_most_dislikes
+import han1meviewer.shared.generated.resources.sort_most_likes
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3ExpressiveApi::class,
+    ExperimentalComposeUiApi::class,
+)
 @Composable
 fun CommentScreen(
     modifier: Modifier = Modifier,
@@ -120,9 +137,9 @@ fun CommentScreen(
         initialFirstVisibleItemScrollOffset = initialFirstVisibleItemScrollOffset,
     )
     val scope = rememberCoroutineScope()
-    val loginFirstText = stringResource(R.string.login_first)
-    val commentTooShortText = stringResource(R.string.comment_too_short)
-    val nestedScrollInterop = rememberNestedScrollInteropConnection()
+    val loginFirstText = stringResource(Res.string.login_first)
+    val commentTooShortText = stringResource(Res.string.comment_too_short)
+    val nestedScrollInterop = rememberHostNestedScrollConnection()
     LaunchedEffect(reportMessageFlow) {
         reportMessageFlow.collect {
             latestReportMessage = it.text
@@ -161,7 +178,7 @@ fun CommentScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Text(
-                    text = stringResource(R.string.sort_comment),
+                    text = stringResource(Res.string.sort_comment),
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp),
                 )
@@ -214,10 +231,10 @@ fun CommentScreen(
                     exit = fadeOut() + slideOutVertically { it / 2 },
                 ) {
                     ExtendedFloatingActionButton(
-                        text = { Text(stringResource(R.string.comment)) },
+                        text = { Text(stringResource(Res.string.comment)) },
                         icon = {
                             Icon(
-                                painter = painterResource(R.drawable.ic_baseline_reply_24),
+                                painter = painterResource(Res.drawable.ic_baseline_reply_24),
                                 contentDescription = null,
                             )
                         },
@@ -259,7 +276,7 @@ fun CommentScreen(
                         onRetry = onRefresh,
                         error = {
                             ErrorContent(
-                                title = stringResource(R.string.load_failed_retry),
+                                title = stringResource(Res.string.load_failed_retry),
                                 message = (state as WebsiteState.Error).throwable.message,
                                 onRetry = onRefresh,
                                 modifier = Modifier
@@ -269,7 +286,7 @@ fun CommentScreen(
                         },
                         empty = {
                             EmptyContent(
-                                hint = stringResource(R.string.comment_not_found),
+                                hint = stringResource(Res.string.comment_not_found),
                                 subHint = latestReportMessage ?: ""
                             )
                         },
@@ -376,7 +393,7 @@ fun CommentScreen(
                                 replyText = TextFieldValue("")
                             }
                         },
-                        placeholder = stringResource(R.string.comment),
+                        placeholder = stringResource(Res.string.comment),
                     )
                 } else {
                     CommentReplyBar(
@@ -392,7 +409,7 @@ fun CommentScreen(
                                 composeText = TextFieldValue("")
                             }
                         },
-                        placeholder = stringResource(R.string.comment),
+                        placeholder = stringResource(Res.string.comment),
                     )
                 }
             }
@@ -424,11 +441,11 @@ private fun sortComments(
 
 @Composable
 private fun sortText(type: CommentSortType): String = when (type) {
-    CommentSortType.LATEST -> stringResource(R.string.sort_by_newest)
-    CommentSortType.EARLIEST -> stringResource(R.string.sort_by_oldest)
-    CommentSortType.MOST_REPLY -> stringResource(R.string.sort_by_replies)
-    CommentSortType.MOST_LIKES -> stringResource(R.string.sort_most_likes)
-    CommentSortType.MOST_DISLIKES -> stringResource(R.string.sort_most_dislikes)
+    CommentSortType.LATEST -> stringResource(Res.string.sort_by_newest)
+    CommentSortType.EARLIEST -> stringResource(Res.string.sort_by_oldest)
+    CommentSortType.MOST_REPLY -> stringResource(Res.string.sort_by_replies)
+    CommentSortType.MOST_LIKES -> stringResource(Res.string.sort_most_likes)
+    CommentSortType.MOST_DISLIKES -> stringResource(Res.string.sort_most_dislikes)
 }
 
 data class CommentMessage(val text: String)

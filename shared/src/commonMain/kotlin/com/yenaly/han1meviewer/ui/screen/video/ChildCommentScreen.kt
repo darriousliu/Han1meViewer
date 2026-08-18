@@ -1,6 +1,5 @@
 package com.yenaly.han1meviewer.ui.screen.video
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -28,16 +27,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalWindowInfo
-import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
-import androidx.compose.ui.res.stringArrayResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.model.ReportReason
 import com.yenaly.han1meviewer.logic.model.VideoCommentArgs
 import com.yenaly.han1meviewer.logic.model.VideoComments
@@ -50,18 +47,31 @@ import com.yenaly.han1meviewer.ui.component.content.EmptyContent
 import com.yenaly.han1meviewer.ui.component.content.ErrorContent
 import com.yenaly.han1meviewer.ui.component.content.LoadingContent
 import com.yenaly.han1meviewer.ui.component.lazy.LazyColumn
+import com.yenaly.han1meviewer.ui.component.rememberHostNestedScrollConnection
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
 import com.yenaly.han1meviewer.ui.preview.fakeCommentList
 import com.yenaly.han1meviewer.ui.screen.rememberRandomLoadingHint
 import com.yenaly.han1meviewer.util.parseTimeStrToMinutes
 import com.yenaly.han1meviewer.util.safeSortedBy
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.child_comment
+import han1meviewer.shared.generated.resources.comment_not_found
+import han1meviewer.shared.generated.resources.comment_too_short
+import han1meviewer.shared.generated.resources.load_reply_failed
+import han1meviewer.shared.generated.resources.login_first
+import han1meviewer.shared.generated.resources.reply_child_comment
+import han1meviewer.shared.generated.resources.send_failed
+import han1meviewer.shared.generated.resources.send_success
+import han1meviewer.shared.generated.resources.sending_reply
+import han1meviewer.shared.generated.resources.video_count
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun ChildCommentScreen(
     commentsFlow: StateFlow<List<VideoComments.VideoComment>>,
@@ -91,11 +101,11 @@ fun ChildCommentScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
-    val loginFirstText = stringResource(R.string.login_first)
-    val sendFailedText = stringResource(R.string.send_failed)
-    val sendSuccessText = stringResource(R.string.send_success)
-    val sendingReplyText = stringResource(R.string.sending_reply)
-    val commentTooShortText = stringResource(R.string.comment_too_short)
+    val loginFirstText = stringResource(Res.string.login_first)
+    val sendFailedText = stringResource(Res.string.send_failed)
+    val sendSuccessText = stringResource(Res.string.send_success)
+    val sendingReplyText = stringResource(Res.string.sending_reply)
+    val commentTooShortText = stringResource(Res.string.comment_too_short)
 
     LaunchedEffect(reportMessageFlow) {
         reportMessageFlow.collect { message ->
@@ -135,7 +145,7 @@ fun ChildCommentScreen(
     val sortedComments = remember(comments) {
         comments.safeSortedBy({ parseTimeStrToMinutes(it.date) }, descending = false)
     }
-    val nestedScrollInterop = rememberNestedScrollInteropConnection()
+    val nestedScrollInterop = rememberHostNestedScrollConnection()
 
     BackHandler(enabled = replyingComment != null) {
         replyingComment = null
@@ -174,7 +184,7 @@ fun ChildCommentScreen(
                             }
                         }
                     },
-                    placeholder = stringResource(R.string.reply_child_comment),
+                    placeholder = stringResource(Res.string.reply_child_comment),
                 )
             }
         },
@@ -187,13 +197,13 @@ fun ChildCommentScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Text(
-                text = stringResource(R.string.child_comment),
+                text = stringResource(Res.string.child_comment),
                 style = MaterialTheme.typography.headlineSmall,
             )
 
             if (sortedComments.isNotEmpty()) {
                 Text(
-                    text = stringResource(R.string.video_count, sortedComments.size),
+                    text = stringResource(Res.string.video_count, sortedComments.size),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -218,7 +228,7 @@ fun ChildCommentScreen(
                 },
                 error = {
                     ErrorContent(
-                        title = stringResource(R.string.load_reply_failed),
+                        title = stringResource(Res.string.load_reply_failed),
                         message = (state as WebsiteState.Error).throwable.message,
                         onRetry = onRefresh,
                         modifier = Modifier
@@ -227,7 +237,7 @@ fun ChildCommentScreen(
                     )
                 },
                 empty = {
-                    EmptyContent(hint = stringResource(R.string.comment_not_found))
+                    EmptyContent(hint = stringResource(Res.string.comment_not_found))
                 },
             ) {
                 LazyColumn(
