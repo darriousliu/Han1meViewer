@@ -17,11 +17,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import be.digitalia.compose.htmlconverter.htmlToAnnotatedString
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
 import kotlin.math.roundToInt
 
 @Composable
@@ -107,7 +108,7 @@ fun SettingNavigationItem(
             )
             if (!summary.isNullOrBlank()) {
                 Text(
-                    text = summary,
+                    text = htmlToAnnotatedString(summary),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )

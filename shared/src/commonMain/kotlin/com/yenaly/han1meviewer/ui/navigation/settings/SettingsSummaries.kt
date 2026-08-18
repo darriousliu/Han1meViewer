@@ -25,13 +25,13 @@ import han1meviewer.shared.generated.resources.slightly_low
 import han1meviewer.shared.generated.resources.very_low
 import han1meviewer.shared.generated.resources.which_days
 import han1meviewer.shared.generated.resources.will_remind_before_d_seconds
-import kotlin.time.ExperimentalTime
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 /*
  * 设置页的摘要文案。全部属于第三节分类里的 **A 类**（全平台通用）——
