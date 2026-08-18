@@ -1,8 +1,8 @@
+@file:OptIn(ExperimentalTime::class)
+
 package com.yenaly.han1meviewer.ui.navigation.settings
 
 import android.content.Context
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,9 +43,14 @@ import com.yenaly.han1meviewer.util.browse
 import com.yenaly.han1meviewer.util.showShortToast
 import com.yenaly.han1meviewer.util.showToast
 import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.dialogs.FileKitDialogSettings
+import io.github.vinceglb.filekit.dialogs.FileKitType
+import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
+import io.github.vinceglb.filekit.dialogs.compose.rememberFileSaverLauncher
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,22 +71,25 @@ fun HomeSettingsRouteScreen(
     var showRestartConfirmDialog by remember { mutableStateOf(false) }
     var showAnalyticsDialog by remember { mutableStateOf(false) }
     var showLauncherPicker by remember { mutableStateOf(false) }
-    var pendingImportUri by remember { mutableStateOf<android.net.Uri?>(null) }
+    var pendingImportFile by remember { mutableStateOf<PlatformFile?>(null) }
 
-    val exportLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.CreateDocument("application/json")
-    ) { uri ->
-        uri ?: return@rememberLauncherForActivityResult
-        coroutineScope.launch(Dispatchers.IO) {
-            runCatching { BackupManager.exportTo(PlatformFile(uri)) }
-                .onSuccess { withContext(Dispatchers.Main) { showShortToast(R.string.backup_export_success) } }
-                .onFailure { withContext(Dispatchers.Main) { showShortToast(R.string.backup_export_failed) } }
+    // BackupManager.exportTo/importFrom 本来就吃 PlatformFile 且是 suspend，
+    // FileKit 自己管调度，所以这里不用再套 Dispatchers.IO
+    val exportLauncher = rememberFileSaverLauncher(
+        dialogSettings = FileKitDialogSettings.createDefault(),
+    ) { file ->
+        file ?: return@rememberFileSaverLauncher
+        coroutineScope.launch {
+            runCatching { BackupManager.exportTo(file) }
+                .onSuccess { showShortToast(R.string.backup_export_success) }
+                .onFailure { showShortToast(R.string.backup_export_failed) }
         }
     }
-    val importLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.OpenDocument()
-    ) { uri ->
-        pendingImportUri = uri
+    // 不写 FileKitType.File("json")：现在的过滤是 arrayOf("application/json",
+    // "text/*", "*/*")，那个 */* 等于「任意文件」。收紧成 json 会让 Downloads 里
+    // 被 provider 报成 application/octet-stream 的备份选不中
+    val importLauncher = rememberFilePickerLauncher(type = FileKitType.File()) { file ->
+        pendingImportFile = file
     }
 
     // 算目录大小是 IO，拼文案是资源——摘要文案现在是 @Composable（commonMain 的
@@ -281,41 +289,38 @@ fun HomeSettingsRouteScreen(
             showClearCacheConfirm = true
         },
         onExportBackup = {
-            exportLauncher.launch("Han1meViewer-backup-${System.currentTimeMillis()}.json")
+            exportLauncher.launch(
+                suggestedName = "Han1meViewer-backup-${Clock.System.now().toEpochMilliseconds()}",
+                defaultExtension = "json",
+            )
         },
         onImportBackup = {
-            importLauncher.launch(arrayOf("application/json", "text/*", "*/*"))
+            importLauncher.launch()
         },
         onSubmitBug = { context.browse(HA1_GITHUB_ISSUE_URL) },
         onOpenForum = { context.browse(HA1_GITHUB_FORUM_URL) },
     )
 
     ConfirmDialog(
-        visible = pendingImportUri != null,
+        visible = pendingImportFile != null,
         title = stringResource(R.string.backup_import_title),
         message = stringResource(R.string.backup_import_confirm_message),
         confirmText = stringResource(R.string.confirm),
         dismissText = stringResource(R.string.cancel),
         onConfirm = {
-            val uri = pendingImportUri ?: return@ConfirmDialog
-            pendingImportUri = null
-            coroutineScope.launch(Dispatchers.IO) {
-                runCatching { BackupManager.importFrom(PlatformFile(uri)) }
+            val file = pendingImportFile ?: return@ConfirmDialog
+            pendingImportFile = null
+            coroutineScope.launch {
+                runCatching { BackupManager.importFrom(file) }
                     .onSuccess {
-                        withContext(Dispatchers.Main) {
-                            showShortToast(R.string.backup_import_success)
-                            refreshKey++
-                            actions.reloadUi()
-                        }
+                        showShortToast(R.string.backup_import_success)
+                        refreshKey++
+                        actions.reloadUi()
                     }
-                    .onFailure {
-                        withContext(Dispatchers.Main) {
-                            showShortToast(R.string.backup_import_failed)
-                        }
-                    }
+                    .onFailure { showShortToast(R.string.backup_import_failed) }
             }
         },
-        onDismiss = { pendingImportUri = null },
+        onDismiss = { pendingImportFile = null },
     )
 
     ConfirmDialog(
