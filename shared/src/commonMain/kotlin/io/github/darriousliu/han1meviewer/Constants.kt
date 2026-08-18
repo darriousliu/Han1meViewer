@@ -1,5 +1,6 @@
 package io.github.darriousliu.han1meviewer
 
+import io.github.darriousliu.han1meviewer.core.common.BuildConfig
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.format.char

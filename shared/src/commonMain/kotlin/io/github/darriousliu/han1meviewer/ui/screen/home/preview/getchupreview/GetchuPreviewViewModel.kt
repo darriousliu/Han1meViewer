@@ -7,8 +7,8 @@ import io.github.darriousliu.han1meviewer.logic.GetchuNetworkRepo.getGetchuPrevi
 import io.github.darriousliu.han1meviewer.logic.GetchuNetworkRepo.getGetchuPreviewDetail
 import io.github.darriousliu.han1meviewer.logic.model.GetchuPreview
 import io.github.darriousliu.han1meviewer.logic.model.GetchuPreviewDetail
-import io.github.darriousliu.han1meviewer.logic.state.PageState
-import io.github.darriousliu.han1meviewer.logic.state.WebsiteState
+import io.github.darriousliu.han1meviewer.core.common.state.PageState
+import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow

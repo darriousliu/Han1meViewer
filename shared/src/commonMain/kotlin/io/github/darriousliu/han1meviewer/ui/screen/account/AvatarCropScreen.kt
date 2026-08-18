@@ -44,11 +44,11 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import io.github.darriousliu.han1meviewer.ui.component.appbar.HanimeScaffold
-import io.github.darriousliu.han1meviewer.util.AVATAR_JPEG_QUALITY
-import io.github.darriousliu.han1meviewer.util.AVATAR_MAX_DIMENSION
-import io.github.darriousliu.han1meviewer.util.PREVIEW_MAX_DIMENSION
-import io.github.darriousliu.han1meviewer.util.decodeSampledImageBitmap
-import io.github.darriousliu.han1meviewer.util.encodeJpeg
+import io.github.darriousliu.han1meviewer.core.common.util.AVATAR_JPEG_QUALITY
+import io.github.darriousliu.han1meviewer.core.common.util.AVATAR_MAX_DIMENSION
+import io.github.darriousliu.han1meviewer.core.common.util.PREVIEW_MAX_DIMENSION
+import io.github.darriousliu.han1meviewer.core.common.util.decodeSampledImageBitmap
+import io.github.darriousliu.han1meviewer.core.common.util.encodeJpeg
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.cancel
 import io.github.darriousliu.han1meviewer.core.resource.confirm

@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.darriousliu.han1meviewer.logic.NetworkRepo
 import io.github.darriousliu.han1meviewer.logic.model.HanimePreview
-import io.github.darriousliu.han1meviewer.logic.state.WebsiteState
+import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.util.TagLocalizer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO

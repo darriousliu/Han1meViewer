@@ -10,7 +10,7 @@ import io.github.darriousliu.han1meviewer.ui.component.showShort
 import io.github.darriousliu.han1meviewer.ui.screen.home.myplaylist.PlaylistScreen
 import io.github.darriousliu.han1meviewer.ui.screen.home.myplaylist.PlaylistUiEvent
 import io.github.darriousliu.han1meviewer.ui.viewmodel.MyPlayListViewModelV2
-import io.github.darriousliu.han1meviewer.util.setPlainText
+import io.github.darriousliu.han1meviewer.core.common.util.setPlainText
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.copy_to_clipboard
 import kotlinx.coroutines.launch

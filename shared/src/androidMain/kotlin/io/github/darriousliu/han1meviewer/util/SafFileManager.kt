@@ -16,7 +16,7 @@ import io.github.darriousliu.han1meviewer.HFileManager.getDownloadVideoCoverFile
 import io.github.darriousliu.han1meviewer.Preferences
 import io.github.darriousliu.han1meviewer.logic.dao.download.HanimeDownloadDao
 import io.github.darriousliu.han1meviewer.logic.entity.download.HanimeDownloadEntity
-import io.github.darriousliu.han1meviewer.logic.state.DownloadState
+import io.github.darriousliu.han1meviewer.core.common.state.DownloadState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,6 +26,7 @@ import kotlinx.serialization.json.jsonPrimitive
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
+import io.github.darriousliu.han1meviewer.core.common.util.application
 
 /**
  * SAF (Storage Access Framework)

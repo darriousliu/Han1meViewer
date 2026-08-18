@@ -4,12 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.darriousliu.han1meviewer.Preferences
 import io.github.darriousliu.han1meviewer.logic.NetworkRepo
-import io.github.darriousliu.han1meviewer.logic.exception.LocalizedStateException
+import io.github.darriousliu.han1meviewer.core.common.exception.LocalizedStateException
 import io.github.darriousliu.han1meviewer.logic.model.HanimeInfo
 import io.github.darriousliu.han1meviewer.logic.model.MyListItems
 import io.github.darriousliu.han1meviewer.logic.model.OnlineWatchHistorySort
-import io.github.darriousliu.han1meviewer.logic.state.PageLoadingState
-import io.github.darriousliu.han1meviewer.logic.state.WebsiteState
+import io.github.darriousliu.han1meviewer.core.common.state.PageLoadingState
+import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.ui.viewmodel.CsrfTokenStore.csrfToken
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.not_logged_in_currently

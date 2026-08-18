@@ -16,7 +16,7 @@ import io.github.darriousliu.han1meviewer.mmkv.mmkvInt
 import io.github.darriousliu.han1meviewer.mmkv.mmkvLong
 import io.github.darriousliu.han1meviewer.mmkv.mmkvNullableString
 import io.github.darriousliu.han1meviewer.mmkv.mmkvString
-import io.github.darriousliu.han1meviewer.util.CookieString
+import io.github.darriousliu.han1meviewer.core.common.util.CookieString
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days

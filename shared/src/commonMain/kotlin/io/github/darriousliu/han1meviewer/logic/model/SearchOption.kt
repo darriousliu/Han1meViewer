@@ -1,13 +1,13 @@
 package io.github.darriousliu.han1meviewer.logic.model
 
 import androidx.compose.ui.text.intl.Locale
-import io.github.darriousliu.han1meviewer.util.CHINESE
-import io.github.darriousliu.han1meviewer.util.ENGLISH
-import io.github.darriousliu.han1meviewer.util.JAPANESE
-import io.github.darriousliu.han1meviewer.util.LanguageHelper
-import io.github.darriousliu.han1meviewer.util.Parcelable
-import io.github.darriousliu.han1meviewer.util.Parcelize
-import io.github.darriousliu.han1meviewer.util.SIMPLIFIED_CHINESE
+import io.github.darriousliu.han1meviewer.core.common.util.CHINESE
+import io.github.darriousliu.han1meviewer.core.common.util.ENGLISH
+import io.github.darriousliu.han1meviewer.core.common.util.JAPANESE
+import io.github.darriousliu.han1meviewer.core.common.util.LanguageHelper
+import io.github.darriousliu.han1meviewer.core.common.util.Parcelable
+import io.github.darriousliu.han1meviewer.core.common.util.Parcelize
+import io.github.darriousliu.han1meviewer.core.common.util.SIMPLIFIED_CHINESE
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.appearance_and_figure
 import io.github.darriousliu.han1meviewer.core.resource.characteristics

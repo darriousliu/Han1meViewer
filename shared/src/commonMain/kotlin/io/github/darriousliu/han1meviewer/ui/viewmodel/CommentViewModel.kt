@@ -11,11 +11,11 @@ import io.github.darriousliu.han1meviewer.logic.model.CommentPlace
 import io.github.darriousliu.han1meviewer.logic.model.ReportReason
 import io.github.darriousliu.han1meviewer.logic.model.VideoCommentArgs
 import io.github.darriousliu.han1meviewer.logic.model.VideoComments
-import io.github.darriousliu.han1meviewer.logic.state.WebsiteState
+import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.ui.screen.video.CommentSortType
 import io.github.darriousliu.han1meviewer.ui.viewmodel.CsrfTokenStore.csrfToken
-import io.github.darriousliu.han1meviewer.util.loadBundledJson
-import io.github.darriousliu.han1meviewer.util.localizedTextOrNull
+import io.github.darriousliu.han1meviewer.core.common.util.loadBundledJson
+import io.github.darriousliu.han1meviewer.core.common.util.localizedTextOrNull
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.cancel_thumb_down_success
 import io.github.darriousliu.han1meviewer.core.resource.cancel_thumb_up_success

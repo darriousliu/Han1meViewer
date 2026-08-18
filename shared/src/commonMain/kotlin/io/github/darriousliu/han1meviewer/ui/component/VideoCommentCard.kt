@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import io.github.darriousliu.han1meviewer.logic.model.VideoComments
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
-import io.github.darriousliu.han1meviewer.util.DisplayTextLocalizer
+import io.github.darriousliu.han1meviewer.core.common.util.DisplayTextLocalizer
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.ic_baseline_reply_24
 import io.github.darriousliu.han1meviewer.core.resource.ic_baseline_report_24

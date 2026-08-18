@@ -8,11 +8,11 @@ import io.github.darriousliu.han1meviewer.logic.DatabaseRepo
 import io.github.darriousliu.han1meviewer.logic.NetworkRepo
 import io.github.darriousliu.han1meviewer.logic.entity.HKeyframeEntity
 import io.github.darriousliu.han1meviewer.logic.entity.WatchHistoryEntity
-import io.github.darriousliu.han1meviewer.logic.exception.LoginStateExpiredException
+import io.github.darriousliu.han1meviewer.core.common.exception.LoginStateExpiredException
 import io.github.darriousliu.han1meviewer.logic.model.Announcement
 import io.github.darriousliu.han1meviewer.logic.network.fetchPlatformAnnouncements
-import io.github.darriousliu.han1meviewer.logic.state.PageState
-import io.github.darriousliu.han1meviewer.logic.state.WebsiteState
+import io.github.darriousliu.han1meviewer.core.common.state.PageState
+import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.logout
 import io.github.darriousliu.han1meviewer.ui.viewmodel.CsrfTokenStore
 import io.github.darriousliu.han1meviewer.core.resource.Res
@@ -59,10 +59,13 @@ class HomePageViewModel: ViewModel() {
         homePageJob?.cancel()
         homePageJob = viewModelScope.launch {
             val current = _homePageFlow.value
+            // cachedInfo 是 T?，`!= null` 之后并不会把 T? 收窄成 T（T 自己就可能是可空
+            // 类型），跨模块之后编译器不再替我们做这一步，所以先取成局部变量。
+            val cachedInfo = (current as? PageState.Error)?.cachedInfo
             if (isRefresh && current is PageState.Success) {
                 _homePageFlow.value = current.copy(isRefreshing = true)
-            } else if (isRefresh && current is PageState.Error && current.cachedInfo != null) {
-                _homePageFlow.value = PageState.Success(info = current.cachedInfo, isRefreshing = true)
+            } else if (isRefresh && cachedInfo != null) {
+                _homePageFlow.value = PageState.Success(info = cachedInfo, isRefreshing = true)
             } else if (!isRefresh && current !is PageState.Success){
                 _homePageFlow.value = PageState.Loading
             }

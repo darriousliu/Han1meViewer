@@ -1,7 +1,7 @@
 package io.github.darriousliu.han1meviewer.ui.screen.home.videogrid
 
 import io.github.darriousliu.han1meviewer.logic.model.HanimeInfo
-import io.github.darriousliu.han1meviewer.logic.state.PageLoadingState
+import io.github.darriousliu.han1meviewer.core.common.state.PageLoadingState
 
 /**
  * 视频网格页面的 UI 状态。

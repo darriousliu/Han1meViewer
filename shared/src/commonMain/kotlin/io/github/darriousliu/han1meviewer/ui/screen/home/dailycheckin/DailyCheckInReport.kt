@@ -50,8 +50,8 @@ import io.github.darriousliu.han1meviewer.logic.entity.CheckInRecordEntity
 import io.github.darriousliu.han1meviewer.ui.component.appbar.HanimeScaffold
 import io.github.darriousliu.han1meviewer.ui.viewmodel.CheckInCalendarViewModel
 import io.github.darriousliu.han1meviewer.ui.viewmodel.MonthlyStats
-import io.github.darriousliu.han1meviewer.util.currentLocalDate
-import io.github.darriousliu.han1meviewer.util.currentYearMonth
+import io.github.darriousliu.han1meviewer.core.common.util.currentLocalDate
+import io.github.darriousliu.han1meviewer.core.common.util.currentYearMonth
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.baseline_screen_rotation_24
 import io.github.darriousliu.han1meviewer.core.resource.checkin_count_format

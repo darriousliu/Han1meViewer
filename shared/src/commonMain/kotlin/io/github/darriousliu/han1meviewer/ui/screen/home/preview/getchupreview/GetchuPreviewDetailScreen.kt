@@ -18,8 +18,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import coil3.compose.LocalPlatformContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import io.github.darriousliu.han1meviewer.logic.state.PageState
-import io.github.darriousliu.han1meviewer.logic.state.dataOrNull
+import io.github.darriousliu.han1meviewer.core.common.state.PageState
+import io.github.darriousliu.han1meviewer.core.common.state.dataOrNull
 import io.github.darriousliu.han1meviewer.pienization
 import io.github.darriousliu.han1meviewer.ui.component.PageContent
 import io.github.darriousliu.han1meviewer.ui.component.isFirstPageEmpty

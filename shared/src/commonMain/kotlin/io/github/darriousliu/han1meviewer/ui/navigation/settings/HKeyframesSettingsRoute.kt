@@ -30,7 +30,7 @@ import io.github.darriousliu.han1meviewer.ui.screen.settings.HKeyframeSettingsUi
 import io.github.darriousliu.han1meviewer.ui.screen.settings.HKeyframesScreen
 import io.github.darriousliu.han1meviewer.ui.screen.settings.SharedHKeyframesScreen
 import io.github.darriousliu.han1meviewer.ui.viewmodel.SettingsViewModel
-import io.github.darriousliu.han1meviewer.util.setPlainText
+import io.github.darriousliu.han1meviewer.core.common.util.setPlainText
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.cancel
 import io.github.darriousliu.han1meviewer.core.resource.confirm

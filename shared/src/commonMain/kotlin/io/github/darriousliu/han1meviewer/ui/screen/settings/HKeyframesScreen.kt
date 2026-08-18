@@ -28,7 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.github.darriousliu.han1meviewer.util.formatVideoTime
+import io.github.darriousliu.han1meviewer.core.common.util.formatVideoTime
 import kotlin.io.encoding.Base64
 import kotlin.time.Clock
 import io.github.darriousliu.han1meviewer.logic.entity.HKeyframeEntity

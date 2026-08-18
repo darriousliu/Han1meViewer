@@ -29,8 +29,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import io.github.darriousliu.han1meviewer.util.currentLocalDate
-import io.github.darriousliu.han1meviewer.util.currentYearMonth
+import io.github.darriousliu.han1meviewer.core.common.util.currentLocalDate
+import io.github.darriousliu.han1meviewer.core.common.util.currentYearMonth
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.fri
 import io.github.darriousliu.han1meviewer.core.resource.mon

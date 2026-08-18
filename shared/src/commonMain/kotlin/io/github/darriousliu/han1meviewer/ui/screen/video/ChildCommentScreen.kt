@@ -38,7 +38,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.darriousliu.han1meviewer.logic.model.ReportReason
 import io.github.darriousliu.han1meviewer.logic.model.VideoCommentArgs
 import io.github.darriousliu.han1meviewer.logic.model.VideoComments
-import io.github.darriousliu.han1meviewer.logic.state.WebsiteState
+import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.ui.component.CommentReplyBar
 import io.github.darriousliu.han1meviewer.ui.component.CommentReportDialog
 import io.github.darriousliu.han1meviewer.ui.component.PageContent
@@ -51,8 +51,8 @@ import io.github.darriousliu.han1meviewer.ui.component.rememberHostNestedScrollC
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.ui.preview.fakeCommentList
 import io.github.darriousliu.han1meviewer.ui.screen.rememberRandomLoadingHint
-import io.github.darriousliu.han1meviewer.util.parseTimeStrToMinutes
-import io.github.darriousliu.han1meviewer.util.safeSortedBy
+import io.github.darriousliu.han1meviewer.core.common.util.parseTimeStrToMinutes
+import io.github.darriousliu.han1meviewer.core.common.util.safeSortedBy
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.child_comment
 import io.github.darriousliu.han1meviewer.core.resource.comment_not_found

@@ -33,8 +33,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import io.github.darriousliu.han1meviewer.util.currentLocalDate
-import io.github.darriousliu.han1meviewer.util.formatMonthDayWithWeekday
+import io.github.darriousliu.han1meviewer.core.common.util.currentLocalDate
+import io.github.darriousliu.han1meviewer.core.common.util.formatMonthDayWithWeekday
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.best_streak
 import io.github.darriousliu.han1meviewer.core.resource.checkin

@@ -1,7 +1,7 @@
 package io.github.darriousliu.han1meviewer.logic
 
 import io.github.darriousliu.han1meviewer.logic.network.HUpdater
-import io.github.darriousliu.han1meviewer.logic.state.WebsiteState
+import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO

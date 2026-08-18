@@ -2,14 +2,14 @@ package io.github.darriousliu.han1meviewer.logic
 
 import co.touchlab.kermit.Logger
 import io.github.darriousliu.han1meviewer.EMPTY_STRING
-import io.github.darriousliu.han1meviewer.HJson
+import io.github.darriousliu.han1meviewer.core.common.HJson
 import io.github.darriousliu.han1meviewer.Preferences
 import io.github.darriousliu.han1meviewer.Preferences.isAlreadyLogin
-import io.github.darriousliu.han1meviewer.logic.exception.CloudFlareBlockedException
-import io.github.darriousliu.han1meviewer.logic.exception.HanimeNotFoundException
-import io.github.darriousliu.han1meviewer.logic.exception.IPBlockedException
-import io.github.darriousliu.han1meviewer.logic.exception.LocalizedStateException
-import io.github.darriousliu.han1meviewer.logic.exception.ParseException
+import io.github.darriousliu.han1meviewer.core.common.exception.CloudFlareBlockedException
+import io.github.darriousliu.han1meviewer.core.common.exception.HanimeNotFoundException
+import io.github.darriousliu.han1meviewer.core.common.exception.IPBlockedException
+import io.github.darriousliu.han1meviewer.core.common.exception.LocalizedStateException
+import io.github.darriousliu.han1meviewer.core.common.exception.ParseException
 import io.github.darriousliu.han1meviewer.logic.model.CommentPlace
 import io.github.darriousliu.han1meviewer.logic.model.CreatorSort
 import io.github.darriousliu.han1meviewer.logic.model.ModifiedPlaylistArgs
@@ -18,10 +18,10 @@ import io.github.darriousliu.han1meviewer.logic.model.OnlineWatchHistorySort
 import io.github.darriousliu.han1meviewer.logic.model.VideoCommentArgs
 import io.github.darriousliu.han1meviewer.logic.model.VideoComments
 import io.github.darriousliu.han1meviewer.logic.network.HanimeNetwork
-import io.github.darriousliu.han1meviewer.logic.state.PageLoadingState
-import io.github.darriousliu.han1meviewer.logic.state.VideoLoadingState
-import io.github.darriousliu.han1meviewer.logic.state.WebsiteState
-import io.github.darriousliu.han1meviewer.util.isSslHandshakeError
+import io.github.darriousliu.han1meviewer.core.common.state.PageLoadingState
+import io.github.darriousliu.han1meviewer.core.common.state.VideoLoadingState
+import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
+import io.github.darriousliu.han1meviewer.core.common.util.isSslHandshakeError
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.account_or_password_wrong
 import io.github.darriousliu.han1meviewer.core.resource.cloudflare_ip_block_warning

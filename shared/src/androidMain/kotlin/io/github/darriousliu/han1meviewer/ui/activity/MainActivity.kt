@@ -46,7 +46,7 @@ import io.github.darriousliu.han1meviewer.ui.screen.main.MainActivityContent
 import io.github.darriousliu.han1meviewer.util.restartApplication
 import io.github.darriousliu.han1meviewer.util.showAlertDialog
 import io.github.darriousliu.han1meviewer.util.showSnackBar
-import io.github.darriousliu.han1meviewer.util.textFromClipboard
+import io.github.darriousliu.han1meviewer.core.common.util.textFromClipboard
 import io.github.darriousliu.han1meviewer.videoUrlRegex
 import kotlinx.coroutines.flow.MutableSharedFlow
 

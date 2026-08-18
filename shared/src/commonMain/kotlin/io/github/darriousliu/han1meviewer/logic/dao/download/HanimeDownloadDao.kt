@@ -9,7 +9,7 @@ import androidx.room3.Transaction
 import androidx.room3.Update
 import io.github.darriousliu.han1meviewer.logic.entity.download.HanimeDownloadEntity
 import io.github.darriousliu.han1meviewer.logic.entity.download.VideoWithCategories
-import io.github.darriousliu.han1meviewer.logic.state.DownloadState
+import io.github.darriousliu.han1meviewer.core.common.state.DownloadState
 import kotlinx.coroutines.flow.Flow
 
 /**

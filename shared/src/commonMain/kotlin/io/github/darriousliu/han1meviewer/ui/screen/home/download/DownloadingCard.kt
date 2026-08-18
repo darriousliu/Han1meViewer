@@ -39,10 +39,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import io.github.darriousliu.han1meviewer.logic.entity.download.HanimeDownloadEntity
-import io.github.darriousliu.han1meviewer.logic.state.DownloadState
+import io.github.darriousliu.han1meviewer.core.common.state.DownloadState
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.ui.preview.fakeHomePageVideos
-import io.github.darriousliu.han1meviewer.util.formatFileSizeV2
+import io.github.darriousliu.han1meviewer.core.common.util.formatFileSizeV2
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.cancel_download
 import io.github.darriousliu.han1meviewer.core.resource.continues

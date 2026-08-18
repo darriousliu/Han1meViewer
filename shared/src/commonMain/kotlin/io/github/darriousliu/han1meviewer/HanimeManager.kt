@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import io.github.darriousliu.han1meviewer.Preferences.isAlreadyLogin
 import io.github.darriousliu.han1meviewer.Preferences.loginCookie
 import io.github.darriousliu.han1meviewer.logic.network.HCookiesStorage
-import io.github.darriousliu.han1meviewer.util.CookieString
-import io.github.darriousliu.han1meviewer.util.localizedText
+import io.github.darriousliu.han1meviewer.core.common.util.CookieString
+import io.github.darriousliu.han1meviewer.core.common.util.localizedText
 
 /**
  * 给用户显示的错误信息

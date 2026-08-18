@@ -10,6 +10,7 @@ import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+import io.github.darriousliu.han1meviewer.core.common.util.applicationContext
 
 /**
  * 设置状态视图

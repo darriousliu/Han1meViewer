@@ -35,7 +35,7 @@ import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter
 import cn.jzvd.JZMediaInterface
 import cn.jzvd.JZMediaSystem
 import cn.jzvd.Jzvd
-import io.github.darriousliu.han1meviewer.BuildConfig
+import io.github.darriousliu.han1meviewer.core.common.BuildConfig
 import io.github.darriousliu.han1meviewer.Preferences
 import io.github.darriousliu.han1meviewer.USER_AGENT
 import io.github.darriousliu.han1meviewer.logic.network.HProxySelector

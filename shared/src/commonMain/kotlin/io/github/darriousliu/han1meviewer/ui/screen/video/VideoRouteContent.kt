@@ -10,7 +10,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.darriousliu.han1meviewer.Preferences
 import io.github.darriousliu.han1meviewer.logic.model.HanimeInfo
-import io.github.darriousliu.han1meviewer.logic.state.VideoLoadingState
+import io.github.darriousliu.han1meviewer.core.common.state.VideoLoadingState
 import io.github.darriousliu.han1meviewer.ui.bridge.VideoPageHost
 import io.github.darriousliu.han1meviewer.ui.viewmodel.CommentViewModel
 import io.github.darriousliu.han1meviewer.ui.viewmodel.VideoViewModel

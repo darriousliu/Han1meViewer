@@ -1,6 +1,6 @@
 package io.github.darriousliu.han1meviewer.logic.network
 
-import io.github.darriousliu.han1meviewer.BuildConfig
+import io.github.darriousliu.han1meviewer.core.common.BuildConfig
 import io.github.darriousliu.han1meviewer.DESKTOP_USER_AGENT
 import io.github.darriousliu.han1meviewer.USER_AGENT
 import io.github.darriousliu.han1meviewer.logic.network.plugin.CloudflareChallenge

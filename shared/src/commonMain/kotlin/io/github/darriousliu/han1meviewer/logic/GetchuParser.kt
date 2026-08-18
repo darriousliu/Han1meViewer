@@ -5,10 +5,10 @@ import com.fleeksoft.ksoup.Ksoup
 import com.fleeksoft.ksoup.nodes.Element
 import io.github.darriousliu.han1meviewer.EMPTY_STRING
 import io.github.darriousliu.han1meviewer.GETCHU_BASE_URL
-import io.github.darriousliu.han1meviewer.HJson
+import io.github.darriousliu.han1meviewer.core.common.HJson
 import io.github.darriousliu.han1meviewer.logic.model.GetchuPreview
 import io.github.darriousliu.han1meviewer.logic.model.GetchuPreviewDetail
-import io.github.darriousliu.han1meviewer.logic.state.WebsiteState
+import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive

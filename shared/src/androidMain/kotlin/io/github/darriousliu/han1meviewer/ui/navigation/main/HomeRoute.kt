@@ -23,8 +23,8 @@ import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.LocalSearchHis
 import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.component.AnnouncementDialog
 import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.saveImageToGallery
 import io.github.darriousliu.han1meviewer.ui.viewmodel.CheckInCalendarViewModel
-import io.github.darriousliu.han1meviewer.util.currentLocalDate
-import io.github.darriousliu.han1meviewer.util.setPlainText
+import io.github.darriousliu.han1meviewer.core.common.util.currentLocalDate
+import io.github.darriousliu.han1meviewer.core.common.util.setPlainText
 import io.github.darriousliu.han1meviewer.util.showShortToast
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter

@@ -72,7 +72,7 @@ import io.github.darriousliu.han1meviewer.ResolutionLinkMap
 import io.github.darriousliu.han1meviewer.logic.entity.CheckInRecordEntity
 import io.github.darriousliu.han1meviewer.logic.model.HanimeInfo
 import io.github.darriousliu.han1meviewer.logic.model.HanimeVideo
-import io.github.darriousliu.han1meviewer.logic.state.VideoLoadingState
+import io.github.darriousliu.han1meviewer.core.common.state.VideoLoadingState
 import io.github.darriousliu.han1meviewer.ui.component.BottomSheetHandler
 import io.github.darriousliu.han1meviewer.ui.component.ExpandableRichText
 import io.github.darriousliu.han1meviewer.ui.component.TagChipGroup
@@ -90,9 +90,9 @@ import io.github.darriousliu.han1meviewer.ui.screen.rememberRandomLoadingHint
 import io.github.darriousliu.han1meviewer.ui.theme.SpacingNormal
 import io.github.darriousliu.han1meviewer.ui.theme.VideoNormalCardMinWidth
 import io.github.darriousliu.han1meviewer.ui.theme.VideoSimplifiedCardMinWidth
-import io.github.darriousliu.han1meviewer.util.DisplayTextLocalizer
-import io.github.darriousliu.han1meviewer.util.HOUR_MINUTE_FORMAT
-import io.github.darriousliu.han1meviewer.util.currentLocalDate
+import io.github.darriousliu.han1meviewer.core.common.util.DisplayTextLocalizer
+import io.github.darriousliu.han1meviewer.core.common.util.HOUR_MINUTE_FORMAT
+import io.github.darriousliu.han1meviewer.core.common.util.currentLocalDate
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.add_to_fav
 import io.github.darriousliu.han1meviewer.core.resource.add_to_playlist

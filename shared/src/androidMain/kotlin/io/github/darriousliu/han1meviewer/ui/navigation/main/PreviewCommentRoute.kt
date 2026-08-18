@@ -28,7 +28,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.darriousliu.han1meviewer.PREVIEW_COMMENT_PREFIX
 import io.github.darriousliu.han1meviewer.Preferences
 import io.github.darriousliu.han1meviewer.R
-import io.github.darriousliu.han1meviewer.logic.state.WebsiteState
+import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
 import io.github.darriousliu.han1meviewer.ui.component.BottomSheetHandler
 import io.github.darriousliu.han1meviewer.ui.navigation.PreviewCommentRoute

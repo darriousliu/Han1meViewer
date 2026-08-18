@@ -13,8 +13,8 @@ import io.github.darriousliu.han1meviewer.logic.entity.HanimeAdvancedSearchHisto
 import io.github.darriousliu.han1meviewer.logic.entity.SearchHistoryEntity
 import io.github.darriousliu.han1meviewer.logic.model.HanimeInfo
 import io.github.darriousliu.han1meviewer.logic.model.SearchOption
-import io.github.darriousliu.han1meviewer.logic.state.PageLoadingState
-import io.github.darriousliu.han1meviewer.util.loadBundledJson
+import io.github.darriousliu.han1meviewer.core.common.state.PageLoadingState
+import io.github.darriousliu.han1meviewer.core.common.util.loadBundledJson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableSharedFlow

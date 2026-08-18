@@ -8,8 +8,8 @@ import io.github.darriousliu.han1meviewer.logic.entity.CheckInRecordEntity
 import io.github.darriousliu.han1meviewer.logic.entity.SideDishEntity
 import io.github.darriousliu.han1meviewer.logic.entity.WatchHistoryEntity
 import io.github.darriousliu.han1meviewer.ui.screen.home.dailycheckin.DailyCheckInUiState
-import io.github.darriousliu.han1meviewer.util.currentLocalDate
-import io.github.darriousliu.han1meviewer.util.currentYearMonth
+import io.github.darriousliu.han1meviewer.core.common.util.currentLocalDate
+import io.github.darriousliu.han1meviewer.core.common.util.currentYearMonth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

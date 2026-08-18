@@ -6,7 +6,7 @@ import io.github.darriousliu.han1meviewer.logic.entity.download.VideoWithCategor
 import io.github.darriousliu.han1meviewer.logic.model.DownloadHeaderNode
 import io.github.darriousliu.han1meviewer.logic.model.DownloadItemNode
 import io.github.darriousliu.han1meviewer.logic.model.DownloadedNode
-import io.github.darriousliu.han1meviewer.logic.state.DownloadState
+import io.github.darriousliu.han1meviewer.core.common.state.DownloadState
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.already_in_queue
 import io.github.darriousliu.han1meviewer.core.resource.baseline_error_outline_24

@@ -2,6 +2,7 @@ package io.github.darriousliu.han1meviewer.util
 
 import co.touchlab.kermit.Logger
 import io.github.darriousliu.han1meviewer.Preferences
+import io.github.darriousliu.han1meviewer.core.common.util.CookieString
 import io.ktor.http.Cookie
 import io.ktor.http.CookieEncoding
 

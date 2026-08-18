@@ -11,6 +11,7 @@ import io.github.darriousliu.han1meviewer.logic.network.HDns
 import okhttp3.OkHttpClient
 import java.lang.ref.WeakReference
 import java.util.concurrent.TimeUnit
+import io.github.darriousliu.han1meviewer.core.common.util.applicationContext
 
 @Suppress("NOTHING_TO_INLINE")
 object HImageMeower {

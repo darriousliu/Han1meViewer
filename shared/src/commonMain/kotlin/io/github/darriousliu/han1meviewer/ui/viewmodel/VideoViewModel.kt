@@ -14,8 +14,8 @@ import io.github.darriousliu.han1meviewer.logic.entity.HKeyframeEntity
 import io.github.darriousliu.han1meviewer.logic.entity.WatchHistoryEntity
 import io.github.darriousliu.han1meviewer.logic.entity.download.HanimeDownloadEntity
 import io.github.darriousliu.han1meviewer.logic.model.HanimeVideo
-import io.github.darriousliu.han1meviewer.logic.state.VideoLoadingState
-import io.github.darriousliu.han1meviewer.logic.state.WebsiteState
+import io.github.darriousliu.han1meviewer.core.common.state.VideoLoadingState
+import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.ui.viewmodel.CsrfTokenStore.csrfToken
 import io.github.darriousliu.han1meviewer.util.TagLocalizer
 import io.github.darriousliu.han1meviewer.core.resource.Res

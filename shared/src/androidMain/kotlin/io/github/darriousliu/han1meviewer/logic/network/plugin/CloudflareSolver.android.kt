@@ -1,8 +1,8 @@
 package io.github.darriousliu.han1meviewer.logic.network.plugin
 
 import io.github.darriousliu.han1meviewer.logic.network.AndroidCloudflareSolver
-import io.github.darriousliu.han1meviewer.util.application
-import io.github.darriousliu.han1meviewer.util.isMainProcess
+import io.github.darriousliu.han1meviewer.core.common.util.application
+import io.github.darriousliu.han1meviewer.core.common.util.isMainProcess
 
 /**
  * 过盾要拉起 Activity 跑 WebView，只在主进程有意义；

@@ -44,7 +44,7 @@ import io.github.darriousliu.han1meviewer.logic.entity.download.VideoWithCategor
 import io.github.darriousliu.han1meviewer.logic.model.DownloadHeaderNode
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.ui.preview.fakeDownloadedNodes
-import io.github.darriousliu.han1meviewer.util.formatFileSizeV2
+import io.github.darriousliu.han1meviewer.core.common.util.formatFileSizeV2
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.collapse
 import io.github.darriousliu.han1meviewer.core.resource.delete

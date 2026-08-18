@@ -3,6 +3,7 @@ package io.github.darriousliu.han1meviewer.util
 import android.content.Context
 import android.widget.Toast
 import androidx.annotation.StringRes
+import io.github.darriousliu.han1meviewer.core.common.util.applicationContext
 
 fun Context.showToast(@StringRes resId: Int, vararg formatArgs: Any, duration: Int = Toast.LENGTH_SHORT) {
     val text = this.resources.getString(resId, *formatArgs)

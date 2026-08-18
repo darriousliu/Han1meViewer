@@ -1,6 +1,6 @@
 package io.github.darriousliu.han1meviewer.logic
 
-import io.github.darriousliu.han1meviewer.BuildConfig
+import io.github.darriousliu.han1meviewer.core.common.BuildConfig
 import io.github.darriousliu.han1meviewer.Preferences
 import io.github.darriousliu.han1meviewer.logic.dao.CheckInRecordDatabase
 import io.github.darriousliu.han1meviewer.logic.dao.DownloadDatabase

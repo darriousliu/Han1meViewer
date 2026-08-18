@@ -10,8 +10,8 @@ import io.github.darriousliu.han1meviewer.logic.model.HanimeInfo
 import io.github.darriousliu.han1meviewer.logic.model.ModifiedPlaylistArgs
 import io.github.darriousliu.han1meviewer.logic.model.MyListItems
 import io.github.darriousliu.han1meviewer.logic.model.Playlists
-import io.github.darriousliu.han1meviewer.logic.state.PageLoadingState
-import io.github.darriousliu.han1meviewer.logic.state.WebsiteState
+import io.github.darriousliu.han1meviewer.core.common.state.PageLoadingState
+import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.ui.screen.home.myplaylist.PlaylistUiState
 import io.github.darriousliu.han1meviewer.ui.viewmodel.CsrfTokenStore.csrfToken
 import kotlinx.coroutines.flow.MutableSharedFlow

@@ -2,7 +2,7 @@ package io.github.darriousliu.han1meviewer.ui.screen.home.preview
 
 import androidx.compose.runtime.saveable.listSaver
 import io.github.darriousliu.han1meviewer.logic.model.HanimePreview
-import io.github.darriousliu.han1meviewer.logic.state.WebsiteState
+import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 
 /**
  * 预览页面路由状态。

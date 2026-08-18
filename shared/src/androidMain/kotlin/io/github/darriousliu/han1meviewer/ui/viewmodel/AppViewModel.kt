@@ -11,8 +11,8 @@ import io.github.darriousliu.han1meviewer.FirebaseConstants
 import io.github.darriousliu.han1meviewer.Preferences
 import io.github.darriousliu.han1meviewer.logic.UpdateRepo
 import io.github.darriousliu.han1meviewer.logic.model.github.Latest
-import io.github.darriousliu.han1meviewer.logic.state.WebsiteState
-import io.github.darriousliu.han1meviewer.util.AndroidAppContext
+import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
+import io.github.darriousliu.han1meviewer.core.common.util.AndroidAppContext
 import io.github.darriousliu.han1meviewer.worker.HUpdateWorker
 import io.github.darriousliu.han1meviewer.worker.HanimeDownloadManagerV2
 import io.github.darriousliu.han1meviewer.worker.HanimeDownloadWorker
@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import io.github.darriousliu.han1meviewer.core.common.util.application
 
 /**
  * @project Han1meViewer

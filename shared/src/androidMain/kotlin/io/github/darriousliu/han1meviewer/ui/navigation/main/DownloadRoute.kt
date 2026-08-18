@@ -21,7 +21,7 @@ import io.github.darriousliu.han1meviewer.ui.viewmodel.DownloadViewModel
 import io.github.darriousliu.han1meviewer.util.SafFileManager
 import io.github.darriousliu.han1meviewer.util.SafFileManager.checkSafPermissions
 import io.github.darriousliu.han1meviewer.util.SafFileManager.scanAndImportHanimeDownloads
-import io.github.darriousliu.han1meviewer.util.application
+import io.github.darriousliu.han1meviewer.core.common.util.application
 import io.github.darriousliu.han1meviewer.util.openDownloadedHanimeVideoLocally
 import io.github.darriousliu.han1meviewer.util.showLongToast
 import io.github.darriousliu.han1meviewer.worker.HanimeDownloadManagerV2

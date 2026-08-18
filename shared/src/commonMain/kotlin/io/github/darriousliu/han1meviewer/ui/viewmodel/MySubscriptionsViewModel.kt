@@ -7,7 +7,7 @@ import io.github.darriousliu.han1meviewer.logic.NetworkRepo
 import io.github.darriousliu.han1meviewer.logic.model.MySubscriptions
 import io.github.darriousliu.han1meviewer.logic.model.SubscriptionItem
 import io.github.darriousliu.han1meviewer.logic.model.SubscriptionVideosItem
-import io.github.darriousliu.han1meviewer.logic.state.WebsiteState
+import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow

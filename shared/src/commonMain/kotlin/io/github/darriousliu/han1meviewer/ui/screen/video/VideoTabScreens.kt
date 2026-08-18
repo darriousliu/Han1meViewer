@@ -19,7 +19,7 @@ import io.github.darriousliu.han1meviewer.getHanimeShareText
 import io.github.darriousliu.han1meviewer.logic.entity.CheckInRecordEntity
 import io.github.darriousliu.han1meviewer.logic.model.HanimeInfo
 import io.github.darriousliu.han1meviewer.logic.model.HanimeVideo
-import io.github.darriousliu.han1meviewer.logic.state.WebsiteState
+import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.ui.bridge.VideoPageHost
 import io.github.darriousliu.han1meviewer.ui.component.BottomSheetHandler
 import io.github.darriousliu.han1meviewer.ui.theme.HanimeTheme

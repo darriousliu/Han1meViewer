@@ -57,8 +57,8 @@ import coil3.compose.AsyncImage
 import io.github.darriousliu.han1meviewer.logic.entity.CheckInRecordEntity
 import io.github.darriousliu.han1meviewer.logic.entity.CheckInType
 import io.github.darriousliu.han1meviewer.logic.entity.WatchHistoryEntity
-import io.github.darriousliu.han1meviewer.util.CHINESE_FULL_DATE_FORMAT
-import io.github.darriousliu.han1meviewer.util.HOUR_MINUTE_FORMAT
+import io.github.darriousliu.han1meviewer.core.common.util.CHINESE_FULL_DATE_FORMAT
+import io.github.darriousliu.han1meviewer.core.common.util.HOUR_MINUTE_FORMAT
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.add
 import io.github.darriousliu.han1meviewer.core.resource.delete

@@ -57,9 +57,9 @@ import io.github.darriousliu.han1meviewer.logic.DatabaseRepo
 import io.github.darriousliu.han1meviewer.logic.dao.CheckInRecordDatabase
 import io.github.darriousliu.han1meviewer.logic.entity.HKeyframeEntity
 import io.github.darriousliu.han1meviewer.logic.entity.WatchHistoryEntity
-import io.github.darriousliu.han1meviewer.logic.exception.ParseException
+import io.github.darriousliu.han1meviewer.core.common.exception.ParseException
 import io.github.darriousliu.han1meviewer.logic.model.SearchOption
-import io.github.darriousliu.han1meviewer.logic.state.VideoLoadingState
+import io.github.darriousliu.han1meviewer.core.common.state.VideoLoadingState
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
 import io.github.darriousliu.han1meviewer.ui.bridge.VideoPageHost
 import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog
@@ -74,10 +74,10 @@ import io.github.darriousliu.han1meviewer.ui.viewmodel.VideoViewModel
 import io.github.darriousliu.han1meviewer.util.OrientationManager
 import io.github.darriousliu.han1meviewer.util.browse
 import io.github.darriousliu.han1meviewer.util.checkBadGuy
-import io.github.darriousliu.han1meviewer.util.copyToClipboard
-import io.github.darriousliu.han1meviewer.util.dpPx
-import io.github.darriousliu.han1meviewer.util.loadBundledJson
-import io.github.darriousliu.han1meviewer.util.localizedTextOrNull
+import io.github.darriousliu.han1meviewer.core.common.util.copyToClipboard
+import io.github.darriousliu.han1meviewer.core.common.util.dpPx
+import io.github.darriousliu.han1meviewer.core.common.util.loadBundledJson
+import io.github.darriousliu.han1meviewer.core.common.util.localizedTextOrNull
 import io.github.darriousliu.han1meviewer.util.shareText
 import io.github.darriousliu.han1meviewer.util.showShortToast
 import io.github.darriousliu.han1meviewer.util.startActivity

@@ -21,6 +21,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
+import io.github.darriousliu.han1meviewer.core.common.HJson
 
 /**
  * @project Han1meViewer

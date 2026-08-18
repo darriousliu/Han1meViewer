@@ -83,7 +83,7 @@ import io.github.darriousliu.han1meviewer.logic.entity.SearchHistoryEntity
 import io.github.darriousliu.han1meviewer.logic.model.HanimeInfo
 import io.github.darriousliu.han1meviewer.logic.model.HanimeInfo.Companion.NORMAL
 import io.github.darriousliu.han1meviewer.logic.model.SearchOption
-import io.github.darriousliu.han1meviewer.logic.state.PageLoadingState
+import io.github.darriousliu.han1meviewer.core.common.state.PageLoadingState
 import io.github.darriousliu.han1meviewer.ui.component.VideoCardItem
 import io.github.darriousliu.han1meviewer.ui.component.content.EmptyContent
 import io.github.darriousliu.han1meviewer.ui.component.lazy.LazyVerticalGrid

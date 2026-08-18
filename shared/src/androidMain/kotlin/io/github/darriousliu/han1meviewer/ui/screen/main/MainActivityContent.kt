@@ -21,10 +21,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavBackStack
 import io.github.darriousliu.han1meviewer.Preferences
 import io.github.darriousliu.han1meviewer.R
-import io.github.darriousliu.han1meviewer.logic.exception.CloudFlareBlockedException
+import io.github.darriousliu.han1meviewer.core.common.exception.CloudFlareBlockedException
 import io.github.darriousliu.han1meviewer.logic.model.github.Latest
 import io.github.darriousliu.han1meviewer.logic.network.CloudflareNavBridge
-import io.github.darriousliu.han1meviewer.logic.state.PageState
+import io.github.darriousliu.han1meviewer.core.common.state.PageState
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
 import io.github.darriousliu.han1meviewer.ui.component.HanimeToastHost
 import io.github.darriousliu.han1meviewer.ui.component.UpdateDialog

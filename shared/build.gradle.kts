@@ -1,15 +1,7 @@
 @file:Suppress("UnstableApiUsage")
 @file:OptIn(ExperimentalKotlinGradlePluginApi::class)
 
-import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
-import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.INT
-import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
-import io.github.darriousliu.han1meviewer.convention.Config
-import io.github.darriousliu.han1meviewer.convention.Config.Version.createVersion
 import io.github.darriousliu.han1meviewer.convention.createAndroidJvmMain
-import io.github.darriousliu.han1meviewer.convention.Config.Version.source
-import io.github.darriousliu.han1meviewer.convention.Config.isRelease
-import io.github.darriousliu.han1meviewer.convention.Config.lastCommitSha
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
@@ -21,18 +13,7 @@ plugins {
     alias(libs.plugins.androidx.room)
     alias(libs.plugins.aboutlibraries)
     alias(libs.plugins.ben.manes)
-    alias(libs.plugins.buildkonfig)
 }
-
-val releaseBuild = isRelease
-val commitSha = if (releaseBuild) lastCommitSha else "b8eace8"
-val githubToken = System.getenv("HA_GITHUB_TOKEN") ?: rootProject
-    .file("app/ha1_github_token.txt")
-    .takeIf { it.isFile }
-    ?.readText()
-    .orEmpty()
-val (versionCode, versionName) = createVersion(major = 1, minor = 0, patch = 2)
-val applicationId = "io.github.darriousliu.han1meviewer${if (releaseBuild) "" else ".debug"}"
 
 // plugin 是跟着「app 逻辑搬进 shared」那次带过来的，但配置块没带过来，
 // 结果 :shared 产出的 aboutlibraries.json 一直是空的
@@ -58,32 +39,6 @@ aboutLibraries {
     }
 }
 
-buildkonfig {
-    packageName = "io.github.darriousliu.han1meviewer"
-    exposeObjectWithName = "BuildConfig"
-
-    defaultConfigs {
-        buildConfigField(
-            BOOLEAN, "DEBUG", (!releaseBuild).toString(),
-            nullable = false,
-            const = true
-        )
-        buildConfigField(STRING, "APPLICATION_ID", applicationId, nullable = false, const = true)
-        buildConfigField(STRING, "COMMIT_SHA", commitSha, nullable = false, const = true)
-        buildConfigField(STRING, "VERSION_NAME", versionName, nullable = false, const = true)
-        buildConfigField(
-            INT, "VERSION_CODE", versionCode.toString(),
-            nullable = false,
-            const = true
-        )
-        buildConfigField(STRING, "HA_GITHUB_TOKEN", githubToken, nullable = false, const = true)
-        buildConfigField(STRING, "VERSION_SOURCE", source, nullable = false, const = true)
-        buildConfigField(
-            INT, "SEARCH_YEAR_RANGE_END", Config.thisYear.toString(), nullable = false,
-            const = true
-        )
-    }
-}
 
 kotlin {
     android {
@@ -103,7 +58,7 @@ kotlin {
         compilerOptions {
             freeCompilerArgs.addAll(
                 "-P",
-                "plugin:org.jetbrains.kotlin.parcelize:additionalAnnotation=io.github.darriousliu.han1meviewer.util.Parcelize",
+                "plugin:org.jetbrains.kotlin.parcelize:additionalAnnotation=io.github.darriousliu.han1meviewer.core.common.util.Parcelize",
             )
         }
     }
@@ -141,6 +96,8 @@ kotlin {
             // Res 出现在很多公开签名里（StringResource / DrawableResource 参数），
             // 用 api 传递出去，消费方不用各自再声明一遍。
             api(project(":core:resource"))
+            // 异常、状态、格式化这些类型遍布公开签名，用 api 传下去
+            api(project(":core:common"))
             implementation(libs.kotlinx.io.core)
             implementation(libs.ksoup)
             implementation(libs.mmkv.kotlin)

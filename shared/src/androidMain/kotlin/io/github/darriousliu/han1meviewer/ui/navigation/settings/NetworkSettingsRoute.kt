@@ -26,14 +26,14 @@ import io.github.darriousliu.han1meviewer.logic.network.DohConfig
 import io.github.darriousliu.han1meviewer.logic.network.HDns
 import io.github.darriousliu.han1meviewer.logic.network.HProxySelector
 import io.github.darriousliu.han1meviewer.logic.network.HanimeNetwork
-import io.github.darriousliu.han1meviewer.logic.state.WebsiteState
+import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.logout
 import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog
 import io.github.darriousliu.han1meviewer.ui.screen.settings.DelayResultUi
 import io.github.darriousliu.han1meviewer.ui.screen.settings.DohTestResultUi
 import io.github.darriousliu.han1meviewer.ui.screen.settings.NetworkSettingsScreen
 import io.github.darriousliu.han1meviewer.ui.screen.settings.NetworkSettingsUiState
-import io.github.darriousliu.han1meviewer.util.applicationContext
+import io.github.darriousliu.han1meviewer.core.common.util.applicationContext
 import io.github.darriousliu.han1meviewer.util.restartApplication
 import io.github.darriousliu.han1meviewer.util.showAlertDialog
 import io.github.darriousliu.han1meviewer.util.showShortToast

@@ -16,7 +16,7 @@ import io.github.darriousliu.han1meviewer.ui.navigation.SearchRoute
 import io.github.darriousliu.han1meviewer.ui.screen.search.AdvancedSearchSheet
 import io.github.darriousliu.han1meviewer.ui.screen.search.SearchScreen
 import io.github.darriousliu.han1meviewer.ui.viewmodel.SearchViewModel
-import io.github.darriousliu.han1meviewer.util.setPlainText
+import io.github.darriousliu.han1meviewer.core.common.util.setPlainText
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.copy_to_clipboard
 import kotlinx.coroutines.launch

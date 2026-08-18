@@ -30,9 +30,9 @@ import io.github.darriousliu.han1meviewer.ui.screen.home.dailycheckin.DailyCheck
 import io.github.darriousliu.han1meviewer.ui.screen.home.dailycheckin.DailyCheckInEvent
 import io.github.darriousliu.han1meviewer.ui.screen.home.dailycheckin.DailyCheckInUiState
 import io.github.darriousliu.han1meviewer.ui.viewmodel.CheckInCalendarViewModel
-import io.github.darriousliu.han1meviewer.util.CHINESE_MONTH_DAY_FORMAT
-import io.github.darriousliu.han1meviewer.util.currentLocalDate
-import io.github.darriousliu.han1meviewer.util.currentYearMonth
+import io.github.darriousliu.han1meviewer.core.common.util.CHINESE_MONTH_DAY_FORMAT
+import io.github.darriousliu.han1meviewer.core.common.util.currentLocalDate
+import io.github.darriousliu.han1meviewer.core.common.util.currentYearMonth
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.add_widget
 import io.github.darriousliu.han1meviewer.core.resource.calendar_dialog_confirm

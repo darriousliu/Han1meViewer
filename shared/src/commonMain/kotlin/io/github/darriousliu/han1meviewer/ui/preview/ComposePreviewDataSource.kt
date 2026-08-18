@@ -398,7 +398,7 @@ val fakeDownloadedVideos = fakeHomePageVideos.take(3).mapIndexed { index, item -
             videoUrl = "https://example.com/test$index.mp4",
             length = 100L * 1024 * 1024,
             downloadedLength = 100L * 1024 * 1024,
-            state = io.github.darriousliu.han1meviewer.logic.state.DownloadState.Finished,
+            state = io.github.darriousliu.han1meviewer.core.common.state.DownloadState.Finished,
             id = index + 1,
         ),
         categories = emptyList(),

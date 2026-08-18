@@ -25,7 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import io.github.darriousliu.han1meviewer.util.formatVideoTime
+import io.github.darriousliu.han1meviewer.core.common.util.formatVideoTime
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.back
 import io.github.darriousliu.han1meviewer.core.resource.ic_baseline_arrow_back_24

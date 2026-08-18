@@ -22,7 +22,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.darriousliu.han1meviewer.logic.model.CreatorTab
 import io.github.darriousliu.han1meviewer.logic.model.CreatorUploadingItem
 import io.github.darriousliu.han1meviewer.logic.model.HanimeInfo
-import io.github.darriousliu.han1meviewer.logic.state.PageLoadingState
+import io.github.darriousliu.han1meviewer.core.common.state.PageLoadingState
 import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog
 import io.github.darriousliu.han1meviewer.ui.component.appbar.HanimeScaffold
 import io.github.darriousliu.han1meviewer.ui.screen.home.creatorcenter.CreatorCenterEvent

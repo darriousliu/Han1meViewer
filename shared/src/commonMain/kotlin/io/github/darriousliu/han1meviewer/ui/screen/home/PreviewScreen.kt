@@ -21,7 +21,7 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import io.github.darriousliu.han1meviewer.PREVIEW_COMMENT_PREFIX
 import io.github.darriousliu.han1meviewer.logic.model.HanimePreview
-import io.github.darriousliu.han1meviewer.logic.state.WebsiteState
+import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.ui.preview.fakeHomePageVideos
 import io.github.darriousliu.han1meviewer.ui.preview.fakeNewHanimeInfo

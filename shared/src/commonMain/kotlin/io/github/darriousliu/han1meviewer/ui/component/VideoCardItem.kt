@@ -35,7 +35,7 @@ import io.github.darriousliu.han1meviewer.ui.preview.fakeVideosItem
 import io.github.darriousliu.han1meviewer.ui.screen.RetryableImage
 import io.github.darriousliu.han1meviewer.ui.theme.VideoMetaIconSize
 import io.github.darriousliu.han1meviewer.ui.theme.VideoMetaTextSize
-import io.github.darriousliu.han1meviewer.util.DisplayTextLocalizer
+import io.github.darriousliu.han1meviewer.core.common.util.DisplayTextLocalizer
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.h_chan_load_failed
 import io.github.darriousliu.han1meviewer.core.resource.h_chan_loading

@@ -61,7 +61,7 @@ import io.github.darriousliu.han1meviewer.HANIME_BASE_URL
 import io.github.darriousliu.han1meviewer.logic.model.UserAccount
 import io.github.darriousliu.han1meviewer.logic.model.UserAccountAction
 import io.github.darriousliu.han1meviewer.logic.model.UserAccountSubmittingState
-import io.github.darriousliu.han1meviewer.logic.state.WebsiteState
+import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.ui.component.PageContent
 import io.github.darriousliu.han1meviewer.ui.component.appbar.HanimeScaffold
 import io.github.darriousliu.han1meviewer.ui.component.content.ErrorContent

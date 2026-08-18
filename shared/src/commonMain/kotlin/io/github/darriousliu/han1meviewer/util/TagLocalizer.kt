@@ -1,5 +1,7 @@
 package io.github.darriousliu.han1meviewer.util
 
+import io.github.darriousliu.han1meviewer.core.common.util.LanguageHelper
+import io.github.darriousliu.han1meviewer.core.common.util.loadBundledJson
 import io.github.darriousliu.han1meviewer.logic.model.SearchOption
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock

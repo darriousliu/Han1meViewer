@@ -2,6 +2,7 @@ package io.github.darriousliu.han1meviewer.util
 
 import android.content.Intent
 import kotlin.system.exitProcess
+import io.github.darriousliu.han1meviewer.core.common.util.applicationContext
 
 fun restartApplication(killProcess: Boolean = true) {
     applicationContext.packageManager

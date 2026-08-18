@@ -1,7 +1,7 @@
 package io.github.darriousliu.han1meviewer.logic.network
 
-import io.github.darriousliu.han1meviewer.util.applicationContext
-import io.github.darriousliu.han1meviewer.util.isMainProcess
+import io.github.darriousliu.han1meviewer.core.common.util.applicationContext
+import io.github.darriousliu.han1meviewer.core.common.util.isMainProcess
 import okhttp3.Cache
 import java.io.File
 

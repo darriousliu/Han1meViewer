@@ -11,13 +11,14 @@ import com.google.firebase.Firebase
 import com.google.firebase.analytics.analytics
 import io.github.darriousliu.han1meviewer.HanimeApplication
 import io.github.darriousliu.han1meviewer.logic.model.github.Latest
-import io.github.darriousliu.han1meviewer.logic.state.WebsiteState
+import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.ui.viewmodel.AppViewModel
 import io.github.darriousliu.han1meviewer.Preferences
 import io.github.darriousliu.han1meviewer.util.ThemeUtils
 import io.github.darriousliu.han1meviewer.util.activity
 import io.github.darriousliu.han1meviewer.util.restartApplication
 import kotlinx.coroutines.flow.StateFlow
+import io.github.darriousliu.han1meviewer.core.common.util.applicationContext
 
 /**
  * `LocalActivity` 来自 activity-compose（项目在 1.13.0，远高于引入它的 1.10.0）。

@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.core.net.toUri
+import io.github.darriousliu.han1meviewer.core.common.util.applicationContext
 
 infix fun Context.browse(uri: String) {
     startActivity(

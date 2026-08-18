@@ -1,7 +1,7 @@
 package io.github.darriousliu.han1meviewer.ui.screen.home.preview
 
 import androidx.compose.foundation.lazy.LazyListState
-import io.github.darriousliu.han1meviewer.util.currentLocalDate
+import io.github.darriousliu.han1meviewer.core.common.util.currentLocalDate
 
 /**
  * 根据年份和月份生成日期码（yyyyMM 格式）。

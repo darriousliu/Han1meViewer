@@ -5,8 +5,8 @@ import io.github.darriousliu.han1meviewer.HanimeConstants.HANIME_HOSTNAME
 import io.github.darriousliu.han1meviewer.HanimeConstants.HANIME_URL
 import io.github.darriousliu.han1meviewer.PlayerDefaults
 import io.github.darriousliu.han1meviewer.Preferences
-import io.github.darriousliu.han1meviewer.util.formatBytesPerSecond
-import io.github.darriousliu.han1meviewer.util.formatFileSizeV2
+import io.github.darriousliu.han1meviewer.core.common.util.formatBytesPerSecond
+import io.github.darriousliu.han1meviewer.core.common.util.formatFileSizeV2
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.alternative
 import io.github.darriousliu.han1meviewer.core.resource.at_any_time

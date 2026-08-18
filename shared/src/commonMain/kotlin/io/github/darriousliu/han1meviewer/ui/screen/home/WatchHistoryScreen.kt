@@ -62,8 +62,8 @@ import io.github.darriousliu.han1meviewer.LOCAL_DATE_TIME_FORMAT
 import io.github.darriousliu.han1meviewer.logic.entity.WatchHistoryEntity
 import io.github.darriousliu.han1meviewer.logic.model.HanimeInfo
 import io.github.darriousliu.han1meviewer.logic.model.OnlineWatchHistorySort
-import io.github.darriousliu.han1meviewer.logic.state.PageLoadingState
-import io.github.darriousliu.han1meviewer.logic.state.WebsiteState
+import io.github.darriousliu.han1meviewer.core.common.state.PageLoadingState
+import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog
 import io.github.darriousliu.han1meviewer.ui.component.LoadMoreFooter
 import io.github.darriousliu.han1meviewer.ui.component.PageContent

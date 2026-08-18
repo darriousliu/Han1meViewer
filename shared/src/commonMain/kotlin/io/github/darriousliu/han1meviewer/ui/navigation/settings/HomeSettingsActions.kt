@@ -3,9 +3,9 @@ package io.github.darriousliu.han1meviewer.ui.navigation.settings
 import androidx.compose.runtime.Composable
 import io.github.darriousliu.han1meviewer.Preferences
 import io.github.darriousliu.han1meviewer.logic.model.github.Latest
-import io.github.darriousliu.han1meviewer.logic.state.WebsiteState
-import io.github.darriousliu.han1meviewer.util.applyAppLanguage
-import io.github.darriousliu.han1meviewer.util.toLanguageTagOrNull
+import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
+import io.github.darriousliu.han1meviewer.core.common.util.applyAppLanguage
+import io.github.darriousliu.han1meviewer.core.common.util.toLanguageTagOrNull
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 

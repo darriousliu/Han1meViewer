@@ -3,7 +3,7 @@ package io.github.darriousliu.han1meviewer.logic.network
 import io.github.darriousliu.han1meviewer.GETCHU_BASE_URL
 import io.github.darriousliu.han1meviewer.HA1_GITHUB_API_URL
 import io.github.darriousliu.han1meviewer.HANIME_BASE_URL
-import io.github.darriousliu.han1meviewer.HJson
+import io.github.darriousliu.han1meviewer.core.common.HJson
 import io.github.darriousliu.han1meviewer.logic.network.service.GetchuService
 import io.github.darriousliu.han1meviewer.logic.network.service.HGitHubService
 import io.github.darriousliu.han1meviewer.logic.network.service.HanimeBaseService

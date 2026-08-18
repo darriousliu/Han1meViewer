@@ -1,7 +1,7 @@
 package io.github.darriousliu.han1meviewer.logic.model
 
-import io.github.darriousliu.han1meviewer.util.Parcelable
-import io.github.darriousliu.han1meviewer.util.Parcelize
+import io.github.darriousliu.han1meviewer.core.common.util.Parcelable
+import io.github.darriousliu.han1meviewer.core.common.util.Parcelize
 
 @Parcelize
 data class MySubscriptions(

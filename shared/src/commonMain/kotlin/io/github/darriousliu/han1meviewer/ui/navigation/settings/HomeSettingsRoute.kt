@@ -2,8 +2,8 @@
 
 package io.github.darriousliu.han1meviewer.ui.navigation.settings
 
-import io.github.darriousliu.han1meviewer.util.appCacheSizeBytes
-import io.github.darriousliu.han1meviewer.util.clearAppCache
+import io.github.darriousliu.han1meviewer.core.common.util.appCacheSizeBytes
+import io.github.darriousliu.han1meviewer.core.common.util.clearAppCache
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,13 +16,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import io.github.darriousliu.han1meviewer.BuildConfig
+import io.github.darriousliu.han1meviewer.core.common.BuildConfig
 import io.github.darriousliu.han1meviewer.HA1_GITHUB_FORUM_URL
 import io.github.darriousliu.han1meviewer.HA1_GITHUB_ISSUE_URL
 import io.github.darriousliu.han1meviewer.HanimeConstants
 import io.github.darriousliu.han1meviewer.Preferences
 import io.github.darriousliu.han1meviewer.logic.BackupManager
-import io.github.darriousliu.han1meviewer.logic.state.WebsiteState
+import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog
 import io.github.darriousliu.han1meviewer.ui.component.LocalToaster
 import io.github.darriousliu.han1meviewer.ui.component.showShort

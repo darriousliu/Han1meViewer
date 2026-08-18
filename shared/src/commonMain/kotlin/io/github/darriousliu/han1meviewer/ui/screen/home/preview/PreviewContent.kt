@@ -44,9 +44,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import io.github.darriousliu.han1meviewer.logic.exception.HanimeNotFoundException
+import io.github.darriousliu.han1meviewer.core.common.exception.HanimeNotFoundException
 import io.github.darriousliu.han1meviewer.logic.model.HanimePreview
-import io.github.darriousliu.han1meviewer.logic.state.WebsiteState
+import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.pienization
 import io.github.darriousliu.han1meviewer.ui.component.content.EmptyContent
 import io.github.darriousliu.han1meviewer.ui.component.content.ErrorContent

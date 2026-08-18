@@ -18,7 +18,7 @@ import io.github.darriousliu.han1meviewer.ui.navigation.SearchRoute
 import io.github.darriousliu.han1meviewer.ui.navigation.navigateSafely
 import io.github.darriousliu.han1meviewer.ui.viewmodel.VideoViewModel
 import io.github.darriousliu.han1meviewer.util.browse
-import io.github.darriousliu.han1meviewer.util.copyToClipboard
+import io.github.darriousliu.han1meviewer.core.common.util.copyToClipboard
 import io.github.darriousliu.han1meviewer.util.requestPostNotificationPermission
 import io.github.darriousliu.han1meviewer.util.showAlertDialog
 import io.github.darriousliu.han1meviewer.util.showShortToast

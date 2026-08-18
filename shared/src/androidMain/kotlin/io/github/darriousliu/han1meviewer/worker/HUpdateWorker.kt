@@ -30,7 +30,7 @@ import io.github.darriousliu.han1meviewer.UPDATE_NOTIFICATION_CHANNEL
 import io.github.darriousliu.han1meviewer.logic.model.github.Latest
 import io.github.darriousliu.han1meviewer.logic.network.injectUpdate
 import io.github.darriousliu.han1meviewer.util.installApkPackage
-import io.github.darriousliu.han1meviewer.util.runSuspendCatching
+import io.github.darriousliu.han1meviewer.core.common.util.runSuspendCatching
 import io.github.darriousliu.han1meviewer.util.showShortToast
 import io.github.darriousliu.han1meviewer.util.updateFile
 import java.io.File

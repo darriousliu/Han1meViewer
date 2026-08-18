@@ -4,7 +4,7 @@ import io.github.darriousliu.han1meviewer.logic.model.CreatorSort
 import io.github.darriousliu.han1meviewer.logic.model.CreatorTab
 import io.github.darriousliu.han1meviewer.logic.model.CreatorUploadingItem
 import io.github.darriousliu.han1meviewer.logic.model.HanimeInfo
-import io.github.darriousliu.han1meviewer.logic.state.PageLoadingState
+import io.github.darriousliu.han1meviewer.core.common.state.PageLoadingState
 
 /**
  * 创作者中心页面的跨平台 UI 状态。

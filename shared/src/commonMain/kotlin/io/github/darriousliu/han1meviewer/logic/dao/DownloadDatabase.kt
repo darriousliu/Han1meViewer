@@ -14,7 +14,7 @@ import io.github.darriousliu.han1meviewer.logic.entity.download.DownloadCategory
 import io.github.darriousliu.han1meviewer.logic.entity.download.DownloadGroupEntity
 import io.github.darriousliu.han1meviewer.logic.entity.download.HanimeCategoryCrossRef
 import io.github.darriousliu.han1meviewer.logic.entity.download.HanimeDownloadEntity
-import io.github.darriousliu.han1meviewer.logic.state.DownloadState
+import io.github.darriousliu.han1meviewer.core.common.state.DownloadState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 

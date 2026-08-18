@@ -1,7 +1,7 @@
 package io.github.darriousliu.han1meviewer.logic
 
 import co.touchlab.kermit.Logger
-import io.github.darriousliu.han1meviewer.HJson
+import io.github.darriousliu.han1meviewer.core.common.HJson
 import io.github.darriousliu.han1meviewer.Preferences
 import io.github.darriousliu.han1meviewer.logic.dao.DownloadDatabase
 import io.github.darriousliu.han1meviewer.logic.dao.HistoryDatabase

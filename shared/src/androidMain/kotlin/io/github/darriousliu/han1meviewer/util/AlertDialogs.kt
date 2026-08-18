@@ -13,6 +13,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.github.darriousliu.han1meviewer.R
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
+import io.github.darriousliu.han1meviewer.core.common.util.dpF
 
 fun Context.getDialogDefaultDrawable(): Drawable {
     val color = MaterialColors.getColor(

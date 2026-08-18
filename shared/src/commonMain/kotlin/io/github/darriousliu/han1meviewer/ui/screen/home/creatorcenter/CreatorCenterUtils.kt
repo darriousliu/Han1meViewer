@@ -4,7 +4,7 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import io.github.darriousliu.han1meviewer.logic.state.PageLoadingState
+import io.github.darriousliu.han1meviewer.core.common.state.PageLoadingState
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.creator_status_pending
 import io.github.darriousliu.han1meviewer.core.resource.creator_status_queued

@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import com.itxca.spannablex.spannable
-import io.github.darriousliu.han1meviewer.BuildConfig
+import io.github.darriousliu.han1meviewer.core.common.BuildConfig
 import io.github.darriousliu.han1meviewer.FILE_PROVIDER_AUTHORITY
 import io.github.darriousliu.han1meviewer.Preferences
 import io.github.darriousliu.han1meviewer.R
@@ -17,6 +17,8 @@ import io.github.darriousliu.han1meviewer.logic.model.github.Latest
 import io.github.darriousliu.han1meviewer.worker.HUpdateWorker
 import java.io.File
 import java.util.regex.Pattern
+import io.github.darriousliu.han1meviewer.core.common.util.applicationContext
+import io.github.darriousliu.han1meviewer.core.common.util.dpPx
 
 val Context.updateFile: File get() = File(applicationContext.cacheDir, "update.apk")
 

@@ -1,14 +1,14 @@
 package io.github.darriousliu.han1meviewer.logic.network
 
-import io.github.darriousliu.han1meviewer.BuildConfig
+import io.github.darriousliu.han1meviewer.core.common.BuildConfig
 import io.github.darriousliu.han1meviewer.FirebaseConstants
 import io.github.darriousliu.han1meviewer.HA1_GITHUB_DEFAULT_BRANCH
 import io.github.darriousliu.han1meviewer.Preferences
 import io.github.darriousliu.han1meviewer.logic.model.github.CommitComparison
 import io.github.darriousliu.han1meviewer.logic.model.github.Latest
 import io.github.darriousliu.han1meviewer.util.Firebase
-import io.github.darriousliu.han1meviewer.util.checkNeedUpdate
-import io.github.darriousliu.han1meviewer.util.runSuspendCatching
+import io.github.darriousliu.han1meviewer.core.common.util.checkNeedUpdate
+import io.github.darriousliu.han1meviewer.core.common.util.runSuspendCatching
 
 /**
  * @project Han1meViewer
