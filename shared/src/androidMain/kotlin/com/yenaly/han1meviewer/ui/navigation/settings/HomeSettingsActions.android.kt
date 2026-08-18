@@ -15,8 +15,6 @@ import com.yenaly.han1meviewer.logic.state.WebsiteState
 import com.yenaly.han1meviewer.ui.viewmodel.AppViewModel
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.util.ThemeUtils
-import com.yenaly.han1meviewer.util.applyAppLanguage
-import com.yenaly.han1meviewer.util.toLanguageTagOrNull
 import com.yenaly.han1meviewer.util.activity
 import com.yenaly.han1meviewer.util.restartApplication
 import kotlinx.coroutines.flow.StateFlow
@@ -50,13 +48,6 @@ private class AndroidHomeSettingsActions(
     }
 
     override fun applyThemeColor() = recreate()
-
-    /**
-     * 换成平台标准的 per-app language API（见 `util/AppLocale.android.kt`）。
-     * 它自己会触发重建，所以这里**不再手动 `recreate()`**。
-     */
-    override fun applyAppLanguage() =
-        applyAppLanguage(toLanguageTagOrNull(Preferences.appLanguage))
 
     override fun reloadUi() = recreate()
 

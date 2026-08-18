@@ -1,8 +1,11 @@
 package com.yenaly.han1meviewer.ui.navigation.settings
 
 import androidx.compose.runtime.Composable
+import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.logic.model.github.Latest
 import com.yenaly.han1meviewer.logic.state.WebsiteState
+import com.yenaly.han1meviewer.util.applyAppLanguage
+import com.yenaly.han1meviewer.util.toLanguageTagOrNull
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -36,8 +39,13 @@ interface HomeSettingsActions {
     /** 主题色改完之后让它生效。 */
     fun applyThemeColor() {}
 
-    /** 应用语言改完之后让它生效。 */
-    fun applyAppLanguage() {}
+    /**
+     * 应用语言改完之后让它生效。
+     *
+     * 默认实现直接调 commonMain 的 `applyAppLanguage`（本身是 expect fun，
+     * 三端各有实现），所以**没有平台需要 override 它**。
+     */
+    fun applyAppLanguage() = applyAppLanguage(toLanguageTagOrNull(Preferences.appLanguage))
 
     /**
      * 一次改了一堆偏好之后重建 UI（现在只有「导入备份」用）。
