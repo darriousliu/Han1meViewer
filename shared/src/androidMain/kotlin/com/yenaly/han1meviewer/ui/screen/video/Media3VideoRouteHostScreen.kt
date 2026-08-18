@@ -1,53 +1,91 @@
 package com.yenaly.han1meviewer.ui.screen.video
 
+import android.widget.Toast
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.yenaly.han1meviewer.PermissionRequester
+import com.yenaly.han1meviewer.HanimeConstants
 import com.yenaly.han1meviewer.Preferences
+import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.ResolutionLinkMap
 import com.yenaly.han1meviewer.logic.DatabaseRepo
+import com.yenaly.han1meviewer.logic.dao.CheckInRecordDatabase
+import com.yenaly.han1meviewer.logic.model.SearchOption
 import com.yenaly.han1meviewer.logic.state.VideoLoadingState
 import com.yenaly.han1meviewer.ui.activity.MainActivity
+import com.yenaly.han1meviewer.ui.bridge.VideoPageHost
 import com.yenaly.han1meviewer.ui.navigation.VideoRoute
 import com.yenaly.han1meviewer.ui.screen.video.player.HanimeVideoPlayer
 import com.yenaly.han1meviewer.ui.screen.video.player.rememberVideoPlayerController
+import com.yenaly.han1meviewer.ui.viewmodel.CommentViewModel
 import com.yenaly.han1meviewer.ui.viewmodel.VideoViewModel
+import com.yenaly.han1meviewer.util.copyToClipboard
+import com.yenaly.han1meviewer.util.loadBundledJson
 import com.yenaly.han1meviewer.util.localizedTextOrNull
+import com.yenaly.han1meviewer.util.shareText
 import com.yenaly.han1meviewer.util.showShortToast
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Media3 + Compose 的视频页宿主。
  *
- * ⚠️ **Step 25-2 的最小可播版本**：只有播放器本身，**还没有简介/评论那两个 tab**。
- * 它存在的目的是先把「只有真机能回答的未知」一次试掉：surface 挂不挂得上、
- * HLS 能不能放、代理通不通、position 报得准不准。tab 和完整控件在后续几批补。
- *
  * 和旧的 [VideoRouteHostScreen] **完全隔离**——旧路径一个字没动，
- * 在设置页把内核切回去就能回到它。所以这里刻意重复了一小段 ViewModel/加载接线，
+ * 在设置页把内核切回去就能回到它。所以这里刻意重复了 ViewModel/加载/actions 的接线，
  * 而不是把那 719 行抽成共用接口：改坏了只能整批回退的前提下，隔离比 DRY 值钱。
  *
  * ⚠️ 本文件**绝不能**调 `Jzvd.releaseAllVideos()` / `goOnPlayOnPause()` / `backPress()`——
  * 那三个是全局静态，两套播放器共用会互相踩。
+ *
+ * 和旧宿主的一处**结构差异**：这里是纯 Compose 的 `Column`（播放器在上、tab 在下），
+ * 没有 `CoordinatorLayout`/`AppBarLayout`。所以**滚动列表不会折叠播放器区域**——
+ * 那正是旧路径要靠 View 互操作（`rememberHostNestedScrollConnection`）才能做到的事。
+ * 这是本轮已知的行为差异，后续再补。
  */
 @Composable
 fun Media3VideoRouteHostScreen(
     activity: MainActivity,
     route: VideoRoute,
 ) {
+    val scope = rememberCoroutineScope()
     val viewModel: VideoViewModel = viewModel(viewModelStoreOwner = activity)
+    val commentViewModel: CommentViewModel = viewModel(viewModelStoreOwner = activity)
     val controller = rememberVideoPlayerController(route.videoCode to route.localUri)
     val videoState by viewModel.hanimeVideoStateFlow.collectAsStateWithLifecycle()
 
     var title by remember(route) { mutableStateOf("") }
+    var checkedQuality by remember(route) { mutableStateOf<String?>(null) }
+    var pendingDownloadPrompt by remember(route) { mutableStateOf<DownloadPromptState?>(null) }
+    var genres by remember(Preferences.baseUrl) { mutableStateOf(emptyList<SearchOption>()) }
+
+    val stringLongPressShare = remember(activity) {
+        activity.getString(R.string.long_press_share_to_copy)
+    }
+
+    LaunchedEffect(Preferences.baseUrl) {
+        val genreFile = if (Preferences.baseUrl == HanimeConstants.HANIME_URL[3]) {
+            "genre_av.json"
+        } else {
+            "genre.json"
+        }
+        genres = loadBundledJson<List<SearchOption>>("files/search_options/$genreFile").orEmpty()
+    }
 
     LaunchedEffect(route) {
+        commentViewModel.code = route.videoCode
         viewModel.getHanimeVideo(route.videoCode, route.localUri)
     }
 
@@ -57,7 +95,7 @@ fun Media3VideoRouteHostScreen(
                 title = state.info.title
                 val url = state.info.videoUrls.pickPreferredUrl()
                 if (url == null) {
-                    showShortToast(com.yenaly.han1meviewer.R.string.fail_to_get_video_link)
+                    showShortToast(R.string.fail_to_get_video_link)
                 } else {
                     val resume = DatabaseRepo.WatchHistory.findBy(route.videoCode)?.progress ?: 0L
                     controller.load(url, if (Preferences.allowResumePlayback) resume else 0L)
@@ -72,12 +110,99 @@ fun Media3VideoRouteHostScreen(
         }
     }
 
-    HanimeVideoPlayer(
-        controller = controller,
-        title = title,
-        onBack = { activity.onBackPressedDispatcher.onBackPressed() },
-        modifier = Modifier.fillMaxSize(),
-    )
+    val actions = remember(activity, scope, viewModel, genres) {
+        VideoRouteActions(
+            context = activity,
+            scope = scope,
+            viewModel = viewModel,
+            genres = genres,
+            requestStoragePermission = { onGranted, onDenied, onPermanentlyDenied ->
+                (activity as PermissionRequester).requestStoragePermission(
+                    onGranted = onGranted,
+                    onDenied = onDenied,
+                    onPermanentlyDenied = onPermanentlyDenied,
+                )
+            },
+            onPendingDownloadPromptChange = { pendingDownloadPrompt = it },
+            getCheckedQuality = { checkedQuality },
+            setCheckedQuality = { checkedQuality = it },
+            onStoragePermissionDenied = { activity.navBackStack.removeLastOrNull() },
+            onDownloadPermissionDialogCancelled = { activity.navBackStack.removeLastOrNull() },
+        )
+    }
+
+    /** PiP 那三个方法原来是用 Jzvd 术语写的，这里用 controller 重新表达。 */
+    val pageHost = remember(controller) {
+        object : VideoPageHost {
+            override fun showCommentBadge(count: Int) = viewModel.setCommentBadgeCount(count)
+            override fun shouldEnterPip(): Boolean = controller.isPlaying
+            override fun enterPipMode() = Unit          // 25-5 补
+            override fun onPipModeChanged(isInPip: Boolean) = viewModel.setPipMode(isInPip)
+            override fun togglePlayPause() {
+                if (controller.isPlaying) controller.pause() else controller.play()
+            }
+        }
+    }
+
+    Column(Modifier.fillMaxSize()) {
+        HanimeVideoPlayer(
+            controller = controller,
+            title = title,
+            onBack = { activity.onBackPressedDispatcher.onBackPressed() },
+            modifier = Modifier.fillMaxWidth().aspectRatio(16f / 9f),
+        )
+        VideoRouteContent(
+            videoCode = route.videoCode,
+            videoState = videoState,
+            videoViewModel = viewModel,
+            commentViewModel = commentViewModel,
+            fromDownload = viewModel.fromDownload,
+            pendingDownloadPrompt = pendingDownloadPrompt,
+            onPendingDownloadPromptChange = { pendingDownloadPrompt = it },
+            onRetry = { viewModel.getHanimeVideo(route.videoCode, route.localUri) },
+            onOpenVideo = { item -> activity.showVideoDetailFragment(item.videoCode) },
+            onOpenArtist = actions::openArtistSearch,
+            onNavigateToSearch = actions::openTagSearch,
+            onToggleSubscribe = actions::toggleArtistSubscription,
+            onToggleFavorite = actions::toggleFavorite,
+            onRateVideo = actions::rateVideo,
+            onManageMyList = actions::updateMyListSelection,
+            onQuickCheckIn = { record ->
+                // \u001E 是打卡记录里「标题 / videoCode」的分隔符
+                val sep = "\u001E"
+                val normalizedRecord = if (record.sideDishes.contains(sep)) {
+                    record
+                } else {
+                    record.copy(sideDishes = "${record.sideDishes}$sep${route.videoCode}")
+                }
+                scope.launch(Dispatchers.IO) {
+                    CheckInRecordDatabase.instance.checkInDao().insert(normalizedRecord)
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(activity, R.string.checkin, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            },
+            onPrepareDownload = { quality, video ->
+                checkedQuality = quality
+                video?.let(actions::startDownloadFlow)
+            },
+            onConfirmDownloadPrompt = { video ->
+                video?.let { actions.confirmPendingDownload(it, pendingDownloadPrompt) }
+            },
+            onRequestOpenOfficialDownloadPage = actions::openOfficialDownloadPage,
+            onRequestOpenDownloadPermissionSettings = actions::openDownloadPermissionSettings,
+            onOpenWebPage = actions::openVideoWebPage,
+            onOpenOriginalComic = actions::openOriginalComic,
+            onOpenShare = { content, shareTitle -> shareText(content, shareTitle) },
+            onCopyText = {
+                it.copyToClipboard()
+                showShortToast(R.string.copy_to_clipboard)
+            },
+            onIntroductionLinkClick = actions::openIntroductionLink,
+            stringLongPressShare = stringLongPressShare,
+            pageHost = pageHost,
+        )
+    }
 }
 
 /**
