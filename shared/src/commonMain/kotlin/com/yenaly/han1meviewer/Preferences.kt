@@ -83,7 +83,19 @@ object Preferences {
 
     var savedUserId: String by SettingsStore.mmkvString(EMPTY_STRING)
 
-    var appLanguage: String by SettingsStore.mmkvString("system")
+    /**
+     * 应用内语言：`system` / `zh-rCN` / `zh` / `ja` / `en`（Android 资源限定符风格）。
+     * 做成 StateFlow 是为了让根组合能 `key(appLanguage)` 重建组合树，
+     * 让 compose-resources 重新解析字符串。
+     */
+    val appLanguageStateFlow: MutableStateFlow<String>
+            by SettingsStore.mmkvString("system", key = "appLanguage").asMutableStateFlow()
+
+    var appLanguage: String
+        get() = appLanguageStateFlow.value
+        set(value) {
+            appLanguageStateFlow.value = value
+        }
 
     /**
      * 深色模式偏好：`follow_system` / `always_on` / `always_off`。

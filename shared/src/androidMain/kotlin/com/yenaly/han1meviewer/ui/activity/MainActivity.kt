@@ -8,7 +8,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.res.Configuration
-import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -49,7 +48,6 @@ import com.yenaly.han1meviewer.util.showAlertDialog
 import com.yenaly.han1meviewer.util.showSnackBar
 import com.yenaly.han1meviewer.util.textFromClipboard
 import com.yenaly.han1meviewer.videoUrlRegex
-import java.util.Locale
 import kotlinx.coroutines.flow.MutableSharedFlow
 
 /**
@@ -138,10 +136,6 @@ class MainActivity : AppCompatActivity(), PermissionRequester {
         pendingNavigationRequests.tryEmit(intent)
     }
 
-    override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(applyAppLocale(newBase))
-    }
-
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
@@ -216,24 +210,6 @@ class MainActivity : AppCompatActivity(), PermissionRequester {
     override fun onStop() {
         super.onStop()
         unregisterReceiver(pipActionReceiver)
-    }
-
-    private fun applyAppLocale(context: Context): Context {
-        val lang = Preferences.appLanguage
-
-        val newLocale = when (lang) {
-            "zh-rCN" -> Locale.SIMPLIFIED_CHINESE
-            "zh" -> Locale.TRADITIONAL_CHINESE
-            "en" -> Locale.ENGLISH
-            "ja" -> Locale.JAPANESE
-            else -> Resources.getSystem().configuration.locales.get(0)
-        }
-
-        Locale.setDefault(newLocale)
-
-        val config = Configuration(context.resources.configuration)
-        config.setLocale(newLocale)
-        return context.createConfigurationContext(config)
     }
 
     override fun onSupportNavigateUp(): Boolean {

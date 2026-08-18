@@ -25,6 +25,7 @@ import com.yenaly.han1meviewer.util.isMainProcess
 import com.yenaly.han1meviewer.util.AnimeShaders
 import com.yenaly.han1meviewer.util.LanguageHelper
 import com.yenaly.han1meviewer.util.ThemeUtils
+import com.yenaly.han1meviewer.util.migrateAppLanguageToPlatformIfNeeded
 import `is`.xyz.mpv.MPVLib
 import java.net.ProxySelector
 
@@ -77,6 +78,7 @@ class HanimeApplication : Application() {
         migrateSharedPreferencesToMMKV(this)
         initCrashX()
         ThemeUtils.applyDarkModeFromPreferences(this)
+        migrateAppLanguageToPlatformIfNeeded(Preferences.appLanguage)
         if (Preferences.useDynamicColor){
             DynamicColors.applyToActivitiesIfAvailable(this)
         }
