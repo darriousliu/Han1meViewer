@@ -34,12 +34,7 @@ import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ThumbDown
-import androidx.compose.material.icons.filled.ThumbUp
-import androidx.compose.material.icons.outlined.ThumbDown
-import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material.icons.rounded.PlayArrow
-import androidx.compose.material.icons.rounded.Schedule
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -67,16 +62,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalWindowInfo
-import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.ResolutionLinkMap
 import com.yenaly.han1meviewer.logic.entity.CheckInRecordEntity
 import com.yenaly.han1meviewer.logic.model.HanimeInfo
@@ -91,6 +82,7 @@ import com.yenaly.han1meviewer.ui.component.content.ErrorContent
 import com.yenaly.han1meviewer.ui.component.content.LoadingContent
 import com.yenaly.han1meviewer.ui.component.lazy.LazyColumn
 import com.yenaly.han1meviewer.ui.component.lazy.LazyRow
+import com.yenaly.han1meviewer.ui.component.rememberHostNestedScrollConnection
 import com.yenaly.han1meviewer.ui.preview.ComponentPreview
 import com.yenaly.han1meviewer.ui.preview.fakeVideoIntroduction
 import com.yenaly.han1meviewer.ui.screen.rememberCardResponsiveWidth
@@ -99,9 +91,68 @@ import com.yenaly.han1meviewer.ui.theme.SpacingNormal
 import com.yenaly.han1meviewer.ui.theme.VideoNormalCardMinWidth
 import com.yenaly.han1meviewer.ui.theme.VideoSimplifiedCardMinWidth
 import com.yenaly.han1meviewer.util.DisplayTextLocalizer
+import com.yenaly.han1meviewer.util.HOUR_MINUTE_FORMAT
+import com.yenaly.han1meviewer.util.currentLocalDate
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.add_to_fav
+import han1meviewer.shared.generated.resources.add_to_playlist
+import han1meviewer.shared.generated.resources.after_download_tips
+import han1meviewer.shared.generated.resources.back
+import han1meviewer.shared.generated.resources.baseline_format_list_bulleted_24
+import han1meviewer.shared.generated.resources.blank_brackets
+import han1meviewer.shared.generated.resources.cancel
+import han1meviewer.shared.generated.resources.check_video_exists_in_download
+import han1meviewer.shared.generated.resources.confirm
+import han1meviewer.shared.generated.resources.dialog_cancel
+import han1meviewer.shared.generated.resources.dialog_confirm
+import han1meviewer.shared.generated.resources.dialog_feeling_hint
+import han1meviewer.shared.generated.resources.download
+import han1meviewer.shared.generated.resources.download_video_detail_below
+import han1meviewer.shared.generated.resources.go_to_official
+import han1meviewer.shared.generated.resources.go_to_settings
+import han1meviewer.shared.generated.resources.ic_baseline_access_time_24
+import han1meviewer.shared.generated.resources.ic_baseline_book
+import han1meviewer.shared.generated.resources.ic_baseline_check_circle_24
+import han1meviewer.shared.generated.resources.ic_baseline_download_24
+import han1meviewer.shared.generated.resources.ic_baseline_favorite_24
+import han1meviewer.shared.generated.resources.ic_baseline_favorite_border_24
+import han1meviewer.shared.generated.resources.ic_baseline_language_24
+import han1meviewer.shared.generated.resources.ic_baseline_share_24
+import han1meviewer.shared.generated.resources.ic_baseline_thumb_down_alt_24
+import han1meviewer.shared.generated.resources.ic_baseline_thumb_down_off_alt_24
+import han1meviewer.shared.generated.resources.ic_baseline_thumb_up_alt_24
+import han1meviewer.shared.generated.resources.ic_baseline_thumb_up_off_alt_24
+import han1meviewer.shared.generated.resources.jump_to_webpage
+import han1meviewer.shared.generated.resources.liked
+import han1meviewer.shared.generated.resources.load_failed_retry
+import han1meviewer.shared.generated.resources.more
+import han1meviewer.shared.generated.resources.name_with_colon
+import han1meviewer.shared.generated.resources.no
+import han1meviewer.shared.generated.resources.now_playing
+import han1meviewer.shared.generated.resources.original_comic
+import han1meviewer.shared.generated.resources.quality_with_colon
+import han1meviewer.shared.generated.resources.quick_checkin
+import han1meviewer.shared.generated.resources.related_video
+import han1meviewer.shared.generated.resources.s_view_times
+import han1meviewer.shared.generated.resources.series_video
+import han1meviewer.shared.generated.resources.settings
+import han1meviewer.shared.generated.resources.share
+import han1meviewer.shared.generated.resources.storage_permission_settings_message
+import han1meviewer.shared.generated.resources.subscribe
+import han1meviewer.shared.generated.resources.subscribed
+import han1meviewer.shared.generated.resources.sure
+import han1meviewer.shared.generated.resources.sure_to_download
+import han1meviewer.shared.generated.resources.sure_to_redownload
+import han1meviewer.shared.generated.resources.video_might_not_exist
+import kotlin.time.Clock
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format
+import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 private val previewSafeDateFormat = LocalDate.Formats.ISO
 
@@ -189,14 +240,14 @@ fun VideoIntroductionScreen(
             )
 
             state is VideoLoadingState.Error -> ErrorContent(
-                title = stringResource(R.string.load_failed_retry),
+                title = stringResource(Res.string.load_failed_retry),
                 message = state.throwable.message,
                 onRetry = onRetry,
                 modifier = Modifier.align(Alignment.Center),
             )
 
             state is VideoLoadingState.NoContent -> EmptyContent(
-                hint = stringResource(R.string.video_might_not_exist),
+                hint = stringResource(Res.string.video_might_not_exist),
             )
 
             else -> LoadingContent(
@@ -331,7 +382,7 @@ private fun VideoIntroductionContent(
         }
     }
 
-    val nestedScrollInterop = rememberNestedScrollInteropConnection()
+    val nestedScrollInterop = rememberHostNestedScrollConnection()
 
     LazyColumn(
         state = listState,
@@ -438,7 +489,7 @@ private fun DownloadQualityDialog(
     val qualities = videoUrls.keys.toList()
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.download)) },
+        title = { Text(stringResource(Res.string.download)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 qualities.forEach { quality ->
@@ -462,7 +513,7 @@ private fun DownloadQualityDialog(
                         Text(quality)
                         if (quality == com.yenaly.han1meviewer.HanimeResolution.RES_UNKNOWN) {
                             Text(
-                                text = stringResource(R.string.go_to_official),
+                                text = stringResource(Res.string.go_to_official),
                                 color = MaterialTheme.colorScheme.primary,
                                 style = MaterialTheme.typography.labelMedium,
                             )
@@ -474,7 +525,7 @@ private fun DownloadQualityDialog(
         confirmButton = {},
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.cancel))
+                Text(stringResource(Res.string.cancel))
             }
         },
     )
@@ -493,19 +544,19 @@ private fun DownloadConfirmDialog(
         title = {
             Text(
                 stringResource(
-                    if (prompt.oldQuality != null) R.string.sure_to_redownload else R.string.sure_to_download
+                    if (prompt.oldQuality != null) Res.string.sure_to_redownload else Res.string.sure_to_download
                 )
             )
         },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Text(stringResource(R.string.download_video_detail_below))
+                Text(stringResource(Res.string.download_video_detail_below))
                 prompt.oldQuality?.let {
-                    Text(stringResource(R.string.check_video_exists_in_download, it))
+                    Text(stringResource(Res.string.check_video_exists_in_download, it))
                 }
-                Text(stringResource(R.string.name_with_colon) + video.title)
+                Text(stringResource(Res.string.name_with_colon) + video.title)
                 Text(
-                    stringResource(R.string.quality_with_colon) + if (
+                    stringResource(Res.string.quality_with_colon) + if (
                         prompt.oldQuality != null && prompt.oldQuality != prompt.newQuality
                     ) {
                         "${prompt.oldQuality} → ${prompt.newQuality}"
@@ -514,7 +565,7 @@ private fun DownloadConfirmDialog(
                     }
                 )
                 Text(
-                    text = stringResource(R.string.after_download_tips),
+                    text = stringResource(Res.string.after_download_tips),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -522,16 +573,16 @@ private fun DownloadConfirmDialog(
         },
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                Text(stringResource(R.string.sure))
+                Text(stringResource(Res.string.sure))
             }
         },
         dismissButton = {
             Row {
                 TextButton(onClick = onOpenOfficial) {
-                    Text(stringResource(R.string.go_to_official))
+                    Text(stringResource(Res.string.go_to_official))
                 }
                 TextButton(onClick = onDismiss) {
-                    Text(stringResource(R.string.no))
+                    Text(stringResource(Res.string.no))
                 }
             }
         },
@@ -545,16 +596,16 @@ private fun PermissionSettingsDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.settings)) },
-        text = { Text(stringResource(R.string.storage_permission_settings_message)) },
+        title = { Text(stringResource(Res.string.settings)) },
+        text = { Text(stringResource(Res.string.storage_permission_settings_message)) },
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                Text(stringResource(R.string.go_to_settings))
+                Text(stringResource(Res.string.go_to_settings))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.cancel))
+                Text(stringResource(Res.string.cancel))
             }
         },
     )
@@ -580,7 +631,7 @@ private fun QuickCheckInDialog(
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text(stringResource(R.string.dialog_feeling_hint)) },
+                placeholder = { Text(stringResource(Res.string.dialog_feeling_hint)) },
                 minLines = 3,
                 supportingText = {
                     Text("${feeling.length}/200")
@@ -590,11 +641,15 @@ private fun QuickCheckInDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    val time = java.time.LocalTime.now()
-                        .format(java.time.format.DateTimeFormatter.ofPattern("HH:mm"))
+                    // 原来用的是 JVM 的 ofPattern("HH:mm")；commonMain 的
+                    // HOUR_MINUTE_FORMAT 就是为打卡记录准备的同一个格式，
+                    // DateFormatTest 已经拿它和原 pattern 对拍过
+                    val time = Clock.System.now()
+                        .toLocalDateTime(TimeZone.currentSystemDefault())
+                        .time.format(HOUR_MINUTE_FORMAT)
                     val sep = "\u001E"
                     val record = CheckInRecordEntity(
-                        date = java.time.LocalDate.now().toString(),
+                        date = currentLocalDate().toString(),
                         time = time,
                         type = com.yenaly.han1meviewer.logic.entity.CheckInType.MASTURBATION.storeName,
                         sideDishes = "${video.title}$sep${video.playlist?.video?.firstOrNull { it.isPlaying }?.videoCode ?: ""}".removeSuffix(
@@ -605,12 +660,12 @@ private fun QuickCheckInDialog(
                     onConfirm(record)
                 }
             ) {
-                Text(stringResource(R.string.dialog_confirm))
+                Text(stringResource(Res.string.dialog_confirm))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.dialog_cancel))
+                Text(stringResource(Res.string.dialog_cancel))
             }
         },
     )
@@ -628,7 +683,7 @@ private fun MyListDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.add_to_playlist)) },
+        title = { Text(stringResource(Res.string.add_to_playlist)) },
         text = {
             LazyColumn(
                 modifier = Modifier.heightIn(max = 320.dp),
@@ -661,12 +716,12 @@ private fun MyListDialog(
         },
         confirmButton = {
             TextButton(onClick = { onConfirm(selectedStates) }) {
-                Text(stringResource(R.string.confirm))
+                Text(stringResource(Res.string.confirm))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.back))
+                Text(stringResource(Res.string.back))
             }
         },
     )
@@ -698,7 +753,7 @@ private fun PlaylistBottomSheet(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = stringResource(R.string.series_video),
+                        text = stringResource(Res.string.series_video),
                         style = MaterialTheme.typography.headlineSmall,
                     )
                     playlist.playlistName?.takeIf { it.isNotBlank() }?.let {
@@ -710,7 +765,7 @@ private fun PlaylistBottomSheet(
                     }
                 }
                 Text(
-                    text = stringResource(R.string.blank_brackets, playlist.video.size),
+                    text = stringResource(Res.string.blank_brackets, playlist.video.size),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -825,7 +880,7 @@ private fun PlaylistBottomSheet(
                         }
                         if (item.isPlaying) {
                             Text(
-                                text = stringResource(R.string.now_playing),
+                                text = stringResource(Res.string.now_playing),
                                 style = MaterialTheme.typography.labelMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.primary,
@@ -893,11 +948,11 @@ private fun ArtistSection(
                             color = MaterialTheme.colorScheme.outlineVariant
                         )
                     ) {
-                        Text(text = stringResource(R.string.subscribed))
+                        Text(text = stringResource(Res.string.subscribed))
                     }
                 } else {
                     Button(onClick = onToggleSubscribe) {
-                        Text(text = stringResource(R.string.subscribe))
+                        Text(text = stringResource(Res.string.subscribe))
                     }
                 }
             }
@@ -948,7 +1003,7 @@ private fun MetaSection(
     onRateVideo: (Boolean) -> Unit,
 ) {
     val viewsText = if (fromDownload) {
-        stringResource(R.string.s_view_times, "0721")
+        stringResource(Res.string.s_view_times, "0721")
     } else {
         DisplayTextLocalizer.localizeViews(video.views.toString())
     }
@@ -982,7 +1037,7 @@ private fun MetaSection(
         MetaInfoItem(
             icon = {
                 Icon(
-                    imageVector = Icons.Rounded.Schedule,
+                    painter = painterResource(Res.drawable.ic_baseline_access_time_24),
                     contentDescription = null,
                     modifier = Modifier.size(14.dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
@@ -1059,9 +1114,10 @@ private fun VideoRatingButtons(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
-                imageVector =
-                    if (video.isFav) Icons.Filled.ThumbUp
-                    else Icons.Outlined.ThumbUp,
+                painter = painterResource(
+                    if (video.isFav) Res.drawable.ic_baseline_thumb_up_alt_24
+                    else Res.drawable.ic_baseline_thumb_up_off_alt_24
+                ),
                 contentDescription = null,
                 modifier = Modifier.size(16.dp),
                 tint = likeContentColor,
@@ -1090,9 +1146,10 @@ private fun VideoRatingButtons(
             contentAlignment = Alignment.Center,
         ) {
             Icon(
-                imageVector =
-                    if (video.isUnlike) Icons.Filled.ThumbDown
-                    else Icons.Outlined.ThumbDown,
+                painter = painterResource(
+                    if (video.isUnlike) Res.drawable.ic_baseline_thumb_down_alt_24
+                    else Res.drawable.ic_baseline_thumb_down_off_alt_24
+                ),
                 contentDescription = null,
                 modifier = Modifier.size(16.dp),
                 tint = dislikeContentColor
@@ -1136,41 +1193,41 @@ private fun ActionSection(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         VideoActionButton(
-            iconRes = R.drawable.ic_baseline_check_circle_24,
-            label = stringResource(R.string.quick_checkin),
+            iconRes = Res.drawable.ic_baseline_check_circle_24,
+            label = stringResource(Res.string.quick_checkin),
             onClick = onQuickCheckIn,
         )
         if (hasOriginalComic && onOpenOriginalComic != null) {
             VideoActionButton(
-                iconRes = R.drawable.ic_baseline_book,
-                label = stringResource(R.string.original_comic),
+                iconRes = Res.drawable.ic_baseline_book,
+                label = stringResource(Res.string.original_comic),
                 onClick = onOpenOriginalComic,
             )
         }
         VideoActionButton(
-            iconRes = if (isFav) R.drawable.ic_baseline_favorite_24 else R.drawable.ic_baseline_favorite_border_24,
-            label = if (isFav) stringResource(R.string.liked) else stringResource(R.string.add_to_fav),
+            iconRes = if (isFav) Res.drawable.ic_baseline_favorite_24 else Res.drawable.ic_baseline_favorite_border_24,
+            label = if (isFav) stringResource(Res.string.liked) else stringResource(Res.string.add_to_fav),
             onClick = onToggleFavorite,
         )
         VideoActionButton(
-            iconRes = R.drawable.baseline_format_list_bulleted_24,
-            label = stringResource(R.string.add_to_playlist),
+            iconRes = Res.drawable.baseline_format_list_bulleted_24,
+            label = stringResource(Res.string.add_to_playlist),
             onClick = onManageMyList,
         )
         VideoActionButton(
-            iconRes = R.drawable.ic_baseline_download_24,
-            label = stringResource(R.string.download),
+            iconRes = Res.drawable.ic_baseline_download_24,
+            label = stringResource(Res.string.download),
             onClick = onDownload,
         )
         VideoActionButton(
-            iconRes = R.drawable.ic_baseline_share_24,
-            label = stringResource(R.string.share),
+            iconRes = Res.drawable.ic_baseline_share_24,
+            label = stringResource(Res.string.share),
             onClick = onShare,
             onLongClick = onCopyShareText,
         )
         VideoActionButton(
-            iconRes = R.drawable.ic_baseline_language_24,
-            label = stringResource(R.string.jump_to_webpage),
+            iconRes = Res.drawable.ic_baseline_language_24,
+            label = stringResource(Res.string.jump_to_webpage),
             onClick = onOpenWebPage,
         )
     }
@@ -1179,7 +1236,7 @@ private fun ActionSection(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun VideoActionButton(
-    iconRes: Int,
+    iconRes: DrawableResource,
     label: String,
     onClick: () -> Unit,
     onLongClick: (() -> Unit)? = null,
@@ -1255,9 +1312,9 @@ private fun PlaylistSection(
     }
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         SectionHeader(
-            title = stringResource(R.string.series_video),
+            title = stringResource(Res.string.series_video),
             subtitle = playlist.playlistName,
-            actionText = if (onShowAllPlaylist != null) stringResource(R.string.more) else null,
+            actionText = if (onShowAllPlaylist != null) stringResource(Res.string.more) else null,
             onActionClick = onShowAllPlaylist,
         )
         val (cardWidth, _) = rememberCardResponsiveWidth()
@@ -1289,7 +1346,7 @@ internal fun RelatedVideosSection(
     Column(
         verticalArrangement = Arrangement.spacedBy(SpacingNormal),
     ) {
-        SectionHeader(title = stringResource(R.string.related_video))
+        SectionHeader(title = stringResource(Res.string.related_video))
 
         BoxWithConstraints(modifier = Modifier.fillMaxWidth()) {
             val isNormal = videos.firstOrNull()?.itemType == HanimeInfo.NORMAL
