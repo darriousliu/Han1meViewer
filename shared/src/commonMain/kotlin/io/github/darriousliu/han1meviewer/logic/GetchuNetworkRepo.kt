@@ -3,7 +3,7 @@ package io.github.darriousliu.han1meviewer.logic
 import co.touchlab.kermit.Logger
 import io.github.darriousliu.han1meviewer.logic.NetworkRepo.handleException
 import io.github.darriousliu.han1meviewer.logic.NetworkRepo.throwRequestException
-import io.github.darriousliu.han1meviewer.logic.network.HanimeNetwork
+import io.github.darriousliu.han1meviewer.core.network.HanimeNetwork
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.core.common.util.decodeEucJp
 import io.ktor.client.call.body

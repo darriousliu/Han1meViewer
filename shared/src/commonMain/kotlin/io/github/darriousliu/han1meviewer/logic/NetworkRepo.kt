@@ -17,7 +17,7 @@ import io.github.darriousliu.han1meviewer.core.model.MyListType
 import io.github.darriousliu.han1meviewer.core.model.OnlineWatchHistorySort
 import io.github.darriousliu.han1meviewer.core.model.VideoCommentArgs
 import io.github.darriousliu.han1meviewer.core.model.VideoComments
-import io.github.darriousliu.han1meviewer.logic.network.HanimeNetwork
+import io.github.darriousliu.han1meviewer.core.network.HanimeNetwork
 import io.github.darriousliu.han1meviewer.core.common.state.PageLoadingState
 import io.github.darriousliu.han1meviewer.core.common.state.VideoLoadingState
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState

@@ -6,7 +6,7 @@ import coil3.PlatformContext
 import coil3.compose.LocalPlatformContext
 import coil3.network.ktor3.KtorNetworkFetcherFactory
 import coil3.request.ImageRequest
-import io.github.darriousliu.han1meviewer.logic.network.HanimeNetwork
+import io.github.darriousliu.han1meviewer.core.network.HanimeNetwork
 import io.github.darriousliu.han1meviewer.core.common.util.currentLocalDate
 
 internal fun currentGetchuDateCode(): String {

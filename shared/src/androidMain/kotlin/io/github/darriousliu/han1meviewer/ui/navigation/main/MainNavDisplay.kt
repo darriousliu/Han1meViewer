@@ -24,7 +24,7 @@ import androidx.navigation3.runtime.result.LocalResultEventBus
 import androidx.navigation3.runtime.result.ResultEffect
 import androidx.navigation3.runtime.result.rememberResultEventBusNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import io.github.darriousliu.han1meviewer.logic.network.CloudflareNavBridge
+import io.github.darriousliu.han1meviewer.core.network.CloudflareNavBridge
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
 import io.github.darriousliu.han1meviewer.ui.component.LocalToaster
 import io.github.darriousliu.han1meviewer.ui.component.showShort

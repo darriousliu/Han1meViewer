@@ -7,7 +7,7 @@ import coil.imageLoader
 import coil.request.ErrorResult
 import coil.request.ImageRequest
 import coil.request.ImageResult
-import io.github.darriousliu.han1meviewer.logic.network.HDns
+import io.github.darriousliu.han1meviewer.core.network.HDns
 import okhttp3.OkHttpClient
 import java.lang.ref.WeakReference
 import java.util.concurrent.TimeUnit

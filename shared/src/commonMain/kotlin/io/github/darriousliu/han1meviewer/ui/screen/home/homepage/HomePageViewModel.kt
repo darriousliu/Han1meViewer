@@ -10,7 +10,7 @@ import io.github.darriousliu.han1meviewer.core.storage.entity.HKeyframeEntity
 import io.github.darriousliu.han1meviewer.core.storage.entity.WatchHistoryEntity
 import io.github.darriousliu.han1meviewer.core.common.exception.LoginStateExpiredException
 import io.github.darriousliu.han1meviewer.core.model.Announcement
-import io.github.darriousliu.han1meviewer.logic.network.fetchPlatformAnnouncements
+import io.github.darriousliu.han1meviewer.core.network.fetchPlatformAnnouncements
 import io.github.darriousliu.han1meviewer.core.common.state.PageState
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.logout

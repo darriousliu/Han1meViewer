@@ -111,6 +111,8 @@ kotlin {
             implementation(project(":core:parse"))
             // Firebase 门面（Android 接真身，JVM 空实现）
             api(project(":core:firebase"))
+            // HttpClient / 各 service 接口遍布公开签名
+            api(project(":core:network"))
             implementation(libs.kotlinx.io.core)
             implementation(libs.ksoup)
             implementation(libs.htmlconverter)

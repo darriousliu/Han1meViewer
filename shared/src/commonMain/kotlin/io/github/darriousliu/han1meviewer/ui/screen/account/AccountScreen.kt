@@ -57,7 +57,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
-import io.github.darriousliu.han1meviewer.HANIME_BASE_URL
+import io.github.darriousliu.han1meviewer.core.storage.HANIME_BASE_URL
 import io.github.darriousliu.han1meviewer.core.model.UserAccount
 import io.github.darriousliu.han1meviewer.core.model.UserAccountAction
 import io.github.darriousliu.han1meviewer.core.model.UserAccountSubmittingState

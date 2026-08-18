@@ -16,7 +16,7 @@ import com.google.firebase.database.database
 import com.google.firebase.remoteconfig.remoteConfig
 import com.google.firebase.remoteconfig.remoteConfigSettings
 import io.github.darriousliu.han1meviewer.di.initKoin
-import io.github.darriousliu.han1meviewer.logic.network.HProxySelector
+import io.github.darriousliu.han1meviewer.core.network.HProxySelector
 import io.github.darriousliu.han1meviewer.core.storage.mmkv.initializeMMKV
 import io.github.darriousliu.han1meviewer.core.storage.mmkv.migrateSharedPreferencesToMMKV
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity

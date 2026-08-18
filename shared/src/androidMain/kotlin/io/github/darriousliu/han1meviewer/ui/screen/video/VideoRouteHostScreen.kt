@@ -52,7 +52,7 @@ import io.github.darriousliu.han1meviewer.core.firebase.FirebaseConstants
 import io.github.darriousliu.han1meviewer.PermissionRequester
 import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.R
-import io.github.darriousliu.han1meviewer.getHanimeVideoLink
+import io.github.darriousliu.han1meviewer.core.storage.getHanimeVideoLink
 import io.github.darriousliu.han1meviewer.logic.DatabaseRepo
 import io.github.darriousliu.han1meviewer.core.storage.dao.CheckInRecordDatabase
 import io.github.darriousliu.han1meviewer.core.storage.entity.HKeyframeEntity

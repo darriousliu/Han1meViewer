@@ -25,7 +25,7 @@ import androidx.documentfile.provider.DocumentFile
 import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.R
 import io.github.darriousliu.han1meviewer.core.storage.dao.DownloadDatabase
-import io.github.darriousliu.han1meviewer.logic.network.interceptor.SpeedLimitInterceptor
+import io.github.darriousliu.han1meviewer.core.network.interceptor.SpeedLimitInterceptor
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
 import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog
 import io.github.darriousliu.han1meviewer.ui.component.TripleButtonDialog

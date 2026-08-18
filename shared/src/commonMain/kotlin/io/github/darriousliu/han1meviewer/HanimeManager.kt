@@ -3,7 +3,7 @@ package io.github.darriousliu.han1meviewer
 import androidx.compose.runtime.Composable
 import io.github.darriousliu.han1meviewer.core.storage.Preferences.isAlreadyLogin
 import io.github.darriousliu.han1meviewer.core.storage.Preferences.loginCookie
-import io.github.darriousliu.han1meviewer.logic.network.HCookiesStorage
+import io.github.darriousliu.han1meviewer.core.network.HCookiesStorage
 import io.github.darriousliu.han1meviewer.core.common.util.CookieString
 import io.github.darriousliu.han1meviewer.core.common.util.localizedText
 import io.github.darriousliu.han1meviewer.core.common.EMPTY_STRING

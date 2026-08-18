@@ -22,10 +22,10 @@ import io.github.darriousliu.han1meviewer.core.common.EMPTY_STRING
 import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.R
 import io.github.darriousliu.han1meviewer.core.parse.Parser
-import io.github.darriousliu.han1meviewer.logic.network.DohConfig
-import io.github.darriousliu.han1meviewer.logic.network.HDns
-import io.github.darriousliu.han1meviewer.logic.network.HProxySelector
-import io.github.darriousliu.han1meviewer.logic.network.HanimeNetwork
+import io.github.darriousliu.han1meviewer.core.network.DohConfig
+import io.github.darriousliu.han1meviewer.core.network.HDns
+import io.github.darriousliu.han1meviewer.core.network.HProxySelector
+import io.github.darriousliu.han1meviewer.core.network.HanimeNetwork
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.logout
 import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog

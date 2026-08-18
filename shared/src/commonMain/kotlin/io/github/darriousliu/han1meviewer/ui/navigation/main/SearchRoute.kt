@@ -9,7 +9,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalClipboard
 import org.koin.compose.viewmodel.koinViewModel
-import io.github.darriousliu.han1meviewer.getHanimeShareText
+import io.github.darriousliu.han1meviewer.core.storage.getHanimeShareText
 import io.github.darriousliu.han1meviewer.ui.component.LocalToaster
 import io.github.darriousliu.han1meviewer.ui.component.showShort
 import io.github.darriousliu.han1meviewer.ui.navigation.SearchRoute

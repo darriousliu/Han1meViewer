@@ -11,7 +11,7 @@ import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.darriousliu.han1meviewer.R
-import io.github.darriousliu.han1meviewer.getHanimeShareText
+import io.github.darriousliu.han1meviewer.core.storage.getHanimeShareText
 import io.github.darriousliu.han1meviewer.logic.DatabaseRepo
 import io.github.darriousliu.han1meviewer.core.storage.entity.CheckInType
 import io.github.darriousliu.han1meviewer.core.model.Announcement

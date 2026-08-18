@@ -28,7 +28,7 @@ import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.R
 import io.github.darriousliu.han1meviewer.core.common.UPDATE_NOTIFICATION_CHANNEL
 import io.github.darriousliu.han1meviewer.core.model.github.Latest
-import io.github.darriousliu.han1meviewer.logic.network.injectUpdate
+import io.github.darriousliu.han1meviewer.core.network.injectUpdate
 import io.github.darriousliu.han1meviewer.util.installApkPackage
 import io.github.darriousliu.han1meviewer.core.common.util.runSuspendCatching
 import io.github.darriousliu.han1meviewer.util.showShortToast

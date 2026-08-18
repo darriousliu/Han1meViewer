@@ -89,37 +89,3 @@ fun Context.openDownloadedHanimeVideoLocally(
         }
     }
 }
-
-/**
- * copyTo with progress
- */
-suspend fun InputStream.copyTo(
-    out: OutputStream,
-    contentLength: Long,
-    bufferSize: Int = DEFAULT_BUFFER_SIZE,
-    progress: (suspend (Int, Long, Long) -> Unit)? = null,
-): Long {
-    return withContext(Dispatchers.IO) {
-        this@copyTo.use {
-            var bytesCopied: Long = 0
-            val buffer = ByteArray(bufferSize)
-            var bytes = read(buffer)
-            var percent = 0
-            while (bytes >= 0) {
-                ensureActive()
-                out.write(buffer, 0, bytes)
-                bytesCopied += bytes
-                if (contentLength > 0) {
-                    val newPercent = (bytesCopied * 100 / contentLength).toInt()
-                    if (newPercent != percent) {
-                        percent = newPercent
-                        progress?.invoke(percent.coerceAtMost(100), contentLength, bytesCopied)
-                    }
-                }
-                bytes = read(buffer)
-            }
-            Log.i("progress",bytesCopied.toString())
-            bytesCopied
-        }
-    }
-}

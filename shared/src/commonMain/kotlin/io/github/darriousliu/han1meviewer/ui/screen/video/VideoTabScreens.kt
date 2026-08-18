@@ -15,7 +15,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.core.storage.Preferences.isAlreadyLogin
 import io.github.darriousliu.han1meviewer.core.common.VIDEO_COMMENT_PREFIX
-import io.github.darriousliu.han1meviewer.getHanimeShareText
+import io.github.darriousliu.han1meviewer.core.storage.getHanimeShareText
 import io.github.darriousliu.han1meviewer.core.storage.entity.CheckInRecordEntity
 import io.github.darriousliu.han1meviewer.core.model.HanimeInfo
 import io.github.darriousliu.han1meviewer.core.model.HanimeVideo

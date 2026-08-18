@@ -9,8 +9,8 @@ import io.github.darriousliu.han1meviewer.HAdvancedSearch
 import io.github.darriousliu.han1meviewer.HCacheManager
 import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.R
-import io.github.darriousliu.han1meviewer.getHanimeVideoDownloadLink
-import io.github.darriousliu.han1meviewer.getHanimeVideoLink
+import io.github.darriousliu.han1meviewer.core.storage.getHanimeVideoDownloadLink
+import io.github.darriousliu.han1meviewer.core.storage.getHanimeVideoLink
 import io.github.darriousliu.han1meviewer.core.model.HanimeVideo
 import io.github.darriousliu.han1meviewer.core.model.SearchOption
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity

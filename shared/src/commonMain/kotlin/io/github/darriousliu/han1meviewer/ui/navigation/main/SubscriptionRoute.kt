@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.darriousliu.han1meviewer.getHanimeSearchShareText
-import io.github.darriousliu.han1meviewer.getHanimeShareText
+import io.github.darriousliu.han1meviewer.core.storage.getHanimeSearchShareText
+import io.github.darriousliu.han1meviewer.core.storage.getHanimeShareText
 import io.github.darriousliu.han1meviewer.ui.component.LocalToaster
 import io.github.darriousliu.han1meviewer.ui.component.showShort
 import io.github.darriousliu.han1meviewer.ui.screen.home.SubscriptionScreen

@@ -23,7 +23,7 @@ import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.R
 import io.github.darriousliu.han1meviewer.core.common.exception.CloudFlareBlockedException
 import io.github.darriousliu.han1meviewer.core.model.github.Latest
-import io.github.darriousliu.han1meviewer.logic.network.CloudflareNavBridge
+import io.github.darriousliu.han1meviewer.core.network.CloudflareNavBridge
 import io.github.darriousliu.han1meviewer.core.common.state.PageState
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
 import io.github.darriousliu.han1meviewer.ui.component.HanimeToastHost
