@@ -6,8 +6,8 @@ import androidx.compose.ui.platform.LocalClipboard
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.darriousliu.han1meviewer.core.storage.getHanimeSearchShareText
 import io.github.darriousliu.han1meviewer.core.storage.getHanimeShareText
-import io.github.darriousliu.han1meviewer.ui.component.LocalToaster
-import io.github.darriousliu.han1meviewer.ui.component.showShort
+import io.github.darriousliu.han1meviewer.core.ui.component.LocalToaster
+import io.github.darriousliu.han1meviewer.core.ui.component.showShort
 import io.github.darriousliu.han1meviewer.ui.screen.home.SubscriptionScreen
 import io.github.darriousliu.han1meviewer.ui.viewmodel.MySubscriptionsViewModel
 import io.github.darriousliu.han1meviewer.core.common.util.setPlainText

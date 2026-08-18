@@ -28,10 +28,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
-import io.github.darriousliu.han1meviewer.ui.component.PullRefreshOverlay
-import io.github.darriousliu.han1meviewer.ui.component.TextInputDialog
-import io.github.darriousliu.han1meviewer.ui.component.appbar.HanimeScaffold
-import io.github.darriousliu.han1meviewer.ui.component.content.EmptyContent
+import io.github.darriousliu.han1meviewer.core.ui.component.PullRefreshOverlay
+import io.github.darriousliu.han1meviewer.core.ui.component.TextInputDialog
+import io.github.darriousliu.han1meviewer.core.ui.component.appbar.HanimeScaffold
+import io.github.darriousliu.han1meviewer.core.ui.component.content.EmptyContent
 import io.github.darriousliu.han1meviewer.ui.viewmodel.MyPlayListViewModelV2
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.add_failed

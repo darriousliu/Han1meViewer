@@ -30,7 +30,7 @@ import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.R
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
-import io.github.darriousliu.han1meviewer.ui.component.BottomSheetHandler
+import io.github.darriousliu.han1meviewer.core.ui.component.BottomSheetHandler
 import io.github.darriousliu.han1meviewer.core.navigation.PreviewCommentRoute
 import io.github.darriousliu.han1meviewer.ui.screen.video.ChildCommentScreen
 import io.github.darriousliu.han1meviewer.ui.screen.video.CommentMessage

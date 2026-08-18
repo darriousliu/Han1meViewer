@@ -28,7 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import io.github.darriousliu.han1meviewer.ui.component.appbar.HanimeScaffold
+import io.github.darriousliu.han1meviewer.core.ui.component.appbar.HanimeScaffold
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.confirm
 import io.github.darriousliu.han1meviewer.core.resource.cookies_import_desc

@@ -8,11 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.github.darriousliu.han1meviewer.ui.component.SettingNavigationItem
-import io.github.darriousliu.han1meviewer.ui.component.SettingSliderItem
-import io.github.darriousliu.han1meviewer.ui.component.SettingSwitchItem
-import io.github.darriousliu.han1meviewer.ui.component.lazy.LazyColumn
-import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
+import io.github.darriousliu.han1meviewer.core.ui.component.SettingNavigationItem
+import io.github.darriousliu.han1meviewer.core.ui.component.SettingSliderItem
+import io.github.darriousliu.han1meviewer.core.ui.component.SettingSwitchItem
+import io.github.darriousliu.han1meviewer.core.ui.component.lazy.LazyColumn
+import io.github.darriousliu.han1meviewer.core.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.baseline_count_down_24
 import io.github.darriousliu.han1meviewer.core.resource.baseline_h_24

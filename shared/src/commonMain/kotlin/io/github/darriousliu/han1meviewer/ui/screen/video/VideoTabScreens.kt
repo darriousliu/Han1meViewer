@@ -21,8 +21,8 @@ import io.github.darriousliu.han1meviewer.core.model.HanimeInfo
 import io.github.darriousliu.han1meviewer.core.model.HanimeVideo
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.ui.bridge.VideoPageHost
-import io.github.darriousliu.han1meviewer.ui.component.BottomSheetHandler
-import io.github.darriousliu.han1meviewer.ui.theme.HanimeTheme
+import io.github.darriousliu.han1meviewer.core.ui.component.BottomSheetHandler
+import io.github.darriousliu.han1meviewer.core.ui.theme.HanimeTheme
 import io.github.darriousliu.han1meviewer.ui.viewmodel.CommentViewModel
 import io.github.darriousliu.han1meviewer.ui.viewmodel.VideoViewModel
 import io.github.darriousliu.han1meviewer.core.resource.Res

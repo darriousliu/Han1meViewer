@@ -25,35 +25,12 @@ import io.github.darriousliu.han1meviewer.core.resource.latest_release
 import io.github.darriousliu.han1meviewer.core.resource.they_watched
 import kotlin.time.Clock
 import kotlinx.datetime.LocalDate
+import io.github.darriousliu.han1meviewer.core.ui.preview.fakeTagList2
 
 
 /**
  * Compose预览用数据源
  */
-val fakeArtists = listOf(
-    SubscriptionItem("初音未来", "null"),
-    SubscriptionItem("绫波丽", "null"),
-    SubscriptionItem("阿库娅", "null"),
-    SubscriptionItem("初音未来", "null"),
-    SubscriptionItem("绫波丽", "null"),
-    SubscriptionItem("阿库娅", "null"),
-    SubscriptionItem("初音未来", "null"),
-    SubscriptionItem("绫波丽", "null"),
-    SubscriptionItem("阿库娅", "null"),
-    SubscriptionItem("阿库娅", "null"),
-    SubscriptionItem("初音未来", "null"),
-    SubscriptionItem("绫波丽", "null"),
-    SubscriptionItem("阿库娅", "null"),
-    SubscriptionItem("阿库娅", "null"),
-    SubscriptionItem("初音未来", "null"),
-    SubscriptionItem("绫波丽", "null"),
-    SubscriptionItem("阿库娅", "null"),
-    SubscriptionItem("阿库娅", "null"),
-    SubscriptionItem("初音未来", "null"),
-    SubscriptionItem("绫波丽", "null"),
-    SubscriptionItem("阿库娅", "null"),
-)
-
 val fakeVideos = listOf(
     SubscriptionVideosItem(
         title = "小恶魔的补习计划",
@@ -100,16 +77,6 @@ val fakeVideos = listOf(
         reviews = "99%",
         uploadTime = "2010-12-10",
     ),
-)
-
-val fakeVideosItem = SubscriptionVideosItem(
-    title = "小恶魔的补习计划",
-    coverUrl = "https://vdownload.hembed.com/image/thumbnail/101573l.jpg",
-    videoCode = "101573",
-    duration = "04:34",
-    views = "44.9万次",
-    reviews = "100%",
-    uploadTime = "2020-12-12",
 )
 
 val fakePlaylists = listOf(
@@ -299,23 +266,6 @@ val fakeHomePage = HomePage(
 )
 
 val fakeTagList1 = listOf("新番", "预告", "校园", "妹妹", "姐系", "正太", "萝莉")
-val fakeTagList2 = listOf(
-    "新番",
-    "预告",
-    "校园",
-    "妹妹",
-    "姐系",
-    "正太",
-    "萝莉",
-    "伪娘",
-    "NTR",
-    "SM",
-    "暴力",
-    "GURO",
-    "血腥",
-    "人妻"
-)
-
 val fakeNewHanimeInfo = listOf(
     HanimePreview.PreviewInfo(
         title = "日文标题",
@@ -421,12 +371,6 @@ val fakeDownloadedNodes = listOf(
     ),
     DownloadItemNode(fakeDownloadedVideos[0], "分组1"),
 )
-
-const val longText =
-    "这是一段用于预览的简介文本，包含一个链接 https://hanime1.me/watch?v=101573 ，用于验证展开和收" +
-            "起功能是否正常。为了触发折叠，这里再补充一些额外内容。超长文本超长文本超长文本超长文本超长文本超长文本超长文本" +
-            "超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本超长文本"
-
 
 val fakeVideoIntroduction = HanimeVideo(
     title = "Shishunki no Obenkyou 2",

@@ -22,8 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog
-import io.github.darriousliu.han1meviewer.ui.component.appbar.HanimeScaffold
+import io.github.darriousliu.han1meviewer.core.ui.component.ConfirmDialog
+import io.github.darriousliu.han1meviewer.core.ui.component.appbar.HanimeScaffold
 import io.github.darriousliu.han1meviewer.ui.screen.home.dailycheckin.CheckInDialog
 import io.github.darriousliu.han1meviewer.ui.screen.home.dailycheckin.ContributionReportDialog
 import io.github.darriousliu.han1meviewer.ui.screen.home.dailycheckin.DailyCheckInContent

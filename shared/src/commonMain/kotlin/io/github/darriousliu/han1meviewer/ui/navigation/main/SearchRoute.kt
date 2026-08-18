@@ -10,8 +10,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalClipboard
 import org.koin.compose.viewmodel.koinViewModel
 import io.github.darriousliu.han1meviewer.core.storage.getHanimeShareText
-import io.github.darriousliu.han1meviewer.ui.component.LocalToaster
-import io.github.darriousliu.han1meviewer.ui.component.showShort
+import io.github.darriousliu.han1meviewer.core.ui.component.LocalToaster
+import io.github.darriousliu.han1meviewer.core.ui.component.showShort
 import io.github.darriousliu.han1meviewer.core.navigation.SearchRoute
 import io.github.darriousliu.han1meviewer.ui.screen.search.AdvancedSearchSheet
 import io.github.darriousliu.han1meviewer.ui.screen.search.SearchScreen

@@ -22,7 +22,7 @@ import coil3.request.crossfade
 import io.github.darriousliu.han1meviewer.core.common.PREVIEW_COMMENT_PREFIX
 import io.github.darriousliu.han1meviewer.core.model.HanimePreview
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
-import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
+import io.github.darriousliu.han1meviewer.core.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.ui.preview.fakeHomePageVideos
 import io.github.darriousliu.han1meviewer.ui.preview.fakeNewHanimeInfo
 import io.github.darriousliu.han1meviewer.ui.viewmodel.CommentViewModel

@@ -10,11 +10,11 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import io.github.darriousliu.han1meviewer.core.model.HanimeInfo
-import io.github.darriousliu.han1meviewer.ui.component.LoadMoreFooter
-import io.github.darriousliu.han1meviewer.ui.component.VideoCardItem
-import io.github.darriousliu.han1meviewer.ui.component.lazy.LazyVerticalGrid
-import io.github.darriousliu.han1meviewer.ui.screen.rememberVideoGridColumns
-import io.github.darriousliu.han1meviewer.ui.theme.SpacingNormal
+import io.github.darriousliu.han1meviewer.core.ui.component.LoadMoreFooter
+import io.github.darriousliu.han1meviewer.core.ui.component.VideoCardItem
+import io.github.darriousliu.han1meviewer.core.ui.component.lazy.LazyVerticalGrid
+import io.github.darriousliu.han1meviewer.core.ui.rememberVideoGridColumns
+import io.github.darriousliu.han1meviewer.core.ui.theme.SpacingNormal
 
 /**
  * 视频网格 Content 层。纯 UI，不持有 ViewModel。

@@ -43,7 +43,7 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import io.github.darriousliu.han1meviewer.ui.component.appbar.HanimeScaffold
+import io.github.darriousliu.han1meviewer.core.ui.component.appbar.HanimeScaffold
 import io.github.darriousliu.han1meviewer.core.common.util.AVATAR_JPEG_QUALITY
 import io.github.darriousliu.han1meviewer.core.common.util.AVATAR_MAX_DIMENSION
 import io.github.darriousliu.han1meviewer.core.common.util.PREVIEW_MAX_DIMENSION

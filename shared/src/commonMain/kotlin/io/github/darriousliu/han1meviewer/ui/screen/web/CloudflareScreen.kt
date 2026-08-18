@@ -22,7 +22,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
 import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.core.common.USER_AGENT
-import io.github.darriousliu.han1meviewer.ui.component.appbar.HanimeScaffold
+import io.github.darriousliu.han1meviewer.core.ui.component.appbar.HanimeScaffold
 import io.github.darriousliu.han1meviewer.core.common.util.CookieString
 import dev.nucleusframework.webview.web.LoadingState
 import dev.nucleusframework.webview.web.WebView

@@ -39,7 +39,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import io.github.darriousliu.han1meviewer.ui.component.fullScreenDialogProperties
+import io.github.darriousliu.han1meviewer.core.ui.component.fullScreenDialogProperties
 import coil3.ImageLoader
 import coil3.SingletonImageLoader
 import coil3.compose.LocalPlatformContext

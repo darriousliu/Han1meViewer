@@ -39,11 +39,11 @@ import coil3.ImageLoader
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import io.github.darriousliu.han1meviewer.core.model.GetchuPreviewDetail
-import io.github.darriousliu.han1meviewer.ui.component.lazy.LazyColumn
-import io.github.darriousliu.han1meviewer.ui.component.lazy.LazyRow
+import io.github.darriousliu.han1meviewer.core.ui.component.lazy.LazyColumn
+import io.github.darriousliu.han1meviewer.core.ui.component.lazy.LazyRow
 import io.github.darriousliu.han1meviewer.core.resource.icon.OpenInNew
 import io.github.darriousliu.han1meviewer.core.resource.icon.PlayCircleOutline
-import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
+import io.github.darriousliu.han1meviewer.core.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.ui.preview.fakeGetchuPreviewDetail
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.brand

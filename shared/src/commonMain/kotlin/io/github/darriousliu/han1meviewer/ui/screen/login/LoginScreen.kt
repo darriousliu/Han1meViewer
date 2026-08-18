@@ -32,8 +32,8 @@ import androidx.compose.ui.unit.dp
 import io.github.darriousliu.han1meviewer.core.storage.HANIME_LOGIN_URL
 import io.github.darriousliu.han1meviewer.core.common.HanimeConstants.HANIME_URL
 import io.github.darriousliu.han1meviewer.core.common.USER_AGENT
-import io.github.darriousliu.han1meviewer.ui.component.appbar.HanimeScaffold
-import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
+import io.github.darriousliu.han1meviewer.core.ui.component.appbar.HanimeScaffold
+import io.github.darriousliu.han1meviewer.core.ui.preview.ComponentPreview
 import dev.nucleusframework.webview.request.RequestInterceptor
 import dev.nucleusframework.webview.request.WebRequest
 import dev.nucleusframework.webview.request.WebRequestInterceptResult

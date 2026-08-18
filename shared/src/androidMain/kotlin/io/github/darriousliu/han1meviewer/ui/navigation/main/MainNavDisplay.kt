@@ -26,8 +26,8 @@ import androidx.navigation3.runtime.result.rememberResultEventBusNavEntryDecorat
 import androidx.navigation3.ui.NavDisplay
 import io.github.darriousliu.han1meviewer.core.network.CloudflareNavBridge
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
-import io.github.darriousliu.han1meviewer.ui.component.LocalToaster
-import io.github.darriousliu.han1meviewer.ui.component.showShort
+import io.github.darriousliu.han1meviewer.core.ui.component.LocalToaster
+import io.github.darriousliu.han1meviewer.core.ui.component.showShort
 import io.github.darriousliu.han1meviewer.core.navigation.AccountRoute
 import io.github.darriousliu.han1meviewer.core.navigation.AvatarCropRoute
 import io.github.darriousliu.han1meviewer.core.navigation.AvatarCropped

@@ -33,11 +33,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.darriousliu.han1meviewer.core.network.DohConfig
 import io.github.darriousliu.han1meviewer.core.common.ProxyType
-import io.github.darriousliu.han1meviewer.ui.component.ChoiceDialog
-import io.github.darriousliu.han1meviewer.ui.component.SettingNavigationItem
-import io.github.darriousliu.han1meviewer.ui.component.SettingSwitchItem
-import io.github.darriousliu.han1meviewer.ui.component.lazy.LazyColumn
-import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
+import io.github.darriousliu.han1meviewer.core.ui.component.ChoiceDialog
+import io.github.darriousliu.han1meviewer.core.ui.component.SettingNavigationItem
+import io.github.darriousliu.han1meviewer.core.ui.component.SettingSwitchItem
+import io.github.darriousliu.han1meviewer.core.ui.component.lazy.LazyColumn
+import io.github.darriousliu.han1meviewer.core.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.baseline_delay_24
 import io.github.darriousliu.han1meviewer.core.resource.baseline_doh_24

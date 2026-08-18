@@ -23,8 +23,8 @@ import io.github.darriousliu.han1meviewer.core.model.CreatorTab
 import io.github.darriousliu.han1meviewer.core.model.CreatorUploadingItem
 import io.github.darriousliu.han1meviewer.core.model.HanimeInfo
 import io.github.darriousliu.han1meviewer.core.common.state.PageLoadingState
-import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog
-import io.github.darriousliu.han1meviewer.ui.component.appbar.HanimeScaffold
+import io.github.darriousliu.han1meviewer.core.ui.component.ConfirmDialog
+import io.github.darriousliu.han1meviewer.core.ui.component.appbar.HanimeScaffold
 import io.github.darriousliu.han1meviewer.ui.screen.home.creatorcenter.CreatorCenterEvent
 import io.github.darriousliu.han1meviewer.ui.screen.home.creatorcenter.CreatorUploadedPage
 import io.github.darriousliu.han1meviewer.ui.screen.home.creatorcenter.CreatorUploadingPage

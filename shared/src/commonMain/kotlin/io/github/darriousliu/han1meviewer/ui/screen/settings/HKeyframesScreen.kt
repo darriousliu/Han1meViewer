@@ -32,10 +32,10 @@ import io.github.darriousliu.han1meviewer.core.common.util.formatVideoTime
 import kotlin.io.encoding.Base64
 import kotlin.time.Clock
 import io.github.darriousliu.han1meviewer.core.storage.entity.HKeyframeEntity
-import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog
-import io.github.darriousliu.han1meviewer.ui.component.content.EmptyContent
-import io.github.darriousliu.han1meviewer.ui.component.lazy.LazyColumn
-import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
+import io.github.darriousliu.han1meviewer.core.ui.component.ConfirmDialog
+import io.github.darriousliu.han1meviewer.core.ui.component.content.EmptyContent
+import io.github.darriousliu.han1meviewer.core.ui.component.lazy.LazyColumn
+import io.github.darriousliu.han1meviewer.core.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.cancel
 import io.github.darriousliu.han1meviewer.core.resource.confirm

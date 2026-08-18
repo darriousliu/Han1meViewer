@@ -26,9 +26,9 @@ import io.github.darriousliu.han1meviewer.core.model.github.Latest
 import io.github.darriousliu.han1meviewer.core.network.CloudflareNavBridge
 import io.github.darriousliu.han1meviewer.core.common.state.PageState
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
-import io.github.darriousliu.han1meviewer.ui.component.HanimeToastHost
-import io.github.darriousliu.han1meviewer.ui.component.UpdateDialog
-import io.github.darriousliu.han1meviewer.ui.component.UsageNoticeDialog
+import io.github.darriousliu.han1meviewer.core.ui.component.HanimeToastHost
+import io.github.darriousliu.han1meviewer.core.ui.component.UpdateDialog
+import io.github.darriousliu.han1meviewer.core.ui.component.UsageNoticeDialog
 import io.github.darriousliu.han1meviewer.core.navigation.CloudflareRoute
 import io.github.darriousliu.han1meviewer.core.navigation.HanimeRoute
 import io.github.darriousliu.han1meviewer.core.navigation.HomeRoute
@@ -40,7 +40,7 @@ import io.github.darriousliu.han1meviewer.ui.navigation.main.navigateDrawerDesti
 import io.github.darriousliu.han1meviewer.core.navigation.navigateSafely
 import io.github.darriousliu.han1meviewer.core.navigation.rememberHanimeBackStack
 import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.HomePageViewModel
-import io.github.darriousliu.han1meviewer.ui.theme.HanimeTheme
+import io.github.darriousliu.han1meviewer.core.ui.theme.HanimeTheme
 import io.github.darriousliu.han1meviewer.ui.viewmodel.AppViewModel
 import io.github.darriousliu.han1meviewer.util.getUpdateIfExists
 import io.github.darriousliu.han1meviewer.util.installApkPackage

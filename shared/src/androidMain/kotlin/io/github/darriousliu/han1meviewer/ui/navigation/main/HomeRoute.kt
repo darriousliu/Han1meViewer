@@ -16,7 +16,7 @@ import io.github.darriousliu.han1meviewer.core.repository.DatabaseRepo
 import io.github.darriousliu.han1meviewer.core.storage.entity.CheckInType
 import io.github.darriousliu.han1meviewer.core.model.Announcement
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
-import io.github.darriousliu.han1meviewer.ui.component.TripleButtonDialog
+import io.github.darriousliu.han1meviewer.core.ui.component.TripleButtonDialog
 import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.HomePageScreen
 import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.HomeUiEvent
 import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.LocalSearchHistoryQuery

@@ -10,8 +10,8 @@ import androidx.compose.ui.Modifier
 import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.github.darriousliu.han1meviewer.ui.component.lazy.LazyColumn
-import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
+import io.github.darriousliu.han1meviewer.core.ui.component.lazy.LazyColumn
+import io.github.darriousliu.han1meviewer.core.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.ui.preview.fakeAnnouncements
 import io.github.darriousliu.han1meviewer.ui.preview.fakeHomePage
 import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.component.AnnouncementCard

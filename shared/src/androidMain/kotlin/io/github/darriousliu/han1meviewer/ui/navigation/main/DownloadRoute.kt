@@ -14,7 +14,7 @@ import io.github.darriousliu.han1meviewer.R
 import io.github.darriousliu.han1meviewer.core.storage.dao.DownloadDatabase
 import io.github.darriousliu.han1meviewer.core.storage.entity.download.HanimeDownloadEntity
 import io.github.darriousliu.han1meviewer.core.storage.entity.download.VideoWithCategories
-import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog
+import io.github.darriousliu.han1meviewer.core.ui.component.ConfirmDialog
 import io.github.darriousliu.han1meviewer.ui.screen.home.DownloadScreen
 import io.github.darriousliu.han1meviewer.ui.screen.home.download.DownloadEvent
 import io.github.darriousliu.han1meviewer.ui.viewmodel.DownloadViewModel

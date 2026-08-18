@@ -27,8 +27,8 @@ import io.github.darriousliu.han1meviewer.R
 import io.github.darriousliu.han1meviewer.core.storage.dao.DownloadDatabase
 import io.github.darriousliu.han1meviewer.core.network.interceptor.SpeedLimitInterceptor
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
-import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog
-import io.github.darriousliu.han1meviewer.ui.component.TripleButtonDialog
+import io.github.darriousliu.han1meviewer.core.ui.component.ConfirmDialog
+import io.github.darriousliu.han1meviewer.core.ui.component.TripleButtonDialog
 import io.github.darriousliu.han1meviewer.ui.screen.settings.DownloadSettingsScreen
 import io.github.darriousliu.han1meviewer.ui.screen.settings.DownloadSettingsUiState
 import io.github.darriousliu.han1meviewer.util.SafFileManager

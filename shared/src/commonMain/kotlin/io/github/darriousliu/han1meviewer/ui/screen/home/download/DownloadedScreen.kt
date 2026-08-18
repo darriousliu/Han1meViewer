@@ -38,11 +38,11 @@ import io.github.darriousliu.han1meviewer.core.storage.entity.download.DownloadG
 import io.github.darriousliu.han1meviewer.core.storage.entity.download.VideoWithCategories
 import io.github.darriousliu.han1meviewer.logic.DownloadHeaderNode
 import io.github.darriousliu.han1meviewer.logic.DownloadItemNode
-import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog
-import io.github.darriousliu.han1meviewer.ui.component.content.EmptyContent
-import io.github.darriousliu.han1meviewer.ui.component.lazy.LazyColumn
+import io.github.darriousliu.han1meviewer.core.ui.component.ConfirmDialog
+import io.github.darriousliu.han1meviewer.core.ui.component.content.EmptyContent
+import io.github.darriousliu.han1meviewer.core.ui.component.lazy.LazyColumn
 import io.github.darriousliu.han1meviewer.core.resource.icon.DriveFileMove
-import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
+import io.github.darriousliu.han1meviewer.core.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.ui.preview.fakeDownloadedGroups
 import io.github.darriousliu.han1meviewer.ui.preview.fakeDownloadedNodes
 import io.github.darriousliu.han1meviewer.core.resource.Res

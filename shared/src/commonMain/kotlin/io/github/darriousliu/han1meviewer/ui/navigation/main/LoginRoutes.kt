@@ -9,8 +9,8 @@ import androidx.compose.runtime.setValue
 import io.github.darriousliu.han1meviewer.core.repository.NetworkRepo
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.login
-import io.github.darriousliu.han1meviewer.ui.component.LocalToaster
-import io.github.darriousliu.han1meviewer.ui.component.showShort
+import io.github.darriousliu.han1meviewer.core.ui.component.LocalToaster
+import io.github.darriousliu.han1meviewer.core.ui.component.showShort
 import io.github.darriousliu.han1meviewer.ui.screen.login.LoginScreen
 import io.github.darriousliu.han1meviewer.ui.screen.login.ManualInputCookiesScreen
 import io.github.darriousliu.han1meviewer.core.resource.Res

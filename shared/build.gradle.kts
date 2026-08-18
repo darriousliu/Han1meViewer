@@ -117,6 +117,8 @@ kotlin {
             api(project(":core:repository"))
             // 路由类型遍布各 route 与屏幕的签名
             api(project(":core:navigation"))
+            // 公共组件/主题遍布各屏幕
+            api(project(":core:ui"))
             implementation(libs.kotlinx.io.core)
             implementation(libs.ksoup)
             implementation(libs.htmlconverter)

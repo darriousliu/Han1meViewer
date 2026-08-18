@@ -22,9 +22,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.core.storage.entity.HKeyframeEntity
-import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog
-import io.github.darriousliu.han1meviewer.ui.component.LocalToaster
-import io.github.darriousliu.han1meviewer.ui.component.showShort
+import io.github.darriousliu.han1meviewer.core.ui.component.ConfirmDialog
+import io.github.darriousliu.han1meviewer.core.ui.component.LocalToaster
+import io.github.darriousliu.han1meviewer.core.ui.component.showShort
 import io.github.darriousliu.han1meviewer.ui.screen.settings.HKeyframeSettingsScreen
 import io.github.darriousliu.han1meviewer.ui.screen.settings.HKeyframeSettingsUiState
 import io.github.darriousliu.han1meviewer.ui.screen.settings.HKeyframesScreen

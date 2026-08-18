@@ -28,7 +28,7 @@ import io.github.darriousliu.han1meviewer.core.network.HProxySelector
 import io.github.darriousliu.han1meviewer.core.network.HanimeNetwork
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.logout
-import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog
+import io.github.darriousliu.han1meviewer.core.ui.component.ConfirmDialog
 import io.github.darriousliu.han1meviewer.ui.screen.settings.DelayResultUi
 import io.github.darriousliu.han1meviewer.ui.screen.settings.DohTestResultUi
 import io.github.darriousliu.han1meviewer.ui.screen.settings.NetworkSettingsScreen

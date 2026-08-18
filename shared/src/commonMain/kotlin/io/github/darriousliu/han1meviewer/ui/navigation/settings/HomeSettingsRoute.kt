@@ -23,9 +23,9 @@ import io.github.darriousliu.han1meviewer.core.common.HanimeConstants
 import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.core.repository.BackupManager
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
-import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog
-import io.github.darriousliu.han1meviewer.ui.component.LocalToaster
-import io.github.darriousliu.han1meviewer.ui.component.showShort
+import io.github.darriousliu.han1meviewer.core.ui.component.ConfirmDialog
+import io.github.darriousliu.han1meviewer.core.ui.component.LocalToaster
+import io.github.darriousliu.han1meviewer.core.ui.component.showShort
 import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.defaultHomeCategoryPreferenceItems
 import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.hiddenHomeCategoryKeys
 import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.homeCategoryOrder
@@ -37,7 +37,7 @@ import io.github.darriousliu.han1meviewer.ui.screen.settings.dialog.LauncherIcon
 import io.github.darriousliu.han1meviewer.ui.screen.settings.dialog.LicenseDialog
 import io.github.darriousliu.han1meviewer.ui.screen.settings.dialog.launcherIconOptions
 import io.github.darriousliu.han1meviewer.ui.screen.settings.model.HomeSettingsUiState
-import io.github.darriousliu.han1meviewer.ui.theme.ThemeColorPreset
+import io.github.darriousliu.han1meviewer.core.ui.theme.ThemeColorPreset
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.action_app_open_by_default_settings_not_support
 import io.github.darriousliu.han1meviewer.core.resource.already_latest_update

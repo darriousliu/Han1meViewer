@@ -29,9 +29,9 @@ import io.github.darriousliu.han1meviewer.core.storage.entity.download.DownloadG
 import io.github.darriousliu.han1meviewer.core.storage.entity.download.HanimeDownloadEntity
 import io.github.darriousliu.han1meviewer.core.storage.entity.download.VideoWithCategories
 import io.github.darriousliu.han1meviewer.logic.DownloadHeaderNode
-import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog
-import io.github.darriousliu.han1meviewer.ui.component.appbar.HanimeScaffold
-import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
+import io.github.darriousliu.han1meviewer.core.ui.component.ConfirmDialog
+import io.github.darriousliu.han1meviewer.core.ui.component.appbar.HanimeScaffold
+import io.github.darriousliu.han1meviewer.core.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.ui.screen.home.download.DownloadEvent
 import io.github.darriousliu.han1meviewer.ui.screen.home.download.DownloadUiState
 import io.github.darriousliu.han1meviewer.ui.screen.home.download.DownloadedScreen

@@ -48,12 +48,12 @@ import io.github.darriousliu.han1meviewer.core.common.exception.HanimeNotFoundEx
 import io.github.darriousliu.han1meviewer.core.model.HanimePreview
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.pienization
-import io.github.darriousliu.han1meviewer.ui.component.content.EmptyContent
-import io.github.darriousliu.han1meviewer.ui.component.content.ErrorContent
-import io.github.darriousliu.han1meviewer.ui.component.content.LoadingContent
-import io.github.darriousliu.han1meviewer.ui.component.lazy.LazyColumn
+import io.github.darriousliu.han1meviewer.core.ui.component.content.EmptyContent
+import io.github.darriousliu.han1meviewer.core.ui.component.content.ErrorContent
+import io.github.darriousliu.han1meviewer.core.ui.component.content.LoadingContent
+import io.github.darriousliu.han1meviewer.core.ui.component.lazy.LazyColumn
 import io.github.darriousliu.han1meviewer.core.resource.icon.CalendarMonth
-import io.github.darriousliu.han1meviewer.ui.screen.rememberRandomLoadingHint
+import io.github.darriousliu.han1meviewer.core.ui.rememberRandomLoadingHint
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.back
 import io.github.darriousliu.han1meviewer.core.resource.comment

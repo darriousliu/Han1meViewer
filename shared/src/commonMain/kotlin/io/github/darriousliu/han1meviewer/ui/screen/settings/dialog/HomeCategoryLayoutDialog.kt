@@ -38,7 +38,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import io.github.darriousliu.han1meviewer.ui.component.verticalScrollbar
+import io.github.darriousliu.han1meviewer.core.ui.component.verticalScrollbar
 import io.github.darriousliu.han1meviewer.ui.screen.settings.model.HomeSettingsUiState
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.cancel

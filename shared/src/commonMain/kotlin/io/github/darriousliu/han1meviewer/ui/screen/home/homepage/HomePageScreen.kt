@@ -26,13 +26,13 @@ import androidx.compose.ui.backhandler.BackHandler
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.darriousliu.han1meviewer.core.common.state.PageState
 import io.github.darriousliu.han1meviewer.core.common.state.dataOrNull
-import io.github.darriousliu.han1meviewer.ui.component.PageContent
-import io.github.darriousliu.han1meviewer.ui.component.PullRefreshOverlay
-import io.github.darriousliu.han1meviewer.ui.component.isFirstPageEmpty
-import io.github.darriousliu.han1meviewer.ui.component.isFirstPageError
-import io.github.darriousliu.han1meviewer.ui.component.isFirstPageLoading
+import io.github.darriousliu.han1meviewer.core.ui.component.PageContent
+import io.github.darriousliu.han1meviewer.core.ui.component.PullRefreshOverlay
+import io.github.darriousliu.han1meviewer.core.ui.component.isFirstPageEmpty
+import io.github.darriousliu.han1meviewer.core.ui.component.isFirstPageError
+import io.github.darriousliu.han1meviewer.core.ui.component.isFirstPageLoading
 import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.component.HomePageTopBar
-import io.github.darriousliu.han1meviewer.ui.screen.rememberRandomLoadingHint
+import io.github.darriousliu.han1meviewer.core.ui.rememberRandomLoadingHint
 import io.github.darriousliu.han1meviewer.core.common.util.toNetworkErrorMessage
 import org.jetbrains.compose.resources.stringResource
 

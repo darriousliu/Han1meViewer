@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import io.github.darriousliu.han1meviewer.core.model.CreatorSort
 import io.github.darriousliu.han1meviewer.core.model.CreatorUploadingItem
-import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
+import io.github.darriousliu.han1meviewer.core.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.h_chan_load_failed
 import io.github.darriousliu.han1meviewer.core.resource.h_chan_loading

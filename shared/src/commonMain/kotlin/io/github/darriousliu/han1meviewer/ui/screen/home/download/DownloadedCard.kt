@@ -42,7 +42,7 @@ import coil3.compose.AsyncImage
 import io.github.darriousliu.han1meviewer.core.common.LOCAL_DATE_TIME_FORMAT
 import io.github.darriousliu.han1meviewer.core.storage.entity.download.VideoWithCategories
 import io.github.darriousliu.han1meviewer.logic.DownloadHeaderNode
-import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
+import io.github.darriousliu.han1meviewer.core.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.ui.preview.fakeDownloadedNodes
 import io.github.darriousliu.han1meviewer.core.common.util.formatFileSizeV2
 import io.github.darriousliu.han1meviewer.core.resource.Res

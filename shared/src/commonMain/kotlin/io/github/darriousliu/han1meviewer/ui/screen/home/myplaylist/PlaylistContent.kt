@@ -28,10 +28,10 @@ import androidx.compose.ui.unit.dp
 import io.github.darriousliu.han1meviewer.core.model.Playlists
 import io.github.darriousliu.han1meviewer.core.common.state.PageLoadingState
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
-import io.github.darriousliu.han1meviewer.ui.component.LoadMoreFooter
-import io.github.darriousliu.han1meviewer.ui.component.content.EmptyContent
-import io.github.darriousliu.han1meviewer.ui.component.lazy.LazyVerticalGrid
-import io.github.darriousliu.han1meviewer.ui.screen.getColumnCount
+import io.github.darriousliu.han1meviewer.core.ui.component.LoadMoreFooter
+import io.github.darriousliu.han1meviewer.core.ui.component.content.EmptyContent
+import io.github.darriousliu.han1meviewer.core.ui.component.lazy.LazyVerticalGrid
+import io.github.darriousliu.han1meviewer.core.ui.getColumnCount
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.empty_content
 import io.github.darriousliu.han1meviewer.core.resource.load_failed_with_reason
