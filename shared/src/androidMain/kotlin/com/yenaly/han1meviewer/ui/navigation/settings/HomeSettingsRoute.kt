@@ -1,26 +1,9 @@
 package com.yenaly.han1meviewer.ui.navigation.settings
 
 import android.content.Context
-import android.os.Build
-import android.text.method.LinkMovementMethod
-import android.widget.TextView
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.DrawableRes
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -30,17 +13,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import org.jetbrains.compose.resources.stringResource
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.compose.ui.window.Dialog
-import androidx.core.text.parseAsHtml
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yenaly.han1meviewer.BuildConfig
 import com.yenaly.han1meviewer.HA1_GITHUB_FORUM_URL
@@ -56,6 +31,10 @@ import com.yenaly.han1meviewer.ui.screen.home.homepage.hiddenHomeCategoryKeys
 import com.yenaly.han1meviewer.ui.screen.home.homepage.homeCategoryOrder
 import com.yenaly.han1meviewer.ui.screen.home.homepage.saveHomeCategoryPreferences
 import com.yenaly.han1meviewer.ui.screen.settings.HomeSettingsScreen
+import com.yenaly.han1meviewer.ui.screen.settings.dialog.AnalyticsConsentDialog
+import com.yenaly.han1meviewer.ui.screen.settings.dialog.FakeLauncherIconDialog
+import com.yenaly.han1meviewer.ui.screen.settings.dialog.LauncherIconOption
+import com.yenaly.han1meviewer.ui.screen.settings.dialog.launcherIconOptions
 import com.yenaly.han1meviewer.ui.screen.settings.dialog.LicenseDialog
 import com.yenaly.han1meviewer.ui.screen.settings.model.HomeSettingsUiState
 import com.yenaly.han1meviewer.ui.theme.ThemeColorPreset
@@ -105,36 +84,6 @@ fun HomeSettingsRouteScreen(
         pendingImportUri = uri
     }
 
-    val hanimeAppName = stringResource(R.string.hanime_app_name)
-    val fakeNameCalc = stringResource(R.string.app_name_fake_calc)
-    val fakeNameCornhub = stringResource(R.string.app_name_fake_cornhub)
-    val fakeNameXXT = stringResource(R.string.app_name_fake_xxt)
-
-    val launcherItems = remember(context) {
-        listOf(
-            LauncherItem(
-                name = hanimeAppName,
-                iconRes = R.drawable.ic_launcher_new,
-                alias = "com.yenaly.han1meviewer.LauncherAliasDefault",
-            ),
-            LauncherItem(
-                name = fakeNameCalc,
-                iconRes = R.drawable.ic_launcher_calc,
-                alias = "com.yenaly.han1meviewer.LauncherFakeCalc",
-            ),
-            LauncherItem(
-                name = fakeNameCornhub,
-                iconRes = R.drawable.ic_launcher_cornhub,
-                alias = "com.yenaly.han1meviewer.LauncherFakeCornhub",
-            ),
-            LauncherItem(
-                name = fakeNameXXT,
-                iconRes = R.drawable.ic_launcher_xxt,
-                alias = "com.yenaly.han1meviewer.LauncherFakeXxt",
-            ),
-        )
-    }
-
     // 算目录大小是 IO，拼文案是资源——摘要文案现在是 @Composable（commonMain 的
     // SettingsSummaries），不能在协程里调，所以这里只留大小，文案在下面组合时拼
     var cacheSize by remember { mutableLongStateOf(0L) }
@@ -164,7 +113,7 @@ fun HomeSettingsRouteScreen(
     val themeColorName = stringResource(ThemeColorPreset.fromKey(Preferences.themeColor).displayNameRes)
     val uiState = buildHomeSettingsUiState(
         context = context,
-        launcherItems = launcherItems,
+        launcherOptions = launcherIconOptions,
         updateSummary = updateSummary,
         cacheSummary = cacheSummary,
         themeColorName = themeColorName,
@@ -394,36 +343,13 @@ fun HomeSettingsRouteScreen(
     }
 
     if (showAnalyticsDialog) {
-        val message = stringResource(R.string.about_analytics_summary).parseAsHtml()
-        val analyticsMessage = remember { message }
-        AlertDialog(
-            onDismissRequest = {},
-            title = { Text(stringResource(R.string.about_analytics)) },
-            text = {
-                AndroidView(
-                    factory = { ctx ->
-                        TextView(ctx).apply {
-                            text = analyticsMessage
-                            movementMethod = LinkMovementMethod.getInstance()
-                            setPadding(0, 0, 0, 0)
-                        }
-                    },
-                )
-            },
-            confirmButton = {
-                TextButton(onClick = { showAnalyticsDialog = false }) {
-                    Text(stringResource(R.string.ok))
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = {
-                    Preferences.isAnalyticsEnabled = false
-                    refreshKey++
-                    actions.setAnalyticsEnabled(false)
-                    showAnalyticsDialog = false
-                }) {
-                    Text(stringResource(R.string.deny))
-                }
+        AnalyticsConsentDialog(
+            onAccept = { showAnalyticsDialog = false },
+            onDeny = {
+                Preferences.isAnalyticsEnabled = false
+                refreshKey++
+                actions.setAnalyticsEnabled(false)
+                showAnalyticsDialog = false
             },
         )
     }
@@ -442,58 +368,19 @@ fun HomeSettingsRouteScreen(
     )
 
     if (showLauncherPicker) {
-        Dialog(
-            onDismissRequest = { showLauncherPicker = false },
-        ) {
-            Surface(
-                shape = RoundedCornerShape(28.dp),
-                color = MaterialTheme.colorScheme.surfaceContainerHigh,
-            ) {
-                Column(
-                    modifier = Modifier.padding(20.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                ) {
-                    Text(
-                        stringResource(R.string.fake_app_icon),
-                        style = MaterialTheme.typography.titleLarge,
-                    )
-                    launcherItems.forEach { item ->
-                        TextButton(
-                            onClick = {
-                                Preferences.fakeLauncherIcon = item.alias
-                                actions.switchLauncherIcon(item.alias)
-                                context.showToast(R.string.fake_icon_hint)
-                                refreshKey++
-                                showLauncherPicker = false
-                            },
-                            modifier = Modifier.fillMaxWidth(),
-                        ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                            ) {
-                                Icon(
-                                    painter = painterResource(item.iconRes),
-                                    contentDescription = null,
-                                    tint = Color.Unspecified,
-                                    modifier = Modifier.size(30.dp),
-                                )
-                                Text(item.name)
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        FakeLauncherIconDialog(
+            onSelect = { option ->
+                Preferences.fakeLauncherIcon = option.alias
+                actions.switchLauncherIcon(option.alias)
+                context.showToast(R.string.fake_icon_hint)
+                refreshKey++
+                showLauncherPicker = false
+            },
+            onDismiss = { showLauncherPicker = false },
+        )
     }
 }
 
-private data class LauncherItem(
-    val name: String,
-    @param:DrawableRes val iconRes: Int,
-    val alias: String,
-)
 
 /**
  * @param refreshKey 只用来触发重算——`Preferences` 不是可观察状态，
@@ -502,14 +389,15 @@ private data class LauncherItem(
 @Composable
 private fun buildHomeSettingsUiState(
     context: Context,
-    launcherItems: List<LauncherItem>,
+    launcherOptions: List<LauncherIconOption>,
     updateSummary: String,
     cacheSummary: String,
     themeColorName: String,
     refreshKey: Int,
 ): HomeSettingsUiState {
     val currentAlias = Preferences.fakeLauncherIcon
-    val currentItem = launcherItems.find { it.alias == currentAlias } ?: launcherItems.first()
+    val currentOption = launcherOptions.find { it.alias == currentAlias } ?: launcherOptions.first()
+    val currentOptionName = stringResource(currentOption.name)
     val videoLanguageLabel = when (Preferences.videoLanguage) {
         "zht" -> context.getString(R.string.traditional_chinese)
         "zhs" -> context.getString(R.string.simplified_chinese)
@@ -553,7 +441,7 @@ private fun buildHomeSettingsUiState(
         useCIUpdateChannel = Preferences.useCIUpdateChannel,
         useAnalytics = Preferences.isAnalyticsEnabled,
         useLockScreen = Preferences.useLockScreen,
-        fakeLauncherIconName = currentItem.name,
+        fakeLauncherIconName = currentOptionName,
         updateSummary = updateSummary,
         cacheSummary = cacheSummary,
         versionSummary = context.getString(
