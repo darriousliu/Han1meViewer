@@ -33,6 +33,7 @@ lifecycle = "2.11.0"
 room = "3.0.1"
 sqlite = "2.7.0"
 filekit = "0.15.0"
+htmlconverter = "1.1.1"
 kotlinxIo = "0.9.1"
 mmkvKotlin = "1.5.1"
 mmkv = "2.4.1"
@@ -124,6 +125,7 @@ room-compiler = { group = "androidx.room3", name = "room3-compiler", version.ref
 sqlite-bundled = { group = "androidx.sqlite", name = "sqlite-bundled", version.ref = "sqlite" }
 sqlite-async = { group = "androidx.sqlite", name = "sqlite-async", version.ref = "sqlite" }
 filekit-core = { module = "io.github.vinceglb:filekit-core", version.ref = "filekit" }
+htmlconverter = { module = "be.digitalia.compose.htmlconverter:htmlconverter", version.ref = "htmlconverter" }
 filekit-dialogs-compose = { module = "io.github.vinceglb:filekit-dialogs-compose", version.ref = "filekit" }
 kotlinx-io-core = { module = "org.jetbrains.kotlinx:kotlinx-io-core", version.ref = "kotlinxIo" }
 mmkv-kotlin = { module = "io.github.darriousliu:mmkv-kotlin", version.ref = "mmkvKotlin" }

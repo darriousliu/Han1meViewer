@@ -166,6 +166,7 @@ kotlin {
             implementation(libs.compose.multiplatform.ui)
             implementation(libs.compose.multiplatform.foundation)
             implementation(libs.compose.resources)
+            implementation(libs.htmlconverter)
             implementation(libs.jetbrains.compose.material3)
             implementation(libs.compose.multiplatform.ui.backhandler)
             implementation(libs.compose.multiplatform.ui.tooling.preview)
