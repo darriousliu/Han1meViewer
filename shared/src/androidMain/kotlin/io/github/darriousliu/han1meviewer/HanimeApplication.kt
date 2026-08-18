@@ -15,6 +15,7 @@ import com.google.firebase.crashlytics.setCustomKeys
 import com.google.firebase.database.database
 import com.google.firebase.remoteconfig.remoteConfig
 import com.google.firebase.remoteconfig.remoteConfigSettings
+import io.github.darriousliu.han1meviewer.di.initKoin
 import io.github.darriousliu.han1meviewer.logic.network.HProxySelector
 import io.github.darriousliu.han1meviewer.mmkv.initializeMMKV
 import io.github.darriousliu.han1meviewer.mmkv.migrateSharedPreferencesToMMKV
@@ -27,6 +28,7 @@ import io.github.darriousliu.han1meviewer.util.LanguageHelper
 import io.github.darriousliu.han1meviewer.util.ThemeUtils
 import io.github.darriousliu.han1meviewer.util.migrateAppLanguageToPlatformIfNeeded
 import `is`.xyz.mpv.MPVLib
+import org.koin.android.ext.koin.androidContext
 import java.net.ProxySelector
 
 /**
@@ -73,6 +75,8 @@ class HanimeApplication : Application() {
         // MMKV 必须早于任何 Preferences 访问：Preferences 里的几个 StateFlow 一被碰到就会读盘。
         // 放在 isMainProcess 判断之前，因为非主进程（下载 worker 等）同样会读 Preferences。
         initializeMMKV()
+        // 同样放在 isMainProcess 之前：worker 跑在别的进程里，也要能取到依赖。
+        initKoin { androidContext(this@HanimeApplication) }
         if (!isMainProcess) return
         // 迁移只在主进程做一次，读写旧 SharedPreferences 不适合多进程并发。
         migrateSharedPreferencesToMMKV(this)

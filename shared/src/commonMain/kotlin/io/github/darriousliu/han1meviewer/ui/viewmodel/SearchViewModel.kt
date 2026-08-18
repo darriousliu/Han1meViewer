@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.android.annotation.KoinViewModel
 
 private val logger = Logger.withTag("SearchViewModel")
 
@@ -34,6 +35,7 @@ private val logger = Logger.withTag("SearchViewModel")
  * @author Yenaly Liew
  * @time 2022/06/13 013 22:29
  */
+@KoinViewModel
 class SearchViewModel(
     private val state: SavedStateHandle
 ) : ViewModel() {

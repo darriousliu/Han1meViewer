@@ -28,6 +28,9 @@ kotlin {
             implementation(libs.findLibrary("lifecycle-viewmodel-savedstate").get())
             implementation(libs.findLibrary("lifecycle-viewmodel-compose").get())
             implementation(libs.findLibrary("lifecycle-runtime-compose").get())
+            implementation(project.dependencies.platform(libs.findLibrary("koin-bom").get()))
+            implementation(libs.findLibrary("koin-compose").get())
+            implementation(libs.findLibrary("koin-compose-viewmodel").get())
         }
     }
 }

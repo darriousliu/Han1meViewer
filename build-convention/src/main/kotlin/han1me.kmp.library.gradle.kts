@@ -54,10 +54,54 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            implementation(project.dependencies.platform(libs.findLibrary("koin-bom").get()))
+            implementation(libs.findLibrary("koin-core").get())
+            // koin-annotations 必须钉死在 KSP 处理器那条版本线上，不能跟着 BOM 走：
+            // 处理器生成的 KoinMeta 文件 import 的 `org.koin.meta.annotations` 只存在于
+            // 2.3.x，BOM 会把它提到 4.2.2，一提上去生成的代码就编译不过
+            // （Unresolved reference 'meta'）。
+            implementation(libs.findLibrary("koin-annotations").get())
             implementation(libs.findLibrary("coroutines-core").get())
             implementation(libs.findLibrary("serialization-json").get())
             implementation(libs.findLibrary("datetime").get())
             implementation(libs.findLibrary("kermit").get())
         }
+        androidMain.dependencies {
+            implementation(project.dependencies.platform(libs.findLibrary("koin-bom").get()))
+            implementation(libs.findLibrary("koin-android").get())
+        }
+    }
+
+    // KSP 生成到 commonMain metadata，各目标共用一份
+    sourceSets.commonMain {
+        kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
     }
 }
+
+dependencies {
+    // Koin 的注解处理器。只挂 commonMain metadata：定义都写在 commonMain，
+    // 生成一次各目标共用。
+    add("kspCommonMainMetadata", libs.findLibrary("koin-ksp-compiler").get())
+}
+
+// koin-annotations 必须钉死在 KSP 处理器那条版本线上，不能跟着 koin-bom 走。
+// 处理器生成的 KoinMeta 文件 import 的 `org.koin.meta.annotations` 只存在于 2.3.x；
+// BOM 4.2.2 会把 koin-annotations 一起提上去，而 4.2.2 里没有这个包，
+// 生成的代码当场编译不过（Unresolved reference 'meta'）。
+// 官方新的 Kotlin compiler plugin 方案没这个问题，但它编译时链的是 kotlin-compiler
+// 2.3.20，在本项目的 2.4.20-Beta2 上 IR 阶段就崩，等它跟上再换。
+configurations.configureEach {
+    resolutionStrategy {
+        force(libs.findLibrary("koin-annotations").get())
+    }
+}
+
+// 所有编译任务和其它 ksp 任务都会读 commonMain 的生成目录，都要排在它后面，
+// 否则 Gradle 报 "uses this output ... without declaring an explicit dependency"。
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask<*>>().configureEach {
+    if (name != "kspCommonMainKotlinMetadata") {
+        dependsOn("kspCommonMainKotlinMetadata")
+    }
+}
+tasks.matching { it.name.startsWith("ksp") && it.name != "kspCommonMainKotlinMetadata" }
+    .configureEach { dependsOn("kspCommonMainKotlinMetadata") }

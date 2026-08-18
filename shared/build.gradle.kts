@@ -11,7 +11,6 @@ import io.github.darriousliu.han1meviewer.convention.Config.Version.source
 import io.github.darriousliu.han1meviewer.convention.Config.isRelease
 import io.github.darriousliu.han1meviewer.convention.Config.lastCommitSha
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     // targets / 编译选项 / Compose 那圈公共依赖都在 convention 里
@@ -163,6 +162,8 @@ kotlin {
 
         getByName("androidHostTest").dependencies {
             implementation(libs.junit)
+            implementation(project.dependencies.platform(libs.koin.bom))
+            implementation(libs.koin.test)
         }
 
         getByName("androidDeviceTest").dependencies {
@@ -323,18 +324,4 @@ kotlin.sourceSets.commonMain {
     kotlin.srcDir(generateSharedHKeyframeIndex)
 }
 
-// KSP 在 commonMain 上生成的代码要手动挂进源集，并保证所有编译任务都排在它后面。
-kotlin.sourceSets.commonMain {
-    kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
-}
-
-// 各目标的编译任务和 KSP 任务都会读 commonMain 的生成目录，都要排在它后面，
-// 否则 Gradle 会报 "uses this output ... without declaring an explicit dependency"。
-tasks.withType<KotlinCompilationTask<*>>().configureEach {
-    if (name != "kspCommonMainKotlinMetadata") {
-        dependsOn("kspCommonMainKotlinMetadata")
-    }
-}
-
-tasks.matching { it.name.startsWith("ksp") && it.name != "kspCommonMainKotlinMetadata" }
-    .configureEach { dependsOn("kspCommonMainKotlinMetadata") }
+// KSP 的源集挂载与任务排序在 han1me.kmp.library 里（Koin/Ktorfit 共用同一套接线）。

@@ -8,7 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalClipboard
-import androidx.lifecycle.viewmodel.compose.viewModel
+import org.koin.compose.viewmodel.koinViewModel
 import io.github.darriousliu.han1meviewer.getHanimeShareText
 import io.github.darriousliu.han1meviewer.ui.component.LocalToaster
 import io.github.darriousliu.han1meviewer.ui.component.showShort
@@ -31,7 +31,7 @@ fun SearchRouteScreen(
 ) {
     val clipboard = LocalClipboard.current
     val scope = rememberCoroutineScope()
-    val viewModel: SearchViewModel = viewModel()
+    val viewModel: SearchViewModel = koinViewModel()
     val toaster = LocalToaster.current
     val copiedHint = stringResource(Res.string.copy_to_clipboard)
     var showAdvancedSearchSheet by remember { mutableStateOf(false) }
