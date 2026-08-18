@@ -33,13 +33,13 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.darriousliu.han1meviewer.logic.model.ReportReason
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.baseline_remove_circle_24
-import han1meviewer.shared.generated.resources.cancel
-import han1meviewer.shared.generated.resources.ic_baseline_check_circle_24
-import han1meviewer.shared.generated.resources.ic_baseline_send_24
-import han1meviewer.shared.generated.resources.submit
-import han1meviewer.shared.generated.resources.whats_wrong_with_him
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.baseline_remove_circle_24
+import io.github.darriousliu.han1meviewer.core.resource.cancel
+import io.github.darriousliu.han1meviewer.core.resource.ic_baseline_check_circle_24
+import io.github.darriousliu.han1meviewer.core.resource.ic_baseline_send_24
+import io.github.darriousliu.han1meviewer.core.resource.submit
+import io.github.darriousliu.han1meviewer.core.resource.whats_wrong_with_him
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

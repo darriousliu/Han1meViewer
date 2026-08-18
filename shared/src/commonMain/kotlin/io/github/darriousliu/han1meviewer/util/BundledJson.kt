@@ -1,7 +1,7 @@
 package io.github.darriousliu.han1meviewer.util
 
 import io.github.darriousliu.han1meviewer.HJson
-import han1meviewer.shared.generated.resources.Res
+import io.github.darriousliu.han1meviewer.core.resource.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 /** 读取 `composeResources/files` 下的 JSON；资源缺失或内容无效时返回 null。 */

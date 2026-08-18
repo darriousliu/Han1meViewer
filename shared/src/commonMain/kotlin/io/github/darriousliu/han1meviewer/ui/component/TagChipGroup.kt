@@ -30,9 +30,9 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.ui.preview.fakeTagList2
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.collapse
-import han1meviewer.shared.generated.resources.expand
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.collapse
+import io.github.darriousliu.han1meviewer.core.resource.expand
 import kotlin.random.Random
 
 /**

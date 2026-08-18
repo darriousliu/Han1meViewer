@@ -30,16 +30,16 @@ import coil3.compose.AsyncImage
 import io.github.darriousliu.han1meviewer.logic.model.VideoComments
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.util.DisplayTextLocalizer
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.ic_baseline_reply_24
-import han1meviewer.shared.generated.resources.ic_baseline_report_24
-import han1meviewer.shared.generated.resources.ic_baseline_thumb_down_alt_24
-import han1meviewer.shared.generated.resources.ic_baseline_thumb_down_off_alt_24
-import han1meviewer.shared.generated.resources.ic_baseline_thumb_up_alt_24
-import han1meviewer.shared.generated.resources.ic_baseline_thumb_up_off_alt_24
-import han1meviewer.shared.generated.resources.reply
-import han1meviewer.shared.generated.resources.report_reason_hint
-import han1meviewer.shared.generated.resources.view_more_replies
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.ic_baseline_reply_24
+import io.github.darriousliu.han1meviewer.core.resource.ic_baseline_report_24
+import io.github.darriousliu.han1meviewer.core.resource.ic_baseline_thumb_down_alt_24
+import io.github.darriousliu.han1meviewer.core.resource.ic_baseline_thumb_down_off_alt_24
+import io.github.darriousliu.han1meviewer.core.resource.ic_baseline_thumb_up_alt_24
+import io.github.darriousliu.han1meviewer.core.resource.ic_baseline_thumb_up_off_alt_24
+import io.github.darriousliu.han1meviewer.core.resource.reply
+import io.github.darriousliu.han1meviewer.core.resource.report_reason_hint
+import io.github.darriousliu.han1meviewer.core.resource.view_more_replies
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

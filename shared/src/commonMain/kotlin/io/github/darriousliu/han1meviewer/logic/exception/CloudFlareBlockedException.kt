@@ -1,9 +1,9 @@
 package io.github.darriousliu.han1meviewer.logic.exception
 
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.website_blocked_msg
-import han1meviewer.shared.generated.resources.website_blocked_msg_2
-import han1meviewer.shared.generated.resources.website_blocked_msg_3
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.website_blocked_msg
+import io.github.darriousliu.han1meviewer.core.resource.website_blocked_msg_2
+import io.github.darriousliu.han1meviewer.core.resource.website_blocked_msg_3
 import org.jetbrains.compose.resources.StringResource
 
 /**

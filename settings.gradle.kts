@@ -22,3 +22,11 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Han1meViewer"
 include(":app", ":desktopApp", ":shared")
+
+// core/ 和 feature/ 下的模块自动纳入，新建目录不用回来登记
+file("core").listFiles()?.filter { it.isDirectory }?.sorted()?.forEach {
+    include(":core:${it.name}")
+}
+file("feature").listFiles()?.filter { it.isDirectory }?.sorted()?.forEach {
+    include(":feature:${it.name}")
+}

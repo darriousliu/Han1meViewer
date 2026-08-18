@@ -55,10 +55,10 @@ import io.github.darriousliu.han1meviewer.ui.preview.fakeVideos
 import io.github.darriousliu.han1meviewer.ui.screen.rememberVideoGridColumns
 import io.github.darriousliu.han1meviewer.ui.theme.ArtistIconSize
 import io.github.darriousliu.han1meviewer.ui.theme.SpacingNormal
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.ic_baseline_arrow_forward_24
-import han1meviewer.shared.generated.resources.subscribed_artists_count
-import han1meviewer.shared.generated.resources.swipe_more
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.ic_baseline_arrow_forward_24
+import io.github.darriousliu.han1meviewer.core.resource.subscribed_artists_count
+import io.github.darriousliu.han1meviewer.core.resource.swipe_more
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import org.jetbrains.compose.resources.painterResource

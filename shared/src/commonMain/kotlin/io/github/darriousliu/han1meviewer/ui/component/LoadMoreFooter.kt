@@ -23,11 +23,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.darriousliu.han1meviewer.logic.state.PageLoadingState
 import io.github.darriousliu.han1meviewer.ui.component.lazy.LazyColumn
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.load_complete
-import han1meviewer.shared.generated.resources.load_complete_with_pages
-import han1meviewer.shared.generated.resources.load_failed_retry
-import han1meviewer.shared.generated.resources.loading
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.load_complete
+import io.github.darriousliu.han1meviewer.core.resource.load_complete_with_pages
+import io.github.darriousliu.han1meviewer.core.resource.load_failed_retry
+import io.github.darriousliu.han1meviewer.core.resource.loading
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 

@@ -32,10 +32,10 @@ import io.github.darriousliu.han1meviewer.ui.component.LoadMoreFooter
 import io.github.darriousliu.han1meviewer.ui.component.content.EmptyContent
 import io.github.darriousliu.han1meviewer.ui.component.lazy.LazyVerticalGrid
 import io.github.darriousliu.han1meviewer.ui.screen.getColumnCount
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.empty_content
-import han1meviewer.shared.generated.resources.load_failed_with_reason
-import han1meviewer.shared.generated.resources.retry
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.empty_content
+import io.github.darriousliu.han1meviewer.core.resource.load_failed_with_reason
+import io.github.darriousliu.han1meviewer.core.resource.retry
 import org.jetbrains.compose.resources.stringResource
 
 /**

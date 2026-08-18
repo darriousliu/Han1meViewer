@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.icon
+package io.github.darriousliu.han1meviewer.core.resource.icon
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.ui.graphics.Color

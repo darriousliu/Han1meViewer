@@ -1,16 +1,16 @@
 package io.github.darriousliu.han1meviewer.util
 
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.home_error_connect
-import han1meviewer.shared.generated.resources.home_error_connection_interrupted
-import han1meviewer.shared.generated.resources.home_error_connection_reset
-import han1meviewer.shared.generated.resources.home_error_dns
-import han1meviewer.shared.generated.resources.home_error_forbidden
-import han1meviewer.shared.generated.resources.home_error_generic
-import han1meviewer.shared.generated.resources.home_error_not_found
-import han1meviewer.shared.generated.resources.home_error_server_unavailable
-import han1meviewer.shared.generated.resources.home_error_ssl
-import han1meviewer.shared.generated.resources.home_error_timeout
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.home_error_connect
+import io.github.darriousliu.han1meviewer.core.resource.home_error_connection_interrupted
+import io.github.darriousliu.han1meviewer.core.resource.home_error_connection_reset
+import io.github.darriousliu.han1meviewer.core.resource.home_error_dns
+import io.github.darriousliu.han1meviewer.core.resource.home_error_forbidden
+import io.github.darriousliu.han1meviewer.core.resource.home_error_generic
+import io.github.darriousliu.han1meviewer.core.resource.home_error_not_found
+import io.github.darriousliu.han1meviewer.core.resource.home_error_server_unavailable
+import io.github.darriousliu.han1meviewer.core.resource.home_error_ssl
+import io.github.darriousliu.han1meviewer.core.resource.home_error_timeout
 import org.jetbrains.compose.resources.StringResource
 
 /**

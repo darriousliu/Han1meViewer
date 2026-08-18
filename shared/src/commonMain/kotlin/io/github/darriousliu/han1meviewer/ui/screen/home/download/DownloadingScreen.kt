@@ -20,12 +20,12 @@ import io.github.darriousliu.han1meviewer.ui.component.content.EmptyContent
 import io.github.darriousliu.han1meviewer.ui.component.lazy.LazyColumn
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.ui.preview.fakeHomePageVideos
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.cancel
-import han1meviewer.shared.generated.resources.confirm
-import han1meviewer.shared.generated.resources.empty_content
-import han1meviewer.shared.generated.resources.prepare_to_delete_s
-import han1meviewer.shared.generated.resources.sure_to_delete
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.cancel
+import io.github.darriousliu.han1meviewer.core.resource.confirm
+import io.github.darriousliu.han1meviewer.core.resource.empty_content
+import io.github.darriousliu.han1meviewer.core.resource.prepare_to_delete_s
+import io.github.darriousliu.han1meviewer.core.resource.sure_to_delete
 import kotlin.time.Clock
 import org.jetbrains.compose.resources.stringResource
 

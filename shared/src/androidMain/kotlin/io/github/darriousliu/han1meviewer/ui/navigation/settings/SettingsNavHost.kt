@@ -22,8 +22,8 @@ import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
 import io.github.darriousliu.han1meviewer.ui.navigation.HanimeRoute
 import io.github.darriousliu.han1meviewer.util.findActivity
 import io.github.darriousliu.han1meviewer.util.logScreenViewEvent
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.back
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.back
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)

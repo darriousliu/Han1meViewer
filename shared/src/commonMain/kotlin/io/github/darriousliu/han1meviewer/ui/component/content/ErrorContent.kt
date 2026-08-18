@@ -15,10 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.h_chan_sad
-import han1meviewer.shared.generated.resources.load_failed_retry
-import han1meviewer.shared.generated.resources.retry
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.h_chan_sad
+import io.github.darriousliu.han1meviewer.core.resource.load_failed_retry
+import io.github.darriousliu.han1meviewer.core.resource.retry
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

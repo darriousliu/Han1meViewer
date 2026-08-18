@@ -40,12 +40,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import io.github.darriousliu.han1meviewer.ui.component.verticalScrollbar
 import io.github.darriousliu.han1meviewer.ui.screen.settings.model.HomeSettingsUiState
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.cancel
-import han1meviewer.shared.generated.resources.confirm
-import han1meviewer.shared.generated.resources.home_category_layout
-import han1meviewer.shared.generated.resources.home_category_layout_dialog_summary
-import han1meviewer.shared.generated.resources.reset
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.cancel
+import io.github.darriousliu.han1meviewer.core.resource.confirm
+import io.github.darriousliu.han1meviewer.core.resource.home_category_layout
+import io.github.darriousliu.han1meviewer.core.resource.home_category_layout_dialog_summary
+import io.github.darriousliu.han1meviewer.core.resource.reset
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 

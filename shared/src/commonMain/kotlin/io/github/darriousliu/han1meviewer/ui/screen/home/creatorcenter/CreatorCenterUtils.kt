@@ -5,11 +5,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import io.github.darriousliu.han1meviewer.logic.state.PageLoadingState
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.creator_status_pending
-import han1meviewer.shared.generated.resources.creator_status_queued
-import han1meviewer.shared.generated.resources.creator_status_transcoding
-import han1meviewer.shared.generated.resources.creator_status_uploaded
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.creator_status_pending
+import io.github.darriousliu.han1meviewer.core.resource.creator_status_queued
+import io.github.darriousliu.han1meviewer.core.resource.creator_status_transcoding
+import io.github.darriousliu.han1meviewer.core.resource.creator_status_uploaded
 import org.jetbrains.compose.resources.stringResource
 
 /**

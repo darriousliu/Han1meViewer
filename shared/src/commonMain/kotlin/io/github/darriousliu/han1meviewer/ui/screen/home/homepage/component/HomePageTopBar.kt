@@ -30,11 +30,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.hanime_list
-import han1meviewer.shared.generated.resources.ic_baseline_newspaper_24
-import han1meviewer.shared.generated.resources.open_menu
-import han1meviewer.shared.generated.resources.search_placeholders
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.hanime_list
+import io.github.darriousliu.han1meviewer.core.resource.ic_baseline_newspaper_24
+import io.github.darriousliu.han1meviewer.core.resource.open_menu
+import io.github.darriousliu.han1meviewer.core.resource.search_placeholders
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringArrayResource
 import org.jetbrains.compose.resources.stringResource

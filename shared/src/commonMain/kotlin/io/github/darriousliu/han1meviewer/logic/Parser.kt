@@ -30,8 +30,8 @@ import io.github.darriousliu.han1meviewer.logic.state.PageLoadingState
 import io.github.darriousliu.han1meviewer.logic.state.VideoLoadingState
 import io.github.darriousliu.han1meviewer.logic.state.WebsiteState
 import io.github.darriousliu.han1meviewer.toVideoCode
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.login_state_expired
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.login_state_expired
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive

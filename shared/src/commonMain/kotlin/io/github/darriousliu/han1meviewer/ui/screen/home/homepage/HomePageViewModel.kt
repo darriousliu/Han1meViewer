@@ -15,8 +15,8 @@ import io.github.darriousliu.han1meviewer.logic.state.PageState
 import io.github.darriousliu.han1meviewer.logic.state.WebsiteState
 import io.github.darriousliu.han1meviewer.logout
 import io.github.darriousliu.han1meviewer.ui.viewmodel.CsrfTokenStore
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.login_state_expired
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.login_state_expired
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.Dispatchers

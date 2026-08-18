@@ -26,10 +26,10 @@ import io.github.darriousliu.han1meviewer.logic.model.Playlists
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.ui.preview.fakePlaylists
 import io.github.darriousliu.han1meviewer.ui.screen.RetryableImage
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.h_chan_load_failed
-import han1meviewer.shared.generated.resources.h_chan_loading
-import han1meviewer.shared.generated.resources.video_count
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.h_chan_load_failed
+import io.github.darriousliu.han1meviewer.core.resource.h_chan_loading
+import io.github.darriousliu.han1meviewer.core.resource.video_count
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

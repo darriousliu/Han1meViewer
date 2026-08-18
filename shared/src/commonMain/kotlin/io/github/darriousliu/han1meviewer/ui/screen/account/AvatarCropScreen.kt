@@ -49,10 +49,10 @@ import io.github.darriousliu.han1meviewer.util.AVATAR_MAX_DIMENSION
 import io.github.darriousliu.han1meviewer.util.PREVIEW_MAX_DIMENSION
 import io.github.darriousliu.han1meviewer.util.decodeSampledImageBitmap
 import io.github.darriousliu.han1meviewer.util.encodeJpeg
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.cancel
-import han1meviewer.shared.generated.resources.confirm
-import han1meviewer.shared.generated.resources.crop_avatar
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.cancel
+import io.github.darriousliu.han1meviewer.core.resource.confirm
+import io.github.darriousliu.han1meviewer.core.resource.crop_avatar
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.readBytes
 import kotlinx.coroutines.launch

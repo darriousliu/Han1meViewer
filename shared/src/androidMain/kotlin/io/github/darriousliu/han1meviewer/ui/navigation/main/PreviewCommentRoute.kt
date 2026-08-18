@@ -37,8 +37,8 @@ import io.github.darriousliu.han1meviewer.ui.screen.video.CommentMessage
 import io.github.darriousliu.han1meviewer.ui.screen.video.CommentScreen
 import io.github.darriousliu.han1meviewer.ui.viewmodel.CommentViewModel
 import io.github.darriousliu.han1meviewer.ui.viewmodel.PreviewCommentPrefetcher
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.there_is_a_small_issue
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.there_is_a_small_issue
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString

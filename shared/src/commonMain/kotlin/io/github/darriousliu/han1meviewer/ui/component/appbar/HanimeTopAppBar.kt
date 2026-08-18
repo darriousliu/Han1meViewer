@@ -13,9 +13,9 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.back
-import han1meviewer.shared.generated.resources.ic_baseline_arrow_back_24
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.back
+import io.github.darriousliu.han1meviewer.core.resource.ic_baseline_arrow_back_24
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

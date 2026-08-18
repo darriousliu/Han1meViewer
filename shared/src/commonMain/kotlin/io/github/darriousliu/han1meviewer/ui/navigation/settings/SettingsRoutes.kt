@@ -9,15 +9,15 @@ import io.github.darriousliu.han1meviewer.ui.navigation.MpvPlayerSettingsRoute
 import io.github.darriousliu.han1meviewer.ui.navigation.NetworkSettingsRoute
 import io.github.darriousliu.han1meviewer.ui.navigation.PlayerSettingsRoute
 import io.github.darriousliu.han1meviewer.ui.navigation.SharedHKeyframesRoute
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.download_settings
-import han1meviewer.shared.generated.resources.h_keyframe_manage
-import han1meviewer.shared.generated.resources.h_keyframe_settings
-import han1meviewer.shared.generated.resources.mpv_advanced_settings
-import han1meviewer.shared.generated.resources.network_settings
-import han1meviewer.shared.generated.resources.player_settings
-import han1meviewer.shared.generated.resources.settings
-import han1meviewer.shared.generated.resources.shared_h_keyframe_manage
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.download_settings
+import io.github.darriousliu.han1meviewer.core.resource.h_keyframe_manage
+import io.github.darriousliu.han1meviewer.core.resource.h_keyframe_settings
+import io.github.darriousliu.han1meviewer.core.resource.mpv_advanced_settings
+import io.github.darriousliu.han1meviewer.core.resource.network_settings
+import io.github.darriousliu.han1meviewer.core.resource.player_settings
+import io.github.darriousliu.han1meviewer.core.resource.settings
+import io.github.darriousliu.han1meviewer.core.resource.shared_h_keyframe_manage
 import kotlin.reflect.KClass
 import org.jetbrains.compose.resources.StringResource
 

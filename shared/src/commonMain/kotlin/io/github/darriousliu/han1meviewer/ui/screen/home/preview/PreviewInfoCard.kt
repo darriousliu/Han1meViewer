@@ -31,10 +31,10 @@ import io.github.darriousliu.han1meviewer.ui.component.TagChipGroup
 import io.github.darriousliu.han1meviewer.ui.component.lazy.LazyRow
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.ui.preview.fakeNewHanimeInfo
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.brand
-import han1meviewer.shared.generated.resources.play_trailer
-import han1meviewer.shared.generated.resources.release_date
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.brand
+import io.github.darriousliu.han1meviewer.core.resource.play_trailer
+import io.github.darriousliu.han1meviewer.core.resource.release_date
 import org.jetbrains.compose.resources.stringResource
 
 /**

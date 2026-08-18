@@ -14,9 +14,9 @@ import io.github.darriousliu.han1meviewer.logic.state.VideoLoadingState
 import io.github.darriousliu.han1meviewer.ui.bridge.VideoPageHost
 import io.github.darriousliu.han1meviewer.ui.viewmodel.CommentViewModel
 import io.github.darriousliu.han1meviewer.ui.viewmodel.VideoViewModel
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.comment
-import han1meviewer.shared.generated.resources.introduction
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.comment
+import io.github.darriousliu.han1meviewer.core.resource.introduction
 import org.jetbrains.compose.resources.getString
 
 @Composable

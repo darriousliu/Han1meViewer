@@ -46,9 +46,9 @@ import io.github.darriousliu.han1meviewer.ui.component.isFirstPageLoading
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.ui.screen.rememberRandomLoadingHint
 import io.github.darriousliu.han1meviewer.util.toNetworkErrorMessage
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.back
-import han1meviewer.shared.generated.resources.getchu_preview_title
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.back
+import io.github.darriousliu.han1meviewer.core.resource.getchu_preview_title
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)

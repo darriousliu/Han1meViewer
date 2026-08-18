@@ -21,9 +21,9 @@ import io.github.darriousliu.han1meviewer.logic.model.SubscriptionItem
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.ui.preview.fakeArtists
 import io.github.darriousliu.han1meviewer.ui.screen.RetryableImage
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.h_chan_load_failed_small
-import han1meviewer.shared.generated.resources.h_chan_loading_small
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.h_chan_load_failed_small
+import io.github.darriousliu.han1meviewer.core.resource.h_chan_loading_small
 import org.jetbrains.compose.resources.painterResource
 
 

@@ -10,8 +10,8 @@ import io.github.darriousliu.han1meviewer.logic.model.UserAccountAction
 import io.github.darriousliu.han1meviewer.logic.model.UserAccountActionEvent
 import io.github.darriousliu.han1meviewer.logic.model.UserAccountSubmittingState
 import io.github.darriousliu.han1meviewer.logic.state.WebsiteState
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.not_logged_in_currently
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.not_logged_in_currently
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow

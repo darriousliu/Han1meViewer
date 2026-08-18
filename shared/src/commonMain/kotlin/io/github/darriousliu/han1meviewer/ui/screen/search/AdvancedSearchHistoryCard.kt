@@ -16,16 +16,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import io.github.darriousliu.han1meviewer.logic.entity.HanimeAdvancedSearchHistoryEntity
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.brand
-import han1meviewer.shared.generated.resources.delete
-import han1meviewer.shared.generated.resources.duration
-import han1meviewer.shared.generated.resources.ic_baseline_delete_24
-import han1meviewer.shared.generated.resources.pair_widely
-import han1meviewer.shared.generated.resources.release_date
-import han1meviewer.shared.generated.resources.sort_option
-import han1meviewer.shared.generated.resources.tag
-import han1meviewer.shared.generated.resources.type
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.brand
+import io.github.darriousliu.han1meviewer.core.resource.delete
+import io.github.darriousliu.han1meviewer.core.resource.duration
+import io.github.darriousliu.han1meviewer.core.resource.ic_baseline_delete_24
+import io.github.darriousliu.han1meviewer.core.resource.pair_widely
+import io.github.darriousliu.han1meviewer.core.resource.release_date
+import io.github.darriousliu.han1meviewer.core.resource.sort_option
+import io.github.darriousliu.han1meviewer.core.resource.tag
+import io.github.darriousliu.han1meviewer.core.resource.type
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

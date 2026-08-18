@@ -28,10 +28,10 @@ import io.github.darriousliu.han1meviewer.ui.component.isFirstPageLoading
 import io.github.darriousliu.han1meviewer.ui.screen.home.preview.PreviewImageViewerDialog
 import io.github.darriousliu.han1meviewer.ui.screen.home.preview.PreviewImageViewerState
 import io.github.darriousliu.han1meviewer.ui.screen.rememberRandomLoadingHint
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.back
-import han1meviewer.shared.generated.resources.getchu_preview_detail
-import han1meviewer.shared.generated.resources.ic_baseline_arrow_back_24
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.back
+import io.github.darriousliu.han1meviewer.core.resource.getchu_preview_detail
+import io.github.darriousliu.han1meviewer.core.resource.ic_baseline_arrow_back_24
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

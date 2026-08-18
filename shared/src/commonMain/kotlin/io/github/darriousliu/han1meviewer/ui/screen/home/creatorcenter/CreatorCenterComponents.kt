@@ -30,12 +30,12 @@ import coil3.compose.AsyncImage
 import io.github.darriousliu.han1meviewer.logic.model.CreatorSort
 import io.github.darriousliu.han1meviewer.logic.model.CreatorUploadingItem
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.h_chan_load_failed
-import han1meviewer.shared.generated.resources.h_chan_loading
-import han1meviewer.shared.generated.resources.popular
-import han1meviewer.shared.generated.resources.sort_by_newest
-import han1meviewer.shared.generated.resources.sort_by_oldest
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.h_chan_load_failed
+import io.github.darriousliu.han1meviewer.core.resource.h_chan_loading
+import io.github.darriousliu.han1meviewer.core.resource.popular
+import io.github.darriousliu.han1meviewer.core.resource.sort_by_newest
+import io.github.darriousliu.han1meviewer.core.resource.sort_by_oldest
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

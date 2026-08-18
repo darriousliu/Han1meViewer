@@ -34,11 +34,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.darriousliu.han1meviewer.util.currentYearMonth
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.checkin_calendar
-import han1meviewer.shared.generated.resources.checkin_tip
-import han1meviewer.shared.generated.resources.next_double_arrow_24
-import han1meviewer.shared.generated.resources.previous_double_arrow_24
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.checkin_calendar
+import io.github.darriousliu.han1meviewer.core.resource.checkin_tip
+import io.github.darriousliu.han1meviewer.core.resource.next_double_arrow_24
+import io.github.darriousliu.han1meviewer.core.resource.previous_double_arrow_24
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.YearMonth
 import kotlinx.datetime.plus

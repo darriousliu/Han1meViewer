@@ -28,8 +28,8 @@ import io.github.darriousliu.han1meviewer.ui.preview.fakeHomePageVideos
 import io.github.darriousliu.han1meviewer.ui.screen.rememberCardResponsiveWidth
 import io.github.darriousliu.han1meviewer.ui.theme.SpacingLarge
 import io.github.darriousliu.han1meviewer.ui.theme.SpacingNormal
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.more
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.more
 import org.jetbrains.compose.resources.stringResource
 
 /**

@@ -26,11 +26,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import io.github.darriousliu.han1meviewer.util.formatVideoTime
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.back
-import han1meviewer.shared.generated.resources.ic_baseline_arrow_back_24
-import han1meviewer.shared.generated.resources.ic_baseline_pause_24
-import han1meviewer.shared.generated.resources.ic_baseline_play_arrow_24
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.back
+import io.github.darriousliu.han1meviewer.core.resource.ic_baseline_arrow_back_24
+import io.github.darriousliu.han1meviewer.core.resource.ic_baseline_pause_24
+import io.github.darriousliu.han1meviewer.core.resource.ic_baseline_play_arrow_24
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource

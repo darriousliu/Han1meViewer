@@ -20,9 +20,9 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.cancel
-import han1meviewer.shared.generated.resources.confirm
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.cancel
+import io.github.darriousliu.han1meviewer.core.resource.confirm
 import org.jetbrains.compose.resources.stringResource
 
 /**

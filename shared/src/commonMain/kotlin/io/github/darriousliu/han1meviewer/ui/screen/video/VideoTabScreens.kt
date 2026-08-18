@@ -25,8 +25,8 @@ import io.github.darriousliu.han1meviewer.ui.component.BottomSheetHandler
 import io.github.darriousliu.han1meviewer.ui.theme.HanimeTheme
 import io.github.darriousliu.han1meviewer.ui.viewmodel.CommentViewModel
 import io.github.darriousliu.han1meviewer.ui.viewmodel.VideoViewModel
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.there_is_a_small_issue
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.there_is_a_small_issue
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.map

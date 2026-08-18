@@ -1,11 +1,11 @@
 package io.github.darriousliu.han1meviewer.logic.entity
 
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.checkin_type_masturbation
-import han1meviewer.shared.generated.resources.checkin_type_oral
-import han1meviewer.shared.generated.resources.checkin_type_other
-import han1meviewer.shared.generated.resources.checkin_type_sex
-import han1meviewer.shared.generated.resources.checkin_type_wet_dream
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.checkin_type_masturbation
+import io.github.darriousliu.han1meviewer.core.resource.checkin_type_oral
+import io.github.darriousliu.han1meviewer.core.resource.checkin_type_other
+import io.github.darriousliu.han1meviewer.core.resource.checkin_type_sex
+import io.github.darriousliu.han1meviewer.core.resource.checkin_type_wet_dream
 import org.jetbrains.compose.resources.StringResource
 
 enum class CheckInType(val displayNameRes: StringResource, val storeName: String) {

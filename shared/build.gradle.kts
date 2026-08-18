@@ -51,7 +51,9 @@ aboutLibraries {
         all = true
     }
     export {
-        outputFile = file("src/commonMain/composeResources/files/aboutlibraries.json")
+        outputFile = rootProject.file(
+            "core/resource/src/commonMain/composeResources/files/aboutlibraries.json"
+        )
         prettyPrint = false
     }
 }
@@ -136,6 +138,9 @@ kotlin {
         // jetbrains material3|icons-core / lifecycle viewmodel|savedstate|compose|runtime-compose
         //   （han1me.kmp.compose）
         commonMain.dependencies {
+            // Res 出现在很多公开签名里（StringResource / DrawableResource 参数），
+            // 用 api 传递出去，消费方不用各自再声明一遍。
+            api(project(":core:resource"))
             implementation(libs.kotlinx.io.core)
             implementation(libs.ksoup)
             implementation(libs.mmkv.kotlin)
@@ -284,44 +289,5 @@ room3 {
     schemaDirectory("$projectDir/schemas")
 }
 
-// compose-resources 的 Res.readBytes 只能按名字读，**没有列目录的能力**，
-// 而共享关键 H 帧是「一个视频一个 json」的布局（README_TECH 第 15 节说明了这是为了
-// 方便贡献者直接丢一个文件进来，不要改成单个大数组）。所以在构建期扫一遍目录，
-// 生成一份 videoCode 清单给 DatabaseRepo.loadAllShared() 用。
-val sharedHKeyframeDir =
-    layout.projectDirectory.dir("src/commonMain/composeResources/files/h_keyframes")
-val generateSharedHKeyframeIndex = tasks.register("generateSharedHKeyframeIndex") {
-    description = "生成共享关键 H 帧的索引"
-    val srcDir = sharedHKeyframeDir
-    val outDir = layout.buildDirectory.dir("generated/sharedHKeyframeIndex/kotlin")
-    inputs.dir(srcDir).withPropertyName("sharedHKeyframes")
-    outputs.dir(outDir)
-    doLast {
-        val codes = srcDir.asFile.listFiles()
-            .orEmpty()
-            .filter { it.isFile && it.extension == "json" }
-            .map { it.nameWithoutExtension }
-            .sorted()
-        val target =
-            outDir.get().file("io/github/darriousliu/han1meviewer/logic/SharedHKeyframeIndex.kt")
-                .asFile
-        target.parentFile.mkdirs()
-        target.writeText(
-            buildString {
-                appendLine("// 由 :shared:generateSharedHKeyframeIndex 生成，不要手改。")
-                appendLine("package io.github.darriousliu.han1meviewer.logic")
-                appendLine()
-                appendLine("/** `composeResources/files/h_keyframes/` 下所有共享关键 H 帧的 videoCode。 */")
-                appendLine("internal val SHARED_H_KEYFRAME_CODES: List<String> = listOf(")
-                codes.forEach { appendLine("    \"$it\",") }
-                appendLine(")")
-            }
-        )
-    }
-}
-
-kotlin.sourceSets.commonMain {
-    kotlin.srcDir(generateSharedHKeyframeIndex)
-}
-
 // KSP 的源集挂载与任务排序在 han1me.kmp.library 里（Koin/Ktorfit 共用同一套接线）。
+// composeResources 与 generateSharedHKeyframeIndex 都在 :core:resource。

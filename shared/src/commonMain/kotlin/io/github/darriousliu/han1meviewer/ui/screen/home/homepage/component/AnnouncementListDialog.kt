@@ -23,9 +23,9 @@ import io.github.darriousliu.han1meviewer.logic.model.Announcement
 import io.github.darriousliu.han1meviewer.ui.component.lazy.LazyColumn
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.ui.preview.fakeAnnouncements
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.announcement_list
-import han1meviewer.shared.generated.resources.close
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.announcement_list
+import io.github.darriousliu.han1meviewer.core.resource.close
 import org.jetbrains.compose.resources.stringResource
 
 /**

@@ -6,13 +6,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.darriousliu.han1meviewer.Preferences
 import io.github.darriousliu.han1meviewer.ui.screen.home.VideoGridScreen
 import io.github.darriousliu.han1meviewer.ui.viewmodel.MyListViewModel
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.delete_fav
-import han1meviewer.shared.generated.resources.delete_watch_later
-import han1meviewer.shared.generated.resources.fav_video
-import han1meviewer.shared.generated.resources.long_press_to_cancel_fav
-import han1meviewer.shared.generated.resources.long_press_to_cancel_watch_later
-import han1meviewer.shared.generated.resources.watch_later
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.delete_fav
+import io.github.darriousliu.han1meviewer.core.resource.delete_watch_later
+import io.github.darriousliu.han1meviewer.core.resource.fav_video
+import io.github.darriousliu.han1meviewer.core.resource.long_press_to_cancel_fav
+import io.github.darriousliu.han1meviewer.core.resource.long_press_to_cancel_watch_later
+import io.github.darriousliu.han1meviewer.core.resource.watch_later
 
 @Composable
 fun FavVideoRouteScreen(

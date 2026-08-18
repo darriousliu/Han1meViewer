@@ -1,7 +1,7 @@
 package io.github.darriousliu.han1meviewer.logic.exception
 
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.parse_error_msg
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.parse_error_msg
 import org.jetbrains.compose.resources.StringResource
 
 /**

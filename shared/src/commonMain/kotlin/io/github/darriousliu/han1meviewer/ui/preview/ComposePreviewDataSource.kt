@@ -18,10 +18,10 @@ import io.github.darriousliu.han1meviewer.logic.model.SubscriptionItem
 import io.github.darriousliu.han1meviewer.logic.model.SubscriptionVideosItem
 import io.github.darriousliu.han1meviewer.logic.model.VideoComments
 import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.HomeCategory
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.latest_hanime
-import han1meviewer.shared.generated.resources.latest_release
-import han1meviewer.shared.generated.resources.they_watched
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.latest_hanime
+import io.github.darriousliu.han1meviewer.core.resource.latest_release
+import io.github.darriousliu.han1meviewer.core.resource.they_watched
 import kotlin.time.Clock
 import kotlinx.datetime.LocalDate
 

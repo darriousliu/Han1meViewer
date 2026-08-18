@@ -47,16 +47,16 @@ import io.github.darriousliu.han1meviewer.logic.model.DownloadHeaderNode
 import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog
 import io.github.darriousliu.han1meviewer.ui.component.lazy.LazyColumn
 import io.github.darriousliu.han1meviewer.ui.component.verticalScrollbar
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.cancel
-import han1meviewer.shared.generated.resources.confirm
-import han1meviewer.shared.generated.resources.create_new_group
-import han1meviewer.shared.generated.resources.current_group_name
-import han1meviewer.shared.generated.resources.delete_group
-import han1meviewer.shared.generated.resources.delete_group_confirm
-import han1meviewer.shared.generated.resources.modify_video_group
-import han1meviewer.shared.generated.resources.new_group_name
-import han1meviewer.shared.generated.resources.rename_group
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.cancel
+import io.github.darriousliu.han1meviewer.core.resource.confirm
+import io.github.darriousliu.han1meviewer.core.resource.create_new_group
+import io.github.darriousliu.han1meviewer.core.resource.current_group_name
+import io.github.darriousliu.han1meviewer.core.resource.delete_group
+import io.github.darriousliu.han1meviewer.core.resource.delete_group_confirm
+import io.github.darriousliu.han1meviewer.core.resource.modify_video_group
+import io.github.darriousliu.han1meviewer.core.resource.new_group_name
+import io.github.darriousliu.han1meviewer.core.resource.rename_group
 import org.jetbrains.compose.resources.stringResource
 
 /**

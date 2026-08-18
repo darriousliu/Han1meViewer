@@ -33,13 +33,13 @@ import io.github.darriousliu.han1meviewer.ui.component.content.ErrorContent
 import io.github.darriousliu.han1meviewer.ui.component.lazy.LazyVerticalGrid
 import io.github.darriousliu.han1meviewer.ui.screen.rememberVideoGridColumns
 import io.github.darriousliu.han1meviewer.ui.theme.SpacingNormal
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.creator_uploaded_empty_description
-import han1meviewer.shared.generated.resources.creator_uploaded_empty_title
-import han1meviewer.shared.generated.resources.creator_uploaded_load_failed
-import han1meviewer.shared.generated.resources.creator_uploading_empty_description
-import han1meviewer.shared.generated.resources.creator_uploading_empty_title
-import han1meviewer.shared.generated.resources.creator_uploading_load_failed
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.creator_uploaded_empty_description
+import io.github.darriousliu.han1meviewer.core.resource.creator_uploaded_empty_title
+import io.github.darriousliu.han1meviewer.core.resource.creator_uploaded_load_failed
+import io.github.darriousliu.han1meviewer.core.resource.creator_uploading_empty_description
+import io.github.darriousliu.han1meviewer.core.resource.creator_uploading_empty_title
+import io.github.darriousliu.han1meviewer.core.resource.creator_uploading_load_failed
 import kotlinx.coroutines.flow.distinctUntilChanged
 import org.jetbrains.compose.resources.stringResource
 

@@ -34,13 +34,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.bg_default_header
-import han1meviewer.shared.generated.resources.ic_baseline_switch_24
-import han1meviewer.shared.generated.resources.loading
-import han1meviewer.shared.generated.resources.not_logged_in
-import han1meviewer.shared.generated.resources.refresh_page_or_login_expired
-import han1meviewer.shared.generated.resources.switch_site
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.bg_default_header
+import io.github.darriousliu.han1meviewer.core.resource.ic_baseline_switch_24
+import io.github.darriousliu.han1meviewer.core.resource.loading
+import io.github.darriousliu.han1meviewer.core.resource.not_logged_in
+import io.github.darriousliu.han1meviewer.core.resource.refresh_page_or_login_expired
+import io.github.darriousliu.han1meviewer.core.resource.switch_site
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

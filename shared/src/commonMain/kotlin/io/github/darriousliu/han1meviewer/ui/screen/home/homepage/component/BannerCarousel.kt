@@ -36,9 +36,9 @@ import io.github.darriousliu.han1meviewer.logic.model.HomePage
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.ui.preview.fakeBanner
 import io.github.darriousliu.han1meviewer.ui.screen.RetryableImage
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.h_chan_load_failed
-import han1meviewer.shared.generated.resources.h_chan_loading
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.h_chan_load_failed
+import io.github.darriousliu.han1meviewer.core.resource.h_chan_loading
 import org.jetbrains.compose.resources.painterResource
 
 /**

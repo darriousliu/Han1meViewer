@@ -13,11 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.darriousliu.han1meviewer.ui.component.content.EmptyContent
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.ic_baseline_pause_24
-import han1meviewer.shared.generated.resources.ic_baseline_play_arrow_24
-import han1meviewer.shared.generated.resources.pause_all
-import han1meviewer.shared.generated.resources.start_all
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.ic_baseline_pause_24
+import io.github.darriousliu.han1meviewer.core.resource.ic_baseline_play_arrow_24
+import io.github.darriousliu.han1meviewer.core.resource.pause_all
+import io.github.darriousliu.han1meviewer.core.resource.start_all
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

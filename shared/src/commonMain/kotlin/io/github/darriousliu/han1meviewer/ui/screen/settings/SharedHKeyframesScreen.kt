@@ -22,9 +22,9 @@ import io.github.darriousliu.han1meviewer.ui.component.content.EmptyContent
 import io.github.darriousliu.han1meviewer.ui.component.lazy.LazyColumn
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.util.formatVideoTime
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.h_keyframe_title_prefix
-import han1meviewer.shared.generated.resources.here_is_empty
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.h_keyframe_title_prefix
+import io.github.darriousliu.han1meviewer.core.resource.here_is_empty
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

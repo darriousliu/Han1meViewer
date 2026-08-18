@@ -43,12 +43,12 @@ import io.github.darriousliu.han1meviewer.logic.model.Announcement
 import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.ui.preview.fakeAnnouncements
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.cancel
-import han1meviewer.shared.generated.resources.i_understand
-import han1meviewer.shared.generated.resources.ic_baseline_alert_24
-import han1meviewer.shared.generated.resources.save_image_confirm
-import han1meviewer.shared.generated.resources.sure
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.cancel
+import io.github.darriousliu.han1meviewer.core.resource.i_understand
+import io.github.darriousliu.han1meviewer.core.resource.ic_baseline_alert_24
+import io.github.darriousliu.han1meviewer.core.resource.save_image_confirm
+import io.github.darriousliu.han1meviewer.core.resource.sure
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

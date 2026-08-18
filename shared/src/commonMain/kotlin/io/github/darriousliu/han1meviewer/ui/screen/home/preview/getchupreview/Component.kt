@@ -27,13 +27,13 @@ import io.github.darriousliu.han1meviewer.logic.model.GetchuPreviewDetail
 import io.github.darriousliu.han1meviewer.ui.component.lazy.LazyRow
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.ui.preview.fakeGetchuPreviewItem
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.brand
-import han1meviewer.shared.generated.resources.getchu_product_intro
-import han1meviewer.shared.generated.resources.getchu_staff
-import han1meviewer.shared.generated.resources.getchu_story
-import han1meviewer.shared.generated.resources.h_chan_load_failed
-import han1meviewer.shared.generated.resources.h_chan_loading
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.brand
+import io.github.darriousliu.han1meviewer.core.resource.getchu_product_intro
+import io.github.darriousliu.han1meviewer.core.resource.getchu_staff
+import io.github.darriousliu.han1meviewer.core.resource.getchu_story
+import io.github.darriousliu.han1meviewer.core.resource.h_chan_load_failed
+import io.github.darriousliu.han1meviewer.core.resource.h_chan_loading
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

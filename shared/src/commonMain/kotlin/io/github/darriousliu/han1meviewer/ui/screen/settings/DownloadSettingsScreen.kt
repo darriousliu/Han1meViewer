@@ -9,16 +9,16 @@ import io.github.darriousliu.han1meviewer.ui.component.SettingNavigationItem
 import io.github.darriousliu.han1meviewer.ui.component.SettingSliderItem
 import io.github.darriousliu.han1meviewer.ui.component.lazy.LazyColumn
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.baseline_count_24
-import han1meviewer.shared.generated.resources.baseline_export_24
-import han1meviewer.shared.generated.resources.baseline_path_24
-import han1meviewer.shared.generated.resources.baseline_speed2_24
-import han1meviewer.shared.generated.resources.download_count_limit
-import han1meviewer.shared.generated.resources.download_path
-import han1meviewer.shared.generated.resources.download_speed_limit
-import han1meviewer.shared.generated.resources.pref_export_downloads_summary
-import han1meviewer.shared.generated.resources.pref_export_downloads_title
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.baseline_count_24
+import io.github.darriousliu.han1meviewer.core.resource.baseline_export_24
+import io.github.darriousliu.han1meviewer.core.resource.baseline_path_24
+import io.github.darriousliu.han1meviewer.core.resource.baseline_speed2_24
+import io.github.darriousliu.han1meviewer.core.resource.download_count_limit
+import io.github.darriousliu.han1meviewer.core.resource.download_path
+import io.github.darriousliu.han1meviewer.core.resource.download_speed_limit
+import io.github.darriousliu.han1meviewer.core.resource.pref_export_downloads_summary
+import io.github.darriousliu.han1meviewer.core.resource.pref_export_downloads_title
 import org.jetbrains.compose.resources.stringResource
 
 data class DownloadSettingsUiState(

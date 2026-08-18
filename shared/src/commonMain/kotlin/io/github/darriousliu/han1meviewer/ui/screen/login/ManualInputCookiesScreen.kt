@@ -29,15 +29,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import io.github.darriousliu.han1meviewer.ui.component.appbar.HanimeScaffold
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.confirm
-import han1meviewer.shared.generated.resources.cookies_import_desc
-import han1meviewer.shared.generated.resources.cookies_import_dismiss
-import han1meviewer.shared.generated.resources.cookies_import_title
-import han1meviewer.shared.generated.resources.cookies_intro1
-import han1meviewer.shared.generated.resources.cookies_label
-import han1meviewer.shared.generated.resources.import_cookies_intro
-import han1meviewer.shared.generated.resources.title_activity_qrcode_scanner
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.confirm
+import io.github.darriousliu.han1meviewer.core.resource.cookies_import_desc
+import io.github.darriousliu.han1meviewer.core.resource.cookies_import_dismiss
+import io.github.darriousliu.han1meviewer.core.resource.cookies_import_title
+import io.github.darriousliu.han1meviewer.core.resource.cookies_intro1
+import io.github.darriousliu.han1meviewer.core.resource.cookies_label
+import io.github.darriousliu.han1meviewer.core.resource.import_cookies_intro
+import io.github.darriousliu.han1meviewer.core.resource.title_activity_qrcode_scanner
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

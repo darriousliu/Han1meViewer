@@ -12,8 +12,8 @@ import io.github.darriousliu.han1meviewer.logic.model.HanimeInfo
 import io.github.darriousliu.han1meviewer.logic.model.MyListItems
 import io.github.darriousliu.han1meviewer.logic.state.PageLoadingState
 import io.github.darriousliu.han1meviewer.ui.screen.home.creatorcenter.CreatorCenterUiState
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.not_logged_in_currently
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.not_logged_in_currently
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

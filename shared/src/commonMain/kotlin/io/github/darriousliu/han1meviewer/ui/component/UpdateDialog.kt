@@ -28,11 +28,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.darriousliu.han1meviewer.logic.model.github.Latest
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.cancel
-import han1meviewer.shared.generated.resources.new_version_found
-import han1meviewer.shared.generated.resources.update
-import han1meviewer.shared.generated.resources.update_content
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.cancel
+import io.github.darriousliu.han1meviewer.core.resource.new_version_found
+import io.github.darriousliu.han1meviewer.core.resource.update
+import io.github.darriousliu.han1meviewer.core.resource.update_content
 import org.jetbrains.compose.resources.stringResource
 
 private val urlPattern =

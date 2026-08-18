@@ -36,14 +36,14 @@ import io.github.darriousliu.han1meviewer.ui.screen.RetryableImage
 import io.github.darriousliu.han1meviewer.ui.theme.VideoMetaIconSize
 import io.github.darriousliu.han1meviewer.ui.theme.VideoMetaTextSize
 import io.github.darriousliu.han1meviewer.util.DisplayTextLocalizer
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.h_chan_load_failed
-import han1meviewer.shared.generated.resources.h_chan_loading
-import han1meviewer.shared.generated.resources.ic_baseline_access_time_24
-import han1meviewer.shared.generated.resources.ic_baseline_play_circle_outline_24
-import han1meviewer.shared.generated.resources.ic_baseline_thumb_up_alt_24
-import han1meviewer.shared.generated.resources.now_playing
-import han1meviewer.shared.generated.resources.played
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.h_chan_load_failed
+import io.github.darriousliu.han1meviewer.core.resource.h_chan_loading
+import io.github.darriousliu.han1meviewer.core.resource.ic_baseline_access_time_24
+import io.github.darriousliu.han1meviewer.core.resource.ic_baseline_play_circle_outline_24
+import io.github.darriousliu.han1meviewer.core.resource.ic_baseline_thumb_up_alt_24
+import io.github.darriousliu.han1meviewer.core.resource.now_playing
+import io.github.darriousliu.han1meviewer.core.resource.played
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

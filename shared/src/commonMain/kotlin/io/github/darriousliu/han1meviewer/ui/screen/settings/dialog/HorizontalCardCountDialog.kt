@@ -12,16 +12,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import io.github.darriousliu.han1meviewer.HorizontalCardCountConfig
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.ui.screen.settings.model.GridRangeOption
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.current_bucket
-import han1meviewer.shared.generated.resources.horizontal_card_count_current_bucket_hint
-import han1meviewer.shared.generated.resources.horizontal_card_count_current_width_hint
-import han1meviewer.shared.generated.resources.horizontal_card_count_dialog_hint
-import han1meviewer.shared.generated.resources.horizontal_card_count_range_compact
-import han1meviewer.shared.generated.resources.horizontal_card_count_range_expanded
-import han1meviewer.shared.generated.resources.horizontal_card_count_range_medium
-import han1meviewer.shared.generated.resources.horizontal_card_count_range_narrow
-import han1meviewer.shared.generated.resources.horizontal_card_count_title
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.current_bucket
+import io.github.darriousliu.han1meviewer.core.resource.horizontal_card_count_current_bucket_hint
+import io.github.darriousliu.han1meviewer.core.resource.horizontal_card_count_current_width_hint
+import io.github.darriousliu.han1meviewer.core.resource.horizontal_card_count_dialog_hint
+import io.github.darriousliu.han1meviewer.core.resource.horizontal_card_count_range_compact
+import io.github.darriousliu.han1meviewer.core.resource.horizontal_card_count_range_expanded
+import io.github.darriousliu.han1meviewer.core.resource.horizontal_card_count_range_medium
+import io.github.darriousliu.han1meviewer.core.resource.horizontal_card_count_range_narrow
+import io.github.darriousliu.han1meviewer.core.resource.horizontal_card_count_title
 import net.sergeych.sprintf.sprintf
 import org.jetbrains.compose.resources.stringResource
 

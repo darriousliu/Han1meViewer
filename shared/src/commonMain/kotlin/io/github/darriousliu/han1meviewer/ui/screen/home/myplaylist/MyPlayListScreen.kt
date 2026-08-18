@@ -33,17 +33,17 @@ import io.github.darriousliu.han1meviewer.ui.component.TextInputDialog
 import io.github.darriousliu.han1meviewer.ui.component.appbar.HanimeScaffold
 import io.github.darriousliu.han1meviewer.ui.component.content.EmptyContent
 import io.github.darriousliu.han1meviewer.ui.viewmodel.MyPlayListViewModelV2
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.add_failed
-import han1meviewer.shared.generated.resources.add_success
-import han1meviewer.shared.generated.resources.cancel
-import han1meviewer.shared.generated.resources.confirm
-import han1meviewer.shared.generated.resources.create_new_playlist
-import han1meviewer.shared.generated.resources.h_chan_sad
-import han1meviewer.shared.generated.resources.load_failed_with_reason
-import han1meviewer.shared.generated.resources.my_list
-import han1meviewer.shared.generated.resources.playlist_description
-import han1meviewer.shared.generated.resources.playlist_title
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.add_failed
+import io.github.darriousliu.han1meviewer.core.resource.add_success
+import io.github.darriousliu.han1meviewer.core.resource.cancel
+import io.github.darriousliu.han1meviewer.core.resource.confirm
+import io.github.darriousliu.han1meviewer.core.resource.create_new_playlist
+import io.github.darriousliu.han1meviewer.core.resource.h_chan_sad
+import io.github.darriousliu.han1meviewer.core.resource.load_failed_with_reason
+import io.github.darriousliu.han1meviewer.core.resource.my_list
+import io.github.darriousliu.han1meviewer.core.resource.playlist_description
+import io.github.darriousliu.han1meviewer.core.resource.playlist_title
 import org.jetbrains.compose.resources.stringResource
 
 /**

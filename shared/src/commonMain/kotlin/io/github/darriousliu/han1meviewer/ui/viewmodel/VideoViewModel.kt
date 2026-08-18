@@ -18,9 +18,9 @@ import io.github.darriousliu.han1meviewer.logic.state.VideoLoadingState
 import io.github.darriousliu.han1meviewer.logic.state.WebsiteState
 import io.github.darriousliu.han1meviewer.ui.viewmodel.CsrfTokenStore.csrfToken
 import io.github.darriousliu.han1meviewer.util.TagLocalizer
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.add_success
-import han1meviewer.shared.generated.resources.interval_must_greater_than_d
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.add_success
+import io.github.darriousliu.han1meviewer.core.resource.interval_must_greater_than_d
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.IO

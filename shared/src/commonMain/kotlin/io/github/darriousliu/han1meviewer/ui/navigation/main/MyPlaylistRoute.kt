@@ -11,8 +11,8 @@ import io.github.darriousliu.han1meviewer.ui.screen.home.myplaylist.PlaylistScre
 import io.github.darriousliu.han1meviewer.ui.screen.home.myplaylist.PlaylistUiEvent
 import io.github.darriousliu.han1meviewer.ui.viewmodel.MyPlayListViewModelV2
 import io.github.darriousliu.han1meviewer.util.setPlainText
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.copy_to_clipboard
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.copy_to_clipboard
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource

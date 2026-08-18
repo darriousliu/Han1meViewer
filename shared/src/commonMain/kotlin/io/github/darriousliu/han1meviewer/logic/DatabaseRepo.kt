@@ -15,7 +15,8 @@ import io.github.darriousliu.han1meviewer.logic.entity.WatchHistoryEntity
 import io.github.darriousliu.han1meviewer.logic.entity.download.DownloadGroupEntity
 import io.github.darriousliu.han1meviewer.logic.entity.download.HanimeDownloadEntity
 import io.github.darriousliu.han1meviewer.logic.model.SearchOption
-import han1meviewer.shared.generated.resources.Res
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.SHARED_H_KEYFRAME_CODES
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -39,7 +40,7 @@ object DatabaseRepo {
         // #issue-106: 剧集分类
         //
         // 迁移前是 `assets.list("h_keyframes")` 枚举目录，compose-resources 没有这个能力，
-        // 改成读构建期生成的 [SHARED_H_KEYFRAME_CODES]（见 :shared:generateSharedHKeyframeIndex）。
+        // 改成读构建期生成的 [SHARED_H_KEYFRAME_CODES]（见 :core:resource:generateSharedHKeyframeIndex）。
         // 文件布局仍然是一个视频一个 json，贡献方式不变。
         @OptIn(ExperimentalResourceApi::class)
         fun loadAllShared(): Flow<List<HKeyframeType>> = flow {

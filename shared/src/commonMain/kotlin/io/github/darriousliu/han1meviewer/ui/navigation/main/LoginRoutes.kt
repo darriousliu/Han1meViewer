@@ -13,10 +13,10 @@ import io.github.darriousliu.han1meviewer.ui.component.LocalToaster
 import io.github.darriousliu.han1meviewer.ui.component.showShort
 import io.github.darriousliu.han1meviewer.ui.screen.login.LoginScreen
 import io.github.darriousliu.han1meviewer.ui.screen.login.ManualInputCookiesScreen
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.account_or_password_wrong
-import han1meviewer.shared.generated.resources.login_failed
-import han1meviewer.shared.generated.resources.login_success
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.account_or_password_wrong
+import io.github.darriousliu.han1meviewer.core.resource.login_failed
+import io.github.darriousliu.han1meviewer.core.resource.login_success
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 

@@ -41,21 +41,21 @@ import io.github.darriousliu.han1meviewer.logic.model.DownloadItemNode
 import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog
 import io.github.darriousliu.han1meviewer.ui.component.content.EmptyContent
 import io.github.darriousliu.han1meviewer.ui.component.lazy.LazyColumn
-import io.github.darriousliu.han1meviewer.ui.icon.DriveFileMove
+import io.github.darriousliu.han1meviewer.core.resource.icon.DriveFileMove
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.ui.preview.fakeDownloadedGroups
 import io.github.darriousliu.han1meviewer.ui.preview.fakeDownloadedNodes
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.cancel
-import han1meviewer.shared.generated.resources.close
-import han1meviewer.shared.generated.resources.confirm
-import han1meviewer.shared.generated.resources.confirm_delete_videos
-import han1meviewer.shared.generated.resources.delete
-import han1meviewer.shared.generated.resources.deselect_all
-import han1meviewer.shared.generated.resources.downloaded
-import han1meviewer.shared.generated.resources.empty_content
-import han1meviewer.shared.generated.resources.move_group
-import han1meviewer.shared.generated.resources.select_all
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.cancel
+import io.github.darriousliu.han1meviewer.core.resource.close
+import io.github.darriousliu.han1meviewer.core.resource.confirm
+import io.github.darriousliu.han1meviewer.core.resource.confirm_delete_videos
+import io.github.darriousliu.han1meviewer.core.resource.delete
+import io.github.darriousliu.han1meviewer.core.resource.deselect_all
+import io.github.darriousliu.han1meviewer.core.resource.downloaded
+import io.github.darriousliu.han1meviewer.core.resource.empty_content
+import io.github.darriousliu.han1meviewer.core.resource.move_group
+import io.github.darriousliu.han1meviewer.core.resource.select_all
 import org.jetbrains.compose.resources.stringResource
 
 /**

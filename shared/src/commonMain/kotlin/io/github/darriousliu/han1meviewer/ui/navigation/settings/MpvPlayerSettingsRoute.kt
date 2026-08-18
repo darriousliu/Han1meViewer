@@ -10,18 +10,18 @@ import io.github.darriousliu.han1meviewer.Preferences
 import io.github.darriousliu.han1meviewer.ui.screen.settings.MpvChoiceDialog
 import io.github.darriousliu.han1meviewer.ui.screen.settings.MpvPlayerSettingsScreen
 import io.github.darriousliu.han1meviewer.ui.screen.settings.MpvPlayerSettingsUiState
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.decoding_auto
-import han1meviewer.shared.generated.resources.decoding_hw
-import han1meviewer.shared.generated.resources.decoding_hw_plus
-import han1meviewer.shared.generated.resources.decoding_sw
-import han1meviewer.shared.generated.resources.decoding_vulkan
-import han1meviewer.shared.generated.resources.decoding_vulkan_copy
-import han1meviewer.shared.generated.resources.mpv_cache_secs_summary
-import han1meviewer.shared.generated.resources.mpv_hwdec_summary
-import han1meviewer.shared.generated.resources.mpv_network_timeout_summary
-import han1meviewer.shared.generated.resources.profile_fast
-import han1meviewer.shared.generated.resources.profile_gpu_hq
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.decoding_auto
+import io.github.darriousliu.han1meviewer.core.resource.decoding_hw
+import io.github.darriousliu.han1meviewer.core.resource.decoding_hw_plus
+import io.github.darriousliu.han1meviewer.core.resource.decoding_sw
+import io.github.darriousliu.han1meviewer.core.resource.decoding_vulkan
+import io.github.darriousliu.han1meviewer.core.resource.decoding_vulkan_copy
+import io.github.darriousliu.han1meviewer.core.resource.mpv_cache_secs_summary
+import io.github.darriousliu.han1meviewer.core.resource.mpv_hwdec_summary
+import io.github.darriousliu.han1meviewer.core.resource.mpv_network_timeout_summary
+import io.github.darriousliu.han1meviewer.core.resource.profile_fast
+import io.github.darriousliu.han1meviewer.core.resource.profile_gpu_hq
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

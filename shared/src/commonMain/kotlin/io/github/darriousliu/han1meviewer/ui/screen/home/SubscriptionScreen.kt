@@ -32,10 +32,10 @@ import io.github.darriousliu.han1meviewer.ui.screen.home.subscription.Subscripti
 import io.github.darriousliu.han1meviewer.ui.screen.home.subscription.SubscriptionEvent
 import io.github.darriousliu.han1meviewer.ui.screen.home.subscription.SubscriptionUiState
 import io.github.darriousliu.han1meviewer.ui.viewmodel.MySubscriptionsViewModel
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.h_chan_sad
-import han1meviewer.shared.generated.resources.load_failed_with_reason
-import han1meviewer.shared.generated.resources.my_subscribe
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.h_chan_sad
+import io.github.darriousliu.han1meviewer.core.resource.load_failed_with_reason
+import io.github.darriousliu.han1meviewer.core.resource.my_subscribe
 import org.jetbrains.compose.resources.stringResource
 
 /**

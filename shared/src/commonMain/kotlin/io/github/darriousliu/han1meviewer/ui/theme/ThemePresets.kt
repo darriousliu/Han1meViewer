@@ -4,17 +4,17 @@ import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.theme_color_blue
-import han1meviewer.shared.generated.resources.theme_color_default
-import han1meviewer.shared.generated.resources.theme_color_high_contrast
-import han1meviewer.shared.generated.resources.theme_color_light_green
-import han1meviewer.shared.generated.resources.theme_color_orange
-import han1meviewer.shared.generated.resources.theme_color_pink
-import han1meviewer.shared.generated.resources.theme_color_purple
-import han1meviewer.shared.generated.resources.theme_color_system
-import han1meviewer.shared.generated.resources.theme_color_teal
-import han1meviewer.shared.generated.resources.theme_color_yellow
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.theme_color_blue
+import io.github.darriousliu.han1meviewer.core.resource.theme_color_default
+import io.github.darriousliu.han1meviewer.core.resource.theme_color_high_contrast
+import io.github.darriousliu.han1meviewer.core.resource.theme_color_light_green
+import io.github.darriousliu.han1meviewer.core.resource.theme_color_orange
+import io.github.darriousliu.han1meviewer.core.resource.theme_color_pink
+import io.github.darriousliu.han1meviewer.core.resource.theme_color_purple
+import io.github.darriousliu.han1meviewer.core.resource.theme_color_system
+import io.github.darriousliu.han1meviewer.core.resource.theme_color_teal
+import io.github.darriousliu.han1meviewer.core.resource.theme_color_yellow
 import org.jetbrains.compose.resources.StringResource
 
 enum class ThemeColorPreset(

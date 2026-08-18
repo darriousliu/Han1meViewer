@@ -40,9 +40,9 @@ import io.github.darriousliu.han1meviewer.logic.model.Announcement
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.ui.preview.fakeAnnouncements
 import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.formatTimestamp
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.close
-import han1meviewer.shared.generated.resources.view_all
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.close
+import io.github.darriousliu.han1meviewer.core.resource.view_all
 import org.jetbrains.compose.resources.stringResource
 
 /**

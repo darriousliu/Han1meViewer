@@ -23,12 +23,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.usage_notice_accept
-import han1meviewer.shared.generated.resources.usage_notice_accept_countdown
-import han1meviewer.shared.generated.resources.usage_notice_content
-import han1meviewer.shared.generated.resources.usage_notice_decline
-import han1meviewer.shared.generated.resources.usage_notice_title
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.usage_notice_accept
+import io.github.darriousliu.han1meviewer.core.resource.usage_notice_accept_countdown
+import io.github.darriousliu.han1meviewer.core.resource.usage_notice_content
+import io.github.darriousliu.han1meviewer.core.resource.usage_notice_decline
+import io.github.darriousliu.han1meviewer.core.resource.usage_notice_title
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 

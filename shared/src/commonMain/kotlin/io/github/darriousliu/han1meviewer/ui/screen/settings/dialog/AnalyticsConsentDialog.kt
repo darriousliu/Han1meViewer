@@ -5,11 +5,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import be.digitalia.compose.htmlconverter.htmlToAnnotatedString
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.about_analytics
-import han1meviewer.shared.generated.resources.about_analytics_summary
-import han1meviewer.shared.generated.resources.deny
-import han1meviewer.shared.generated.resources.ok
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.about_analytics
+import io.github.darriousliu.han1meviewer.core.resource.about_analytics_summary
+import io.github.darriousliu.han1meviewer.core.resource.deny
+import io.github.darriousliu.han1meviewer.core.resource.ok
 import org.jetbrains.compose.resources.stringResource
 
 /**

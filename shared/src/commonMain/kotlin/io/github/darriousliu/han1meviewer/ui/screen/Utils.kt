@@ -23,8 +23,8 @@ import io.github.darriousliu.han1meviewer.Preferences
 import io.github.darriousliu.han1meviewer.ui.theme.SpacingLarge
 import io.github.darriousliu.han1meviewer.ui.theme.SpacingNormal
 import io.github.darriousliu.han1meviewer.ui.theme.VideoNormalCardMinWidth
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.loading_hints
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.loading_hints
 import org.jetbrains.compose.resources.stringArrayResource
 
 private val logger = Logger.withTag("ScreenUtils")

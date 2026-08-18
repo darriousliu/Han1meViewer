@@ -26,9 +26,9 @@ import androidx.compose.ui.window.DialogProperties
 import com.mikepenz.aboutlibraries.ui.compose.LibraryDefaults
 import com.mikepenz.aboutlibraries.ui.compose.rememberLibraries
 import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
-import han1meviewer.shared.generated.resources.Res
-import han1meviewer.shared.generated.resources.close
-import han1meviewer.shared.generated.resources.open_source_license
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.close
+import io.github.darriousliu.han1meviewer.core.resource.open_source_license
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
