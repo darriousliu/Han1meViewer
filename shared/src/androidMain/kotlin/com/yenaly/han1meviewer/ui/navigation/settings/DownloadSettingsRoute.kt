@@ -44,7 +44,7 @@ fun DownloadSettingsRouteScreen(
     var showDownloadPathDialog by remember { mutableStateOf(false) }
     var showRestoreDefaultConfirm by remember { mutableStateOf(false) }
     val dao = remember { DownloadDatabase.instance.hanimeDownloadDao }
-    val uiState = remember(refreshKey, context) { buildDownloadSettingsUiState(context) }
+    val uiState = buildDownloadSettingsUiState(context, refreshKey)
 
     val openDirectoryPicker = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -165,7 +165,12 @@ fun DownloadSettingsRouteScreen(
     )
 }
 
-private fun buildDownloadSettingsUiState(context: Context): DownloadSettingsUiState {
+/**
+ * @param refreshKey 只用来触发重算——`Preferences` 不是可观察状态，
+ *   改完得靠它把这个 composable 拉一遍。
+ */
+@Composable
+private fun buildDownloadSettingsUiState(context: Context, refreshKey: Int): DownloadSettingsUiState {
     val uri = SafFileManager.getSavedUri()
     val pathSummary = if (Preferences.isUsePrivateStorage) {
         context.getExternalFilesDir(null)?.absolutePath.orEmpty()
@@ -175,14 +180,11 @@ private fun buildDownloadSettingsUiState(context: Context): DownloadSettingsUiSt
             uri ?: return DownloadSettingsUiState(
                 downloadPathSummary = context.getString(R.string.unknown_error),
                 downloadCountLimit = Preferences.downloadCountLimit,
-                downloadCountLimitSummary = toDownloadCountLimitPrettyString(
-                    context,
-                    Preferences.downloadCountLimit
-                ),
+                downloadCountLimitSummary = toDownloadCountLimitPrettyString(Preferences.downloadCountLimit),
                 downloadSpeedLimitIndex = Preferences.downloadSpeedLimitIndex,
                 downloadSpeedLimitSummary = SpeedLimitInterceptor.SPEED_BYTES[
                     Preferences.downloadSpeedLimitIndex
-                ].toDownloadSpeedPrettyString(context),
+                ].toDownloadSpeedPrettyString(),
             )
         )?.name ?: uri.toString()
     }
@@ -190,12 +192,9 @@ private fun buildDownloadSettingsUiState(context: Context): DownloadSettingsUiSt
     return DownloadSettingsUiState(
         downloadPathSummary = pathSummary,
         downloadCountLimit = Preferences.downloadCountLimit,
-        downloadCountLimitSummary = toDownloadCountLimitPrettyString(
-            context,
-            Preferences.downloadCountLimit
-        ),
+        downloadCountLimitSummary = toDownloadCountLimitPrettyString(Preferences.downloadCountLimit),
         downloadSpeedLimitIndex = speedIndex,
         downloadSpeedLimitSummary = SpeedLimitInterceptor.SPEED_BYTES[speedIndex]
-            .toDownloadSpeedPrettyString(context),
+            .toDownloadSpeedPrettyString(),
     )
 }

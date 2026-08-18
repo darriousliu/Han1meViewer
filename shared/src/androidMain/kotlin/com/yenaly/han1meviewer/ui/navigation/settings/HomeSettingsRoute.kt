@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -142,13 +143,14 @@ fun HomeSettingsRouteScreen(
         )
     }
 
-    var cacheSummary by remember { mutableStateOf("") }
+    // 算目录大小是 IO，拼文案是资源——摘要文案现在是 @Composable（commonMain 的
+    // SettingsSummaries），不能在协程里调，所以这里只留大小，文案在下面组合时拼
+    var cacheSize by remember { mutableLongStateOf(0L) }
 
     LaunchedEffect(cacheKey) {
-        cacheSummary = withContext(Dispatchers.IO) {
-            generateClearCacheSummary(context, context.cacheDir?.folderSize ?: 0L).toString()
-        }
+        cacheSize = withContext(Dispatchers.IO) { context.cacheDir?.folderSize ?: 0L }
     }
+    val cacheSummary = generateClearCacheSummary(cacheSize)
     val checkUpdateFailed = stringResource(R.string.check_update_failed)
     val checkingUpdate = stringResource(R.string.checking_update)
     val alreadyLatestUpdate = stringResource(R.string.already_latest_update)
@@ -168,17 +170,14 @@ fun HomeSettingsRouteScreen(
         }
     }
     val themeColorName = stringResource(ThemeColorPreset.fromKey(Preferences.themeColor).displayNameRes)
-    val uiState = remember(
-        refreshKey, updateSummary, cacheSummary, launcherItems, context, themeColorName,
-    ) {
-        buildHomeSettingsUiState(
-            context = context,
-            launcherItems = launcherItems,
-            updateSummary = updateSummary,
-            cacheSummary = cacheSummary,
-            themeColorName = themeColorName,
-        )
-    }
+    val uiState = buildHomeSettingsUiState(
+        context = context,
+        launcherItems = launcherItems,
+        updateSummary = updateSummary,
+        cacheSummary = cacheSummary,
+        themeColorName = themeColorName,
+        refreshKey = refreshKey,
+    )
 
     HomeSettingsScreen(
         state = uiState,
@@ -508,12 +507,18 @@ private data class LauncherItem(
     val alias: String,
 )
 
+/**
+ * @param refreshKey 只用来触发重算——`Preferences` 不是可观察状态，
+ *   改完得靠它把这个 composable 拉一遍。
+ */
+@Composable
 private fun buildHomeSettingsUiState(
     context: Context,
     launcherItems: List<LauncherItem>,
     updateSummary: String,
     cacheSummary: String,
     themeColorName: String,
+    refreshKey: Int,
 ): HomeSettingsUiState {
     val currentAlias = Preferences.fakeLauncherIcon
     val currentItem = launcherItems.find { it.alias == currentAlias } ?: launcherItems.first()
@@ -568,7 +573,6 @@ private fun buildHomeSettingsUiState(
             "v${BuildConfig.VERSION_NAME}"
         ),
         updatePopupIntervalSummary = toIntervalDaysPrettyString(
-            context,
             Preferences.updatePopupIntervalDays
         ),
         updatePopupIntervalDays = Preferences.updatePopupIntervalDays,

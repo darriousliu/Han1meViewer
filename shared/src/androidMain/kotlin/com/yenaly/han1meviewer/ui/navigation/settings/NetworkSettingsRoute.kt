@@ -80,7 +80,7 @@ fun NetworkSettingsRouteScreen() {
     val delayHandler = remember { Handler(Looper.getMainLooper()) }
     val dohHandler = remember { Handler(Looper.getMainLooper()) }
     val executor = remember { Executors.newCachedThreadPool() }
-    val uiState = remember(refreshKey, context) { buildNetworkSettingsUiState(context) }
+    val uiState = buildNetworkSettingsUiState(context, refreshKey)
     val networkTimeoutText = stringResource(R.string.network_timeout_text)
     fun stopDelayTest() {
         isDelayTesting = false
@@ -169,7 +169,7 @@ fun NetworkSettingsRouteScreen() {
 
     NetworkSettingsScreen(
         state = uiState,
-        domainOptions = buildDomainOptions(context),
+        domainOptions = buildDomainOptions(),
         currentHost = currentHost,
         delayResults = delayResults,
         dohTestResults = dohTestResults,
@@ -442,10 +442,15 @@ fun NetworkSettingsRouteScreen() {
     )
 }
 
-private fun buildNetworkSettingsUiState(context: Context): NetworkSettingsUiState {
+/**
+ * @param refreshKey 只用来触发重算——`Preferences` 不是可观察状态，
+ *   改完得靠它把这个 composable 拉一遍。
+ */
+@Composable
+private fun buildNetworkSettingsUiState(context: Context, refreshKey: Int): NetworkSettingsUiState {
     return NetworkSettingsUiState(
         domainName = Preferences.baseUrl,
-        domainDisplay = buildDomainOptions(context).firstOrNull { it.second == Preferences.baseUrl }?.first
+        domainDisplay = buildDomainOptions().firstOrNull { it.second == Preferences.baseUrl }?.first
             ?: Preferences.baseUrl,
         proxySummary = when (Preferences.proxyType) {
             HProxySelector.TYPE_DIRECT -> context.getString(R.string.direct)

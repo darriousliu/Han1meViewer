@@ -22,7 +22,7 @@ fun PlayerSettingsRouteScreen(
 ) {
     val context = LocalContext.current
     var refreshKey by remember { mutableIntStateOf(0) }
-    val uiState = remember(refreshKey, context) { buildPlayerSettingsUiState(context) }
+    val uiState = buildPlayerSettingsUiState(context, refreshKey)
 
     PlayerSettingsScreen(
         state = uiState,
@@ -69,7 +69,12 @@ fun PlayerSettingsRouteScreen(
     )
 }
 
-private fun buildPlayerSettingsUiState(context: Context): PlayerSettingsUiState {
+/**
+ * @param refreshKey 只用来触发重算——`Preferences` 不是可观察状态，
+ *   改完得靠它把这个 composable 拉一遍。
+ */
+@Composable
+private fun buildPlayerSettingsUiState(context: Context, refreshKey: Int): PlayerSettingsUiState {
     val kernel = Preferences.switchPlayerKernel
     val isMpvPlayer = kernel == HMediaKernel.Type.MpvPlayer.name
     val currentSpeed = Preferences.playerSpeed
@@ -94,7 +99,7 @@ private fun buildPlayerSettingsUiState(context: Context): PlayerSettingsUiState 
         longPressSpeedTimes = currentLongPressSpeed.toOptionValue(),
         longPressSpeedTimesLabel = longPressDisplay,
         slideSensitivity = Preferences.slideSensitivity,
-        slideSensitivitySummary = toPrettySensitivityString(context, Preferences.slideSensitivity),
+        slideSensitivitySummary = toPrettySensitivityString(Preferences.slideSensitivity),
     )
 }
 

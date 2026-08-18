@@ -31,6 +31,10 @@ import com.yenaly.han1meviewer.ui.viewmodel.SettingsViewModel
 import com.yenaly.han1meviewer.util.copyToClipboard
 import com.yenaly.han1meviewer.util.decodeFromStringByBase64
 import com.yenaly.han1meviewer.util.showShortToast
+import org.jetbrains.compose.resources.stringResource
+import han1meviewer.shared.generated.resources.h_keyframes_disable_tip
+import han1meviewer.shared.generated.resources.h_keyframes_enable_tip
+import han1meviewer.shared.generated.resources.Res
 import kotlinx.serialization.json.Json
 
 @Composable
@@ -175,7 +179,7 @@ fun HKeyframeSettingsRouteScreen(
 ) {
     val context = LocalContext.current
     var refreshKey by remember { mutableIntStateOf(0) }
-    val uiState = remember(refreshKey, context) { buildHKeyframeSettingsUiState(context) }
+    val uiState = buildHKeyframeSettingsUiState(refreshKey)
 
     HKeyframeSettingsScreen(
         state = uiState,
@@ -204,20 +208,24 @@ fun HKeyframeSettingsRouteScreen(
     )
 }
 
-private fun buildHKeyframeSettingsUiState(context: Context): HKeyframeSettingsUiState {
+/**
+ * @param refreshKey 只用来触发重算——`Preferences` 不是可观察状态，
+ *   改完得靠它把这个 composable 拉一遍。
+ */
+@Composable
+private fun buildHKeyframeSettingsUiState(refreshKey: Int): HKeyframeSettingsUiState {
     return HKeyframeSettingsUiState(
         hKeyframesEnable = Preferences.hKeyframesEnable,
         hKeyframesSummary = if (Preferences.hKeyframesEnable) {
-            context.getString(R.string.h_keyframes_enable_tip)
+            stringResource(Res.string.h_keyframes_enable_tip)
         } else {
-            context.getString(R.string.h_keyframes_disable_tip)
+            stringResource(Res.string.h_keyframes_disable_tip)
         },
         sharedHKeyframesEnable = Preferences.sharedHKeyframesEnable,
         sharedHKeyframesUseFirst = Preferences.sharedHKeyframesUseFirst,
         showCommentWhenCountdown = Preferences.showCommentWhenCountdown,
         whenCountdownRemind = Preferences.whenCountdownRemind / 1000,
         whenCountdownRemindSummary = toPrettyCountdownRemindString(
-            context,
             Preferences.whenCountdownRemind / 1000
         ),
     )
