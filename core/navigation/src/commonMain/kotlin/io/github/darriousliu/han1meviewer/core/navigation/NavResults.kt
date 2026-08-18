@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.navigation
+package io.github.darriousliu.han1meviewer.core.navigation
 
 /*
  * 屏幕之间的回传结果，走 nav3 的 `ResultEventBus`（androidx.navigation3.runtime.result）。

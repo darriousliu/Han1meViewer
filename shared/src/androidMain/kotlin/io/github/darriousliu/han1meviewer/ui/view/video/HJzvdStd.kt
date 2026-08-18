@@ -55,8 +55,8 @@ import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
 import io.github.darriousliu.han1meviewer.ui.adapter.HKeyframeRvAdapter
 import io.github.darriousliu.han1meviewer.ui.adapter.SuperResolutionAdapter
 import io.github.darriousliu.han1meviewer.ui.adapter.VideoSpeedAdapter
-import io.github.darriousliu.han1meviewer.ui.navigation.HomeRoute
-import io.github.darriousliu.han1meviewer.ui.navigation.popTo
+import io.github.darriousliu.han1meviewer.core.navigation.HomeRoute
+import io.github.darriousliu.han1meviewer.core.navigation.popTo
 import io.github.darriousliu.han1meviewer.util.OrientationManager
 import io.github.darriousliu.han1meviewer.core.common.util.appScreenWidth
 import io.github.darriousliu.han1meviewer.util.findActivityOrNull

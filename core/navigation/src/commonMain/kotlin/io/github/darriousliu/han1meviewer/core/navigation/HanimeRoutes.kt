@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.navigation
+package io.github.darriousliu.han1meviewer.core.navigation
 
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable

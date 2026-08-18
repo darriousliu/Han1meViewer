@@ -115,6 +115,8 @@ kotlin {
             api(project(":core:network"))
             // 各 Repo 遍布 ViewModel 的公开签名
             api(project(":core:repository"))
+            // 路由类型遍布各 route 与屏幕的签名
+            api(project(":core:navigation"))
             implementation(libs.kotlinx.io.core)
             implementation(libs.ksoup)
             implementation(libs.htmlconverter)
@@ -131,8 +133,6 @@ kotlin {
             implementation(libs.composewebview)
             implementation(libs.filekit.core)
             implementation(libs.filekit.dialogs.compose)
-            implementation(libs.navigation3.ui.jb)
-            implementation(libs.lifecycle.viewmodel.navigation3)
         }
 
         getByName("androidHostTest").dependencies {

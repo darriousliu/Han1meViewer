@@ -14,8 +14,8 @@ import io.github.darriousliu.han1meviewer.core.storage.getHanimeVideoLink
 import io.github.darriousliu.han1meviewer.core.model.HanimeVideo
 import io.github.darriousliu.han1meviewer.core.model.SearchOption
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
-import io.github.darriousliu.han1meviewer.ui.navigation.SearchRoute
-import io.github.darriousliu.han1meviewer.ui.navigation.navigateSafely
+import io.github.darriousliu.han1meviewer.core.navigation.SearchRoute
+import io.github.darriousliu.han1meviewer.core.navigation.navigateSafely
 import io.github.darriousliu.han1meviewer.ui.viewmodel.VideoViewModel
 import io.github.darriousliu.han1meviewer.util.browse
 import io.github.darriousliu.han1meviewer.core.common.util.copyToClipboard

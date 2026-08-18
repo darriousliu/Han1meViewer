@@ -2,7 +2,7 @@ package io.github.darriousliu.han1meviewer.ui.navigation.main
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.darriousliu.han1meviewer.ui.navigation.GetchuPreviewDetailRoute
+import io.github.darriousliu.han1meviewer.core.navigation.GetchuPreviewDetailRoute
 import io.github.darriousliu.han1meviewer.ui.screen.home.preview.getchupreview.GetchuPreviewDetailScreen
 import io.github.darriousliu.han1meviewer.ui.screen.home.preview.getchupreview.GetchuPreviewScreen
 import io.github.darriousliu.han1meviewer.ui.screen.home.preview.getchupreview.GetchuPreviewViewModel

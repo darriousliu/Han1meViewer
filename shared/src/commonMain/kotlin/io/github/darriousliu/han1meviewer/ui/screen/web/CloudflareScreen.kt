@@ -38,6 +38,7 @@ import io.github.darriousliu.han1meviewer.core.resource.webview_version_unknown
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
+import io.github.darriousliu.han1meviewer.core.navigation.CloudflareRoute
 
 /**
  * Cloudflare 过盾页。原来是独立的 `CloudflareActivity`（`NEW_TASK` + companion 静态回调），

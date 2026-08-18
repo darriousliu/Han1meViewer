@@ -2,9 +2,9 @@ package io.github.darriousliu.han1meviewer.ui.navigation.main
 
 import android.content.Intent
 import androidx.navigation3.runtime.NavBackStack
-import io.github.darriousliu.han1meviewer.ui.navigation.HanimeRoute
-import io.github.darriousliu.han1meviewer.ui.navigation.VideoRoute
-import io.github.darriousliu.han1meviewer.ui.navigation.navigateSafely
+import io.github.darriousliu.han1meviewer.core.navigation.HanimeRoute
+import io.github.darriousliu.han1meviewer.core.navigation.VideoRoute
+import io.github.darriousliu.han1meviewer.core.navigation.navigateSafely
 
 /*
  * 深链分派——原 `MainNavigationActions.kt` 的后半。

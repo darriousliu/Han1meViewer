@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.navigation
+package io.github.darriousliu.han1meviewer.core.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.rememberSerializable

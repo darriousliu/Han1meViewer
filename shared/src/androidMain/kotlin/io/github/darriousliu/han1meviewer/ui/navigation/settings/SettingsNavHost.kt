@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation3.runtime.NavBackStack
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
-import io.github.darriousliu.han1meviewer.ui.navigation.HanimeRoute
+import io.github.darriousliu.han1meviewer.core.navigation.HanimeRoute
 import io.github.darriousliu.han1meviewer.util.findActivity
 import io.github.darriousliu.han1meviewer.core.firebase.logScreenViewEvent
 import io.github.darriousliu.han1meviewer.core.resource.Res

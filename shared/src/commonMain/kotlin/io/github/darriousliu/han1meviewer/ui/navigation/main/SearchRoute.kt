@@ -12,7 +12,7 @@ import org.koin.compose.viewmodel.koinViewModel
 import io.github.darriousliu.han1meviewer.core.storage.getHanimeShareText
 import io.github.darriousliu.han1meviewer.ui.component.LocalToaster
 import io.github.darriousliu.han1meviewer.ui.component.showShort
-import io.github.darriousliu.han1meviewer.ui.navigation.SearchRoute
+import io.github.darriousliu.han1meviewer.core.navigation.SearchRoute
 import io.github.darriousliu.han1meviewer.ui.screen.search.AdvancedSearchSheet
 import io.github.darriousliu.han1meviewer.ui.screen.search.SearchScreen
 import io.github.darriousliu.han1meviewer.ui.viewmodel.SearchViewModel

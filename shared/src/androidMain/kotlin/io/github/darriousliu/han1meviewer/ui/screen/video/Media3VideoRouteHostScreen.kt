@@ -26,7 +26,7 @@ import io.github.darriousliu.han1meviewer.core.model.SearchOption
 import io.github.darriousliu.han1meviewer.core.common.state.VideoLoadingState
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
 import io.github.darriousliu.han1meviewer.ui.bridge.VideoPageHost
-import io.github.darriousliu.han1meviewer.ui.navigation.VideoRoute
+import io.github.darriousliu.han1meviewer.core.navigation.VideoRoute
 import io.github.darriousliu.han1meviewer.ui.screen.video.player.HanimeVideoPlayer
 import io.github.darriousliu.han1meviewer.ui.screen.video.player.rememberVideoPlayerController
 import io.github.darriousliu.han1meviewer.ui.viewmodel.CommentViewModel

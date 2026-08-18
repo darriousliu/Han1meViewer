@@ -36,10 +36,10 @@ import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.R
 import io.github.darriousliu.han1meviewer.logout
 import io.github.darriousliu.han1meviewer.ui.bridge.VideoPageHost
-import io.github.darriousliu.han1meviewer.ui.navigation.AccountRoute
-import io.github.darriousliu.han1meviewer.ui.navigation.HanimeRoute
-import io.github.darriousliu.han1meviewer.ui.navigation.VideoRoute
-import io.github.darriousliu.han1meviewer.ui.navigation.navigateSafely
+import io.github.darriousliu.han1meviewer.core.navigation.AccountRoute
+import io.github.darriousliu.han1meviewer.core.navigation.HanimeRoute
+import io.github.darriousliu.han1meviewer.core.navigation.VideoRoute
+import io.github.darriousliu.han1meviewer.core.navigation.navigateSafely
 import io.github.darriousliu.han1meviewer.ui.navigation.settings.isDeviceSecureCompat
 import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.HomePageViewModel
 import io.github.darriousliu.han1meviewer.ui.screen.main.MainActivityContent

@@ -63,7 +63,7 @@ import io.github.darriousliu.han1meviewer.core.common.state.VideoLoadingState
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
 import io.github.darriousliu.han1meviewer.ui.bridge.VideoPageHost
 import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog
-import io.github.darriousliu.han1meviewer.ui.navigation.VideoRoute
+import io.github.darriousliu.han1meviewer.core.navigation.VideoRoute
 import io.github.darriousliu.han1meviewer.ui.view.video.ExoMediaKernel
 import io.github.darriousliu.han1meviewer.ui.view.video.HJzvdStd
 import io.github.darriousliu.han1meviewer.ui.view.video.HMediaKernel

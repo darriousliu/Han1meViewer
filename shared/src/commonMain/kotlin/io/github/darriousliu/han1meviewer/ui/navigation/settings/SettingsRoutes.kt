@@ -1,14 +1,14 @@
 package io.github.darriousliu.han1meviewer.ui.navigation.settings
 
 import androidx.navigation3.runtime.NavKey
-import io.github.darriousliu.han1meviewer.ui.navigation.DownloadSettingsRoute
-import io.github.darriousliu.han1meviewer.ui.navigation.HKeyframeSettingsRoute
-import io.github.darriousliu.han1meviewer.ui.navigation.HKeyframesRoute
-import io.github.darriousliu.han1meviewer.ui.navigation.HomeSettingsRoute
-import io.github.darriousliu.han1meviewer.ui.navigation.MpvPlayerSettingsRoute
-import io.github.darriousliu.han1meviewer.ui.navigation.NetworkSettingsRoute
-import io.github.darriousliu.han1meviewer.ui.navigation.PlayerSettingsRoute
-import io.github.darriousliu.han1meviewer.ui.navigation.SharedHKeyframesRoute
+import io.github.darriousliu.han1meviewer.core.navigation.DownloadSettingsRoute
+import io.github.darriousliu.han1meviewer.core.navigation.HKeyframeSettingsRoute
+import io.github.darriousliu.han1meviewer.core.navigation.HKeyframesRoute
+import io.github.darriousliu.han1meviewer.core.navigation.HomeSettingsRoute
+import io.github.darriousliu.han1meviewer.core.navigation.MpvPlayerSettingsRoute
+import io.github.darriousliu.han1meviewer.core.navigation.NetworkSettingsRoute
+import io.github.darriousliu.han1meviewer.core.navigation.PlayerSettingsRoute
+import io.github.darriousliu.han1meviewer.core.navigation.SharedHKeyframesRoute
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.download_settings
 import io.github.darriousliu.han1meviewer.core.resource.h_keyframe_manage

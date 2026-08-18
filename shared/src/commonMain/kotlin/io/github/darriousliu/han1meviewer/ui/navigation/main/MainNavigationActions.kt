@@ -1,18 +1,18 @@
 package io.github.darriousliu.han1meviewer.ui.navigation.main
 
 import androidx.navigation3.runtime.NavBackStack
-import io.github.darriousliu.han1meviewer.ui.navigation.CreatorCenterRoute
-import io.github.darriousliu.han1meviewer.ui.navigation.DailyCheckInRoute
-import io.github.darriousliu.han1meviewer.ui.navigation.DownloadRoute
-import io.github.darriousliu.han1meviewer.ui.navigation.HanimeRoute
-import io.github.darriousliu.han1meviewer.ui.navigation.HomeRoute
-import io.github.darriousliu.han1meviewer.ui.navigation.HomeSettingsRoute
-import io.github.darriousliu.han1meviewer.ui.navigation.MyFavVideoRoute
-import io.github.darriousliu.han1meviewer.ui.navigation.MyPlaylistRoute
-import io.github.darriousliu.han1meviewer.ui.navigation.MyWatchLaterRoute
-import io.github.darriousliu.han1meviewer.ui.navigation.SubscriptionRoute
-import io.github.darriousliu.han1meviewer.ui.navigation.WatchHistoryRoute
-import io.github.darriousliu.han1meviewer.ui.navigation.navigateSafely
+import io.github.darriousliu.han1meviewer.core.navigation.CreatorCenterRoute
+import io.github.darriousliu.han1meviewer.core.navigation.DailyCheckInRoute
+import io.github.darriousliu.han1meviewer.core.navigation.DownloadRoute
+import io.github.darriousliu.han1meviewer.core.navigation.HanimeRoute
+import io.github.darriousliu.han1meviewer.core.navigation.HomeRoute
+import io.github.darriousliu.han1meviewer.core.navigation.HomeSettingsRoute
+import io.github.darriousliu.han1meviewer.core.navigation.MyFavVideoRoute
+import io.github.darriousliu.han1meviewer.core.navigation.MyPlaylistRoute
+import io.github.darriousliu.han1meviewer.core.navigation.MyWatchLaterRoute
+import io.github.darriousliu.han1meviewer.core.navigation.SubscriptionRoute
+import io.github.darriousliu.han1meviewer.core.navigation.WatchHistoryRoute
+import io.github.darriousliu.han1meviewer.core.navigation.navigateSafely
 
 private val loginRequiredDrawerItems = setOf(
     MainDrawerDestination.FavVideo,
