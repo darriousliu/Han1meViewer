@@ -254,6 +254,7 @@ kotlin {
             implementation(libs.jiaozi.video.player)
             implementation(libs.media3.exoplayer)
             implementation(libs.media3.exoplayer.hls)
+            implementation(libs.media3.ui.compose)
             implementation(libs.mpv.lib)
 
             // view
