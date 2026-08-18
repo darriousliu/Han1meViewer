@@ -1,6 +1,7 @@
 package io.github.darriousliu.han1meviewer
 
 import io.github.darriousliu.han1meviewer.core.common.HanimeConstants
+import io.github.darriousliu.han1meviewer.core.common.toVideoCode
 
 /**
  * 站内链接的拼接与解析。原本在 androidMain 的 `HanimeManager.kt`，
@@ -36,12 +37,3 @@ fun getHanimeSearchShareText(artist: String): String = buildString {
  * 獲取 Hanime 影片**官方**下載地址
  */
 fun getHanimeVideoDownloadLink(videoCode: String) = HANIME_BASE_URL + "download?v=" + videoCode
-
-/**
- * 如果添加备选网址别忘了确认这个正则，见 [HanimeConstants.HANIME_URL]
- */
-val videoUrlRegex = Regex(
-    """(?:(?:https?:)?//[^\s"'<>/]+|(?:hanime(?:1|one)|javchu)\.(?:com|me))?(?:/[^/?#\s"'<>]+)*/watch\?(?:[^#\s"'<>]*&)?v=(\d+)"""
-)
-
-fun String.toVideoCode() = videoUrlRegex.find(this)?.groupValues?.get(1)

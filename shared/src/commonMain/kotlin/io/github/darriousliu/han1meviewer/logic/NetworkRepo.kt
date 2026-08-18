@@ -48,6 +48,7 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.contentOrNull
 import kotlinx.serialization.json.jsonObject
+import io.github.darriousliu.han1meviewer.core.parse.Parser
 
 /**
  * @project Hanime1

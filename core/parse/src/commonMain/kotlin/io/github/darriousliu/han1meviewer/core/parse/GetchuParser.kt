@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.logic
+package io.github.darriousliu.han1meviewer.core.parse
 
 import co.touchlab.kermit.Logger
 import com.fleeksoft.ksoup.Ksoup

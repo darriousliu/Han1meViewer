@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.logic
+package io.github.darriousliu.han1meviewer.core.parse
 
 import co.touchlab.kermit.Logger
 import com.fleeksoft.ksoup.Ksoup
@@ -29,7 +29,7 @@ import io.github.darriousliu.han1meviewer.core.model.VideoComments
 import io.github.darriousliu.han1meviewer.core.common.state.PageLoadingState
 import io.github.darriousliu.han1meviewer.core.common.state.VideoLoadingState
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
-import io.github.darriousliu.han1meviewer.toVideoCode
+import io.github.darriousliu.han1meviewer.core.common.toVideoCode
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.login_state_expired
 import kotlinx.datetime.LocalDate

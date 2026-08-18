@@ -101,6 +101,7 @@ kotlin {
             api(project(":core:model"))
             // Preferences / Room 实体遍布公开签名
             api(project(":core:storage"))
+            implementation(project(":core:parse"))
             implementation(libs.kotlinx.io.core)
             implementation(libs.ksoup)
             implementation(libs.htmlconverter)

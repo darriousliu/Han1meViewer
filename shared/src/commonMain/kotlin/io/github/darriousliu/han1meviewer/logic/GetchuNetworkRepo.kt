@@ -15,6 +15,7 @@ import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import io.github.darriousliu.han1meviewer.core.parse.GetchuParser
 
 object GetchuNetworkRepo {
     fun getGetchuPreview(date: String) = websiteIOFlow(

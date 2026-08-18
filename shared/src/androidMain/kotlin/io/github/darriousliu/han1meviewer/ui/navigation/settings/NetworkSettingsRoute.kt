@@ -21,7 +21,7 @@ import androidx.core.net.toUri
 import io.github.darriousliu.han1meviewer.core.common.EMPTY_STRING
 import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.R
-import io.github.darriousliu.han1meviewer.logic.Parser
+import io.github.darriousliu.han1meviewer.core.parse.Parser
 import io.github.darriousliu.han1meviewer.logic.network.DohConfig
 import io.github.darriousliu.han1meviewer.logic.network.HDns
 import io.github.darriousliu.han1meviewer.logic.network.HProxySelector
