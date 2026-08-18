@@ -31,7 +31,6 @@ data class HomeSettingsUiState(
     val versionSummary: String,
     val updatePopupIntervalSummary: String,
     val updatePopupIntervalDays: Int,
-    val dynamicColorEnabled: Boolean,
     val themeColorKey: String,
     val themeColorName: String,
     val searchGridColumnsSummary: String,

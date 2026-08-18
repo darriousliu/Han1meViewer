@@ -576,7 +576,6 @@ private fun buildHomeSettingsUiState(
             Preferences.updatePopupIntervalDays
         ),
         updatePopupIntervalDays = Preferences.updatePopupIntervalDays,
-        dynamicColorEnabled = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S,
         themeColorKey = Preferences.themeColor ?: ThemeColorPreset.DEFAULT.key,
         themeColorName = themeColorName,
         searchGridColumnsSummary = listOf(

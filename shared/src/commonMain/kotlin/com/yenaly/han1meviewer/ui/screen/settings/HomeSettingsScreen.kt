@@ -29,7 +29,9 @@ import com.yenaly.han1meviewer.ui.preview.ComponentPreview
 import com.yenaly.han1meviewer.ui.screen.settings.dialog.HomeCategoryLayoutDialog
 import com.yenaly.han1meviewer.ui.screen.settings.dialog.HorizontalCardCountDialog
 import com.yenaly.han1meviewer.ui.screen.settings.dialog.SearchGridColumnsDialog
+import com.yenaly.han1meviewer.ui.screen.settings.model.HomeSettingsCapabilities
 import com.yenaly.han1meviewer.ui.screen.settings.model.HomeSettingsUiState
+import com.yenaly.han1meviewer.ui.screen.settings.model.homeSettingsCapabilities
 import com.yenaly.han1meviewer.ui.theme.ThemeColorPreset
 import han1meviewer.shared.generated.resources.Res
 import han1meviewer.shared.generated.resources.about
@@ -149,6 +151,7 @@ private enum class HomeSettingsChoiceDialog {
 @Composable
 fun HomeSettingsScreen(
     state: HomeSettingsUiState,
+    capabilities: HomeSettingsCapabilities = homeSettingsCapabilities,
     onVideoLanguageChange: (String) -> Unit,
     onVideoQualityChange: (String) -> Unit,
     onDarkModeChange: (String) -> Unit,
@@ -255,7 +258,7 @@ fun HomeSettingsScreen(
         visible = activeDialog == HomeSettingsChoiceDialog.ThemeColor,
         title = stringResource(Res.string.theme_color),
         options = ThemeColorPreset.entries
-            .filter { state.dynamicColorEnabled || it != ThemeColorPreset.SYSTEM }
+            .filter { capabilities.dynamicColor || it != ThemeColorPreset.SYSTEM }
             .map { stringResource(it.displayNameRes) to it.key },
         selectedValue = state.themeColorKey,
         onDismiss = { activeDialog = null },
@@ -320,14 +323,16 @@ fun HomeSettingsScreen(
                 onClick = { activeDialog = HomeSettingsChoiceDialog.VideoQuality },
             )
         }
-        item {
-            SettingSwitchItem(
-                title = stringResource(Res.string.allow_pip_title),
-                summary = stringResource(Res.string.allow_pip_disc),
-                checked = state.allowPipMode,
-                iconRes = Res.drawable.ic_pip_mode,
-                onCheckedChange = onAllowPipModeChange,
-            )
+        if (capabilities.pictureInPicture) {
+            item {
+                SettingSwitchItem(
+                    title = stringResource(Res.string.allow_pip_title),
+                    summary = stringResource(Res.string.allow_pip_disc),
+                    checked = state.allowPipMode,
+                    iconRes = Res.drawable.ic_pip_mode,
+                    onCheckedChange = onAllowPipModeChange,
+                )
+            }
         }
         item {
             SettingSwitchItem(
@@ -365,24 +370,28 @@ fun HomeSettingsScreen(
                 onCheckedChange = onSearchArtistIgnoreVideoTypeChange,
             )
         }
-        item {
-            SettingSwitchItem(
-                title = stringResource(Res.string.disable_mobile_data_warning),
-                summary = stringResource(Res.string.disable_mobile_data_warning_summary),
-                checked = state.disableMobileDataWarning,
-                iconRes = Res.drawable.baseline_mobile_data_24,
-                onCheckedChange = onDisableMobileDataWarningChange,
-            )
+        if (capabilities.mobileDataWarning) {
+            item {
+                SettingSwitchItem(
+                    title = stringResource(Res.string.disable_mobile_data_warning),
+                    summary = stringResource(Res.string.disable_mobile_data_warning_summary),
+                    checked = state.disableMobileDataWarning,
+                    iconRes = Res.drawable.baseline_mobile_data_24,
+                    onCheckedChange = onDisableMobileDataWarningChange,
+                )
+            }
         }
-        item {
-            SettingSwitchItem(
-                title = stringResource(Res.string.disable_predictive_back_title),
-                summary = "暂不可用 Temporarily unavailable",
-                checked = state.disablePredictiveBack,
-                iconRes = Res.drawable.ic_baseline_arrow_back_24,
-                onCheckedChange = onDisablePredictiveBackChange,
-                enabled = false
-            )
+        if (capabilities.predictiveBack) {
+            item {
+                SettingSwitchItem(
+                    title = stringResource(Res.string.disable_predictive_back_title),
+                    summary = "暂不可用 Temporarily unavailable",
+                    checked = state.disablePredictiveBack,
+                    iconRes = Res.drawable.ic_baseline_arrow_back_24,
+                    onCheckedChange = onDisablePredictiveBackChange,
+                    enabled = false
+                )
+            }
         }
         item {
             SettingSwitchItem(
@@ -428,22 +437,24 @@ fun HomeSettingsScreen(
             )
         }
 
-        item { SettingsGroupTitle(stringResource(Res.string.download)) }
-        item {
-            SettingNavigationItem(
-                title = stringResource(Res.string.download_settings),
-                iconRes = Res.drawable.ic_baseline_download_24,
-                onClick = onOpenDownloadSettings,
-            )
-        }
-        item {
-            SettingSwitchItem(
-                title = stringResource(Res.string.collapse_downloaded_groups),
-                summary = stringResource(Res.string.collapse_downloaded_groups_summary),
-                checked = state.collapseDownloadedGroup,
-                iconRes = Res.drawable.ic_baseline_fold_24,
-                onCheckedChange = onCollapseDownloadedGroupChange,
-            )
+        if (capabilities.downloads) {
+            item { SettingsGroupTitle(stringResource(Res.string.download)) }
+            item {
+                SettingNavigationItem(
+                    title = stringResource(Res.string.download_settings),
+                    iconRes = Res.drawable.ic_baseline_download_24,
+                    onClick = onOpenDownloadSettings,
+                )
+            }
+            item {
+                SettingSwitchItem(
+                    title = stringResource(Res.string.collapse_downloaded_groups),
+                    summary = stringResource(Res.string.collapse_downloaded_groups_summary),
+                    checked = state.collapseDownloadedGroup,
+                    iconRes = Res.drawable.ic_baseline_fold_24,
+                    onCheckedChange = onCollapseDownloadedGroupChange,
+                )
+            }
         }
 
         item { SettingsGroupTitle(stringResource(Res.string.network)) }
@@ -454,23 +465,27 @@ fun HomeSettingsScreen(
                 onClick = onOpenNetworkSettings,
             )
         }
-        item {
-            SettingNavigationItem(
-                title = stringResource(Res.string.apply_deep_links),
-                summary = stringResource(Res.string.apply_deep_links_summary),
-                iconRes = Res.drawable.baseline_add_link_24,
-                onClick = onOpenApplyDeepLinks,
-            )
+        if (capabilities.deepLinkSettings) {
+            item {
+                SettingNavigationItem(
+                    title = stringResource(Res.string.apply_deep_links),
+                    summary = stringResource(Res.string.apply_deep_links_summary),
+                    iconRes = Res.drawable.baseline_add_link_24,
+                    onClick = onOpenApplyDeepLinks,
+                )
+            }
         }
 
         item { SettingsGroupTitle(stringResource(Res.string.theme)) }
-        item {
-            SettingNavigationItem(
-                title = stringResource(Res.string.dark_theme),
-                valueText = state.darkModeLabel,
-                iconRes = Res.drawable.ic_baseline_moon_24,
-                onClick = { activeDialog = HomeSettingsChoiceDialog.DarkMode },
-            )
+        if (capabilities.darkModeOverride) {
+            item {
+                SettingNavigationItem(
+                    title = stringResource(Res.string.dark_theme),
+                    valueText = state.darkModeLabel,
+                    iconRes = Res.drawable.ic_baseline_moon_24,
+                    onClick = { activeDialog = HomeSettingsChoiceDialog.DarkMode },
+                )
+            }
         }
         item {
             SettingNavigationItem(
@@ -492,71 +507,89 @@ fun HomeSettingsScreen(
                 onClick = { showHomeCategoryDialog = true },
             )
         }
-        item {
-            SettingNavigationItem(
-                title = stringResource(Res.string.app_lang),
-                summary = stringResource(Res.string.app_lang_sum),
-                valueText = state.appLanguageLabel,
-                iconRes = Res.drawable.ic_setting_lang,
-                onClick = { activeDialog = HomeSettingsChoiceDialog.AppLanguage },
-            )
+        if (capabilities.appLanguageOverride) {
+            item {
+                SettingNavigationItem(
+                    title = stringResource(Res.string.app_lang),
+                    summary = stringResource(Res.string.app_lang_sum),
+                    valueText = state.appLanguageLabel,
+                    iconRes = Res.drawable.ic_setting_lang,
+                    onClick = { activeDialog = HomeSettingsChoiceDialog.AppLanguage },
+                )
+            }
         }
 
-        item { SettingsGroupTitle(stringResource(Res.string.update)) }
-        item {
-            SettingNavigationItem(
-                title = stringResource(Res.string.check_update),
-                summary = state.updateSummary,
-                iconRes = Res.drawable.ic_baseline_update_24,
-                onClick = onCheckUpdate,
-            )
+        if (capabilities.updateCheck || capabilities.ciUpdateChannel) {
+            item { SettingsGroupTitle(stringResource(Res.string.update)) }
         }
-        item {
-            SettingSwitchItem(
-                title = stringResource(Res.string.use_ci_update_channel),
-                checked = state.useCIUpdateChannel,
-                iconRes = Res.drawable.ic_setting_ci,
-                onCheckedChange = onUseCIUpdateChannelChange,
-            )
+        if (capabilities.updateCheck) {
+            item {
+                SettingNavigationItem(
+                    title = stringResource(Res.string.check_update),
+                    summary = state.updateSummary,
+                    iconRes = Res.drawable.ic_baseline_update_24,
+                    onClick = onCheckUpdate,
+                )
+            }
         }
-        item {
-            SettingSliderItem(
-                title = stringResource(Res.string.update_popup_interval_days),
-                summary = state.updatePopupIntervalSummary,
-                value = state.updatePopupIntervalDays,
-                valueRange = 0..30,
-                iconRes = Res.drawable.ic_clock,
-                onValueChange = onUpdatePopupIntervalDaysChange,
-            )
+        if (capabilities.ciUpdateChannel) {
+            item {
+                SettingSwitchItem(
+                    title = stringResource(Res.string.use_ci_update_channel),
+                    checked = state.useCIUpdateChannel,
+                    iconRes = Res.drawable.ic_setting_ci,
+                    onCheckedChange = onUseCIUpdateChannelChange,
+                )
+            }
+        }
+        if (capabilities.updateCheck) {
+            item {
+                SettingSliderItem(
+                    title = stringResource(Res.string.update_popup_interval_days),
+                    summary = state.updatePopupIntervalSummary,
+                    value = state.updatePopupIntervalDays,
+                    valueRange = 0..30,
+                    iconRes = Res.drawable.ic_clock,
+                    onValueChange = onUpdatePopupIntervalDaysChange,
+                )
+            }
         }
 
-        item { SettingsGroupTitle(stringResource(Res.string.privacy)) }
-        item {
-            SettingSwitchItem(
-                title = stringResource(Res.string.analytics_title),
-                summary = stringResource(Res.string.analytics_summary),
-                checked = state.useAnalytics,
-                iconRes = Res.drawable.baseline_data_usage_24,
-                onCheckedChange = onUseAnalyticsChange,
-            )
+        if (capabilities.analytics || capabilities.appLock || capabilities.fakeLauncherIcon) {
+            item { SettingsGroupTitle(stringResource(Res.string.privacy)) }
         }
-        item {
-            SettingSwitchItem(
-                title = stringResource(Res.string.use_lock_screen),
-                summary = stringResource(Res.string.use_lock_screen_sum),
-                checked = state.useLockScreen,
-                iconRes = Res.drawable.ic_setting_applock,
-                onCheckedChange = onUseLockScreenChange,
-            )
+        if (capabilities.analytics) {
+            item {
+                SettingSwitchItem(
+                    title = stringResource(Res.string.analytics_title),
+                    summary = stringResource(Res.string.analytics_summary),
+                    checked = state.useAnalytics,
+                    iconRes = Res.drawable.baseline_data_usage_24,
+                    onCheckedChange = onUseAnalyticsChange,
+                )
+            }
         }
-        item {
-            SettingNavigationItem(
-                title = stringResource(Res.string.fake_app_icon),
-                summary = stringResource(Res.string.select_fake_icon),
-                valueText = state.fakeLauncherIconName,
-                iconRes = Res.drawable.ic_baseline_mask,
-                onClick = onOpenFakeLauncherIcon,
-            )
+        if (capabilities.appLock) {
+            item {
+                SettingSwitchItem(
+                    title = stringResource(Res.string.use_lock_screen),
+                    summary = stringResource(Res.string.use_lock_screen_sum),
+                    checked = state.useLockScreen,
+                    iconRes = Res.drawable.ic_setting_applock,
+                    onCheckedChange = onUseLockScreenChange,
+                )
+            }
+        }
+        if (capabilities.fakeLauncherIcon) {
+            item {
+                SettingNavigationItem(
+                    title = stringResource(Res.string.fake_app_icon),
+                    summary = stringResource(Res.string.select_fake_icon),
+                    valueText = state.fakeLauncherIconName,
+                    iconRes = Res.drawable.ic_baseline_mask,
+                    onClick = onOpenFakeLauncherIcon,
+                )
+            }
         }
 
         item { SettingsGroupTitle(stringResource(Res.string.other)) }
@@ -632,9 +665,19 @@ private fun SettingsGroupTitle(title: String) {
 
 @Preview(showBackground = true, widthDp = 420, heightDp = 1000)
 @Composable
-private fun HomeSettingsScreenPreview() {
+private fun HomeSettingsScreenPreview() = HomeSettingsScreenPreviewBody(homeSettingsCapabilities)
+
+/** 全 false，等于 desktop/iOS 现在的样子——用来一眼看出门控掉之后还剩什么。 */
+@Preview(showBackground = true, widthDp = 420, heightDp = 1000)
+@Composable
+private fun HomeSettingsScreenNoCapabilitiesPreview() =
+    HomeSettingsScreenPreviewBody(HomeSettingsCapabilities())
+
+@Composable
+private fun HomeSettingsScreenPreviewBody(capabilities: HomeSettingsCapabilities) {
     ComponentPreview {
         HomeSettingsScreen(
+            capabilities = capabilities,
             state = HomeSettingsUiState(
                 videoLanguage = "zhs",
                 videoLanguageLabel = "简体中文",
@@ -662,7 +705,6 @@ private fun HomeSettingsScreenPreview() {
                 versionSummary = "當前版本：v1.0.0",
                 updatePopupIntervalSummary = "7天\n最近還沒跳出過更新視窗哦",
                 updatePopupIntervalDays = 7,
-                dynamicColorEnabled = true,
                 themeColorKey = "default",
                 themeColorName = "預設（暖紅）",
                 searchGridColumnsSummary = "2 / 3 / 4 / 5",
