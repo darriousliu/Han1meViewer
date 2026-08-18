@@ -26,6 +26,8 @@ import androidx.navigation3.runtime.result.rememberResultEventBusNavEntryDecorat
 import androidx.navigation3.ui.NavDisplay
 import com.yenaly.han1meviewer.logic.network.CloudflareNavBridge
 import com.yenaly.han1meviewer.ui.activity.MainActivity
+import com.yenaly.han1meviewer.ui.component.LocalToaster
+import com.yenaly.han1meviewer.ui.component.showShort
 import com.yenaly.han1meviewer.ui.navigation.AccountRoute
 import com.yenaly.han1meviewer.ui.navigation.AvatarCropRoute
 import com.yenaly.han1meviewer.ui.navigation.AvatarCropped
@@ -217,6 +219,7 @@ fun MainNavDisplay(
                 )
             }
             entry<AccountRoute> {
+                val toaster = LocalToaster.current
                 val accountViewModel: UserAccountViewModel = viewModel()
                 ResultEffect<AvatarCropped> { result ->
                     accountViewModel.updateAvatar(result.jpeg, "avatar.jpg")
@@ -230,7 +233,7 @@ fun MainNavDisplay(
                         )
                     },
                     onRefreshHome = { activity.viewModel.getHomePage() },
-                    onMessage = ::showShortToast,
+                    onMessage = toaster::showShort,
                     onLogout = { activity.showLogoutConfirmDialog(closeCurrentPageOnConfirm = true) },
                 )
             }
