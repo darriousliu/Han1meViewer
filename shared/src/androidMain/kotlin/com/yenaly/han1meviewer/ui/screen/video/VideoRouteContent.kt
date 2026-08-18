@@ -9,12 +9,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yenaly.han1meviewer.Preferences
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.model.HanimeInfo
 import com.yenaly.han1meviewer.logic.state.VideoLoadingState
 import com.yenaly.han1meviewer.ui.bridge.VideoPageHost
 import com.yenaly.han1meviewer.ui.viewmodel.CommentViewModel
 import com.yenaly.han1meviewer.ui.viewmodel.VideoViewModel
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.comment
+import han1meviewer.shared.generated.resources.introduction
 import org.jetbrains.compose.resources.getString
 
 @Composable
@@ -53,9 +55,9 @@ fun VideoRouteContent(
     }
     val tabs = remember(disableComments, hostUiState.commentBadgeCount, fromDownload) {
         buildList {
-            add(VideoTabItem(R.string.introduction))
+            add(VideoTabItem(Res.string.introduction))
             if (!fromDownload && !disableComments) {
-                add(VideoTabItem(R.string.comment, badgeCount = hostUiState.commentBadgeCount))
+                add(VideoTabItem(Res.string.comment, badgeCount = hostUiState.commentBadgeCount))
             }
         }
     }
