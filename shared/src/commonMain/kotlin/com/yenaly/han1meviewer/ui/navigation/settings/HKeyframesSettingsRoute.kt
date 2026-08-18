@@ -15,7 +15,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yenaly.han1meviewer.Preferences
@@ -28,6 +30,7 @@ import com.yenaly.han1meviewer.ui.screen.settings.HKeyframeSettingsUiState
 import com.yenaly.han1meviewer.ui.screen.settings.HKeyframesScreen
 import com.yenaly.han1meviewer.ui.screen.settings.SharedHKeyframesScreen
 import com.yenaly.han1meviewer.ui.viewmodel.SettingsViewModel
+import com.yenaly.han1meviewer.util.setPlainText
 import han1meviewer.shared.generated.resources.Res
 import han1meviewer.shared.generated.resources.cancel
 import han1meviewer.shared.generated.resources.confirm
@@ -44,6 +47,7 @@ import han1meviewer.shared.generated.resources.shared_h_keyframe_detected_msg
 import kotlin.io.encoding.Base64
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.stringResource
 
@@ -62,8 +66,9 @@ fun HKeyframesRouteScreen(
     onOpenVideo: (String) -> Unit,
     showImportDialog: Boolean,
     onImportDialogDismiss: () -> Unit,
-    onCopy: (String) -> Unit,
 ) {
+    val clipboard = LocalClipboard.current
+    val scope = rememberCoroutineScope()
     val viewModel: SettingsViewModel = viewModel()
     val toaster = LocalToaster.current
     // stringResource 是 composable，下面那些回调里用不了，先解开
@@ -109,7 +114,7 @@ fun HKeyframesRouteScreen(
             toaster.showShort(modifySuccess)
         },
         onCopyShareContent = {
-            onCopy(it)
+            scope.launch { clipboard.setPlainText(it) }
             toaster.showShort(copiedHint)
         },
     )

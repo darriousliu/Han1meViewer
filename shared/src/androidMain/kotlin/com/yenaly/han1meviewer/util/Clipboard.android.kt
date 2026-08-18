@@ -3,6 +3,7 @@ package com.yenaly.han1meviewer.util
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import androidx.compose.ui.platform.ClipEntry
 
 fun copyTextToClipboard(
     text: CharSequence?,
@@ -25,3 +26,6 @@ val textFromClipboard: CharSequence?
             ?.getItemAt(0)
             ?.coerceToText(context)
     }
+
+actual fun plainTextClipEntry(text: String): ClipEntry =
+    ClipEntry(ClipData.newPlainText(null, text))

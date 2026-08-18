@@ -27,7 +27,6 @@ import androidx.navigation3.ui.NavDisplay
 import com.yenaly.han1meviewer.logic.network.CloudflareNavBridge
 import com.yenaly.han1meviewer.ui.activity.MainActivity
 import com.yenaly.han1meviewer.ui.component.LocalToaster
-import com.yenaly.han1meviewer.util.copyTextToClipboard
 import com.yenaly.han1meviewer.ui.component.showShort
 import com.yenaly.han1meviewer.ui.navigation.AccountRoute
 import com.yenaly.han1meviewer.ui.navigation.AvatarCropRoute
@@ -78,7 +77,6 @@ import com.yenaly.han1meviewer.ui.screen.home.CreatorCenterScreen
 import com.yenaly.han1meviewer.ui.screen.web.CloudflareScreen
 import com.yenaly.han1meviewer.ui.viewmodel.CreatorCenterViewModel
 import com.yenaly.han1meviewer.ui.viewmodel.UserAccountViewModel
-import com.yenaly.han1meviewer.util.showShortToast
 import io.github.vinceglb.filekit.PlatformFile
 import kotlinx.serialization.json.Json
 
@@ -187,7 +185,6 @@ fun MainNavDisplay(
                 MyPlaylistRouteScreen(
                     onBack = onBack,
                     onNavigateToVideo = onNavigateToVideo,
-                    onCopy = ::copyTextToClipboard,
                 )
             }
             entry<SubscriptionRoute> {
@@ -195,7 +192,6 @@ fun MainNavDisplay(
                     onBack = onBack,
                     onNavigateToSearch = { query -> backStack.navigateSafely(SearchRoute(query = query)) },
                     onNavigateToVideo = onNavigateToVideo,
-                    onCopy = ::copyTextToClipboard,
                 )
             }
             entry<DailyCheckInRoute> {
@@ -322,7 +318,6 @@ fun MainNavDisplay(
                         onOpenVideo = onNavigateToVideo,
                         showImportDialog = showImportDialog,
                         onImportDialogDismiss = { showImportDialog = false },
-                        onCopy = ::copyTextToClipboard,
                     )
                 }
             }
@@ -352,7 +347,6 @@ fun MainNavDisplay(
                     route = route,
                     onBack = onBack,
                     onNavigateToVideo = onNavigateToVideo,
-                    onCopy = ::copyTextToClipboard,
                 )
             }
             entry<PreviewRoute> {

@@ -2,6 +2,7 @@ package com.yenaly.han1meviewer.ui.navigation.main
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yenaly.han1meviewer.getHanimeShareText
 import com.yenaly.han1meviewer.ui.component.LocalToaster
@@ -9,6 +10,7 @@ import com.yenaly.han1meviewer.ui.component.showShort
 import com.yenaly.han1meviewer.ui.screen.home.myplaylist.PlaylistScreen
 import com.yenaly.han1meviewer.ui.screen.home.myplaylist.PlaylistUiEvent
 import com.yenaly.han1meviewer.ui.viewmodel.MyPlayListViewModelV2
+import com.yenaly.han1meviewer.util.setPlainText
 import han1meviewer.shared.generated.resources.Res
 import han1meviewer.shared.generated.resources.copy_to_clipboard
 import kotlinx.coroutines.launch
@@ -19,8 +21,8 @@ import org.jetbrains.compose.resources.stringResource
 fun MyPlaylistRouteScreen(
     onBack: () -> Unit,
     onNavigateToVideo: (String) -> Unit,
-    onCopy: (String) -> Unit,
 ) {
+    val clipboard = LocalClipboard.current
     val viewModel: MyPlayListViewModelV2 = viewModel()
     val scope = rememberCoroutineScope()
     val toaster = LocalToaster.current
@@ -30,7 +32,7 @@ fun MyPlaylistRouteScreen(
         navigateBack = onBack,
         onClickItem = onNavigateToVideo,
         onLongClickItem = { videoCode, title ->
-            onCopy(getHanimeShareText(title, videoCode))
+            scope.launch { clipboard.setPlainText(getHanimeShareText(title, videoCode)) }
             toaster.showShort(copiedHint)
         },
         // 屏幕只发事件，提示由这里弹。getString 是挂起函数，要包 scope.launch。

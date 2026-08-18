@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.yenaly.han1meviewer.R
@@ -22,8 +23,8 @@ import com.yenaly.han1meviewer.ui.screen.home.homepage.LocalSearchHistoryQuery
 import com.yenaly.han1meviewer.ui.screen.home.homepage.component.AnnouncementDialog
 import com.yenaly.han1meviewer.ui.screen.home.homepage.saveImageToGallery
 import com.yenaly.han1meviewer.ui.viewmodel.CheckInCalendarViewModel
-import com.yenaly.han1meviewer.util.copyTextToClipboard
 import com.yenaly.han1meviewer.util.currentLocalDate
+import com.yenaly.han1meviewer.util.setPlainText
 import com.yenaly.han1meviewer.util.showShortToast
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -52,6 +53,7 @@ fun HomeRouteScreen(
     var showExitDialog by remember { mutableStateOf(false) }
     var announcement by remember { mutableStateOf<Announcement?>(null) }
     val scope = rememberCoroutineScope()
+    val clipboard = LocalClipboard.current
     CompositionLocalProvider(
         LocalSearchHistoryQuery provides { keyword: String ->
             DatabaseRepo.SearchHistory.loadAll(keyword).first().map { it.query }
@@ -68,7 +70,11 @@ fun HomeRouteScreen(
                     is HomeUiEvent.NavigateToSearchAdvanced -> onNavigateToSearchAdvanced(event.params)
                     is HomeUiEvent.OpenVideo -> onNavigateToVideo(event.videoCode)
                     is HomeUiEvent.LongPressVideoCopy -> {
-                        copyTextToClipboard(getHanimeShareText(event.videoTitle, event.videoCode))
+                        scope.launch {
+                            clipboard.setPlainText(
+                                getHanimeShareText(event.videoTitle, event.videoCode)
+                            )
+                        }
                         showShortToast(R.string.copy_to_clipboard)
                     }
                     is HomeUiEvent.ShowAnnouncementDialog -> { announcement = event.announcement }
