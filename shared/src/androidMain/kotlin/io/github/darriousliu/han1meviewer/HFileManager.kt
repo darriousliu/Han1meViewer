@@ -3,6 +3,8 @@ import android.content.Context
 import android.os.Environment
 import android.util.Log
 import java.io.File
+import io.github.darriousliu.han1meviewer.core.common.APP_NAME
+import io.github.darriousliu.han1meviewer.core.common.DEFAULT_VIDEO_SUFFIX
 
 object HFileManager {
 

@@ -22,8 +22,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import io.github.darriousliu.han1meviewer.logic.model.SubscriptionItem
-import io.github.darriousliu.han1meviewer.logic.model.SubscriptionVideosItem
+import io.github.darriousliu.han1meviewer.core.model.SubscriptionItem
+import io.github.darriousliu.han1meviewer.core.model.SubscriptionVideosItem
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.ui.component.PullRefreshOverlay
 import io.github.darriousliu.han1meviewer.ui.component.appbar.HanimeScaffold

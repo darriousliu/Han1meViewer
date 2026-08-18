@@ -39,9 +39,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import io.github.darriousliu.han1meviewer.LOCAL_DATE_TIME_FORMAT
+import io.github.darriousliu.han1meviewer.core.common.LOCAL_DATE_TIME_FORMAT
 import io.github.darriousliu.han1meviewer.logic.entity.download.VideoWithCategories
-import io.github.darriousliu.han1meviewer.logic.model.DownloadHeaderNode
+import io.github.darriousliu.han1meviewer.logic.DownloadHeaderNode
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.ui.preview.fakeDownloadedNodes
 import io.github.darriousliu.han1meviewer.core.common.util.formatFileSizeV2
@@ -348,7 +348,7 @@ private fun PreviewDownloadGroupHeader() {
 @Composable
 private fun PreviewDownloadedVideoCard() {
     val node = fakeDownloadedNodes
-        .filterIsInstance<io.github.darriousliu.han1meviewer.logic.model.DownloadItemNode>()
+        .filterIsInstance<io.github.darriousliu.han1meviewer.logic.DownloadItemNode>()
         .firstOrNull()?.data
         ?: return
     ComponentPreview {

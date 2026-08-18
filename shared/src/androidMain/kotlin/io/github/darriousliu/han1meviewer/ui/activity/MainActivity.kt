@@ -29,8 +29,8 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation3.runtime.NavBackStack
 import com.google.android.material.snackbar.Snackbar
-import io.github.darriousliu.han1meviewer.HanimeConstants.ANIME_URL
-import io.github.darriousliu.han1meviewer.HanimeConstants.HANIME_URL
+import io.github.darriousliu.han1meviewer.core.common.HanimeConstants.ANIME_URL
+import io.github.darriousliu.han1meviewer.core.common.HanimeConstants.HANIME_URL
 import io.github.darriousliu.han1meviewer.PermissionRequester
 import io.github.darriousliu.han1meviewer.Preferences
 import io.github.darriousliu.han1meviewer.R

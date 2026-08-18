@@ -73,6 +73,8 @@ kotlin {
             implementation(libs.filekit.core)
             // FileSizeFormat 的 %f 格式化：CMP 的 stringResource 只认 %N$d / %N$s
             implementation(libs.mp.stools)
+            // HanimeResolution 用 ktor 的 ContentType 判断清晰度链接的类型
+            implementation(libs.ktor.client.core)
         }
 
         androidMain.dependencies {

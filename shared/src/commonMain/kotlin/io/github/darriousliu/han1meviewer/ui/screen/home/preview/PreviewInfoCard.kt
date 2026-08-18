@@ -26,7 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import io.github.darriousliu.han1meviewer.logic.model.HanimePreview
+import io.github.darriousliu.han1meviewer.core.model.HanimePreview
 import io.github.darriousliu.han1meviewer.ui.component.TagChipGroup
 import io.github.darriousliu.han1meviewer.ui.component.lazy.LazyRow
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
@@ -94,9 +94,10 @@ fun PreviewInfoCard(
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
                         )
-                        if (!previewInfo.title.isNullOrBlank()) {
+                        val previewTitle = previewInfo.title
+                        if (!previewTitle.isNullOrBlank()) {
                             Text(
-                                text = previewInfo.title,
+                                text = previewTitle,
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -130,10 +131,11 @@ fun PreviewInfoCard(
                         }
                     }
                 }
-                if (!previewInfo.introduction.isNullOrBlank()) {
+                val introduction = previewInfo.introduction
+                if (!introduction.isNullOrBlank()) {
                     SelectionContainer {
                         Text(
-                            text = previewInfo.introduction,
+                            text = introduction,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )

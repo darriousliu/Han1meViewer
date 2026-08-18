@@ -6,18 +6,18 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
-import io.github.darriousliu.han1meviewer.EMPTY_STRING
-import io.github.darriousliu.han1meviewer.HanimeResolution
+import io.github.darriousliu.han1meviewer.core.common.EMPTY_STRING
+import io.github.darriousliu.han1meviewer.core.common.HanimeResolution
 import io.github.darriousliu.han1meviewer.logic.DatabaseRepo
 import io.github.darriousliu.han1meviewer.logic.NetworkRepo
 import io.github.darriousliu.han1meviewer.logic.entity.HKeyframeEntity
 import io.github.darriousliu.han1meviewer.logic.entity.WatchHistoryEntity
 import io.github.darriousliu.han1meviewer.logic.entity.download.HanimeDownloadEntity
-import io.github.darriousliu.han1meviewer.logic.model.HanimeVideo
+import io.github.darriousliu.han1meviewer.core.model.HanimeVideo
 import io.github.darriousliu.han1meviewer.core.common.state.VideoLoadingState
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.ui.viewmodel.CsrfTokenStore.csrfToken
-import io.github.darriousliu.han1meviewer.util.TagLocalizer
+import io.github.darriousliu.han1meviewer.core.model.TagLocalizer
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.add_success
 import io.github.darriousliu.han1meviewer.core.resource.interval_must_greater_than_d
@@ -188,7 +188,7 @@ class VideoViewModel : ViewModel() {
     private suspend fun HanimeVideo.withLocalizedLabels(): HanimeVideo {
         return copy(
             tags = TagLocalizer.localizeTags(tags),
-            artist = artist?.copy(genre = TagLocalizer.localizeTag(artist.genre)),
+            artist = artist?.let { it.copy(genre = TagLocalizer.localizeTag(it.genre)) },
         )
     }
 
@@ -379,7 +379,11 @@ class VideoViewModel : ViewModel() {
                 _subscribeArtistFlow.emit(state)
                 if (state is WebsiteState.Success) {
                     _hanimeVideoFlow.update {
-                        it?.copy(artist = it.artist?.copy(post = it.artist.post?.copy(isSubscribed = true)))
+                        it?.copy(
+                            artist = it.artist?.let { artist ->
+                                artist.copy(post = artist.post?.copy(isSubscribed = true))
+                            }
+                        )
                     }
                 }
             }
@@ -395,7 +399,11 @@ class VideoViewModel : ViewModel() {
                 _subscribeArtistFlow.emit(state)
                 if (state is WebsiteState.Success) {
                     _hanimeVideoFlow.update {
-                        it?.copy(artist = it.artist?.copy(post = it.artist.post?.copy(isSubscribed = false)))
+                        it?.copy(
+                            artist = it.artist?.let { artist ->
+                                artist.copy(post = artist.post?.copy(isSubscribed = false))
+                            }
+                        )
                     }
                 }
             }

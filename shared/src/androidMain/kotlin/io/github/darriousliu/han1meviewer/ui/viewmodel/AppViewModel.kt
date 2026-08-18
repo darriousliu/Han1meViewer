@@ -10,7 +10,7 @@ import com.google.firebase.crashlytics.setCustomKeys
 import io.github.darriousliu.han1meviewer.FirebaseConstants
 import io.github.darriousliu.han1meviewer.Preferences
 import io.github.darriousliu.han1meviewer.logic.UpdateRepo
-import io.github.darriousliu.han1meviewer.logic.model.github.Latest
+import io.github.darriousliu.han1meviewer.core.model.github.Latest
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.core.common.util.AndroidAppContext
 import io.github.darriousliu.han1meviewer.worker.HUpdateWorker

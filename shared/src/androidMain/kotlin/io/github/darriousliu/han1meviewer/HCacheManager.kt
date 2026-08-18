@@ -6,7 +6,7 @@ import android.util.Log
 import androidx.annotation.WorkerThread
 import androidx.appcompat.app.AlertDialog
 import io.github.darriousliu.han1meviewer.logic.DatabaseRepo
-import io.github.darriousliu.han1meviewer.logic.model.HanimeVideo
+import io.github.darriousliu.han1meviewer.core.model.HanimeVideo
 import io.github.darriousliu.han1meviewer.util.SafFileManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -22,6 +22,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 import io.github.darriousliu.han1meviewer.core.common.HJson
+import io.github.darriousliu.han1meviewer.core.common.HanimeLink
 
 /**
  * @project Han1meViewer

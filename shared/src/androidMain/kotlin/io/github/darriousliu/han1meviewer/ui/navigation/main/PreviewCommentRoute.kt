@@ -25,7 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.darriousliu.han1meviewer.PREVIEW_COMMENT_PREFIX
+import io.github.darriousliu.han1meviewer.core.common.PREVIEW_COMMENT_PREFIX
 import io.github.darriousliu.han1meviewer.Preferences
 import io.github.darriousliu.han1meviewer.R
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState

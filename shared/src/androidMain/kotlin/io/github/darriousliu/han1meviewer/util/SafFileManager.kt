@@ -7,7 +7,7 @@ import android.os.Environment
 import android.util.Log
 import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
-import io.github.darriousliu.han1meviewer.APP_NAME
+import io.github.darriousliu.han1meviewer.core.common.APP_NAME
 import io.github.darriousliu.han1meviewer.HFileManager.DEF_VIDEO_COVER_TYPE
 import io.github.darriousliu.han1meviewer.HFileManager.HANIME_DOWNLOAD_FOLDER
 import io.github.darriousliu.han1meviewer.HFileManager.createVideoCoverName

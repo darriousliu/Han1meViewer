@@ -17,7 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.github.darriousliu.han1meviewer.logic.model.SubscriptionItem
+import io.github.darriousliu.han1meviewer.core.model.SubscriptionItem
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.ui.preview.fakeArtists
 import io.github.darriousliu.han1meviewer.ui.screen.RetryableImage

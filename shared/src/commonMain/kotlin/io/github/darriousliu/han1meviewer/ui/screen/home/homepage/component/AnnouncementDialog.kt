@@ -39,7 +39,7 @@ import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import io.github.darriousliu.han1meviewer.logic.model.Announcement
+import io.github.darriousliu.han1meviewer.core.model.Announcement
 import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.ui.preview.fakeAnnouncements
@@ -144,9 +144,10 @@ fun AnnouncementDialog(
                     horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    if (!announcementData.negativeText.isNullOrBlank()) {
+                    val negativeText = announcementData.negativeText
+                    if (!negativeText.isNullOrBlank()) {
                         TextButton(onClick = onDismiss) {
-                            Text(text = announcementData.negativeText)
+                            Text(text = negativeText)
                         }
                         Spacer(Modifier.width(8.dp))
                     }
@@ -162,13 +163,14 @@ fun AnnouncementDialog(
         }
     }
 
-    if (showFullScreenImage && !announcementData.imageUrl.isNullOrBlank()) {
+    val announcementImageUrl = announcementData.imageUrl
+    if (showFullScreenImage && !announcementImageUrl.isNullOrBlank()) {
         Dialog(
             onDismissRequest = { showFullScreenImage = false },
             properties = DialogProperties(usePlatformDefaultWidth = false),
         ) {
             AsyncImage(
-                model = announcementData.imageUrl,
+                model = announcementImageUrl,
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
@@ -181,8 +183,8 @@ fun AnnouncementDialog(
         }
     }
 
-    if (showSaveImageConfirm && !announcementData.imageUrl.isNullOrBlank()) {
-        val imageUrl = announcementData.imageUrl
+    if (showSaveImageConfirm && !announcementImageUrl.isNullOrBlank()) {
+        val imageUrl = announcementImageUrl
         ConfirmDialog(
             visible = true,
             title = stringResource(Res.string.save_image_confirm),

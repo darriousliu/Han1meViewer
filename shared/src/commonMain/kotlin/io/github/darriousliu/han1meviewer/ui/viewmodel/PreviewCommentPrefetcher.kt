@@ -1,7 +1,7 @@
 package io.github.darriousliu.han1meviewer.ui.viewmodel
 
 import co.touchlab.kermit.Logger
-import io.github.darriousliu.han1meviewer.logic.model.VideoComments
+import io.github.darriousliu.han1meviewer.core.model.VideoComments
 
 /**
  * 连通预览页与预览评论页的评论预取器。

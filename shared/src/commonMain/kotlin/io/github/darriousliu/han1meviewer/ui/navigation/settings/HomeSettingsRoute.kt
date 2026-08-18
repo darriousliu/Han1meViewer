@@ -17,9 +17,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.darriousliu.han1meviewer.core.common.BuildConfig
-import io.github.darriousliu.han1meviewer.HA1_GITHUB_FORUM_URL
-import io.github.darriousliu.han1meviewer.HA1_GITHUB_ISSUE_URL
-import io.github.darriousliu.han1meviewer.HanimeConstants
+import io.github.darriousliu.han1meviewer.core.common.HA1_GITHUB_FORUM_URL
+import io.github.darriousliu.han1meviewer.core.common.HA1_GITHUB_ISSUE_URL
+import io.github.darriousliu.han1meviewer.core.common.HanimeConstants
 import io.github.darriousliu.han1meviewer.Preferences
 import io.github.darriousliu.han1meviewer.logic.BackupManager
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState

@@ -20,7 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.github.darriousliu.han1meviewer.logic.model.HanimeInfo
+import io.github.darriousliu.han1meviewer.core.model.HanimeInfo
 import io.github.darriousliu.han1meviewer.ui.component.VideoCardItem
 import io.github.darriousliu.han1meviewer.ui.component.lazy.LazyRow
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview

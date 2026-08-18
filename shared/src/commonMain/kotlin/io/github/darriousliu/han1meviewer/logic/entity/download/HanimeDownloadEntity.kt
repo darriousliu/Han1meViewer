@@ -1,7 +1,7 @@
 package io.github.darriousliu.han1meviewer.logic.entity.download
 
 import androidx.annotation.IntRange
-import io.github.darriousliu.han1meviewer.DEFAULT_VIDEO_SUFFIX
+import io.github.darriousliu.han1meviewer.core.common.DEFAULT_VIDEO_SUFFIX
 import androidx.room3.ColumnTypeConverter
 import androidx.room3.ColumnTypeConverters
 import androidx.room3.Entity

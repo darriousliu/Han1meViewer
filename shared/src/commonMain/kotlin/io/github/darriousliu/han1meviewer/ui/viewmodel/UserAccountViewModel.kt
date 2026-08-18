@@ -5,10 +5,10 @@ import androidx.lifecycle.viewModelScope
 import io.github.darriousliu.han1meviewer.Preferences
 import io.github.darriousliu.han1meviewer.logic.NetworkRepo
 import io.github.darriousliu.han1meviewer.core.common.exception.LocalizedStateException
-import io.github.darriousliu.han1meviewer.logic.model.UserAccount
-import io.github.darriousliu.han1meviewer.logic.model.UserAccountAction
-import io.github.darriousliu.han1meviewer.logic.model.UserAccountActionEvent
-import io.github.darriousliu.han1meviewer.logic.model.UserAccountSubmittingState
+import io.github.darriousliu.han1meviewer.core.model.UserAccount
+import io.github.darriousliu.han1meviewer.core.model.UserAccountAction
+import io.github.darriousliu.han1meviewer.core.model.UserAccountActionEvent
+import io.github.darriousliu.han1meviewer.core.model.UserAccountSubmittingState
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.not_logged_in_currently

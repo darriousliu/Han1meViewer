@@ -7,10 +7,10 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import co.touchlab.kermit.Logger
 import io.github.darriousliu.han1meviewer.logic.NetworkRepo
-import io.github.darriousliu.han1meviewer.logic.model.CommentPlace
-import io.github.darriousliu.han1meviewer.logic.model.ReportReason
-import io.github.darriousliu.han1meviewer.logic.model.VideoCommentArgs
-import io.github.darriousliu.han1meviewer.logic.model.VideoComments
+import io.github.darriousliu.han1meviewer.core.model.CommentPlace
+import io.github.darriousliu.han1meviewer.core.model.ReportReason
+import io.github.darriousliu.han1meviewer.core.model.VideoCommentArgs
+import io.github.darriousliu.han1meviewer.core.model.VideoComments
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.ui.screen.video.CommentSortType
 import io.github.darriousliu.han1meviewer.ui.viewmodel.CsrfTokenStore.csrfToken

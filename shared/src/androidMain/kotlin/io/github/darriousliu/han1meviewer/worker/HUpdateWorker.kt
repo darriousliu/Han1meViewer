@@ -22,12 +22,12 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import io.github.darriousliu.han1meviewer.EMPTY_STRING
-import io.github.darriousliu.han1meviewer.FILE_PROVIDER_AUTHORITY
+import io.github.darriousliu.han1meviewer.core.common.EMPTY_STRING
+import io.github.darriousliu.han1meviewer.core.common.FILE_PROVIDER_AUTHORITY
 import io.github.darriousliu.han1meviewer.Preferences
 import io.github.darriousliu.han1meviewer.R
-import io.github.darriousliu.han1meviewer.UPDATE_NOTIFICATION_CHANNEL
-import io.github.darriousliu.han1meviewer.logic.model.github.Latest
+import io.github.darriousliu.han1meviewer.core.common.UPDATE_NOTIFICATION_CHANNEL
+import io.github.darriousliu.han1meviewer.core.model.github.Latest
 import io.github.darriousliu.han1meviewer.logic.network.injectUpdate
 import io.github.darriousliu.han1meviewer.util.installApkPackage
 import io.github.darriousliu.han1meviewer.core.common.util.runSuspendCatching

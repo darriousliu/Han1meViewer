@@ -68,10 +68,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import io.github.darriousliu.han1meviewer.ResolutionLinkMap
+import io.github.darriousliu.han1meviewer.core.common.ResolutionLinkMap
 import io.github.darriousliu.han1meviewer.logic.entity.CheckInRecordEntity
-import io.github.darriousliu.han1meviewer.logic.model.HanimeInfo
-import io.github.darriousliu.han1meviewer.logic.model.HanimeVideo
+import io.github.darriousliu.han1meviewer.core.model.HanimeInfo
+import io.github.darriousliu.han1meviewer.core.model.HanimeVideo
 import io.github.darriousliu.han1meviewer.core.common.state.VideoLoadingState
 import io.github.darriousliu.han1meviewer.ui.component.BottomSheetHandler
 import io.github.darriousliu.han1meviewer.ui.component.ExpandableRichText
@@ -341,9 +341,10 @@ private fun VideoIntroductionContent(
         )
     }
 
-    if (showPlaylistSheet && video.playlist != null) {
+    val playlist = video.playlist
+    if (showPlaylistSheet && playlist != null) {
         PlaylistBottomSheet(
-            playlist = video.playlist,
+            playlist = playlist,
             onDismiss = { showPlaylistSheet = false },
             onOpenVideo = {
                 showPlaylistSheet = false
@@ -363,12 +364,13 @@ private fun VideoIntroductionContent(
         )
     }
 
-    if (showMyListDialog && video.myList != null) {
+    val myList = video.myList
+    if (showMyListDialog && myList != null) {
         MyListDialog(
-            myList = video.myList,
+            myList = myList,
             onDismiss = { showMyListDialog = false },
             onConfirm = { selectedStates ->
-                onManageMyList(video.myList.titleArray.toList(), selectedStates)
+                onManageMyList(myList.titleArray.toList(), selectedStates)
                 showMyListDialog = false
             },
         )
@@ -452,10 +454,11 @@ private fun VideoIntroductionContent(
             }
         }
 
-        if (!fromDownload && video.playlist != null && video.playlist.video.isNotEmpty()) {
+        val listSectionPlaylist = video.playlist
+        if (!fromDownload && listSectionPlaylist != null && listSectionPlaylist.video.isNotEmpty()) {
             item(key = "playlist") {
                 PlaylistSection(
-                    playlist = video.playlist,
+                    playlist = listSectionPlaylist,
                     initialIndex = playlistInitialIndex,
                     onOpenVideo = onOpenVideo,
                     onShowAllPlaylist = if (onShowAllPlaylist != null) {
@@ -499,7 +502,7 @@ private fun DownloadQualityDialog(
                             .selectable(
                                 selected = false,
                                 onClick = {
-                                    if (quality == io.github.darriousliu.han1meviewer.HanimeResolution.RES_UNKNOWN) {
+                                    if (quality == io.github.darriousliu.han1meviewer.core.common.HanimeResolution.RES_UNKNOWN) {
                                         onOpenOfficial()
                                     } else {
                                         onSelectQuality(quality)
@@ -511,7 +514,7 @@ private fun DownloadQualityDialog(
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(quality)
-                        if (quality == io.github.darriousliu.han1meviewer.HanimeResolution.RES_UNKNOWN) {
+                        if (quality == io.github.darriousliu.han1meviewer.core.common.HanimeResolution.RES_UNKNOWN) {
                             Text(
                                 text = stringResource(Res.string.go_to_official),
                                 color = MaterialTheme.colorScheme.primary,

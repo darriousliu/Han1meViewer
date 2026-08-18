@@ -1,10 +1,10 @@
 package io.github.darriousliu.han1meviewer.logic.network.service
 
-import io.github.darriousliu.han1meviewer.HA1_GITHUB_DEFAULT_BRANCH
-import io.github.darriousliu.han1meviewer.logic.model.github.Artifacts
-import io.github.darriousliu.han1meviewer.logic.model.github.CommitComparison
-import io.github.darriousliu.han1meviewer.logic.model.github.Release
-import io.github.darriousliu.han1meviewer.logic.model.github.WorkflowRuns
+import io.github.darriousliu.han1meviewer.core.common.HA1_GITHUB_DEFAULT_BRANCH
+import io.github.darriousliu.han1meviewer.core.model.github.Artifacts
+import io.github.darriousliu.han1meviewer.core.model.github.CommitComparison
+import io.github.darriousliu.han1meviewer.core.model.github.Release
+import io.github.darriousliu.han1meviewer.core.model.github.WorkflowRuns
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.Path
 import de.jensklingenberg.ktorfit.http.Query

@@ -3,11 +3,11 @@ package io.github.darriousliu.han1meviewer.logic
 import co.touchlab.kermit.Logger
 import com.fleeksoft.ksoup.Ksoup
 import com.fleeksoft.ksoup.nodes.Element
-import io.github.darriousliu.han1meviewer.EMPTY_STRING
-import io.github.darriousliu.han1meviewer.GETCHU_BASE_URL
+import io.github.darriousliu.han1meviewer.core.common.EMPTY_STRING
+import io.github.darriousliu.han1meviewer.core.common.GETCHU_BASE_URL
 import io.github.darriousliu.han1meviewer.core.common.HJson
-import io.github.darriousliu.han1meviewer.logic.model.GetchuPreview
-import io.github.darriousliu.han1meviewer.logic.model.GetchuPreviewDetail
+import io.github.darriousliu.han1meviewer.core.model.GetchuPreview
+import io.github.darriousliu.han1meviewer.core.model.GetchuPreviewDetail
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject

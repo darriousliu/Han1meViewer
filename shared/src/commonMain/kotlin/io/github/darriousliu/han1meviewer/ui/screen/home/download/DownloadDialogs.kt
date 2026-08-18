@@ -43,7 +43,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import io.github.darriousliu.han1meviewer.logic.entity.download.DownloadGroupEntity
 import io.github.darriousliu.han1meviewer.logic.entity.download.VideoWithCategories
-import io.github.darriousliu.han1meviewer.logic.model.DownloadHeaderNode
+import io.github.darriousliu.han1meviewer.logic.DownloadHeaderNode
 import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog
 import io.github.darriousliu.han1meviewer.ui.component.lazy.LazyColumn
 import io.github.darriousliu.han1meviewer.ui.component.verticalScrollbar

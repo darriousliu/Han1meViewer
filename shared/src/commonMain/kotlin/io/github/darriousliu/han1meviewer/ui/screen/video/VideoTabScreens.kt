@@ -14,11 +14,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.darriousliu.han1meviewer.Preferences
 import io.github.darriousliu.han1meviewer.Preferences.isAlreadyLogin
-import io.github.darriousliu.han1meviewer.VIDEO_COMMENT_PREFIX
+import io.github.darriousliu.han1meviewer.core.common.VIDEO_COMMENT_PREFIX
 import io.github.darriousliu.han1meviewer.getHanimeShareText
 import io.github.darriousliu.han1meviewer.logic.entity.CheckInRecordEntity
-import io.github.darriousliu.han1meviewer.logic.model.HanimeInfo
-import io.github.darriousliu.han1meviewer.logic.model.HanimeVideo
+import io.github.darriousliu.han1meviewer.core.model.HanimeInfo
+import io.github.darriousliu.han1meviewer.core.model.HanimeVideo
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.ui.bridge.VideoPageHost
 import io.github.darriousliu.han1meviewer.ui.component.BottomSheetHandler

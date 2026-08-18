@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.darriousliu.han1meviewer.Preferences
-import io.github.darriousliu.han1meviewer.logic.model.HanimeInfo
+import io.github.darriousliu.han1meviewer.core.model.HanimeInfo
 import io.github.darriousliu.han1meviewer.core.common.state.VideoLoadingState
 import io.github.darriousliu.han1meviewer.ui.bridge.VideoPageHost
 import io.github.darriousliu.han1meviewer.ui.viewmodel.CommentViewModel
@@ -30,15 +30,15 @@ fun VideoRouteContent(
     onPendingDownloadPromptChange: (DownloadPromptState?) -> Unit,
     onRetry: () -> Unit,
     onOpenVideo: (HanimeInfo) -> Unit,
-    onOpenArtist: (io.github.darriousliu.han1meviewer.logic.model.HanimeVideo.Artist) -> Unit,
+    onOpenArtist: (io.github.darriousliu.han1meviewer.core.model.HanimeVideo.Artist) -> Unit,
     onNavigateToSearch: (String) -> Unit,
-    onToggleSubscribe: (io.github.darriousliu.han1meviewer.logic.model.HanimeVideo.Artist) -> Unit,
-    onToggleFavorite: (io.github.darriousliu.han1meviewer.logic.model.HanimeVideo) -> Unit,
-    onRateVideo: (io.github.darriousliu.han1meviewer.logic.model.HanimeVideo, Boolean) -> Unit,
-    onManageMyList: (io.github.darriousliu.han1meviewer.logic.model.HanimeVideo.MyList?, List<Boolean>) -> Unit,
+    onToggleSubscribe: (io.github.darriousliu.han1meviewer.core.model.HanimeVideo.Artist) -> Unit,
+    onToggleFavorite: (io.github.darriousliu.han1meviewer.core.model.HanimeVideo) -> Unit,
+    onRateVideo: (io.github.darriousliu.han1meviewer.core.model.HanimeVideo, Boolean) -> Unit,
+    onManageMyList: (io.github.darriousliu.han1meviewer.core.model.HanimeVideo.MyList?, List<Boolean>) -> Unit,
     onQuickCheckIn: (io.github.darriousliu.han1meviewer.logic.entity.CheckInRecordEntity) -> Unit,
-    onPrepareDownload: (String, io.github.darriousliu.han1meviewer.logic.model.HanimeVideo?) -> Unit,
-    onConfirmDownloadPrompt: (io.github.darriousliu.han1meviewer.logic.model.HanimeVideo?) -> Unit,
+    onPrepareDownload: (String, io.github.darriousliu.han1meviewer.core.model.HanimeVideo?) -> Unit,
+    onConfirmDownloadPrompt: (io.github.darriousliu.han1meviewer.core.model.HanimeVideo?) -> Unit,
     onRequestOpenOfficialDownloadPage: () -> Unit,
     onRequestOpenDownloadPermissionSettings: () -> Unit,
     onOpenWebPage: () -> Unit,

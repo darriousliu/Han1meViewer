@@ -1,6 +1,6 @@
 package io.github.darriousliu.han1meviewer.logic.network
 
-import io.github.darriousliu.han1meviewer.logic.model.Announcement
+import io.github.darriousliu.han1meviewer.core.model.Announcement
 
 /**
  * 拉取平台的公告列表。Android 走 Firebase Realtime Database；

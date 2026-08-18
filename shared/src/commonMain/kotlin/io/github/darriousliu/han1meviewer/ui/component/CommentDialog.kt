@@ -32,7 +32,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.github.darriousliu.han1meviewer.logic.model.ReportReason
+import io.github.darriousliu.han1meviewer.core.model.ReportReason
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.baseline_remove_circle_24
 import io.github.darriousliu.han1meviewer.core.resource.cancel

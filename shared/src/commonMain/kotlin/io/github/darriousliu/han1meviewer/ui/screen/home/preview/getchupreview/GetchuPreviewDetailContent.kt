@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import coil3.ImageLoader
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
-import io.github.darriousliu.han1meviewer.logic.model.GetchuPreviewDetail
+import io.github.darriousliu.han1meviewer.core.model.GetchuPreviewDetail
 import io.github.darriousliu.han1meviewer.ui.component.lazy.LazyColumn
 import io.github.darriousliu.han1meviewer.ui.component.lazy.LazyRow
 import io.github.darriousliu.han1meviewer.core.resource.icon.OpenInNew

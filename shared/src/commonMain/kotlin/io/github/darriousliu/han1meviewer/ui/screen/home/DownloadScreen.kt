@@ -28,7 +28,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.darriousliu.han1meviewer.logic.entity.download.DownloadGroupEntity
 import io.github.darriousliu.han1meviewer.logic.entity.download.HanimeDownloadEntity
 import io.github.darriousliu.han1meviewer.logic.entity.download.VideoWithCategories
-import io.github.darriousliu.han1meviewer.logic.model.DownloadHeaderNode
+import io.github.darriousliu.han1meviewer.logic.DownloadHeaderNode
 import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog
 import io.github.darriousliu.han1meviewer.ui.component.appbar.HanimeScaffold
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
@@ -173,7 +173,7 @@ fun DownloadScreen(
                 }
             }
             is DownloadEvent.OnSelectAllCurrentGroup -> {
-                val groupVideos = downloadedNodes.filterIsInstance<io.github.darriousliu.han1meviewer.logic.model.DownloadItemNode>()
+                val groupVideos = downloadedNodes.filterIsInstance<io.github.darriousliu.han1meviewer.logic.DownloadItemNode>()
                     .filter { it.parentKey == event.groupKey }
                 selectedVideoIds = if (event.select) {
                     selectedVideoIds + groupVideos.map { it.data.video.id }.toSet()
@@ -286,7 +286,7 @@ fun DownloadScreen(
 
     if (pendingBatchMove) {
         val selectedVideos = downloadedNodes
-            .filterIsInstance<io.github.darriousliu.han1meviewer.logic.model.DownloadItemNode>()
+            .filterIsInstance<io.github.darriousliu.han1meviewer.logic.DownloadItemNode>()
             .filter { it.data.video.id in selectedVideoIds }
             .map { it.data }
         if (selectedVideos.isNotEmpty()) {

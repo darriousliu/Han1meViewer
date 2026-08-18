@@ -58,10 +58,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
-import io.github.darriousliu.han1meviewer.LOCAL_DATE_TIME_FORMAT
+import io.github.darriousliu.han1meviewer.core.common.LOCAL_DATE_TIME_FORMAT
 import io.github.darriousliu.han1meviewer.logic.entity.WatchHistoryEntity
-import io.github.darriousliu.han1meviewer.logic.model.HanimeInfo
-import io.github.darriousliu.han1meviewer.logic.model.OnlineWatchHistorySort
+import io.github.darriousliu.han1meviewer.core.model.HanimeInfo
+import io.github.darriousliu.han1meviewer.core.model.OnlineWatchHistorySort
 import io.github.darriousliu.han1meviewer.core.common.state.PageLoadingState
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog

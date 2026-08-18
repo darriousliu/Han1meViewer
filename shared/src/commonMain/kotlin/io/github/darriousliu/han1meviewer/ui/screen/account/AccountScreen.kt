@@ -58,9 +58,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import io.github.darriousliu.han1meviewer.HANIME_BASE_URL
-import io.github.darriousliu.han1meviewer.logic.model.UserAccount
-import io.github.darriousliu.han1meviewer.logic.model.UserAccountAction
-import io.github.darriousliu.han1meviewer.logic.model.UserAccountSubmittingState
+import io.github.darriousliu.han1meviewer.core.model.UserAccount
+import io.github.darriousliu.han1meviewer.core.model.UserAccountAction
+import io.github.darriousliu.han1meviewer.core.model.UserAccountSubmittingState
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.ui.component.PageContent
 import io.github.darriousliu.han1meviewer.ui.component.appbar.HanimeScaffold
@@ -118,9 +118,11 @@ fun AccountScreen(
 
     LaunchedEffect(viewModel) {
         viewModel.actionFlow.collect { event ->
-            when (event.state) {
+            // 先取成局部变量：event.state 是别的模块的 public 属性，跨模块之后
+            // 编译器不再对它做智能转换。
+            when (val state = event.state) {
                 is WebsiteState.Error -> {
-                    onMessage(event.state.throwable.message ?: modifyFailed)
+                    onMessage(state.throwable.message ?: modifyFailed)
                 }
 
                 is WebsiteState.Success -> {
@@ -306,10 +308,11 @@ private fun AccountContent(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
 
-                if (!account.joinedLabel.isNullOrBlank()) {
+                val joinedLabel = account.joinedLabel
+                if (!joinedLabel.isNullOrBlank()) {
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = account.joinedLabel,
+                        text = joinedLabel,
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )

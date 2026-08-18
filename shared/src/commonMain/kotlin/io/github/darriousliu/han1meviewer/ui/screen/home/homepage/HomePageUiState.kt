@@ -1,6 +1,6 @@
 package io.github.darriousliu.han1meviewer.ui.screen.home.homepage
 
-import io.github.darriousliu.han1meviewer.logic.model.Announcement
+import io.github.darriousliu.han1meviewer.core.model.Announcement
 import org.jetbrains.compose.resources.StringResource
 
 /**

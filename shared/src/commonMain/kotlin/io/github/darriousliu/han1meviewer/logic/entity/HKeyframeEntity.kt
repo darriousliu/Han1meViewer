@@ -7,7 +7,7 @@ import androidx.room3.ColumnTypeConverters
 import androidx.room3.Entity
 import androidx.room3.Ignore
 import androidx.room3.PrimaryKey
-import io.github.darriousliu.han1meviewer.logic.model.MultiItemEntity
+import io.github.darriousliu.han1meviewer.core.model.MultiItemEntity
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 

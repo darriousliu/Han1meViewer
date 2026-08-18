@@ -35,9 +35,9 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import io.github.darriousliu.han1meviewer.logic.model.ReportReason
-import io.github.darriousliu.han1meviewer.logic.model.VideoCommentArgs
-import io.github.darriousliu.han1meviewer.logic.model.VideoComments
+import io.github.darriousliu.han1meviewer.core.model.ReportReason
+import io.github.darriousliu.han1meviewer.core.model.VideoCommentArgs
+import io.github.darriousliu.han1meviewer.core.model.VideoComments
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.ui.component.CommentReplyBar
 import io.github.darriousliu.han1meviewer.ui.component.CommentReportDialog

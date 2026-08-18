@@ -58,7 +58,7 @@ import io.github.darriousliu.han1meviewer.logic.dao.CheckInRecordDatabase
 import io.github.darriousliu.han1meviewer.logic.entity.HKeyframeEntity
 import io.github.darriousliu.han1meviewer.logic.entity.WatchHistoryEntity
 import io.github.darriousliu.han1meviewer.core.common.exception.ParseException
-import io.github.darriousliu.han1meviewer.logic.model.SearchOption
+import io.github.darriousliu.han1meviewer.core.model.SearchOption
 import io.github.darriousliu.han1meviewer.core.common.state.VideoLoadingState
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
 import io.github.darriousliu.han1meviewer.ui.bridge.VideoPageHost
@@ -103,7 +103,7 @@ fun VideoRouteHostScreen(
     var genres by remember(Preferences.baseUrl) { mutableStateOf(emptyList<SearchOption>()) }
     LaunchedEffect(Preferences.baseUrl) {
         val genreFile =
-            if (Preferences.baseUrl == io.github.darriousliu.han1meviewer.HanimeConstants.HANIME_URL[3]) {
+            if (Preferences.baseUrl == io.github.darriousliu.han1meviewer.core.common.HanimeConstants.HANIME_URL[3]) {
                 "genre_av.json"
             } else {
                 "genre.json"

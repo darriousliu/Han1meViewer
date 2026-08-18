@@ -19,9 +19,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import io.github.darriousliu.han1meviewer.logic.model.CreatorTab
-import io.github.darriousliu.han1meviewer.logic.model.CreatorUploadingItem
-import io.github.darriousliu.han1meviewer.logic.model.HanimeInfo
+import io.github.darriousliu.han1meviewer.core.model.CreatorTab
+import io.github.darriousliu.han1meviewer.core.model.CreatorUploadingItem
+import io.github.darriousliu.han1meviewer.core.model.HanimeInfo
 import io.github.darriousliu.han1meviewer.core.common.state.PageLoadingState
 import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog
 import io.github.darriousliu.han1meviewer.ui.component.appbar.HanimeScaffold

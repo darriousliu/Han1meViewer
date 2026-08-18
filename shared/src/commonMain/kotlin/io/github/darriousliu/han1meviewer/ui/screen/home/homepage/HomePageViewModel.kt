@@ -9,7 +9,7 @@ import io.github.darriousliu.han1meviewer.logic.NetworkRepo
 import io.github.darriousliu.han1meviewer.logic.entity.HKeyframeEntity
 import io.github.darriousliu.han1meviewer.logic.entity.WatchHistoryEntity
 import io.github.darriousliu.han1meviewer.core.common.exception.LoginStateExpiredException
-import io.github.darriousliu.han1meviewer.logic.model.Announcement
+import io.github.darriousliu.han1meviewer.core.model.Announcement
 import io.github.darriousliu.han1meviewer.logic.network.fetchPlatformAnnouncements
 import io.github.darriousliu.han1meviewer.core.common.state.PageState
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState

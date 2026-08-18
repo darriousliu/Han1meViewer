@@ -22,8 +22,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.ImageLoader
 import coil3.compose.AsyncImage
-import io.github.darriousliu.han1meviewer.logic.model.GetchuPreview
-import io.github.darriousliu.han1meviewer.logic.model.GetchuPreviewDetail
+import io.github.darriousliu.han1meviewer.core.model.GetchuPreview
+import io.github.darriousliu.han1meviewer.core.model.GetchuPreviewDetail
 import io.github.darriousliu.han1meviewer.ui.component.lazy.LazyRow
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.ui.preview.fakeGetchuPreviewItem

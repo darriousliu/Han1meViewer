@@ -30,8 +30,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.unit.dp
 import io.github.darriousliu.han1meviewer.HANIME_LOGIN_URL
-import io.github.darriousliu.han1meviewer.HanimeConstants.HANIME_URL
-import io.github.darriousliu.han1meviewer.USER_AGENT
+import io.github.darriousliu.han1meviewer.core.common.HanimeConstants.HANIME_URL
+import io.github.darriousliu.han1meviewer.core.common.USER_AGENT
 import io.github.darriousliu.han1meviewer.ui.component.appbar.HanimeScaffold
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
 import dev.nucleusframework.webview.request.RequestInterceptor

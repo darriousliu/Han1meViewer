@@ -14,7 +14,7 @@ import io.github.darriousliu.han1meviewer.logic.entity.SearchHistoryEntity
 import io.github.darriousliu.han1meviewer.logic.entity.WatchHistoryEntity
 import io.github.darriousliu.han1meviewer.logic.entity.download.DownloadGroupEntity
 import io.github.darriousliu.han1meviewer.logic.entity.download.HanimeDownloadEntity
-import io.github.darriousliu.han1meviewer.logic.model.SearchOption
+import io.github.darriousliu.han1meviewer.core.model.SearchOption
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.SHARED_H_KEYFRAME_CODES
 import kotlinx.coroutines.flow.Flow

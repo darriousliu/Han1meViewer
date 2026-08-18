@@ -4,19 +4,20 @@ package io.github.darriousliu.han1meviewer.ui.preview
 import io.github.darriousliu.han1meviewer.logic.entity.download.DownloadGroupEntity
 import io.github.darriousliu.han1meviewer.logic.entity.download.HanimeDownloadEntity
 import io.github.darriousliu.han1meviewer.logic.entity.download.VideoWithCategories
-import io.github.darriousliu.han1meviewer.logic.model.Announcement
-import io.github.darriousliu.han1meviewer.logic.model.DownloadHeaderNode
-import io.github.darriousliu.han1meviewer.logic.model.DownloadItemNode
-import io.github.darriousliu.han1meviewer.logic.model.GetchuPreview
-import io.github.darriousliu.han1meviewer.logic.model.GetchuPreviewDetail
-import io.github.darriousliu.han1meviewer.logic.model.HanimeInfo
-import io.github.darriousliu.han1meviewer.logic.model.HanimePreview
-import io.github.darriousliu.han1meviewer.logic.model.HanimeVideo
-import io.github.darriousliu.han1meviewer.logic.model.HomePage
-import io.github.darriousliu.han1meviewer.logic.model.Playlists
-import io.github.darriousliu.han1meviewer.logic.model.SubscriptionItem
-import io.github.darriousliu.han1meviewer.logic.model.SubscriptionVideosItem
-import io.github.darriousliu.han1meviewer.logic.model.VideoComments
+import io.github.darriousliu.han1meviewer.core.common.HanimeResolution
+import io.github.darriousliu.han1meviewer.core.model.Announcement
+import io.github.darriousliu.han1meviewer.logic.DownloadHeaderNode
+import io.github.darriousliu.han1meviewer.logic.DownloadItemNode
+import io.github.darriousliu.han1meviewer.core.model.GetchuPreview
+import io.github.darriousliu.han1meviewer.core.model.GetchuPreviewDetail
+import io.github.darriousliu.han1meviewer.core.model.HanimeInfo
+import io.github.darriousliu.han1meviewer.core.model.HanimePreview
+import io.github.darriousliu.han1meviewer.core.model.HanimeVideo
+import io.github.darriousliu.han1meviewer.core.model.HomePage
+import io.github.darriousliu.han1meviewer.core.model.Playlists
+import io.github.darriousliu.han1meviewer.core.model.SubscriptionItem
+import io.github.darriousliu.han1meviewer.core.model.SubscriptionVideosItem
+import io.github.darriousliu.han1meviewer.core.model.VideoComments
 import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.HomeCategory
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.latest_hanime
@@ -434,7 +435,7 @@ val fakeVideoIntroduction = HanimeVideo(
     introduction = "思春期的性学习 2。为了拓展自己的知识，女主开始在图书馆进行一些不太适合公开讨论的研究。\nhttps://hanime1.me/watch?v=101573",
     uploadTime = LocalDate(2024, 5, 10),
     views = "137.6万次",
-    videoUrls = io.github.darriousliu.han1meviewer.HanimeResolution().apply {
+    videoUrls = io.github.darriousliu.han1meviewer.core.common.HanimeResolution().apply {
         parseResolution("720P", "https://example.com/video.mp4", "video/mp4")
     }.toResolutionLinkMap(),
     tags = fakeTagList2,

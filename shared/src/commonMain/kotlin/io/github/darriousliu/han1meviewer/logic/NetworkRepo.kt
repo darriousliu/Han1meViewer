@@ -1,7 +1,7 @@
 package io.github.darriousliu.han1meviewer.logic
 
 import co.touchlab.kermit.Logger
-import io.github.darriousliu.han1meviewer.EMPTY_STRING
+import io.github.darriousliu.han1meviewer.core.common.EMPTY_STRING
 import io.github.darriousliu.han1meviewer.core.common.HJson
 import io.github.darriousliu.han1meviewer.Preferences
 import io.github.darriousliu.han1meviewer.Preferences.isAlreadyLogin
@@ -10,13 +10,13 @@ import io.github.darriousliu.han1meviewer.core.common.exception.HanimeNotFoundEx
 import io.github.darriousliu.han1meviewer.core.common.exception.IPBlockedException
 import io.github.darriousliu.han1meviewer.core.common.exception.LocalizedStateException
 import io.github.darriousliu.han1meviewer.core.common.exception.ParseException
-import io.github.darriousliu.han1meviewer.logic.model.CommentPlace
-import io.github.darriousliu.han1meviewer.logic.model.CreatorSort
-import io.github.darriousliu.han1meviewer.logic.model.ModifiedPlaylistArgs
-import io.github.darriousliu.han1meviewer.logic.model.MyListType
-import io.github.darriousliu.han1meviewer.logic.model.OnlineWatchHistorySort
-import io.github.darriousliu.han1meviewer.logic.model.VideoCommentArgs
-import io.github.darriousliu.han1meviewer.logic.model.VideoComments
+import io.github.darriousliu.han1meviewer.core.model.CommentPlace
+import io.github.darriousliu.han1meviewer.core.model.CreatorSort
+import io.github.darriousliu.han1meviewer.core.model.ModifiedPlaylistArgs
+import io.github.darriousliu.han1meviewer.core.model.MyListType
+import io.github.darriousliu.han1meviewer.core.model.OnlineWatchHistorySort
+import io.github.darriousliu.han1meviewer.core.model.VideoCommentArgs
+import io.github.darriousliu.han1meviewer.core.model.VideoComments
 import io.github.darriousliu.han1meviewer.logic.network.HanimeNetwork
 import io.github.darriousliu.han1meviewer.core.common.state.PageLoadingState
 import io.github.darriousliu.han1meviewer.core.common.state.VideoLoadingState

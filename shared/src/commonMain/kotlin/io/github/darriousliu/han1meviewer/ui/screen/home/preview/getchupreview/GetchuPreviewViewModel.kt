@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.darriousliu.han1meviewer.logic.GetchuNetworkRepo.getGetchuPreview
 import io.github.darriousliu.han1meviewer.logic.GetchuNetworkRepo.getGetchuPreviewDetail
-import io.github.darriousliu.han1meviewer.logic.model.GetchuPreview
-import io.github.darriousliu.han1meviewer.logic.model.GetchuPreviewDetail
+import io.github.darriousliu.han1meviewer.core.model.GetchuPreview
+import io.github.darriousliu.han1meviewer.core.model.GetchuPreviewDetail
 import io.github.darriousliu.han1meviewer.core.common.state.PageState
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import kotlinx.coroutines.flow.MutableStateFlow

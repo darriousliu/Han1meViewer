@@ -1,7 +1,7 @@
 package io.github.darriousliu.han1meviewer.ui.screen.home.preview
 
 import androidx.compose.runtime.saveable.listSaver
-import io.github.darriousliu.han1meviewer.logic.model.HanimePreview
+import io.github.darriousliu.han1meviewer.core.model.HanimePreview
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 
 /**

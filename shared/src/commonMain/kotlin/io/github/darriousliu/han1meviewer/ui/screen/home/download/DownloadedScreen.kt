@@ -36,8 +36,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.darriousliu.han1meviewer.logic.entity.download.DownloadGroupEntity
 import io.github.darriousliu.han1meviewer.logic.entity.download.VideoWithCategories
-import io.github.darriousliu.han1meviewer.logic.model.DownloadHeaderNode
-import io.github.darriousliu.han1meviewer.logic.model.DownloadItemNode
+import io.github.darriousliu.han1meviewer.logic.DownloadHeaderNode
+import io.github.darriousliu.han1meviewer.logic.DownloadItemNode
 import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog
 import io.github.darriousliu.han1meviewer.ui.component.content.EmptyContent
 import io.github.darriousliu.han1meviewer.ui.component.lazy.LazyColumn

@@ -1,7 +1,7 @@
 package io.github.darriousliu.han1meviewer.logic.network
 
 import co.touchlab.kermit.Logger
-import io.github.darriousliu.han1meviewer.HanimeConstants.HANIME_HOSTNAME
+import io.github.darriousliu.han1meviewer.core.common.HanimeConstants.HANIME_HOSTNAME
 import io.github.darriousliu.han1meviewer.Preferences
 import okhttp3.Dns
 import okhttp3.HttpUrl.Companion.toHttpUrl

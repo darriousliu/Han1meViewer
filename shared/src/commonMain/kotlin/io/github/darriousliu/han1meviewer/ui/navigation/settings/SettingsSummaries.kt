@@ -1,8 +1,8 @@
 package io.github.darriousliu.han1meviewer.ui.navigation.settings
 
 import androidx.compose.runtime.Composable
-import io.github.darriousliu.han1meviewer.HanimeConstants.HANIME_HOSTNAME
-import io.github.darriousliu.han1meviewer.HanimeConstants.HANIME_URL
+import io.github.darriousliu.han1meviewer.core.common.HanimeConstants.HANIME_HOSTNAME
+import io.github.darriousliu.han1meviewer.core.common.HanimeConstants.HANIME_URL
 import io.github.darriousliu.han1meviewer.PlayerDefaults
 import io.github.darriousliu.han1meviewer.Preferences
 import io.github.darriousliu.han1meviewer.core.common.util.formatBytesPerSecond

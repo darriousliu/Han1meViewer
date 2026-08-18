@@ -98,6 +98,8 @@ kotlin {
             api(project(":core:resource"))
             // 异常、状态、格式化这些类型遍布公开签名，用 api 传下去
             api(project(":core:common"))
+            // 模型类遍布公开签名
+            api(project(":core:model"))
             implementation(libs.kotlinx.io.core)
             implementation(libs.ksoup)
             implementation(libs.mmkv.kotlin)

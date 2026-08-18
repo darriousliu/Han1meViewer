@@ -3,7 +3,7 @@ package io.github.darriousliu.han1meviewer.ui.screen.home.download
 import io.github.darriousliu.han1meviewer.logic.entity.download.DownloadGroupEntity
 import io.github.darriousliu.han1meviewer.logic.entity.download.HanimeDownloadEntity
 import io.github.darriousliu.han1meviewer.logic.entity.download.VideoWithCategories
-import io.github.darriousliu.han1meviewer.logic.model.DownloadedNode
+import io.github.darriousliu.han1meviewer.logic.DownloadedNode
 
 /**
  * 下载页面 UI 状态。

@@ -6,6 +6,7 @@ import io.github.darriousliu.han1meviewer.Preferences.loginCookie
 import io.github.darriousliu.han1meviewer.logic.network.HCookiesStorage
 import io.github.darriousliu.han1meviewer.core.common.util.CookieString
 import io.github.darriousliu.han1meviewer.core.common.util.localizedText
+import io.github.darriousliu.han1meviewer.core.common.EMPTY_STRING
 
 /**
  * 给用户显示的错误信息

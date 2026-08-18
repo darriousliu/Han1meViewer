@@ -1,9 +1,9 @@
 package io.github.darriousliu.han1meviewer.ui.screen.home.creatorcenter
 
-import io.github.darriousliu.han1meviewer.logic.model.CreatorSort
-import io.github.darriousliu.han1meviewer.logic.model.CreatorTab
-import io.github.darriousliu.han1meviewer.logic.model.CreatorUploadingItem
-import io.github.darriousliu.han1meviewer.logic.model.HanimeInfo
+import io.github.darriousliu.han1meviewer.core.model.CreatorSort
+import io.github.darriousliu.han1meviewer.core.model.CreatorTab
+import io.github.darriousliu.han1meviewer.core.model.CreatorUploadingItem
+import io.github.darriousliu.han1meviewer.core.model.HanimeInfo
 import io.github.darriousliu.han1meviewer.core.common.state.PageLoadingState
 
 /**

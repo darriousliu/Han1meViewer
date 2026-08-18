@@ -44,7 +44,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.github.darriousliu.han1meviewer.logic.model.SubscriptionItem
+import io.github.darriousliu.han1meviewer.core.model.SubscriptionItem
 import io.github.darriousliu.han1meviewer.core.common.state.PageLoadingState
 import io.github.darriousliu.han1meviewer.ui.component.ArtistItem
 import io.github.darriousliu.han1meviewer.ui.component.LoadMoreFooter

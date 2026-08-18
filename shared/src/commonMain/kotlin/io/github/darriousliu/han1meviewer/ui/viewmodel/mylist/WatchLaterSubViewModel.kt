@@ -2,9 +2,9 @@ package io.github.darriousliu.han1meviewer.ui.viewmodel.mylist
 
 import io.github.darriousliu.han1meviewer.Preferences
 import io.github.darriousliu.han1meviewer.logic.NetworkRepo
-import io.github.darriousliu.han1meviewer.logic.model.HanimeInfo
-import io.github.darriousliu.han1meviewer.logic.model.MyListItems
-import io.github.darriousliu.han1meviewer.logic.model.MyListType
+import io.github.darriousliu.han1meviewer.core.model.HanimeInfo
+import io.github.darriousliu.han1meviewer.core.model.MyListItems
+import io.github.darriousliu.han1meviewer.core.model.MyListType
 import io.github.darriousliu.han1meviewer.core.common.state.PageLoadingState
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.ui.viewmodel.CsrfTokenStore.csrfToken

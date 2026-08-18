@@ -10,7 +10,7 @@ import android.util.Log
 import androidx.core.content.FileProvider
 import androidx.core.graphics.drawable.toBitmapOrNull
 import androidx.core.net.toUri
-import io.github.darriousliu.han1meviewer.FILE_PROVIDER_AUTHORITY
+import io.github.darriousliu.han1meviewer.core.common.FILE_PROVIDER_AUTHORITY
 import io.github.darriousliu.han1meviewer.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ensureActive

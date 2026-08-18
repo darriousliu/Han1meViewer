@@ -1,9 +1,9 @@
 package io.github.darriousliu.han1meviewer.ui.screen.home.homepage
 
 import androidx.compose.runtime.staticCompositionLocalOf
-import io.github.darriousliu.han1meviewer.logic.model.Announcement
-import io.github.darriousliu.han1meviewer.logic.model.HanimeInfo
-import io.github.darriousliu.han1meviewer.logic.model.HomePage
+import io.github.darriousliu.han1meviewer.core.model.Announcement
+import io.github.darriousliu.han1meviewer.core.model.HanimeInfo
+import io.github.darriousliu.han1meviewer.core.model.HomePage
 import org.jetbrains.compose.resources.StringResource
 
 /**

@@ -9,7 +9,7 @@ import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import io.github.darriousliu.han1meviewer.logic.model.HanimeInfo
+import io.github.darriousliu.han1meviewer.core.model.HanimeInfo
 import io.github.darriousliu.han1meviewer.ui.component.LoadMoreFooter
 import io.github.darriousliu.han1meviewer.ui.component.VideoCardItem
 import io.github.darriousliu.han1meviewer.ui.component.lazy.LazyVerticalGrid

@@ -1,5 +1,7 @@
 package io.github.darriousliu.han1meviewer
 
+import io.github.darriousliu.han1meviewer.core.common.HanimeConstants
+
 /**
  * 站内链接的拼接与解析。原本在 androidMain 的 `HanimeManager.kt`，
  * 都是纯字符串操作，`Parser` 上移 commonMain 时要用到 [toVideoCode]，跟着搬过来。

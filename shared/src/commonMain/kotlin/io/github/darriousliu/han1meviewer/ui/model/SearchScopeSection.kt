@@ -1,6 +1,6 @@
 package io.github.darriousliu.han1meviewer.ui.model
 
-import io.github.darriousliu.han1meviewer.logic.model.SearchOption
+import io.github.darriousliu.han1meviewer.core.model.SearchOption
 import org.jetbrains.compose.resources.StringResource
 
 data class SearchScopeSection(

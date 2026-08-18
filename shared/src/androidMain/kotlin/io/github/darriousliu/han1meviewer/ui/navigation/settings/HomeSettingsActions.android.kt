@@ -10,7 +10,7 @@ import androidx.compose.ui.platform.LocalContext
 import com.google.firebase.Firebase
 import com.google.firebase.analytics.analytics
 import io.github.darriousliu.han1meviewer.HanimeApplication
-import io.github.darriousliu.han1meviewer.logic.model.github.Latest
+import io.github.darriousliu.han1meviewer.core.model.github.Latest
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.ui.viewmodel.AppViewModel
 import io.github.darriousliu.han1meviewer.Preferences

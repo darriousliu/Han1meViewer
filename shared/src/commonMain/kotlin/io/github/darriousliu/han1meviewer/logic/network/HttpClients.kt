@@ -1,8 +1,8 @@
 package io.github.darriousliu.han1meviewer.logic.network
 
 import io.github.darriousliu.han1meviewer.core.common.BuildConfig
-import io.github.darriousliu.han1meviewer.DESKTOP_USER_AGENT
-import io.github.darriousliu.han1meviewer.USER_AGENT
+import io.github.darriousliu.han1meviewer.core.common.DESKTOP_USER_AGENT
+import io.github.darriousliu.han1meviewer.core.common.USER_AGENT
 import io.github.darriousliu.han1meviewer.logic.network.plugin.CloudflareChallenge
 import io.github.darriousliu.han1meviewer.logic.network.plugin.UrlLogging
 import io.ktor.client.HttpClient

@@ -1,7 +1,7 @@
 package io.github.darriousliu.han1meviewer.ui.screen.home.subscription
 
-import io.github.darriousliu.han1meviewer.logic.model.SubscriptionItem
-import io.github.darriousliu.han1meviewer.logic.model.SubscriptionVideosItem
+import io.github.darriousliu.han1meviewer.core.model.SubscriptionItem
+import io.github.darriousliu.han1meviewer.core.model.SubscriptionVideosItem
 
 /**
  * 订阅页面 UI 状态。

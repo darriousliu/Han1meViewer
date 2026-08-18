@@ -1,7 +1,7 @@
 package io.github.darriousliu.han1meviewer.ui.view.video
 
 import cn.jzvd.JZDataSource
-import io.github.darriousliu.han1meviewer.ResolutionLinkMap
+import io.github.darriousliu.han1meviewer.core.common.ResolutionLinkMap
 
 class HanimeDataSource : JZDataSource {
 

@@ -1,6 +1,6 @@
 package io.github.darriousliu.han1meviewer.ui.screen.home.myplaylist
 
-import io.github.darriousliu.han1meviewer.logic.model.Playlists
+import io.github.darriousliu.han1meviewer.core.model.Playlists
 import org.jetbrains.compose.resources.StringResource
 
 /**

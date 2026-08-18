@@ -29,7 +29,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import io.github.darriousliu.han1meviewer.logic.model.VideoItemType
+import io.github.darriousliu.han1meviewer.core.model.VideoItemType
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.ui.preview.fakeVideosItem
 import io.github.darriousliu.han1meviewer.ui.screen.RetryableImage

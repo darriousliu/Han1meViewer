@@ -1,6 +1,6 @@
 package io.github.darriousliu.han1meviewer
 
-import io.github.darriousliu.han1meviewer.HanimeConstants.HANIME_URL
+import io.github.darriousliu.han1meviewer.core.common.HanimeConstants.HANIME_URL
 import io.github.darriousliu.han1meviewer.Preferences.baseUrl
 import io.github.darriousliu.han1meviewer.Preferences.exportSettings
 import io.github.darriousliu.han1meviewer.Preferences.loginCookie
@@ -22,6 +22,7 @@ import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
+import io.github.darriousliu.han1meviewer.core.common.EMPTY_STRING
 
 /**
  * 全局配置。存储后端是 MMKV，key 就是这里的**属性名**。

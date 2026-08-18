@@ -1,8 +1,8 @@
 package io.github.darriousliu.han1meviewer.ui.screen.home.homepage
 
-import io.github.darriousliu.han1meviewer.HanimeConstants
+import io.github.darriousliu.han1meviewer.core.common.HanimeConstants
 import io.github.darriousliu.han1meviewer.Preferences
-import io.github.darriousliu.han1meviewer.logic.model.HomePage
+import io.github.darriousliu.han1meviewer.core.model.HomePage
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.ai_decensored
 import io.github.darriousliu.han1meviewer.core.resource.ai_generated

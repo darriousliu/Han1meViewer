@@ -1,8 +1,8 @@
 package io.github.darriousliu.han1meviewer.logic.network
 
 import com.google.firebase.database.FirebaseDatabase
-import io.github.darriousliu.han1meviewer.FIREBASE_REALTIME_DATABASE
-import io.github.darriousliu.han1meviewer.logic.model.Announcement
+import io.github.darriousliu.han1meviewer.core.common.FIREBASE_REALTIME_DATABASE
+import io.github.darriousliu.han1meviewer.core.model.Announcement
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
