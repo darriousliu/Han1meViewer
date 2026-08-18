@@ -1,32 +1,25 @@
 @file:Suppress("UnstableApiUsage")
 
-import Config.Version.createVersion
 import com.android.build.api.variant.impl.VariantOutputImpl
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import com.yenaly.han1meviewer.convention.Config.Version.createVersion
 
 plugins {
-    alias(libs.plugins.com.android.application)
+    // compileSdk/minSdk/targetSdk、Java 21 + desugaring、compose、jvmTarget 都在 convention 里
+    id("han1me.android.application")
     alias(libs.plugins.org.jetbrains.kotlin.plugin.parcelize)
     alias(libs.plugins.org.jetbrains.kotlin.plugin.serialization)
     alias(libs.plugins.com.google.devtools.ksp)
     alias(libs.plugins.com.google.gms.google.services)
     alias(libs.plugins.com.google.firebase.crashlytics)
     alias(libs.plugins.com.google.firebase.firebase.pref)
-    alias(libs.plugins.compose.compiler)
 }
 
 android {
-    compileSdk = property("compile.sdk")?.toString()?.toIntOrNull()
-
     defaultConfig {
         applicationId = "com.yenaly.han1meviewer"
-        minSdk = property("min.sdk")?.toString()?.toIntOrNull()
-        targetSdk = property("target.sdk")?.toString()?.toIntOrNull()
         val (code, name) = createVersion(major = 1, minor = 0, patch = 2)
         versionCode = code
         versionName = name
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
         create("release") {
@@ -70,27 +63,11 @@ android {
     }
     buildFeatures {
         buildConfig = false
-        compose  =  true
-    }
-    compileOptions {
-        isCoreLibraryDesugaringEnabled = true
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
     }
     lint {
         disable += setOf("EnsureInitializerMetadata")
     }
     namespace = "com.yenaly.han1meviewer.app"
-}
-
-kotlin {
-    compilerOptions {
-        jvmTarget.value(JvmTarget.JVM_21)
-        freeCompilerArgs.addAll(
-            "-opt-in=kotlin.RequiresOptIn",
-            "-jvm-default=enable"
-        )
-    }
 }
 
 
@@ -114,6 +91,5 @@ dependencies {
     implementation(libs.compose.ui.ui.tooling.preview)
     debugImplementation(project.dependencies.platform(libs.compose.compose.bom))
     debugImplementation(libs.compose.ui.ui.tooling)
-
-    coreLibraryDesugaring(libs.desugar.jdk.libs)
+    // coreLibraryDesugaring 在 han1me.android.application 里
 }

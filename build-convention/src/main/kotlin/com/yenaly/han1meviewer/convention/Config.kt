@@ -1,5 +1,7 @@
 @file:Suppress("UnstableApiUsage")
 
+package com.yenaly.han1meviewer.convention
+
 import org.gradle.api.Project
 import java.time.Clock
 import java.time.LocalDateTime

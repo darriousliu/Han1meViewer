@@ -1,27 +1,25 @@
 @file:Suppress("UnstableApiUsage")
 @file:OptIn(ExperimentalKotlinGradlePluginApi::class)
 
-import Config.Version.createVersion
-import Config.Version.source
-import Config.isRelease
-import Config.lastCommitSha
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.INT
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
+import com.yenaly.han1meviewer.convention.Config
+import com.yenaly.han1meviewer.convention.Config.Version.createVersion
+import com.yenaly.han1meviewer.convention.createAndroidJvmMain
+import com.yenaly.han1meviewer.convention.Config.Version.source
+import com.yenaly.han1meviewer.convention.Config.isRelease
+import com.yenaly.han1meviewer.convention.Config.lastCommitSha
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
-    alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.android.kotlin.multiplatform.library)
+    // targets / 编译选项 / Compose 那圈公共依赖都在 convention 里
+    id("han1me.kmp.compose")
     alias(libs.plugins.org.jetbrains.kotlin.plugin.parcelize)
     alias(libs.plugins.org.jetbrains.kotlin.plugin.serialization)
     alias(libs.plugins.ktorfit)
-    alias(libs.plugins.com.google.devtools.ksp)
     alias(libs.plugins.androidx.room)
-    alias(libs.plugins.compose.multiplatform)
-    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.aboutlibraries)
     alias(libs.plugins.ben.manes)
     alias(libs.plugins.buildkonfig)
@@ -87,23 +85,9 @@ buildkonfig {
 }
 
 kotlin {
-    compilerOptions {
-        freeCompilerArgs.add("-Xexpect-actual-classes")
-    }
     android {
         namespace = "com.yenaly.han1meviewer"
-        compileSdk = property("compile.sdk").toString().toInt()
-        minSdk = property("min.sdk").toString().toInt()
 
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_21)
-        }
-        androidResources {
-            enable = true
-        }
-        withHostTest {
-            isIncludeAndroidResources = true
-        }
         withDeviceTestBuilder {
             sourceSetTreeName = "test"
         }.configure {
@@ -123,26 +107,15 @@ kotlin {
         }
     }
 
-    jvm {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_21)
-        }
-    }
-
-    val appleTargets = listOf(
-        iosArm64(),
-        iosSimulatorArm64(),
-    )
-
-    appleTargets.forEach { target ->
+    // targets（android / jvm / iosArm64 / iosSimulatorArm64）与 applyDefaultHierarchyTemplate
+    // 都由 han1me.kmp.library 建好，这里只补 iOS 的 framework 产物。
+    listOf(iosArm64(), iosSimulatorArm64()).forEach { target ->
         target.binaries.framework {
             baseName = "Shared"
             isStatic = true
             binaryOption("bundleId", "com.yenaly.han1meviewer.shared")
         }
     }
-
-    applyDefaultHierarchyTemplate()
 
     swiftPMDependencies {
         iosMinimumDeploymentTarget.set("15.0")
@@ -158,33 +131,22 @@ kotlin {
     }
 
     sourceSets {
+        // 下面这些由 convention 提供，不再重复声明：
+        // coroutines-core / serialization-json / datetime / kermit（han1me.kmp.library）
+        // compose runtime|ui|foundation|backhandler|tooling-preview / compose-resources /
+        // jetbrains material3|icons-core / lifecycle viewmodel|savedstate|compose|runtime-compose
+        //   （han1me.kmp.compose）
         commonMain.dependencies {
             implementation(libs.kotlinx.io.core)
             implementation(libs.ksoup)
             implementation(libs.mmkv.kotlin)
-            implementation(libs.compose.multiplatform.runtime)
-            implementation(libs.compose.multiplatform.ui)
-            implementation(libs.compose.multiplatform.foundation)
-            implementation(libs.compose.resources)
             implementation(libs.htmlconverter)
-            implementation(libs.jetbrains.compose.material3)
-            implementation(libs.compose.multiplatform.ui.backhandler)
-            implementation(libs.compose.multiplatform.ui.tooling.preview)
-            implementation(libs.jetbrains.compose.material.icons.core)
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor3)
-            implementation(libs.lifecycle.viewmodel)
-            implementation(libs.lifecycle.viewmodel.savedstate)
-            implementation(libs.lifecycle.runtime.compose)
-            implementation(libs.lifecycle.viewmodel.compose)
-            implementation(libs.coroutines.core)
-            implementation(libs.datetime)
-            implementation(libs.serialization.json)
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktorfit.lib.light)
-            implementation(libs.kermit)
             implementation(libs.mp.stools)
             implementation(libs.aboutlibraries.core)
             implementation(libs.aboutlibraries.compose.m3)
@@ -289,18 +251,15 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
         }
 
-        val androidJvmMain = create("androidJvmMain") {
-            dependsOn(commonMain.get())
-        }
-        androidJvmMain.dependencies {
-            implementation(libs.ktor.client.okhttp)
-            // OkHttp engine 上那些 Ktor 没有对应物的能力（自定义 DNS/DoH、ProxySelector、
-            // 磁盘缓存、Throttler 限速）要直接用 okhttp 的 API。
-            implementation(libs.okhttp)
-            implementation(libs.okhttp.dns.over.https)
-        }
-        androidMain.get().dependsOn(androidJvmMain)
-        jvmMain.get().dependsOn(androidJvmMain)
+    }
+
+    // android + jvm 共用的中间源集（helper 在 convention 里，见 KotlinMultiplatform.kt）
+    createAndroidJvmMain().dependencies {
+        implementation(libs.ktor.client.okhttp)
+        // OkHttp engine 上那些 Ktor 没有对应物的能力（自定义 DNS/DoH、ProxySelector、
+        // 磁盘缓存、Throttler 限速）要直接用 okhttp 的 API。
+        implementation(libs.okhttp)
+        implementation(libs.okhttp.dns.over.https)
     }
 }
 

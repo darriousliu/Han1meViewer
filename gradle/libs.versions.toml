@@ -80,6 +80,14 @@ mpv = "v0.1.7"
 ben-manes = "0.61.0"
 
 [libraries]
+# build-convention 专用：precompiled script plugin 要 apply 的插件必须先作为实现依赖
+# 出现在 build-convention/build.gradle.kts 里，这几条只在那里用，主构建不引。
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+compose-compiler-gradle-plugin = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
+android-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "androidGradle" }
+compose-multiplatform-gradle-plugin = { module = "org.jetbrains.compose:compose-gradle-plugin", version.ref = "composeMultiplatform" }
+ksp-gradle-plugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
+
 # Android
 aboutlibraries-core = { module = "com.mikepenz:aboutlibraries-core", version.ref = "aboutlibraries" }
 androidx-biometric = { module = "androidx.biometric:biometric", version.ref = "biometric" }
