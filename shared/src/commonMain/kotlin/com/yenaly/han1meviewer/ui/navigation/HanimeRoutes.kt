@@ -9,10 +9,13 @@ import kotlinx.serialization.Serializable
  * 同一个包里——两个原因：
  *
  * 1. nav3 的 `NavKey` 与路由类都是纯数据，本来就没有平台依赖
- * 2. **sealed 层级要求所有直接实现同包同模块**。收在一起之后
- *    `rememberNavBackStack` 的持久化（进程死亡后恢复返回栈）由 kotlinx 的
- *    sealed 自动多态兜住，不需要手写 `SerializersModule` 逐个注册——
- *    那种注册漏了只有运行时才炸。
+ * 2. **sealed 层级要求所有直接实现同包同模块**。收在一起之后返回栈的持久化
+ *    （进程死亡后恢复）由 kotlinx 的 sealed 自动多态兜住，不需要手写
+ *    `SerializersModule` 逐个注册——那种注册漏了只有运行时才炸。
+ *    前提是建栈时把元素序列化器指成 `HanimeRoute.serializer()`，见
+ *    [rememberHanimeBackStack]；nav3 自带的 `rememberNavBackStack` 写死
+ *    `PolymorphicSerializer(NavKey::class)`（开放接口，kotlinx 自动多态不认），
+ *    享受不到这条。
  *
  * 两个 `*DestinationSpec` 枚举留在原来的包里，反向 import 这里即可。
  */

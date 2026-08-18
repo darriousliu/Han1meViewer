@@ -2,10 +2,10 @@ package com.yenaly.han1meviewer.ui.navigation.main
 
 import android.content.Intent
 import androidx.navigation3.runtime.NavBackStack
-import androidx.navigation3.runtime.NavKey
 import com.yenaly.han1meviewer.ui.navigation.CreatorCenterRoute
 import com.yenaly.han1meviewer.ui.navigation.DailyCheckInRoute
 import com.yenaly.han1meviewer.ui.navigation.DownloadRoute
+import com.yenaly.han1meviewer.ui.navigation.HanimeRoute
 import com.yenaly.han1meviewer.ui.navigation.HomeRoute
 import com.yenaly.han1meviewer.ui.navigation.HomeSettingsRoute
 import com.yenaly.han1meviewer.ui.navigation.MyFavVideoRoute
@@ -23,7 +23,7 @@ private val loginRequiredDrawerItems = setOf(
     MainDrawerDestination.Subscription,
 )
 
-fun NavBackStack<NavKey>.navigateDrawerDestination(
+fun NavBackStack<HanimeRoute>.navigateDrawerDestination(
     destination: MainDrawerDestination,
     isLoggedIn: Boolean,
     onRequireLogin: () -> Unit,
@@ -48,7 +48,7 @@ fun NavBackStack<NavKey>.navigateDrawerDestination(
     return true
 }
 
-fun NavBackStack<NavKey>.handleMainIntent(intent: Intent) {
+fun NavBackStack<HanimeRoute>.handleMainIntent(intent: Intent) {
     if (intent.action == Intent.ACTION_VIEW) {
         val uri = intent.data ?: return
         when (uri.scheme) {

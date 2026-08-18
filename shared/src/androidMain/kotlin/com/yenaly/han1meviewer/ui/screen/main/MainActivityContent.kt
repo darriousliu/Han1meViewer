@@ -18,9 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavBackStack
-import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.runtime.rememberNavBackStack
-import androidx.savedstate.serialization.SavedStateConfiguration
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.exception.CloudFlareBlockedException
@@ -31,6 +28,7 @@ import com.yenaly.han1meviewer.ui.activity.MainActivity
 import com.yenaly.han1meviewer.ui.component.UpdateDialog
 import com.yenaly.han1meviewer.ui.component.UsageNoticeDialog
 import com.yenaly.han1meviewer.ui.navigation.CloudflareRoute
+import com.yenaly.han1meviewer.ui.navigation.HanimeRoute
 import com.yenaly.han1meviewer.ui.navigation.HomeRoute
 import com.yenaly.han1meviewer.ui.navigation.LoginRoute
 import com.yenaly.han1meviewer.ui.navigation.main.MainDestinationSpec
@@ -38,6 +36,7 @@ import com.yenaly.han1meviewer.ui.navigation.main.MainNavDisplay
 import com.yenaly.han1meviewer.ui.navigation.main.handleMainIntent
 import com.yenaly.han1meviewer.ui.navigation.main.navigateDrawerDestination
 import com.yenaly.han1meviewer.ui.navigation.navigateSafely
+import com.yenaly.han1meviewer.ui.navigation.rememberHanimeBackStack
 import com.yenaly.han1meviewer.ui.screen.home.homepage.HomePageViewModel
 import com.yenaly.han1meviewer.ui.theme.HanimeTheme
 import com.yenaly.han1meviewer.ui.viewmodel.AppViewModel
@@ -46,10 +45,10 @@ import com.yenaly.han1meviewer.util.installApkPackage
 import com.yenaly.han1meviewer.util.requestPostNotificationPermission
 import com.yenaly.han1meviewer.util.showShortToast
 import com.yenaly.han1meviewer.worker.HUpdateWorker
-import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
+import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 @Composable
@@ -61,12 +60,12 @@ fun MainActivityContent(
     onOpenAccount: () -> Unit,
     onLogoutClick: () -> Unit,
     onSwitchSiteClick: () -> Unit,
-    onNavigateControllerReady: (NavBackStack<NavKey>) -> Unit,
+    onNavigateControllerReady: (NavBackStack<HanimeRoute>) -> Unit,
 ) {
     HanimeTheme {
-        // 路由类是 sealed @Serializable 层级，DEFAULT 配置下 kotlinx 自动多态，
-        // 进程死亡后返回栈能原样恢复
-        val backStack = rememberNavBackStack(SavedStateConfiguration.DEFAULT, HomeRoute)
+        // 用自家的建栈入口而不是 nav3 的 rememberNavBackStack，理由见 rememberHanimeBackStack：
+        // 栈元素收窄到 sealed 的 HanimeRoute，靠 sealed 自动多态恢复，不用手写 SerializersModule
+        val backStack = rememberHanimeBackStack(HomeRoute)
         val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
         val scope = rememberCoroutineScope()
         var pendingUpdate by remember { mutableStateOf<Latest?>(null) }

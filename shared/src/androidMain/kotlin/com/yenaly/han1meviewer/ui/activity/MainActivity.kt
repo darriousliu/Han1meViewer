@@ -30,7 +30,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation3.runtime.NavBackStack
-import androidx.navigation3.runtime.NavKey
 import com.google.android.material.snackbar.Snackbar
 import com.yenaly.han1meviewer.HanimeConstants.ANIME_URL
 import com.yenaly.han1meviewer.HanimeConstants.HANIME_URL
@@ -40,6 +39,7 @@ import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logout
 import com.yenaly.han1meviewer.ui.bridge.VideoPageHost
 import com.yenaly.han1meviewer.ui.navigation.AccountRoute
+import com.yenaly.han1meviewer.ui.navigation.HanimeRoute
 import com.yenaly.han1meviewer.ui.navigation.VideoRoute
 import com.yenaly.han1meviewer.ui.navigation.navigateSafely
 import com.yenaly.han1meviewer.ui.screen.home.homepage.HomePageViewModel
@@ -49,8 +49,8 @@ import com.yenaly.han1meviewer.util.showAlertDialog
 import com.yenaly.han1meviewer.util.showSnackBar
 import com.yenaly.han1meviewer.util.textFromClipboard
 import com.yenaly.han1meviewer.videoUrlRegex
-import java.util.Locale
 import kotlinx.coroutines.flow.MutableSharedFlow
+import java.util.Locale
 
 /**
  * @project Hanime1
@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity(), PermissionRequester {
 
     val viewModel by viewModels<HomePageViewModel>()
 
-    lateinit var navBackStack: NavBackStack<NavKey>
+    lateinit var navBackStack: NavBackStack<HanimeRoute>
     private var showAuthGuard by mutableStateOf(true)
     private val pendingNavigationRequests = MutableSharedFlow<Intent>(extraBufferCapacity = 1)
     private var currentVideoHost: VideoPageHost? = null

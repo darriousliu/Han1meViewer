@@ -18,7 +18,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavBackStack
-import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.runtime.result.LocalResultEventBus
@@ -39,6 +38,7 @@ import com.yenaly.han1meviewer.ui.navigation.GetchuPreviewDetailRoute
 import com.yenaly.han1meviewer.ui.navigation.GetchuPreviewRoute
 import com.yenaly.han1meviewer.ui.navigation.HKeyframeSettingsRoute
 import com.yenaly.han1meviewer.ui.navigation.HKeyframesRoute
+import com.yenaly.han1meviewer.ui.navigation.HanimeRoute
 import com.yenaly.han1meviewer.ui.navigation.HomeRoute
 import com.yenaly.han1meviewer.ui.navigation.HomeSettingsRoute
 import com.yenaly.han1meviewer.ui.navigation.LoginRoute
@@ -82,7 +82,7 @@ import kotlinx.serialization.json.Json
 @Composable
 fun MainNavDisplay(
     activity: MainActivity,
-    backStack: NavBackStack<NavKey>,
+    backStack: NavBackStack<HanimeRoute>,
     isDrawerOpen: Boolean,
     onOpenDrawer: () -> Unit,
 ) {

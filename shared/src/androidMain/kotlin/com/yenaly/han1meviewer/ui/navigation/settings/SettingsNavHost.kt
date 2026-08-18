@@ -19,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation3.runtime.NavBackStack
-import androidx.navigation3.runtime.NavKey
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.ui.activity.MainActivity
 import com.yenaly.han1meviewer.ui.navigation.HanimeRoute
@@ -29,7 +28,7 @@ import com.yenaly.han1meviewer.util.logScreenViewEvent
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScaffold(
-    backStack: NavBackStack<NavKey>,
+    backStack: NavBackStack<HanimeRoute>,
     fallbackDestination: HanimeRoute,
     actions: @Composable () -> Unit = {},
     content: @Composable () -> Unit,
