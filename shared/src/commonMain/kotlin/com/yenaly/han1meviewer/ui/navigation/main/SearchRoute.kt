@@ -7,23 +7,28 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.getHanimeShareText
+import com.yenaly.han1meviewer.ui.component.LocalToaster
+import com.yenaly.han1meviewer.ui.component.showShort
 import com.yenaly.han1meviewer.ui.navigation.SearchRoute
 import com.yenaly.han1meviewer.ui.screen.search.AdvancedSearchSheet
 import com.yenaly.han1meviewer.ui.screen.search.SearchScreen
 import com.yenaly.han1meviewer.ui.viewmodel.SearchViewModel
-import com.yenaly.han1meviewer.util.copyTextToClipboard
-import com.yenaly.han1meviewer.util.showShortToast
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.copy_to_clipboard
 import kotlinx.serialization.json.Json
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun SearchRouteScreen(
     route: SearchRoute,
     onBack: () -> Unit,
     onNavigateToVideo: (String) -> Unit,
+    onCopy: (String) -> Unit,
 ) {
     val viewModel: SearchViewModel = viewModel()
+    val toaster = LocalToaster.current
+    val copiedHint = stringResource(Res.string.copy_to_clipboard)
     var showAdvancedSearchSheet by remember { mutableStateOf(false) }
 
     LaunchedEffect(route.advancedSearchJson) {
@@ -57,8 +62,8 @@ fun SearchRouteScreen(
         onBack = onBack,
         onOpenVideo = onNavigateToVideo,
         onLongPressCopy = { videoCode, title ->
-            copyTextToClipboard(getHanimeShareText(title, videoCode))
-            showShortToast(R.string.copy_to_clipboard)
+            onCopy(getHanimeShareText(title, videoCode))
+            toaster.showShort(copiedHint)
         },
         onOpenAdvancedSearch = { showAdvancedSearchSheet = true },
     )

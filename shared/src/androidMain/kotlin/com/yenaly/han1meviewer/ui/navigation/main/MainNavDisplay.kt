@@ -27,6 +27,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.yenaly.han1meviewer.logic.network.CloudflareNavBridge
 import com.yenaly.han1meviewer.ui.activity.MainActivity
 import com.yenaly.han1meviewer.ui.component.LocalToaster
+import com.yenaly.han1meviewer.util.copyTextToClipboard
 import com.yenaly.han1meviewer.ui.component.showShort
 import com.yenaly.han1meviewer.ui.navigation.AccountRoute
 import com.yenaly.han1meviewer.ui.navigation.AvatarCropRoute
@@ -186,6 +187,7 @@ fun MainNavDisplay(
                 MyPlaylistRouteScreen(
                     onBack = onBack,
                     onNavigateToVideo = onNavigateToVideo,
+                    onCopy = ::copyTextToClipboard,
                 )
             }
             entry<SubscriptionRoute> {
@@ -193,6 +195,7 @@ fun MainNavDisplay(
                     onBack = onBack,
                     onNavigateToSearch = { query -> backStack.navigateSafely(SearchRoute(query = query)) },
                     onNavigateToVideo = onNavigateToVideo,
+                    onCopy = ::copyTextToClipboard,
                 )
             }
             entry<DailyCheckInRoute> {
@@ -348,6 +351,7 @@ fun MainNavDisplay(
                     route = route,
                     onBack = onBack,
                     onNavigateToVideo = onNavigateToVideo,
+                    onCopy = ::copyTextToClipboard,
                 )
             }
             entry<PreviewRoute> {

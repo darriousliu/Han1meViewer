@@ -3,37 +3,41 @@ package com.yenaly.han1meviewer.ui.navigation.main
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.getHanimeShareText
+import com.yenaly.han1meviewer.ui.component.LocalToaster
+import com.yenaly.han1meviewer.ui.component.showShort
 import com.yenaly.han1meviewer.ui.screen.home.myplaylist.PlaylistScreen
 import com.yenaly.han1meviewer.ui.screen.home.myplaylist.PlaylistUiEvent
 import com.yenaly.han1meviewer.ui.viewmodel.MyPlayListViewModelV2
-import com.yenaly.han1meviewer.util.copyTextToClipboard
-import com.yenaly.han1meviewer.util.showShortToast
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.copy_to_clipboard
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun MyPlaylistRouteScreen(
     onBack: () -> Unit,
     onNavigateToVideo: (String) -> Unit,
+    onCopy: (String) -> Unit,
 ) {
     val viewModel: MyPlayListViewModelV2 = viewModel()
     val scope = rememberCoroutineScope()
+    val toaster = LocalToaster.current
+    val copiedHint = stringResource(Res.string.copy_to_clipboard)
     PlaylistScreen(
         viewModel = viewModel,
         navigateBack = onBack,
         onClickItem = onNavigateToVideo,
         onLongClickItem = { videoCode, title ->
-            copyTextToClipboard(getHanimeShareText(title, videoCode))
-            showShortToast(R.string.copy_to_clipboard)
+            onCopy(getHanimeShareText(title, videoCode))
+            toaster.showShort(copiedHint)
         },
-        // 屏幕原来自己弹 Toast，进 commonMain 之后没有 Toast，改成发事件到这里。
-        // getString 是挂起函数，要包 scope.launch（和 HomeRoute 一致）。
+        // 屏幕只发事件，提示由这里弹。getString 是挂起函数，要包 scope.launch。
         onUiEvent = { event ->
             when (event) {
                 is PlaylistUiEvent.ShowMessage ->
-                    scope.launch { showShortToast(getString(event.messageRes)) }
+                    scope.launch { toaster.showShort(getString(event.messageRes)) }
             }
         },
     )

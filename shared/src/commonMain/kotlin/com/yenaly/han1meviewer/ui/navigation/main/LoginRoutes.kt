@@ -6,14 +6,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.NetworkRepo
 import com.yenaly.han1meviewer.logic.state.WebsiteState
 import com.yenaly.han1meviewer.login
+import com.yenaly.han1meviewer.ui.component.LocalToaster
+import com.yenaly.han1meviewer.ui.component.showShort
 import com.yenaly.han1meviewer.ui.screen.login.LoginScreen
 import com.yenaly.han1meviewer.ui.screen.login.ManualInputCookiesScreen
-import com.yenaly.han1meviewer.util.showShortToast
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.account_or_password_wrong
+import han1meviewer.shared.generated.resources.login_failed
+import han1meviewer.shared.generated.resources.login_success
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 
 /*
  * 原来的 LoginActivity / ManualInputCookiesActivity，Step 17 合并成两个导航目的地。
@@ -32,6 +37,11 @@ fun LoginRouteScreen(
 ) {
     var isLoggingIn by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
+    val toaster = LocalToaster.current
+    // stringResource 是 composable，回调里用不了，先在这里解开
+    val wrongCredentials = stringResource(Res.string.account_or_password_wrong)
+    val loginFailed = stringResource(Res.string.login_failed)
+    val loginSuccess = stringResource(Res.string.login_success)
 
     LoginScreen(
         isLoggingIn = isLoggingIn,
@@ -51,15 +61,15 @@ fun LoginRouteScreen(
                             isLoggingIn = false
                             state.throwable.printStackTrace()
                             if (state.throwable is IllegalStateException) {
-                                showShortToast(R.string.account_or_password_wrong)
+                                toaster.showShort(wrongCredentials)
                             } else {
-                                showShortToast(R.string.login_failed)
+                                toaster.showShort(loginFailed)
                             }
                         }
 
                         is WebsiteState.Success -> {
                             login(state.info)
-                            showShortToast(R.string.login_success)
+                            toaster.showShort(loginSuccess)
                             onLoginFinished()
                         }
                     }
