@@ -263,7 +263,6 @@ fun MainNavDisplay(
                     fallbackDestination = HomeRoute,
                 ) {
                     HomeSettingsRouteScreen(
-                        activity = activity,
                         onNavigateToPlayerSettings = { backStack.navigateSafely(PlayerSettingsRoute) },
                         onNavigateToHKeyframeSettings = { backStack.navigateSafely(HKeyframeSettingsRoute) },
                         onNavigateToDownloadSettings = { backStack.navigateSafely(DownloadSettingsRoute) },

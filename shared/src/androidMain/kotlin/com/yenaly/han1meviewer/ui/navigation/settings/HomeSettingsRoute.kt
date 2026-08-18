@@ -42,18 +42,14 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.core.text.parseAsHtml
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.google.firebase.Firebase
-import com.google.firebase.analytics.analytics
 import com.yenaly.han1meviewer.BuildConfig
 import com.yenaly.han1meviewer.HA1_GITHUB_FORUM_URL
 import com.yenaly.han1meviewer.HA1_GITHUB_ISSUE_URL
-import com.yenaly.han1meviewer.HanimeApplication
 import com.yenaly.han1meviewer.HanimeConstants
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.BackupManager
 import com.yenaly.han1meviewer.logic.state.WebsiteState
-import com.yenaly.han1meviewer.ui.activity.MainActivity
 import com.yenaly.han1meviewer.ui.component.ConfirmDialog
 import com.yenaly.han1meviewer.ui.screen.home.homepage.defaultHomeCategoryPreferenceItems
 import com.yenaly.han1meviewer.ui.screen.home.homepage.hiddenHomeCategoryKeys
@@ -63,12 +59,8 @@ import com.yenaly.han1meviewer.ui.screen.settings.HomeSettingsScreen
 import com.yenaly.han1meviewer.ui.screen.settings.dialog.LicenseDialog
 import com.yenaly.han1meviewer.ui.screen.settings.model.HomeSettingsUiState
 import com.yenaly.han1meviewer.ui.theme.ThemeColorPreset
-import com.yenaly.han1meviewer.ui.viewmodel.AppViewModel
-import com.yenaly.han1meviewer.util.ThemeUtils
 import com.yenaly.han1meviewer.util.applicationContext
 import com.yenaly.han1meviewer.util.browse
-import com.yenaly.han1meviewer.util.folderSize
-import com.yenaly.han1meviewer.util.restartApplication
 import com.yenaly.han1meviewer.util.showShortToast
 import com.yenaly.han1meviewer.util.showToast
 import io.github.vinceglb.filekit.PlatformFile
@@ -79,7 +71,6 @@ import kotlinx.coroutines.withContext
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeSettingsRouteScreen(
-    activity: MainActivity,
     onNavigateToPlayerSettings: () -> Unit,
     onNavigateToHKeyframeSettings: () -> Unit,
     onNavigateToDownloadSettings: () -> Unit,
@@ -87,7 +78,8 @@ fun HomeSettingsRouteScreen(
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    val versionState by AppViewModel.versionFlow.collectAsStateWithLifecycle()
+    val actions = rememberHomeSettingsActions()
+    val versionState by actions.versionFlow.collectAsStateWithLifecycle()
     var refreshKey by remember { mutableIntStateOf(0) }
     var cacheKey by remember { mutableIntStateOf(0) }
     var showClearCacheConfirm by remember { mutableStateOf(false) }
@@ -148,7 +140,7 @@ fun HomeSettingsRouteScreen(
     var cacheSize by remember { mutableLongStateOf(0L) }
 
     LaunchedEffect(cacheKey) {
-        cacheSize = withContext(Dispatchers.IO) { context.cacheDir?.folderSize ?: 0L }
+        cacheSize = actions.cacheSizeBytes()
     }
     val cacheSummary = generateClearCacheSummary(cacheSize)
     val checkUpdateFailed = stringResource(R.string.check_update_failed)
@@ -195,14 +187,13 @@ fun HomeSettingsRouteScreen(
         onDarkModeChange = { value ->
             if (value != Preferences.useDarkMode) {
                 Preferences.useDarkMode = value
-                ThemeUtils.applyDarkModeFromPreferences(context)
-                activity.recreate()
+                actions.applyDarkMode()
             }
         },
         onAllowPipModeChange = { enabled ->
-            if (enabled && !isPipPermissionGranted(context)) {
+            if (enabled && !actions.isPipPermissionGranted()) {
                 context.showToast(R.string.request_pip_alert)
-                openPipPermissionSettings(context)
+                actions.openPipPermissionSettings()
                 Preferences.allowPipMode = false
                 refreshKey++
                 return@HomeSettingsScreen
@@ -259,7 +250,7 @@ fun HomeSettingsRouteScreen(
         onThemeColorChange = { key ->
             Preferences.themeColor = key
             refreshKey++
-            activity.recreate()
+            actions.applyThemeColor()
         },
         onHomeCategoryPreferencesChange = { order, hiddenKeys ->
             saveHomeCategoryPreferences(order, hiddenKeys)
@@ -268,7 +259,7 @@ fun HomeSettingsRouteScreen(
         onUseCIUpdateChannelChange = { value ->
             Preferences.useCIUpdateChannel = value
             refreshKey++
-            AppViewModel.getLatestVersion()
+            actions.onUpdateChannelChanged()
         },
         onUseAnalyticsChange = { value ->
             if (!value) {
@@ -277,19 +268,25 @@ fun HomeSettingsRouteScreen(
             }
             Preferences.isAnalyticsEnabled = true
             refreshKey++
-            Firebase.analytics.setAnalyticsCollectionEnabled(true)
+            actions.setAnalyticsEnabled(true)
         },
         onUseLockScreenChange = { value ->
             if (value) {
-                if (!isDeviceSecureCompat(context)) {
-                    context.showToast(R.string.not_set_sys_lock)
-                    refreshKey++
-                    return@HomeSettingsScreen
-                }
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-                    context.showToast(R.string.not_compact_lock_screen)
-                    refreshKey++
-                    return@HomeSettingsScreen
+                when (actions.deviceLockAvailability()) {
+                    DeviceLockAvailability.NoSystemLock -> {
+                        context.showToast(R.string.not_set_sys_lock)
+                        refreshKey++
+                        return@HomeSettingsScreen
+                    }
+
+                    DeviceLockAvailability.UnsupportedOsVersion,
+                    DeviceLockAvailability.Unsupported -> {
+                        context.showToast(R.string.not_compact_lock_screen)
+                        refreshKey++
+                        return@HomeSettingsScreen
+                    }
+
+                    DeviceLockAvailability.Available -> Unit
                 }
             }
             Preferences.useLockScreen = value
@@ -304,15 +301,15 @@ fun HomeSettingsRouteScreen(
             if (old != value) {
                 Preferences.appLanguage = value
                 refreshKey++
-                activity.recreate()
+                actions.applyAppLanguage()
             }
         },
         onCheckUpdate = {
             val currentVersion = versionState
             if (currentVersion is WebsiteState.Success && currentVersion.info != null) {
-                AppViewModel.showUpdateDialogIfAvailable()
+                actions.showPendingUpdateDialog()
             } else {
-                AppViewModel.getLatestVersion(forceShow = true)
+                actions.checkUpdate(forceShow = true)
             }
         },
         onUpdatePopupIntervalDaysChange = {
@@ -320,19 +317,15 @@ fun HomeSettingsRouteScreen(
             refreshKey++
         },
         onOpenApplyDeepLinks = {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+            if (!actions.openDeepLinkSettings()) {
                 showShortToast(R.string.action_app_open_by_default_settings_not_support)
-            } else {
-                showApplyDeepLinksDialog(context, activity)
             }
         },
         onOpenFakeLauncherIcon = { showLauncherPicker = true },
         onOpenOpenSourceLicense = { showLicenseScreen = true },
         onOpenAbout = {},
         onClearCache = {
-            val cacheDir = context.cacheDir
-            val folderSize = cacheDir?.folderSize ?: 0L
-            if (folderSize == 0L) {
+            if (cacheSize == 0L) {
                 showShortToast(R.string.cache_empty)
                 return@HomeSettingsScreen
             }
@@ -363,7 +356,7 @@ fun HomeSettingsRouteScreen(
                         withContext(Dispatchers.Main) {
                             showShortToast(R.string.backup_import_success)
                             refreshKey++
-                            activity.recreate()
+                            actions.reloadUi()
                         }
                     }
                     .onFailure {
@@ -384,14 +377,11 @@ fun HomeSettingsRouteScreen(
         dismissText = stringResource(R.string.cancel),
         onConfirm = {
             showClearCacheConfirm = false
-            coroutineScope.launch(Dispatchers.IO) {
-                val cacheDir = context.cacheDir
-                val success = cacheDir?.deleteRecursively() == true
-                withContext(Dispatchers.Main) {
-                    cacheKey++
-                    refreshKey++
-                    if (success) showShortToast(R.string.clear_success) else showShortToast(R.string.clear_failed)
-                }
+            coroutineScope.launch {
+                val success = actions.clearCache()
+                cacheKey++
+                refreshKey++
+                if (success) showShortToast(R.string.clear_success) else showShortToast(R.string.clear_failed)
             }
         },
         onDismiss = { showClearCacheConfirm = false },
@@ -429,7 +419,7 @@ fun HomeSettingsRouteScreen(
                 TextButton(onClick = {
                     Preferences.isAnalyticsEnabled = false
                     refreshKey++
-                    Firebase.analytics.setAnalyticsCollectionEnabled(false)
+                    actions.setAnalyticsEnabled(false)
                     showAnalyticsDialog = false
                 }) {
                     Text(stringResource(R.string.deny))
@@ -446,7 +436,7 @@ fun HomeSettingsRouteScreen(
         dismissText = stringResource(R.string.cancel),
         cancelable = false,
         onConfirm = {
-            restartApplication(killProcess = true)
+            actions.restartApp()
         },
         onDismiss = { showRestartConfirmDialog = false },
     )
@@ -471,9 +461,7 @@ fun HomeSettingsRouteScreen(
                         TextButton(
                             onClick = {
                                 Preferences.fakeLauncherIcon = item.alias
-                                (context.applicationContext as? HanimeApplication)?.switchLauncher(
-                                    item.alias
-                                )
+                                actions.switchLauncherIcon(item.alias)
                                 context.showToast(R.string.fake_icon_hint)
                                 refreshKey++
                                 showLauncherPicker = false
