@@ -81,13 +81,6 @@ interface HomeSettingsActions {
 
     fun switchLauncherIcon(alias: String) {}
 
-    // ---- 缓存（B 类） ----
-
-    suspend fun cacheSizeBytes(): Long = 0L
-
-    /** @return 是否清理成功 */
-    suspend fun clearCache(): Boolean = true
-
     // ---- 检查更新 ----
 
     val versionFlow: StateFlow<WebsiteState<Latest?>> get() = NoUpdateAvailable

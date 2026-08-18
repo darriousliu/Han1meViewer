@@ -15,11 +15,8 @@ import com.yenaly.han1meviewer.logic.state.WebsiteState
 import com.yenaly.han1meviewer.ui.viewmodel.AppViewModel
 import com.yenaly.han1meviewer.util.ThemeUtils
 import com.yenaly.han1meviewer.util.activity
-import com.yenaly.han1meviewer.util.folderSize
 import com.yenaly.han1meviewer.util.restartApplication
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.withContext
 
 /**
  * `LocalActivity` 来自 activity-compose（项目在 1.13.0，远高于引入它的 1.10.0）。
@@ -80,12 +77,6 @@ private class AndroidHomeSettingsActions(
     override fun switchLauncherIcon(alias: String) {
         (context.applicationContext as? HanimeApplication)?.switchLauncher(alias)
     }
-
-    override suspend fun cacheSizeBytes(): Long =
-        withContext(Dispatchers.IO) { context.cacheDir?.folderSize ?: 0L }
-
-    override suspend fun clearCache(): Boolean =
-        withContext(Dispatchers.IO) { context.cacheDir?.deleteRecursively() == true }
 
     override val versionFlow: StateFlow<WebsiteState<Latest?>>
         get() = AppViewModel.versionFlow

@@ -2,6 +2,8 @@
 
 package com.yenaly.han1meviewer.ui.navigation.settings
 
+import com.yenaly.han1meviewer.util.appCacheSizeBytes
+import com.yenaly.han1meviewer.util.clearAppCache
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -142,7 +144,7 @@ fun HomeSettingsRouteScreen(
     var cacheSize by remember { mutableLongStateOf(0L) }
 
     LaunchedEffect(cacheKey) {
-        cacheSize = actions.cacheSizeBytes()
+        cacheSize = appCacheSizeBytes()
     }
     val cacheSummary = generateClearCacheSummary(cacheSize)
     val checkUpdateFailed = stringResource(Res.string.check_update_failed)
@@ -378,7 +380,7 @@ fun HomeSettingsRouteScreen(
         onConfirm = {
             showClearCacheConfirm = false
             coroutineScope.launch {
-                val success = actions.clearCache()
+                val success = clearAppCache()
                 cacheKey++
                 refreshKey++
                 if (success) toaster.showShort(clearSuccess) else toaster.showShort(clearFailed)
