@@ -1,6 +1,6 @@
 package io.github.darriousliu.han1meviewer.logic.network
 
-import io.github.darriousliu.han1meviewer.Preferences
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.logic.network.interceptor.SpeedLimitInterceptor
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig

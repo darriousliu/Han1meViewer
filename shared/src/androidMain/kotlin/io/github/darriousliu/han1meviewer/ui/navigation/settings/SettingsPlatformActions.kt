@@ -24,9 +24,9 @@ import androidx.core.net.toUri
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.textview.MaterialTextView
-import io.github.darriousliu.han1meviewer.Preferences
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.R
-import io.github.darriousliu.han1meviewer.logic.dao.download.HanimeDownloadDao
+import io.github.darriousliu.han1meviewer.core.storage.dao.download.HanimeDownloadDao
 import io.github.darriousliu.han1meviewer.util.SafFileManager.checkSafPermissions
 import io.github.darriousliu.han1meviewer.util.SafFileManager.migratePrivateToSaf
 import io.github.darriousliu.han1meviewer.util.showAlertDialog

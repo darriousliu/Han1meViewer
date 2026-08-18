@@ -10,7 +10,6 @@ plugins {
     alias(libs.plugins.org.jetbrains.kotlin.plugin.parcelize)
     alias(libs.plugins.org.jetbrains.kotlin.plugin.serialization)
     alias(libs.plugins.ktorfit)
-    alias(libs.plugins.androidx.room)
     alias(libs.plugins.aboutlibraries)
     alias(libs.plugins.ben.manes)
 }
@@ -100,9 +99,10 @@ kotlin {
             api(project(":core:common"))
             // 模型类遍布公开签名
             api(project(":core:model"))
+            // Preferences / Room 实体遍布公开签名
+            api(project(":core:storage"))
             implementation(libs.kotlinx.io.core)
             implementation(libs.ksoup)
-            implementation(libs.mmkv.kotlin)
             implementation(libs.htmlconverter)
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor3)
@@ -115,9 +115,6 @@ kotlin {
             implementation(libs.aboutlibraries.compose.m3)
             implementation(libs.sonner)
             implementation(libs.composewebview)
-            implementation(libs.room.runtime)
-            implementation(libs.sqlite.bundled)
-            implementation(libs.sqlite.async)
             implementation(libs.filekit.core)
             implementation(libs.filekit.dialogs.compose)
             implementation(libs.navigation3.ui.jb)
@@ -139,7 +136,6 @@ kotlin {
 
         androidMain.dependencies {
             implementation(libs.appcompat)
-            implementation(libs.mmkv)
             implementation(libs.androidx.window)
             implementation(libs.androidx.window.java)
             implementation(libs.androidx.biometric)
@@ -236,17 +232,9 @@ dependencies {
     // 各目标共用。
     add("kspCommonMainMetadata", libs.ktorfit.ksp)
 
-    add("kspAndroid", libs.room.compiler)
-    add("kspIosArm64", libs.room.compiler)
-    add("kspIosSimulatorArm64", libs.room.compiler)
-    add("kspJvm", libs.room.compiler)
-
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 }
 
-room3 {
-    schemaDirectory("$projectDir/schemas")
-}
 
 // KSP 的源集挂载与任务排序在 han1me.kmp.library 里（Koin/Ktorfit 共用同一套接线）。
 // composeResources 与 generateSharedHKeyframeIndex 都在 :core:resource。

@@ -15,7 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import io.github.darriousliu.han1meviewer.logic.entity.HanimeAdvancedSearchHistoryEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.HanimeAdvancedSearchHistoryEntity
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.brand
 import io.github.darriousliu.han1meviewer.core.resource.delete

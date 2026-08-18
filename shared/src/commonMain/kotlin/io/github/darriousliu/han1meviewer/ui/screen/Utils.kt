@@ -19,7 +19,7 @@ import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import io.github.darriousliu.han1meviewer.Preferences
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.ui.theme.SpacingLarge
 import io.github.darriousliu.han1meviewer.ui.theme.SpacingNormal
 import io.github.darriousliu.han1meviewer.ui.theme.VideoNormalCardMinWidth

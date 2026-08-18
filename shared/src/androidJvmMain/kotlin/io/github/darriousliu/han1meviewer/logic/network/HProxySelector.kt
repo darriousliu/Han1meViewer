@@ -1,7 +1,7 @@
 package io.github.darriousliu.han1meviewer.logic.network
 
-import io.github.darriousliu.han1meviewer.Preferences
-import io.github.darriousliu.han1meviewer.ProxyType
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
+import io.github.darriousliu.han1meviewer.core.common.ProxyType
 import okhttp3.internal.proxy.NullProxySelector
 import java.io.IOException
 import java.net.InetAddress

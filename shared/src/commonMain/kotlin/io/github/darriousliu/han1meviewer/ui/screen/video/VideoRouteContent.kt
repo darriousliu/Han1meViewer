@@ -8,7 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import io.github.darriousliu.han1meviewer.Preferences
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.core.model.HanimeInfo
 import io.github.darriousliu.han1meviewer.core.common.state.VideoLoadingState
 import io.github.darriousliu.han1meviewer.ui.bridge.VideoPageHost
@@ -36,7 +36,7 @@ fun VideoRouteContent(
     onToggleFavorite: (io.github.darriousliu.han1meviewer.core.model.HanimeVideo) -> Unit,
     onRateVideo: (io.github.darriousliu.han1meviewer.core.model.HanimeVideo, Boolean) -> Unit,
     onManageMyList: (io.github.darriousliu.han1meviewer.core.model.HanimeVideo.MyList?, List<Boolean>) -> Unit,
-    onQuickCheckIn: (io.github.darriousliu.han1meviewer.logic.entity.CheckInRecordEntity) -> Unit,
+    onQuickCheckIn: (io.github.darriousliu.han1meviewer.core.storage.entity.CheckInRecordEntity) -> Unit,
     onPrepareDownload: (String, io.github.darriousliu.han1meviewer.core.model.HanimeVideo?) -> Unit,
     onConfirmDownloadPrompt: (io.github.darriousliu.han1meviewer.core.model.HanimeVideo?) -> Unit,
     onRequestOpenOfficialDownloadPage: () -> Unit,

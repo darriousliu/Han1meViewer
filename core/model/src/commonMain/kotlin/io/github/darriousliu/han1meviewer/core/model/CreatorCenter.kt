@@ -1,5 +1,7 @@
 package io.github.darriousliu.han1meviewer.core.model
 
+import io.github.darriousliu.han1meviewer.core.model.github.Latest
+
 enum class CreatorSort(val value: String) {
     Latest("latest"),
     Popular("popular"),

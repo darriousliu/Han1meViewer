@@ -3,7 +3,7 @@ package io.github.darriousliu.han1meviewer.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.darriousliu.han1meviewer.logic.DatabaseRepo
-import io.github.darriousliu.han1meviewer.logic.entity.HKeyframeEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.HKeyframeEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.flowOn

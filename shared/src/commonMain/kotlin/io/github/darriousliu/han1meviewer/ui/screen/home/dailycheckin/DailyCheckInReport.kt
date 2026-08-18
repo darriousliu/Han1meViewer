@@ -46,7 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import io.github.darriousliu.han1meviewer.logic.entity.CheckInRecordEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.CheckInRecordEntity
 import io.github.darriousliu.han1meviewer.ui.component.appbar.HanimeScaffold
 import io.github.darriousliu.han1meviewer.ui.viewmodel.CheckInCalendarViewModel
 import io.github.darriousliu.han1meviewer.ui.viewmodel.MonthlyStats

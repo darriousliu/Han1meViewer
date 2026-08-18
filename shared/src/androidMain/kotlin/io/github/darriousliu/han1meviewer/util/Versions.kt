@@ -11,7 +11,7 @@ import androidx.core.content.FileProvider
 import com.itxca.spannablex.spannable
 import io.github.darriousliu.han1meviewer.core.common.BuildConfig
 import io.github.darriousliu.han1meviewer.core.common.FILE_PROVIDER_AUTHORITY
-import io.github.darriousliu.han1meviewer.Preferences
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.R
 import io.github.darriousliu.han1meviewer.core.model.github.Latest
 import io.github.darriousliu.han1meviewer.worker.HUpdateWorker

@@ -8,7 +8,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.crashlytics.crashlytics
 import com.google.firebase.crashlytics.setCustomKeys
 import io.github.darriousliu.han1meviewer.FirebaseConstants
-import io.github.darriousliu.han1meviewer.Preferences
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.logic.UpdateRepo
 import io.github.darriousliu.han1meviewer.core.model.github.Latest
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState

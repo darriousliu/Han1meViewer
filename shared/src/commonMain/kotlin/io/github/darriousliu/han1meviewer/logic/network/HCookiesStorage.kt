@@ -1,7 +1,7 @@
 package io.github.darriousliu.han1meviewer.logic.network
 
 import co.touchlab.kermit.Logger
-import io.github.darriousliu.han1meviewer.Preferences
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.logic.network.HCookiesStorage.addCookie
 import io.github.darriousliu.han1meviewer.util.toLoginCookieList
 import io.ktor.client.plugins.cookies.CookiesStorage

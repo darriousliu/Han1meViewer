@@ -13,7 +13,7 @@ import io.github.darriousliu.han1meviewer.HanimeApplication
 import io.github.darriousliu.han1meviewer.core.model.github.Latest
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.ui.viewmodel.AppViewModel
-import io.github.darriousliu.han1meviewer.Preferences
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.util.ThemeUtils
 import io.github.darriousliu.han1meviewer.util.activity
 import io.github.darriousliu.han1meviewer.util.restartApplication

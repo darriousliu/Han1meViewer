@@ -32,7 +32,7 @@ import com.google.android.material.snackbar.Snackbar
 import io.github.darriousliu.han1meviewer.core.common.HanimeConstants.ANIME_URL
 import io.github.darriousliu.han1meviewer.core.common.HanimeConstants.HANIME_URL
 import io.github.darriousliu.han1meviewer.PermissionRequester
-import io.github.darriousliu.han1meviewer.Preferences
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.R
 import io.github.darriousliu.han1meviewer.logout
 import io.github.darriousliu.han1meviewer.ui.bridge.VideoPageHost

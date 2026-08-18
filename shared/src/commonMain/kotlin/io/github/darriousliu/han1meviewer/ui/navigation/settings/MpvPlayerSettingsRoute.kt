@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import io.github.darriousliu.han1meviewer.Preferences
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.ui.screen.settings.MpvChoiceDialog
 import io.github.darriousliu.han1meviewer.ui.screen.settings.MpvPlayerSettingsScreen
 import io.github.darriousliu.han1meviewer.ui.screen.settings.MpvPlayerSettingsUiState

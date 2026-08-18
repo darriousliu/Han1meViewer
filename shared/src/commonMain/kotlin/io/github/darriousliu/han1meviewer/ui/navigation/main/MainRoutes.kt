@@ -30,6 +30,8 @@ import io.github.darriousliu.han1meviewer.ui.navigation.SubscriptionRoute
 import io.github.darriousliu.han1meviewer.ui.navigation.VideoRoute
 import io.github.darriousliu.han1meviewer.ui.navigation.WatchHistoryRoute
 import kotlin.reflect.KClass
+import io.github.darriousliu.han1meviewer.core.model.GetchuPreviewDetail
+import io.github.darriousliu.han1meviewer.core.model.GetchuPreview
 
 enum class MainDestinationSpec(
     val drawerDestination: MainDrawerDestination?,

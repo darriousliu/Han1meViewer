@@ -8,7 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.darriousliu.han1meviewer.SearchGridColumnsConfig
+import io.github.darriousliu.han1meviewer.core.common.SearchGridColumnsConfig
 import io.github.darriousliu.han1meviewer.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.ui.screen.settings.model.GridRangeOption
 import io.github.darriousliu.han1meviewer.core.resource.Res

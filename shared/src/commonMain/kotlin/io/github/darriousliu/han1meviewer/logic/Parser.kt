@@ -10,8 +10,8 @@ import io.github.darriousliu.han1meviewer.core.common.HJson
 import io.github.darriousliu.han1meviewer.core.common.HanimeConstants.HANIME_URL
 import io.github.darriousliu.han1meviewer.core.common.HanimeResolution
 import io.github.darriousliu.han1meviewer.core.common.LOCAL_DATE_FORMAT
-import io.github.darriousliu.han1meviewer.Preferences
-import io.github.darriousliu.han1meviewer.Preferences.isAlreadyLogin
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
+import io.github.darriousliu.han1meviewer.core.storage.Preferences.isAlreadyLogin
 import io.github.darriousliu.han1meviewer.core.common.exception.LoginStateExpiredException
 import io.github.darriousliu.han1meviewer.core.common.exception.ParseException
 import io.github.darriousliu.han1meviewer.core.model.CreatorUploadingItem

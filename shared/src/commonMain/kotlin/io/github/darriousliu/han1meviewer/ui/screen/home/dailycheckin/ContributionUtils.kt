@@ -1,7 +1,7 @@
 package io.github.darriousliu.han1meviewer.ui.screen.home.dailycheckin
 
 import androidx.compose.ui.graphics.Color
-import io.github.darriousliu.han1meviewer.logic.entity.CheckInType
+import io.github.darriousliu.han1meviewer.core.storage.entity.CheckInType
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.isoDayNumber

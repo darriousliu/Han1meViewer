@@ -13,9 +13,9 @@ import io.github.darriousliu.han1meviewer.HFileManager.HANIME_DOWNLOAD_FOLDER
 import io.github.darriousliu.han1meviewer.HFileManager.createVideoCoverName
 import io.github.darriousliu.han1meviewer.HFileManager.getAppDownloadFolder
 import io.github.darriousliu.han1meviewer.HFileManager.getDownloadVideoCoverFile
-import io.github.darriousliu.han1meviewer.Preferences
-import io.github.darriousliu.han1meviewer.logic.dao.download.HanimeDownloadDao
-import io.github.darriousliu.han1meviewer.logic.entity.download.HanimeDownloadEntity
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
+import io.github.darriousliu.han1meviewer.core.storage.dao.download.HanimeDownloadDao
+import io.github.darriousliu.han1meviewer.core.storage.entity.download.HanimeDownloadEntity
 import io.github.darriousliu.han1meviewer.core.common.state.DownloadState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

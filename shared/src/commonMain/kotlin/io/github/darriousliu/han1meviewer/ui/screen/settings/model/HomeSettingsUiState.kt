@@ -1,7 +1,7 @@
 package io.github.darriousliu.han1meviewer.ui.screen.settings.model
 
-import io.github.darriousliu.han1meviewer.HorizontalCardCountConfig
-import io.github.darriousliu.han1meviewer.SearchGridColumnsConfig
+import io.github.darriousliu.han1meviewer.core.common.HorizontalCardCountConfig
+import io.github.darriousliu.han1meviewer.core.common.SearchGridColumnsConfig
 import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.HomeCategoryPreferenceItem
 
 data class HomeSettingsUiState(

@@ -1,6 +1,6 @@
 package io.github.darriousliu.han1meviewer.logic
 
-import io.github.darriousliu.han1meviewer.logic.entity.download.VideoWithCategories
+import io.github.darriousliu.han1meviewer.core.storage.entity.download.VideoWithCategories
 
 /**
  * 已下载分组的Model

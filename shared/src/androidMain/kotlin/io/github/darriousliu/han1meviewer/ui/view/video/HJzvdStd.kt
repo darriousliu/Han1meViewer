@@ -47,10 +47,10 @@ import cn.jzvd.JzvdStd
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.color.MaterialColors
 import com.itxca.spannablex.spannable
-import io.github.darriousliu.han1meviewer.PlayerDefaults
-import io.github.darriousliu.han1meviewer.Preferences
+import io.github.darriousliu.han1meviewer.core.common.PlayerDefaults
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.R
-import io.github.darriousliu.han1meviewer.logic.entity.HKeyframeEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.HKeyframeEntity
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
 import io.github.darriousliu.han1meviewer.ui.adapter.HKeyframeRvAdapter
 import io.github.darriousliu.han1meviewer.ui.adapter.SuperResolutionAdapter

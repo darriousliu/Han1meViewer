@@ -2,7 +2,7 @@ package io.github.darriousliu.han1meviewer.util
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
-import io.github.darriousliu.han1meviewer.Preferences
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
 
 object ThemeUtils {
     fun applyDarkModeFromPreferences(context: Context) {

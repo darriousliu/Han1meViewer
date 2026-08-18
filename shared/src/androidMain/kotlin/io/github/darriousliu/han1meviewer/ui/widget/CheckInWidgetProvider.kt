@@ -7,9 +7,9 @@ import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
 import io.github.darriousliu.han1meviewer.R
-import io.github.darriousliu.han1meviewer.logic.dao.CheckInRecordDatabase
-import io.github.darriousliu.han1meviewer.logic.entity.CheckInRecordEntity
-import io.github.darriousliu.han1meviewer.logic.entity.CheckInType
+import io.github.darriousliu.han1meviewer.core.storage.dao.CheckInRecordDatabase
+import io.github.darriousliu.han1meviewer.core.storage.entity.CheckInRecordEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.CheckInType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

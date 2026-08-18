@@ -45,7 +45,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.darriousliu.han1meviewer.core.common.SEARCH_YEAR_RANGE_END
 import io.github.darriousliu.han1meviewer.core.common.SEARCH_YEAR_RANGE_START
 import io.github.darriousliu.han1meviewer.logic.DatabaseRepo
-import io.github.darriousliu.han1meviewer.logic.entity.HanimeAdvancedSearchHistoryEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.HanimeAdvancedSearchHistoryEntity
 import io.github.darriousliu.han1meviewer.core.model.SearchOption
 import io.github.darriousliu.han1meviewer.core.model.SearchOption.Companion.flatten
 import io.github.darriousliu.han1meviewer.core.model.SearchOption.Companion.get

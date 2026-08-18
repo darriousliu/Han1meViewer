@@ -1,26 +1,26 @@
 package io.github.darriousliu.han1meviewer.logic
 
 import io.github.darriousliu.han1meviewer.core.common.BuildConfig
-import io.github.darriousliu.han1meviewer.Preferences
-import io.github.darriousliu.han1meviewer.logic.dao.CheckInRecordDatabase
-import io.github.darriousliu.han1meviewer.logic.dao.DownloadDatabase
-import io.github.darriousliu.han1meviewer.logic.dao.HistoryDatabase
-import io.github.darriousliu.han1meviewer.logic.dao.MiscellanyDatabase
-import io.github.darriousliu.han1meviewer.logic.entity.CheckInRecordEntity
-import io.github.darriousliu.han1meviewer.logic.entity.HKeyframeEntity
-import io.github.darriousliu.han1meviewer.logic.entity.SideDishEntity
-import io.github.darriousliu.han1meviewer.logic.entity.WatchHistoryEntity
-import io.github.darriousliu.han1meviewer.logic.entity.download.DownloadCategoryEntity
-import io.github.darriousliu.han1meviewer.logic.entity.download.DownloadGroupEntity
-import io.github.darriousliu.han1meviewer.logic.entity.download.HanimeCategoryCrossRef
-import io.github.darriousliu.han1meviewer.logic.entity.download.HanimeDownloadEntity
-import io.github.darriousliu.han1meviewer.mmkv.LegacyPreferenceKeys
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
+import io.github.darriousliu.han1meviewer.core.storage.dao.CheckInRecordDatabase
+import io.github.darriousliu.han1meviewer.core.storage.dao.DownloadDatabase
+import io.github.darriousliu.han1meviewer.core.storage.dao.HistoryDatabase
+import io.github.darriousliu.han1meviewer.core.storage.dao.MiscellanyDatabase
+import io.github.darriousliu.han1meviewer.core.storage.entity.CheckInRecordEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.HKeyframeEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.SideDishEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.WatchHistoryEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.download.DownloadCategoryEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.download.DownloadGroupEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.download.HanimeCategoryCrossRef
+import io.github.darriousliu.han1meviewer.core.storage.entity.download.HanimeDownloadEntity
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.readString
 import io.github.vinceglb.filekit.writeString
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlin.time.Clock
+import io.github.darriousliu.han1meviewer.core.storage.mmkv.LegacyPreferenceKeys
 
 /**
  * 设置与数据库的整体备份 / 恢复。

@@ -13,7 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.github.darriousliu.han1meviewer.logic.entity.download.HanimeDownloadEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.download.HanimeDownloadEntity
 import io.github.darriousliu.han1meviewer.core.common.state.DownloadState
 import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog
 import io.github.darriousliu.han1meviewer.ui.component.content.EmptyContent

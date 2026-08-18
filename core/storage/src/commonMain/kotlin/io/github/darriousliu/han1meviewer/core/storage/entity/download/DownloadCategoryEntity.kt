@@ -1,0 +1,13 @@
+package io.github.darriousliu.han1meviewer.core.storage.entity.download
+
+import androidx.room3.Entity
+import androidx.room3.PrimaryKey
+import kotlinx.serialization.Serializable
+
+@Serializable
+@Entity
+data class DownloadCategoryEntity(
+    val name: String,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+)

@@ -6,6 +6,7 @@ import android.os.Build
 import io.github.darriousliu.han1meviewer.R
 import java.security.MessageDigest
 import io.github.darriousliu.han1meviewer.core.common.BuildConfig
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
 
 fun isLegalBuild(context: Context, sha: String): Boolean {
   //  if (BuildConfig.DEBUG) return true

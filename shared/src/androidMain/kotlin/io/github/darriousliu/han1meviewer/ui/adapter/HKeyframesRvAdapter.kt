@@ -10,7 +10,7 @@ import com.chad.library.adapter4.BaseQuickAdapter
 import com.chad.library.adapter4.viewholder.QuickViewHolder
 import com.google.android.material.button.MaterialButton
 import io.github.darriousliu.han1meviewer.R
-import io.github.darriousliu.han1meviewer.logic.entity.HKeyframeEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.HKeyframeEntity
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
 import io.github.darriousliu.han1meviewer.util.findActivityOrNull
 import io.github.darriousliu.han1meviewer.util.showAlertDialog

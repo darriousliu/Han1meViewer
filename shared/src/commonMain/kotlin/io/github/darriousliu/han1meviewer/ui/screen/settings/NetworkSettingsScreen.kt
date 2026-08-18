@@ -32,7 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.darriousliu.han1meviewer.logic.network.DohConfig
-import io.github.darriousliu.han1meviewer.ProxyType
+import io.github.darriousliu.han1meviewer.core.common.ProxyType
 import io.github.darriousliu.han1meviewer.ui.component.ChoiceDialog
 import io.github.darriousliu.han1meviewer.ui.component.SettingNavigationItem
 import io.github.darriousliu.han1meviewer.ui.component.SettingSwitchItem

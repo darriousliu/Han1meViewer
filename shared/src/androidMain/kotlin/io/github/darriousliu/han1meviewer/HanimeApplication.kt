@@ -17,8 +17,8 @@ import com.google.firebase.remoteconfig.remoteConfig
 import com.google.firebase.remoteconfig.remoteConfigSettings
 import io.github.darriousliu.han1meviewer.di.initKoin
 import io.github.darriousliu.han1meviewer.logic.network.HProxySelector
-import io.github.darriousliu.han1meviewer.mmkv.initializeMMKV
-import io.github.darriousliu.han1meviewer.mmkv.migrateSharedPreferencesToMMKV
+import io.github.darriousliu.han1meviewer.core.storage.mmkv.initializeMMKV
+import io.github.darriousliu.han1meviewer.core.storage.mmkv.migrateSharedPreferencesToMMKV
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
 import io.github.darriousliu.han1meviewer.ui.viewmodel.AppViewModel
 import io.github.darriousliu.han1meviewer.core.common.util.AndroidAppContext
@@ -34,6 +34,7 @@ import io.github.darriousliu.han1meviewer.core.common.BuildConfig
 import io.github.darriousliu.han1meviewer.core.common.util.applicationContext
 import io.github.darriousliu.han1meviewer.core.common.DOWNLOAD_NOTIFICATION_CHANNEL
 import io.github.darriousliu.han1meviewer.core.common.UPDATE_NOTIFICATION_CHANNEL
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
 
 /**
  * @project Hanime1

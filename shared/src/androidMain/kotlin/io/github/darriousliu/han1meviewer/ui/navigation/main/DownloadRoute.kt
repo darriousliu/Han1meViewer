@@ -9,11 +9,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.darriousliu.han1meviewer.Preferences
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.R
-import io.github.darriousliu.han1meviewer.logic.dao.DownloadDatabase
-import io.github.darriousliu.han1meviewer.logic.entity.download.HanimeDownloadEntity
-import io.github.darriousliu.han1meviewer.logic.entity.download.VideoWithCategories
+import io.github.darriousliu.han1meviewer.core.storage.dao.DownloadDatabase
+import io.github.darriousliu.han1meviewer.core.storage.entity.download.HanimeDownloadEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.download.VideoWithCategories
 import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog
 import io.github.darriousliu.han1meviewer.ui.screen.home.DownloadScreen
 import io.github.darriousliu.han1meviewer.ui.screen.home.download.DownloadEvent

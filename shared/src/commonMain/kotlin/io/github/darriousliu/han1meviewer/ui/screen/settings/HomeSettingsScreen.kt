@@ -17,8 +17,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.github.darriousliu.han1meviewer.HorizontalCardCountConfig
-import io.github.darriousliu.han1meviewer.SearchGridColumnsConfig
+import io.github.darriousliu.han1meviewer.core.common.HorizontalCardCountConfig
+import io.github.darriousliu.han1meviewer.core.common.SearchGridColumnsConfig
 import io.github.darriousliu.han1meviewer.ui.component.ChoiceDialog
 import io.github.darriousliu.han1meviewer.ui.component.SettingInfoItem
 import io.github.darriousliu.han1meviewer.ui.component.SettingNavigationItem

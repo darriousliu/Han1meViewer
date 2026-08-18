@@ -3,8 +3,8 @@ package io.github.darriousliu.han1meviewer.logic
 import co.touchlab.kermit.Logger
 import io.github.darriousliu.han1meviewer.core.common.EMPTY_STRING
 import io.github.darriousliu.han1meviewer.core.common.HJson
-import io.github.darriousliu.han1meviewer.Preferences
-import io.github.darriousliu.han1meviewer.Preferences.isAlreadyLogin
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
+import io.github.darriousliu.han1meviewer.core.storage.Preferences.isAlreadyLogin
 import io.github.darriousliu.han1meviewer.core.common.exception.CloudFlareBlockedException
 import io.github.darriousliu.han1meviewer.core.common.exception.HanimeNotFoundException
 import io.github.darriousliu.han1meviewer.core.common.exception.IPBlockedException

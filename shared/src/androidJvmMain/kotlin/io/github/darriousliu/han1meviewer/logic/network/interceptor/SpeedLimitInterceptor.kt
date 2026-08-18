@@ -1,8 +1,9 @@
 package io.github.darriousliu.han1meviewer.logic.network.interceptor
 
-import io.github.darriousliu.han1meviewer.DownloadDefaults
+import io.github.darriousliu.han1meviewer.core.common.DownloadDefaults
 import okhttp3.Interceptor
 import okhttp3.Response
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
 
 class SpeedLimitInterceptor(var maxSpeed: Long) : Interceptor {
 

@@ -20,8 +20,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.darriousliu.han1meviewer.Preferences
-import io.github.darriousliu.han1meviewer.logic.entity.HKeyframeEntity
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
+import io.github.darriousliu.han1meviewer.core.storage.entity.HKeyframeEntity
 import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog
 import io.github.darriousliu.han1meviewer.ui.component.LocalToaster
 import io.github.darriousliu.han1meviewer.ui.component.showShort

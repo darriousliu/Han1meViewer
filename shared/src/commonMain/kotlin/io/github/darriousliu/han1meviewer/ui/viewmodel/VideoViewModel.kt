@@ -10,9 +10,9 @@ import io.github.darriousliu.han1meviewer.core.common.EMPTY_STRING
 import io.github.darriousliu.han1meviewer.core.common.HanimeResolution
 import io.github.darriousliu.han1meviewer.logic.DatabaseRepo
 import io.github.darriousliu.han1meviewer.logic.NetworkRepo
-import io.github.darriousliu.han1meviewer.logic.entity.HKeyframeEntity
-import io.github.darriousliu.han1meviewer.logic.entity.WatchHistoryEntity
-import io.github.darriousliu.han1meviewer.logic.entity.download.HanimeDownloadEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.HKeyframeEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.WatchHistoryEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.download.HanimeDownloadEntity
 import io.github.darriousliu.han1meviewer.core.model.HanimeVideo
 import io.github.darriousliu.han1meviewer.core.common.state.VideoLoadingState
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState

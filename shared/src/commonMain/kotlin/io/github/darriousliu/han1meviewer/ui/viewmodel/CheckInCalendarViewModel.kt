@@ -2,11 +2,11 @@ package io.github.darriousliu.han1meviewer.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.darriousliu.han1meviewer.logic.dao.CheckInRecordDatabase
-import io.github.darriousliu.han1meviewer.logic.dao.HistoryDatabase
-import io.github.darriousliu.han1meviewer.logic.entity.CheckInRecordEntity
-import io.github.darriousliu.han1meviewer.logic.entity.SideDishEntity
-import io.github.darriousliu.han1meviewer.logic.entity.WatchHistoryEntity
+import io.github.darriousliu.han1meviewer.core.storage.dao.CheckInRecordDatabase
+import io.github.darriousliu.han1meviewer.core.storage.dao.HistoryDatabase
+import io.github.darriousliu.han1meviewer.core.storage.entity.CheckInRecordEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.SideDishEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.WatchHistoryEntity
 import io.github.darriousliu.han1meviewer.ui.screen.home.dailycheckin.DailyCheckInUiState
 import io.github.darriousliu.han1meviewer.core.common.util.currentLocalDate
 import io.github.darriousliu.han1meviewer.core.common.util.currentYearMonth

@@ -1,6 +1,7 @@
 package io.github.darriousliu.han1meviewer
 
 import io.github.darriousliu.han1meviewer.core.common.HanimeConstants
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
 
 // 站点基础 URL
 //

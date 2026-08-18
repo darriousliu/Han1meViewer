@@ -69,7 +69,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import io.github.darriousliu.han1meviewer.core.common.ResolutionLinkMap
-import io.github.darriousliu.han1meviewer.logic.entity.CheckInRecordEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.CheckInRecordEntity
 import io.github.darriousliu.han1meviewer.core.model.HanimeInfo
 import io.github.darriousliu.han1meviewer.core.model.HanimeVideo
 import io.github.darriousliu.han1meviewer.core.common.state.VideoLoadingState
@@ -654,7 +654,7 @@ private fun QuickCheckInDialog(
                     val record = CheckInRecordEntity(
                         date = currentLocalDate().toString(),
                         time = time,
-                        type = io.github.darriousliu.han1meviewer.logic.entity.CheckInType.MASTURBATION.storeName,
+                        type = io.github.darriousliu.han1meviewer.core.storage.entity.CheckInType.MASTURBATION.storeName,
                         sideDishes = "${video.title}$sep${video.playlist?.video?.firstOrNull { it.isPlaying }?.videoCode ?: ""}".removeSuffix(
                             sep
                         ),

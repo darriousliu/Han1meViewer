@@ -54,9 +54,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil3.compose.AsyncImage
-import io.github.darriousliu.han1meviewer.logic.entity.CheckInRecordEntity
-import io.github.darriousliu.han1meviewer.logic.entity.CheckInType
-import io.github.darriousliu.han1meviewer.logic.entity.WatchHistoryEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.CheckInRecordEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.CheckInType
+import io.github.darriousliu.han1meviewer.core.storage.entity.WatchHistoryEntity
 import io.github.darriousliu.han1meviewer.core.common.util.CHINESE_FULL_DATE_FORMAT
 import io.github.darriousliu.han1meviewer.core.common.util.HOUR_MINUTE_FORMAT
 import io.github.darriousliu.han1meviewer.core.resource.Res

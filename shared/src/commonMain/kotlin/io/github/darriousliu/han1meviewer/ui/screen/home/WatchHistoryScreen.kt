@@ -59,7 +59,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import io.github.darriousliu.han1meviewer.core.common.LOCAL_DATE_TIME_FORMAT
-import io.github.darriousliu.han1meviewer.logic.entity.WatchHistoryEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.WatchHistoryEntity
 import io.github.darriousliu.han1meviewer.core.model.HanimeInfo
 import io.github.darriousliu.han1meviewer.core.model.OnlineWatchHistorySort
 import io.github.darriousliu.han1meviewer.core.common.state.PageLoadingState

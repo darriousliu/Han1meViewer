@@ -50,13 +50,13 @@ import com.google.firebase.analytics.analytics
 import com.google.firebase.analytics.logEvent
 import io.github.darriousliu.han1meviewer.FirebaseConstants
 import io.github.darriousliu.han1meviewer.PermissionRequester
-import io.github.darriousliu.han1meviewer.Preferences
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.R
 import io.github.darriousliu.han1meviewer.getHanimeVideoLink
 import io.github.darriousliu.han1meviewer.logic.DatabaseRepo
-import io.github.darriousliu.han1meviewer.logic.dao.CheckInRecordDatabase
-import io.github.darriousliu.han1meviewer.logic.entity.HKeyframeEntity
-import io.github.darriousliu.han1meviewer.logic.entity.WatchHistoryEntity
+import io.github.darriousliu.han1meviewer.core.storage.dao.CheckInRecordDatabase
+import io.github.darriousliu.han1meviewer.core.storage.entity.HKeyframeEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.WatchHistoryEntity
 import io.github.darriousliu.han1meviewer.core.common.exception.ParseException
 import io.github.darriousliu.han1meviewer.core.model.SearchOption
 import io.github.darriousliu.han1meviewer.core.common.state.VideoLoadingState

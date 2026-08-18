@@ -3,7 +3,7 @@ package io.github.darriousliu.han1meviewer.ui.navigation.main
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.darriousliu.han1meviewer.Preferences
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.ui.screen.home.VideoGridScreen
 import io.github.darriousliu.han1meviewer.ui.viewmodel.MyListViewModel
 import io.github.darriousliu.han1meviewer.core.resource.Res

@@ -2,7 +2,7 @@ package io.github.darriousliu.han1meviewer.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.darriousliu.han1meviewer.Preferences
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.logic.NetworkRepo
 import io.github.darriousliu.han1meviewer.core.common.exception.LocalizedStateException
 import io.github.darriousliu.han1meviewer.core.model.UserAccount

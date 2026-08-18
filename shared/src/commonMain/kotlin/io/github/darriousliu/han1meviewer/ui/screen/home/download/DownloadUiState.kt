@@ -1,8 +1,8 @@
 package io.github.darriousliu.han1meviewer.ui.screen.home.download
 
-import io.github.darriousliu.han1meviewer.logic.entity.download.DownloadGroupEntity
-import io.github.darriousliu.han1meviewer.logic.entity.download.HanimeDownloadEntity
-import io.github.darriousliu.han1meviewer.logic.entity.download.VideoWithCategories
+import io.github.darriousliu.han1meviewer.core.storage.entity.download.DownloadGroupEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.download.HanimeDownloadEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.download.VideoWithCategories
 import io.github.darriousliu.han1meviewer.logic.DownloadedNode
 
 /**

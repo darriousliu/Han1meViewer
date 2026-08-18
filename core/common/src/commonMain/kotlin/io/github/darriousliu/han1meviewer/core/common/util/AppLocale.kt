@@ -1,5 +1,6 @@
 package io.github.darriousliu.han1meviewer.core.common.util
 
+
 /**
  * 应用内语言切换。
  *

@@ -2,8 +2,8 @@ package io.github.darriousliu.han1meviewer.ui.navigation.main
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import io.github.darriousliu.han1meviewer.PlayerDefaults
-import io.github.darriousliu.han1meviewer.Preferences
+import io.github.darriousliu.han1meviewer.core.common.PlayerDefaults
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
 import io.github.darriousliu.han1meviewer.ui.navigation.VideoRoute
 import io.github.darriousliu.han1meviewer.ui.screen.video.Media3VideoRouteHostScreen

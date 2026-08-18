@@ -78,8 +78,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import io.github.darriousliu.han1meviewer.Preferences
-import io.github.darriousliu.han1meviewer.logic.entity.SearchHistoryEntity
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
+import io.github.darriousliu.han1meviewer.core.storage.entity.SearchHistoryEntity
 import io.github.darriousliu.han1meviewer.core.model.HanimeInfo
 import io.github.darriousliu.han1meviewer.core.model.HanimeInfo.Companion.NORMAL
 import io.github.darriousliu.han1meviewer.core.model.SearchOption

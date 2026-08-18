@@ -25,9 +25,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import io.github.darriousliu.han1meviewer.logic.entity.download.DownloadGroupEntity
-import io.github.darriousliu.han1meviewer.logic.entity.download.HanimeDownloadEntity
-import io.github.darriousliu.han1meviewer.logic.entity.download.VideoWithCategories
+import io.github.darriousliu.han1meviewer.core.storage.entity.download.DownloadGroupEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.download.HanimeDownloadEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.download.VideoWithCategories
 import io.github.darriousliu.han1meviewer.logic.DownloadHeaderNode
 import io.github.darriousliu.han1meviewer.ui.component.ConfirmDialog
 import io.github.darriousliu.han1meviewer.ui.component.appbar.HanimeScaffold

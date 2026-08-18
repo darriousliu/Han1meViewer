@@ -1,9 +1,9 @@
 @file:Suppress("UNUSED")
 package io.github.darriousliu.han1meviewer.ui.preview
 
-import io.github.darriousliu.han1meviewer.logic.entity.download.DownloadGroupEntity
-import io.github.darriousliu.han1meviewer.logic.entity.download.HanimeDownloadEntity
-import io.github.darriousliu.han1meviewer.logic.entity.download.VideoWithCategories
+import io.github.darriousliu.han1meviewer.core.storage.entity.download.DownloadGroupEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.download.HanimeDownloadEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.download.VideoWithCategories
 import io.github.darriousliu.han1meviewer.core.common.HanimeResolution
 import io.github.darriousliu.han1meviewer.core.model.Announcement
 import io.github.darriousliu.han1meviewer.logic.DownloadHeaderNode

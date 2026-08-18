@@ -23,6 +23,7 @@ import java.io.IOException
 import java.io.OutputStream
 import io.github.darriousliu.han1meviewer.core.common.HJson
 import io.github.darriousliu.han1meviewer.core.common.HanimeLink
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
 
 /**
  * @project Han1meViewer
