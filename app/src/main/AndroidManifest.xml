@@ -26,7 +26,7 @@
     </queries>
 
     <application
-        android:name="com.yenaly.han1meviewer.HanimeApplication"
+        android:name="io.github.darriousliu.han1meviewer.HanimeApplication"
         android:allowBackup="true"
         android:hasFragileUserData="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -59,7 +59,7 @@
 
         <!-- MainActivity 本体：无 launcher 配置 -->
         <activity
-            android:name="com.yenaly.han1meviewer.ui.activity.MainActivity"
+            android:name="io.github.darriousliu.han1meviewer.ui.activity.MainActivity"
             android:supportsPictureInPicture="true"
             android:configChanges="orientation|smallestScreenSize|screenLayout|screenSize|keyboardHidden"
             android:exported="true"
@@ -88,12 +88,12 @@
 
         <!-- 默认启动器别名 -->
         <activity-alias
-            android:name="com.yenaly.han1meviewer.LauncherAliasDefault"
+            android:name="io.github.darriousliu.han1meviewer.LauncherAliasDefault"
             android:enabled="true"
             android:exported="true"
             android:icon="@mipmap/ic_launcher_new"
             android:label="@string/hanime_app_name"
-            android:targetActivity="com.yenaly.han1meviewer.ui.activity.MainActivity">
+            android:targetActivity="io.github.darriousliu.han1meviewer.ui.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -102,12 +102,12 @@
 
         <!-- 伪装1 -->
         <activity-alias
-            android:name="com.yenaly.han1meviewer.LauncherFakeCalc"
+            android:name="io.github.darriousliu.han1meviewer.LauncherFakeCalc"
             android:enabled="false"
             android:exported="true"
             android:icon="@mipmap/ic_launcher_calc"
             android:label="@string/app_name_fake_calc"
-            android:targetActivity="com.yenaly.han1meviewer.ui.activity.MainActivity">
+            android:targetActivity="io.github.darriousliu.han1meviewer.ui.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -115,12 +115,12 @@
         </activity-alias>
         <!-- 伪装2 -->
         <activity-alias
-            android:name="com.yenaly.han1meviewer.LauncherFakeCornhub"
+            android:name="io.github.darriousliu.han1meviewer.LauncherFakeCornhub"
             android:enabled="false"
             android:exported="true"
             android:icon="@mipmap/ic_launcher_cornhub"
             android:label="@string/app_name_fake_cornhub"
-            android:targetActivity="com.yenaly.han1meviewer.ui.activity.MainActivity">
+            android:targetActivity="io.github.darriousliu.han1meviewer.ui.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -128,12 +128,12 @@
         </activity-alias>
         <!-- 伪装3 -->
         <activity-alias
-            android:name="com.yenaly.han1meviewer.LauncherFakeXxt"
+            android:name="io.github.darriousliu.han1meviewer.LauncherFakeXxt"
             android:enabled="false"
             android:exported="true"
             android:icon="@mipmap/ic_launcher_xxt"
             android:label="@string/app_name_fake_xxt"
-            android:targetActivity="com.yenaly.han1meviewer.ui.activity.MainActivity">
+            android:targetActivity="io.github.darriousliu.han1meviewer.ui.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -141,11 +141,11 @@
         </activity-alias>
 
         <receiver
-            android:name="com.yenaly.han1meviewer.ui.widget.CheckInWidgetProvider"
+            android:name="io.github.darriousliu.han1meviewer.ui.widget.CheckInWidgetProvider"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.yenaly.han1meviewer.ACTION_WIDGET_CHECK_IN" />
+                <action android:name="io.github.darriousliu.han1meviewer.ACTION_WIDGET_CHECK_IN" />
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"

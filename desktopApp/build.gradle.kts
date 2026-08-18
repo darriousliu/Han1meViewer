@@ -19,6 +19,6 @@ dependencies {
 
 compose.desktop {
     application {
-        mainClass = "com.yenaly.han1meviewer.MainKt"
+        mainClass = "io.github.darriousliu.han1meviewer.MainKt"
     }
 }

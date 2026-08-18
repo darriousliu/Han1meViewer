@@ -1,9 +1,9 @@
 @file:Suppress("UnstableApiUsage")
 
-import com.yenaly.han1meviewer.convention.compileSdkVersion
-import com.yenaly.han1meviewer.convention.libs
-import com.yenaly.han1meviewer.convention.minSdkVersion
-import com.yenaly.han1meviewer.convention.targetSdkVersion
+import io.github.darriousliu.han1meviewer.convention.compileSdkVersion
+import io.github.darriousliu.han1meviewer.convention.libs
+import io.github.darriousliu.han1meviewer.convention.minSdkVersion
+import io.github.darriousliu.han1meviewer.convention.targetSdkVersion
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 /**

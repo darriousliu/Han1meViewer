@@ -4,12 +4,12 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.INT
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
-import com.yenaly.han1meviewer.convention.Config
-import com.yenaly.han1meviewer.convention.Config.Version.createVersion
-import com.yenaly.han1meviewer.convention.createAndroidJvmMain
-import com.yenaly.han1meviewer.convention.Config.Version.source
-import com.yenaly.han1meviewer.convention.Config.isRelease
-import com.yenaly.han1meviewer.convention.Config.lastCommitSha
+import io.github.darriousliu.han1meviewer.convention.Config
+import io.github.darriousliu.han1meviewer.convention.Config.Version.createVersion
+import io.github.darriousliu.han1meviewer.convention.createAndroidJvmMain
+import io.github.darriousliu.han1meviewer.convention.Config.Version.source
+import io.github.darriousliu.han1meviewer.convention.Config.isRelease
+import io.github.darriousliu.han1meviewer.convention.Config.lastCommitSha
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
@@ -33,7 +33,7 @@ val githubToken = System.getenv("HA_GITHUB_TOKEN") ?: rootProject
     ?.readText()
     .orEmpty()
 val (versionCode, versionName) = createVersion(major = 1, minor = 0, patch = 2)
-val applicationId = "com.yenaly.han1meviewer${if (releaseBuild) "" else ".debug"}"
+val applicationId = "io.github.darriousliu.han1meviewer${if (releaseBuild) "" else ".debug"}"
 
 // plugin 是跟着「app 逻辑搬进 shared」那次带过来的，但配置块没带过来，
 // 结果 :shared 产出的 aboutlibraries.json 一直是空的
@@ -58,7 +58,7 @@ aboutLibraries {
 }
 
 buildkonfig {
-    packageName = "com.yenaly.han1meviewer"
+    packageName = "io.github.darriousliu.han1meviewer"
     exposeObjectWithName = "BuildConfig"
 
     defaultConfigs {
@@ -86,7 +86,7 @@ buildkonfig {
 
 kotlin {
     android {
-        namespace = "com.yenaly.han1meviewer"
+        namespace = "io.github.darriousliu.han1meviewer"
 
         withDeviceTestBuilder {
             sourceSetTreeName = "test"
@@ -102,7 +102,7 @@ kotlin {
         compilerOptions {
             freeCompilerArgs.addAll(
                 "-P",
-                "plugin:org.jetbrains.kotlin.parcelize:additionalAnnotation=com.yenaly.han1meviewer.util.Parcelize",
+                "plugin:org.jetbrains.kotlin.parcelize:additionalAnnotation=io.github.darriousliu.han1meviewer.util.Parcelize",
             )
         }
     }
@@ -113,7 +113,7 @@ kotlin {
         target.binaries.framework {
             baseName = "Shared"
             isStatic = true
-            binaryOption("bundleId", "com.yenaly.han1meviewer.shared")
+            binaryOption("bundleId", "io.github.darriousliu.han1meviewer.shared")
         }
     }
 
@@ -302,12 +302,13 @@ val generateSharedHKeyframeIndex = tasks.register("generateSharedHKeyframeIndex"
             .map { it.nameWithoutExtension }
             .sorted()
         val target =
-            outDir.get().file("com/yenaly/han1meviewer/logic/SharedHKeyframeIndex.kt").asFile
+            outDir.get().file("io/github/darriousliu/han1meviewer/logic/SharedHKeyframeIndex.kt")
+                .asFile
         target.parentFile.mkdirs()
         target.writeText(
             buildString {
                 appendLine("// 由 :shared:generateSharedHKeyframeIndex 生成，不要手改。")
-                appendLine("package com.yenaly.han1meviewer.logic")
+                appendLine("package io.github.darriousliu.han1meviewer.logic")
                 appendLine()
                 appendLine("/** `composeResources/files/h_keyframes/` 下所有共享关键 H 帧的 videoCode。 */")
                 appendLine("internal val SHARED_H_KEYFRAME_CODES: List<String> = listOf(")

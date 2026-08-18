@@ -1,7 +1,7 @@
 @file:Suppress("UnstableApiUsage")
 
 import com.android.build.api.variant.impl.VariantOutputImpl
-import com.yenaly.han1meviewer.convention.Config.Version.createVersion
+import io.github.darriousliu.han1meviewer.convention.Config.Version.createVersion
 
 plugins {
     // compileSdk/minSdk/targetSdk、Java 21 + desugaring、compose、jvmTarget 都在 convention 里
@@ -16,7 +16,7 @@ plugins {
 
 android {
     defaultConfig {
-        applicationId = "com.yenaly.han1meviewer"
+        applicationId = "io.github.darriousliu.han1meviewer"
         val (code, name) = createVersion(major = 1, minor = 0, patch = 2)
         versionCode = code
         versionName = name
@@ -67,7 +67,7 @@ android {
     lint {
         disable += setOf("EnsureInitializerMetadata")
     }
-    namespace = "com.yenaly.han1meviewer.app"
+    namespace = "io.github.darriousliu.han1meviewer.app"
 }
 
 

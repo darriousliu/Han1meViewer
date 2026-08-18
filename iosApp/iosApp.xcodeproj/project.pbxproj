@@ -223,7 +223,7 @@
 					"-framework",
 					Shared,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.yenaly.han1meviewer;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.darriousliu.han1meviewer;
 				PRODUCT_NAME = Han1meViewer;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -260,7 +260,7 @@
 					"-framework",
 					Shared,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.yenaly.han1meviewer;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.darriousliu.han1meviewer;
 				PRODUCT_NAME = Han1meViewer;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;

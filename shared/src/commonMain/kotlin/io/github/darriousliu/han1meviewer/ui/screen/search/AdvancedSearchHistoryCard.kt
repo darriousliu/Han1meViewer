@@ -1,0 +1,95 @@
+package io.github.darriousliu.han1meviewer.ui.screen.search
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import io.github.darriousliu.han1meviewer.logic.entity.HanimeAdvancedSearchHistoryEntity
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.brand
+import han1meviewer.shared.generated.resources.delete
+import han1meviewer.shared.generated.resources.duration
+import han1meviewer.shared.generated.resources.ic_baseline_delete_24
+import han1meviewer.shared.generated.resources.pair_widely
+import han1meviewer.shared.generated.resources.release_date
+import han1meviewer.shared.generated.resources.sort_option
+import han1meviewer.shared.generated.resources.tag
+import han1meviewer.shared.generated.resources.type
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
+
+@Composable
+fun AdvancedSearchHistoryCard(
+    history: HanimeAdvancedSearchHistoryEntity,
+    onDelete: () -> Unit,
+    onClick: () -> Unit,
+) {
+    val type = stringResource(Res.string.type)
+    val sortOption = stringResource(Res.string.sort_option)
+    val pairWidely = stringResource(Res.string.pair_widely)
+    val releaseDate = stringResource(Res.string.release_date)
+    val duration = stringResource(Res.string.duration)
+    val tag = stringResource(Res.string.tag)
+    val brand = stringResource(Res.string.brand)
+    val conditions = remember(history) {
+        buildList {
+            history.genre?.takeIf { it.isNotBlank() }?.let { add("$type: $it") }
+            history.sort?.takeIf { it.isNotBlank() }?.let { add("$sortOption: $it") }
+            if (history.broad == true) add(pairWidely)
+            history.date?.takeIf { it.isNotBlank() }?.let { add("$releaseDate: $it") }
+            history.duration?.takeIf { it.isNotBlank() }?.let { add("$duration: $it") }
+            if (!history.tags.isNullOrBlank()) add("$tag: ${history.tags}")
+            if (!history.brands.isNullOrBlank()) add("$brand: ${history.brands}")
+        }.joinToString(" || ")
+    }
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(14.dp),
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
+        tonalElevation = 2.dp,
+        onClick = onClick,
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                history.query?.takeIf { it.isNotBlank() }?.let {
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                }
+                if (conditions.isNotBlank()) {
+                    Text(
+                        text = conditions,
+                        style = MaterialTheme.typography.bodySmall,
+                        maxLines = 2,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
+            IconButton(onClick = onDelete) {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_baseline_delete_24),
+                    contentDescription = stringResource(Res.string.delete),
+                )
+            }
+        }
+    }
+}

@@ -1,4 +1,4 @@
-import com.yenaly.han1meviewer.convention.libs
+import io.github.darriousliu.han1meviewer.convention.libs
 
 /**
  * 带 Compose 的 KMP 模块（`:core:ui`、`:feature:*`、umbrella）的基线配置。

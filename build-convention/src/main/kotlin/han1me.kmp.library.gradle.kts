@@ -1,9 +1,9 @@
 @file:Suppress("UnstableApiUsage")
 @file:OptIn(ExperimentalKotlinGradlePluginApi::class)
 
-import com.yenaly.han1meviewer.convention.compileSdkVersion
-import com.yenaly.han1meviewer.convention.libs
-import com.yenaly.han1meviewer.convention.minSdkVersion
+import io.github.darriousliu.han1meviewer.convention.compileSdkVersion
+import io.github.darriousliu.han1meviewer.convention.libs
+import io.github.darriousliu.han1meviewer.convention.minSdkVersion
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
