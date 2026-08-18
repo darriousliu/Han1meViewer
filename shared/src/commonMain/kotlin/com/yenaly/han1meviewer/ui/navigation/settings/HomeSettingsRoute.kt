@@ -2,7 +2,6 @@
 
 package com.yenaly.han1meviewer.ui.navigation.settings
 
-import android.content.Context
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -13,19 +12,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import org.jetbrains.compose.resources.stringResource
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.yenaly.han1meviewer.BuildConfig
 import com.yenaly.han1meviewer.HA1_GITHUB_FORUM_URL
 import com.yenaly.han1meviewer.HA1_GITHUB_ISSUE_URL
 import com.yenaly.han1meviewer.HanimeConstants
 import com.yenaly.han1meviewer.Preferences
-import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.logic.BackupManager
 import com.yenaly.han1meviewer.logic.state.WebsiteState
 import com.yenaly.han1meviewer.ui.component.ConfirmDialog
+import com.yenaly.han1meviewer.ui.component.LocalToaster
+import com.yenaly.han1meviewer.ui.component.showShort
 import com.yenaly.han1meviewer.ui.screen.home.homepage.defaultHomeCategoryPreferenceItems
 import com.yenaly.han1meviewer.ui.screen.home.homepage.hiddenHomeCategoryKeys
 import com.yenaly.han1meviewer.ui.screen.home.homepage.homeCategoryOrder
@@ -34,14 +32,44 @@ import com.yenaly.han1meviewer.ui.screen.settings.HomeSettingsScreen
 import com.yenaly.han1meviewer.ui.screen.settings.dialog.AnalyticsConsentDialog
 import com.yenaly.han1meviewer.ui.screen.settings.dialog.FakeLauncherIconDialog
 import com.yenaly.han1meviewer.ui.screen.settings.dialog.LauncherIconOption
-import com.yenaly.han1meviewer.ui.screen.settings.dialog.launcherIconOptions
 import com.yenaly.han1meviewer.ui.screen.settings.dialog.LicenseDialog
+import com.yenaly.han1meviewer.ui.screen.settings.dialog.launcherIconOptions
 import com.yenaly.han1meviewer.ui.screen.settings.model.HomeSettingsUiState
 import com.yenaly.han1meviewer.ui.theme.ThemeColorPreset
-import com.yenaly.han1meviewer.util.applicationContext
-import com.yenaly.han1meviewer.util.browse
-import com.yenaly.han1meviewer.util.showShortToast
-import com.yenaly.han1meviewer.util.showToast
+import han1meviewer.shared.generated.resources.Res
+import han1meviewer.shared.generated.resources.action_app_open_by_default_settings_not_support
+import han1meviewer.shared.generated.resources.already_latest_update
+import han1meviewer.shared.generated.resources.always_off
+import han1meviewer.shared.generated.resources.always_on
+import han1meviewer.shared.generated.resources.attention
+import han1meviewer.shared.generated.resources.backup_export_failed
+import han1meviewer.shared.generated.resources.backup_export_success
+import han1meviewer.shared.generated.resources.backup_import_confirm_message
+import han1meviewer.shared.generated.resources.backup_import_failed
+import han1meviewer.shared.generated.resources.backup_import_success
+import han1meviewer.shared.generated.resources.backup_import_title
+import han1meviewer.shared.generated.resources.cache_empty
+import han1meviewer.shared.generated.resources.cancel
+import han1meviewer.shared.generated.resources.check_update_failed
+import han1meviewer.shared.generated.resources.check_update_success
+import han1meviewer.shared.generated.resources.checking_update
+import han1meviewer.shared.generated.resources.clear_failed
+import han1meviewer.shared.generated.resources.clear_success
+import han1meviewer.shared.generated.resources.confirm
+import han1meviewer.shared.generated.resources.current_version
+import han1meviewer.shared.generated.resources.english_lang
+import han1meviewer.shared.generated.resources.fake_icon_hint
+import han1meviewer.shared.generated.resources.follow_system
+import han1meviewer.shared.generated.resources.japanese_lang
+import han1meviewer.shared.generated.resources.not_compact_lock_screen
+import han1meviewer.shared.generated.resources.not_set_sys_lock
+import han1meviewer.shared.generated.resources.request_pip_alert
+import han1meviewer.shared.generated.resources.restart_needed
+import han1meviewer.shared.generated.resources.simplified_chinese
+import han1meviewer.shared.generated.resources.success_value
+import han1meviewer.shared.generated.resources.sure_to_clear
+import han1meviewer.shared.generated.resources.sure_to_clear_cache
+import han1meviewer.shared.generated.resources.traditional_chinese
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.dialogs.FileKitDialogSettings
 import io.github.vinceglb.filekit.dialogs.FileKitType
@@ -51,6 +79,7 @@ import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,9 +89,25 @@ fun HomeSettingsRouteScreen(
     onNavigateToDownloadSettings: () -> Unit,
     onNavigateToNetworkSettings: () -> Unit,
 ) {
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
+    val toaster = LocalToaster.current
+    val uriHandler = LocalUriHandler.current
     val actions = rememberHomeSettingsActions()
+    // 下面这些在非组合的回调里用，stringResource 是 composable，得先解开
+    val exportSuccess = stringResource(Res.string.backup_export_success)
+    val exportFailed = stringResource(Res.string.backup_export_failed)
+    val importSuccess = stringResource(Res.string.backup_import_success)
+    val importFailed = stringResource(Res.string.backup_import_failed)
+    val pipAlert = stringResource(Res.string.request_pip_alert)
+    val notSetSysLock = stringResource(Res.string.not_set_sys_lock)
+    val notCompactLockScreen = stringResource(Res.string.not_compact_lock_screen)
+    val deepLinksNotSupported =
+        stringResource(Res.string.action_app_open_by_default_settings_not_support)
+    val cacheEmpty = stringResource(Res.string.cache_empty)
+    val clearSuccess = stringResource(Res.string.clear_success)
+    val clearFailed = stringResource(Res.string.clear_failed)
+    val fakeIconHint = stringResource(Res.string.fake_icon_hint)
+    val successValue = stringResource(Res.string.success_value)
     val versionState by actions.versionFlow.collectAsStateWithLifecycle()
     var refreshKey by remember { mutableIntStateOf(0) }
     var cacheKey by remember { mutableIntStateOf(0) }
@@ -81,8 +126,8 @@ fun HomeSettingsRouteScreen(
         file ?: return@rememberFileSaverLauncher
         coroutineScope.launch {
             runCatching { BackupManager.exportTo(file) }
-                .onSuccess { showShortToast(R.string.backup_export_success) }
-                .onFailure { showShortToast(R.string.backup_export_failed) }
+                .onSuccess { toaster.showShort(exportSuccess) }
+                .onFailure { toaster.showShort(exportFailed) }
         }
     }
     // 不写 FileKitType.File("json")：现在的过滤是 arrayOf("application/json",
@@ -100,11 +145,11 @@ fun HomeSettingsRouteScreen(
         cacheSize = actions.cacheSizeBytes()
     }
     val cacheSummary = generateClearCacheSummary(cacheSize)
-    val checkUpdateFailed = stringResource(R.string.check_update_failed)
-    val checkingUpdate = stringResource(R.string.checking_update)
-    val alreadyLatestUpdate = stringResource(R.string.already_latest_update)
+    val checkUpdateFailed = stringResource(Res.string.check_update_failed)
+    val checkingUpdate = stringResource(Res.string.checking_update)
+    val alreadyLatestUpdate = stringResource(Res.string.already_latest_update)
 
-    val updateSummary = remember(versionState, context) {
+    val updateSummary = run {
         when (versionState) {
             is WebsiteState.Error -> checkUpdateFailed
             is WebsiteState.Loading -> checkingUpdate
@@ -113,14 +158,13 @@ fun HomeSettingsRouteScreen(
                 if (info == null) {
                     alreadyLatestUpdate
                 } else {
-                    applicationContext.getString(R.string.check_update_success, info.version)
+                    stringResource(Res.string.check_update_success, info.version)
                 }
             }
         }
     }
     val themeColorName = stringResource(ThemeColorPreset.fromKey(Preferences.themeColor).displayNameRes)
     val uiState = buildHomeSettingsUiState(
-        context = context,
         launcherOptions = launcherIconOptions,
         updateSummary = updateSummary,
         cacheSummary = cacheSummary,
@@ -139,7 +183,9 @@ fun HomeSettingsRouteScreen(
         onVideoQualityChange = { value ->
             Preferences.videoQuality = value
             refreshKey++
-            context.showToast(R.string.success_value, value)
+            // 在回调里，stringResource(res, vararg) 这种 composable API 用不了，
+            // 只能拿解好的模板自己替。`success_value` 四种语言都是 `%1$s`（核实过）
+            toaster.showShort(successValue.replace("%1\$s", value))
         },
         onDarkModeChange = { value ->
             if (value != Preferences.useDarkMode) {
@@ -149,7 +195,7 @@ fun HomeSettingsRouteScreen(
         },
         onAllowPipModeChange = { enabled ->
             if (enabled && !actions.isPipPermissionGranted()) {
-                context.showToast(R.string.request_pip_alert)
+                toaster.showShort(pipAlert)
                 actions.openPipPermissionSettings()
                 Preferences.allowPipMode = false
                 refreshKey++
@@ -231,14 +277,14 @@ fun HomeSettingsRouteScreen(
             if (value) {
                 when (actions.deviceLockAvailability()) {
                     DeviceLockAvailability.NoSystemLock -> {
-                        context.showToast(R.string.not_set_sys_lock)
+                        toaster.showShort(notSetSysLock)
                         refreshKey++
                         return@HomeSettingsScreen
                     }
 
                     DeviceLockAvailability.UnsupportedOsVersion,
                     DeviceLockAvailability.Unsupported -> {
-                        context.showToast(R.string.not_compact_lock_screen)
+                        toaster.showShort(notCompactLockScreen)
                         refreshKey++
                         return@HomeSettingsScreen
                     }
@@ -275,7 +321,7 @@ fun HomeSettingsRouteScreen(
         },
         onOpenApplyDeepLinks = {
             if (!actions.openDeepLinkSettings()) {
-                showShortToast(R.string.action_app_open_by_default_settings_not_support)
+                toaster.showShort(deepLinksNotSupported)
             }
         },
         onOpenFakeLauncherIcon = { showLauncherPicker = true },
@@ -283,7 +329,7 @@ fun HomeSettingsRouteScreen(
         onOpenAbout = {},
         onClearCache = {
             if (cacheSize == 0L) {
-                showShortToast(R.string.cache_empty)
+                toaster.showShort(cacheEmpty)
                 return@HomeSettingsScreen
             }
             showClearCacheConfirm = true
@@ -297,27 +343,27 @@ fun HomeSettingsRouteScreen(
         onImportBackup = {
             importLauncher.launch()
         },
-        onSubmitBug = { context.browse(HA1_GITHUB_ISSUE_URL) },
-        onOpenForum = { context.browse(HA1_GITHUB_FORUM_URL) },
+        onSubmitBug = { uriHandler.openUri(HA1_GITHUB_ISSUE_URL) },
+        onOpenForum = { uriHandler.openUri(HA1_GITHUB_FORUM_URL) },
     )
 
     ConfirmDialog(
         visible = pendingImportFile != null,
-        title = stringResource(R.string.backup_import_title),
-        message = stringResource(R.string.backup_import_confirm_message),
-        confirmText = stringResource(R.string.confirm),
-        dismissText = stringResource(R.string.cancel),
+        title = stringResource(Res.string.backup_import_title),
+        message = stringResource(Res.string.backup_import_confirm_message),
+        confirmText = stringResource(Res.string.confirm),
+        dismissText = stringResource(Res.string.cancel),
         onConfirm = {
             val file = pendingImportFile ?: return@ConfirmDialog
             pendingImportFile = null
             coroutineScope.launch {
                 runCatching { BackupManager.importFrom(file) }
                     .onSuccess {
-                        showShortToast(R.string.backup_import_success)
+                        toaster.showShort(importSuccess)
                         refreshKey++
                         actions.reloadUi()
                     }
-                    .onFailure { showShortToast(R.string.backup_import_failed) }
+                    .onFailure { toaster.showShort(importFailed) }
             }
         },
         onDismiss = { pendingImportFile = null },
@@ -325,17 +371,17 @@ fun HomeSettingsRouteScreen(
 
     ConfirmDialog(
         visible = showClearCacheConfirm,
-        title = stringResource(R.string.sure_to_clear),
-        message = stringResource(R.string.sure_to_clear_cache),
-        confirmText = stringResource(R.string.confirm),
-        dismissText = stringResource(R.string.cancel),
+        title = stringResource(Res.string.sure_to_clear),
+        message = stringResource(Res.string.sure_to_clear_cache),
+        confirmText = stringResource(Res.string.confirm),
+        dismissText = stringResource(Res.string.cancel),
         onConfirm = {
             showClearCacheConfirm = false
             coroutineScope.launch {
                 val success = actions.clearCache()
                 cacheKey++
                 refreshKey++
-                if (success) showShortToast(R.string.clear_success) else showShortToast(R.string.clear_failed)
+                if (success) toaster.showShort(clearSuccess) else toaster.showShort(clearFailed)
             }
         },
         onDismiss = { showClearCacheConfirm = false },
@@ -361,10 +407,10 @@ fun HomeSettingsRouteScreen(
 
     ConfirmDialog(
         visible = showRestartConfirmDialog,
-        title = stringResource(R.string.attention),
-        message = stringResource(R.string.restart_needed),
-        confirmText = stringResource(R.string.confirm),
-        dismissText = stringResource(R.string.cancel),
+        title = stringResource(Res.string.attention),
+        message = stringResource(Res.string.restart_needed),
+        confirmText = stringResource(Res.string.confirm),
+        dismissText = stringResource(Res.string.cancel),
         cancelable = false,
         onConfirm = {
             actions.restartApp()
@@ -377,7 +423,7 @@ fun HomeSettingsRouteScreen(
             onSelect = { option ->
                 Preferences.fakeLauncherIcon = option.alias
                 actions.switchLauncherIcon(option.alias)
-                context.showToast(R.string.fake_icon_hint)
+                toaster.showShort(fakeIconHint)
                 refreshKey++
                 showLauncherPicker = false
             },
@@ -393,7 +439,6 @@ fun HomeSettingsRouteScreen(
  */
 @Composable
 private fun buildHomeSettingsUiState(
-    context: Context,
     launcherOptions: List<LauncherIconOption>,
     updateSummary: String,
     cacheSummary: String,
@@ -404,23 +449,23 @@ private fun buildHomeSettingsUiState(
     val currentOption = launcherOptions.find { it.alias == currentAlias } ?: launcherOptions.first()
     val currentOptionName = stringResource(currentOption.name)
     val videoLanguageLabel = when (Preferences.videoLanguage) {
-        "zht" -> context.getString(R.string.traditional_chinese)
-        "zhs" -> context.getString(R.string.simplified_chinese)
+        "zht" -> stringResource(Res.string.traditional_chinese)
+        "zhs" -> stringResource(Res.string.simplified_chinese)
         else -> Preferences.videoLanguage
     }
     val darkModeLabel = when (Preferences.useDarkMode) {
-        "follow_system" -> context.getString(R.string.follow_system)
-        "always_off" -> context.getString(R.string.always_off)
-        "always_on" -> context.getString(R.string.always_on)
+        "follow_system" -> stringResource(Res.string.follow_system)
+        "always_off" -> stringResource(Res.string.always_off)
+        "always_on" -> stringResource(Res.string.always_on)
         else -> Preferences.useDarkMode
     }
     val appLanguageValue = Preferences.appLanguage
     val appLanguageLabel = when (appLanguageValue) {
-        "system" -> context.getString(R.string.follow_system)
-        "zh-rCN" -> context.getString(R.string.simplified_chinese)
-        "zh" -> context.getString(R.string.traditional_chinese)
-        "ja" -> context.getString(R.string.japanese_lang)
-        "en" -> context.getString(R.string.english_lang)
+        "system" -> stringResource(Res.string.follow_system)
+        "zh-rCN" -> stringResource(Res.string.simplified_chinese)
+        "zh" -> stringResource(Res.string.traditional_chinese)
+        "ja" -> stringResource(Res.string.japanese_lang)
+        "en" -> stringResource(Res.string.english_lang)
         else -> appLanguageValue
     }
     val searchGridColumnsConfig = Preferences.searchGridColumnsConfig
@@ -449,9 +494,9 @@ private fun buildHomeSettingsUiState(
         fakeLauncherIconName = currentOptionName,
         updateSummary = updateSummary,
         cacheSummary = cacheSummary,
-        versionSummary = context.getString(
-            R.string.current_version,
-            "v${BuildConfig.VERSION_NAME}"
+        versionSummary = stringResource(
+            Res.string.current_version,
+            "v${BuildConfig.VERSION_NAME}",
         ),
         updatePopupIntervalSummary = toIntervalDaysPrettyString(
             Preferences.updatePopupIntervalDays
