@@ -2,7 +2,6 @@ package com.yenaly.han1meviewer.ui.activity
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.KeyguardManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -42,6 +41,7 @@ import com.yenaly.han1meviewer.ui.navigation.AccountRoute
 import com.yenaly.han1meviewer.ui.navigation.HanimeRoute
 import com.yenaly.han1meviewer.ui.navigation.VideoRoute
 import com.yenaly.han1meviewer.ui.navigation.navigateSafely
+import com.yenaly.han1meviewer.ui.navigation.settings.isDeviceSecureCompat
 import com.yenaly.han1meviewer.ui.screen.home.homepage.HomePageViewModel
 import com.yenaly.han1meviewer.ui.screen.main.MainActivityContent
 import com.yenaly.han1meviewer.util.restartApplication
@@ -49,8 +49,8 @@ import com.yenaly.han1meviewer.util.showAlertDialog
 import com.yenaly.han1meviewer.util.showSnackBar
 import com.yenaly.han1meviewer.util.textFromClipboard
 import com.yenaly.han1meviewer.videoUrlRegex
-import kotlinx.coroutines.flow.MutableSharedFlow
 import java.util.Locale
+import kotlinx.coroutines.flow.MutableSharedFlow
 
 /**
  * @project Hanime1
@@ -146,11 +146,6 @@ class MainActivity : AppCompatActivity(), PermissionRequester {
         super.onNewIntent(intent)
         setIntent(intent)
         pendingNavigationRequests.tryEmit(intent)
-    }
-
-    private fun isDeviceSecureCompat(context: Context): Boolean {
-        val km = context.getSystemService(KEYGUARD_SERVICE) as KeyguardManager
-        return km.isDeviceSecure
     }
 
     private fun authenticate(
