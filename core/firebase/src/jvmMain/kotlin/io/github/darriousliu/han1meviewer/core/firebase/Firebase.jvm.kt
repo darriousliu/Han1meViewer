@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.util
+package io.github.darriousliu.han1meviewer.core.firebase
 
 actual object Firebase {
     actual fun getBoolean(key: String): Boolean {

@@ -35,6 +35,7 @@ import io.github.darriousliu.han1meviewer.core.common.util.applicationContext
 import io.github.darriousliu.han1meviewer.core.common.DOWNLOAD_NOTIFICATION_CHANNEL
 import io.github.darriousliu.han1meviewer.core.common.UPDATE_NOTIFICATION_CHANNEL
 import io.github.darriousliu.han1meviewer.core.storage.Preferences
+import io.github.darriousliu.han1meviewer.core.firebase.FirebaseConstants
 
 /**
  * @project Hanime1

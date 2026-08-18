@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.util
+package io.github.darriousliu.han1meviewer.core.firebase
 
 import android.app.Activity
 import android.util.Log

@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.util
+package io.github.darriousliu.han1meviewer.core.firebase
 
 import com.google.firebase.remoteconfig.remoteConfig
 import com.google.firebase.Firebase as AndroidFirebase

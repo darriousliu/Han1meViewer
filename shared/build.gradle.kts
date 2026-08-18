@@ -72,6 +72,13 @@ kotlin {
         }
     }
 
+
+    // Firebase 的 iOS SDK 走 Kotlin 2.4 内置的 swiftPM 集成。
+    //
+    // ⚠️ 这段**不能**下沉到 :core:firebase。swiftPM 会给模块挂上
+    // dumpXcodebuildArgs* 任务，而依赖方解析该模块的 KMP 元数据时会拉起它们——
+    // 于是在没装完整 Xcode 的机器上，连 :shared:compileKotlinJvm 都会被
+    // "xcodebuild requires Xcode" 打断。放在 umbrella 里只影响 umbrella 自己。
     swiftPMDependencies {
         iosMinimumDeploymentTarget.set("15.0")
         swiftPackage(
@@ -102,6 +109,8 @@ kotlin {
             // Preferences / Room 实体遍布公开签名
             api(project(":core:storage"))
             implementation(project(":core:parse"))
+            // Firebase 门面（Android 接真身，JVM 空实现）
+            api(project(":core:firebase"))
             implementation(libs.kotlinx.io.core)
             implementation(libs.ksoup)
             implementation(libs.htmlconverter)

@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer
+package io.github.darriousliu.han1meviewer.core.firebase
 
 object FirebaseConstants {
     // <editor-fold desc="Analytics">

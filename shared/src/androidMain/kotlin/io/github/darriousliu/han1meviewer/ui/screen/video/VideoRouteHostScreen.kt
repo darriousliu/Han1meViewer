@@ -48,7 +48,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
 import com.google.firebase.analytics.logEvent
-import io.github.darriousliu.han1meviewer.FirebaseConstants
+import io.github.darriousliu.han1meviewer.core.firebase.FirebaseConstants
 import io.github.darriousliu.han1meviewer.PermissionRequester
 import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.R
