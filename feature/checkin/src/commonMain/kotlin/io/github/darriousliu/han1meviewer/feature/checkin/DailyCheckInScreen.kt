@@ -73,9 +73,9 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun DailyCheckInScreen(
     onBack: () -> Unit,
-    onAddWidget: () -> Unit,
+    onAddWidget: (() -> Unit)?,
     onNavigateToVideo: (String) -> Unit,
-    onAddCalendarEvent: (LocalDate) -> Unit = {},
+    onAddCalendarEvent: ((LocalDate) -> Unit)? = null,
     onFullscreenChange: (Boolean) -> Unit = {},
     onMessage: (StringResource) -> Unit = {},
     viewModel: CheckInCalendarViewModel = koinViewModel(),
@@ -150,7 +150,8 @@ fun DailyCheckInScreen(
             is DailyCheckInEvent.OnDateClick -> {
                 when {
                     event.date > today -> {
-                        calendarDialogDate = event.date
+                        // 平台没有日历能力时,点未来日期不弹预约框
+                        if (onAddCalendarEvent != null) calendarDialogDate = event.date
                     }
 
                     event.date < today && (uiState.records[event.date] ?: 0) == 0 -> {
@@ -198,7 +199,7 @@ fun DailyCheckInScreen(
                     contentDescription = stringResource(Res.string.checkin_report)
                 )
             }
-            FilledIconButton(onClick = onAddWidget) {
+            if (onAddWidget != null) FilledIconButton(onClick = onAddWidget) {
                 Icon(
                     imageVector = Icons.Filled.Add,
                     contentDescription = stringResource(Res.string.add_widget)
@@ -249,7 +250,7 @@ fun DailyCheckInScreen(
         confirmText = stringResource(Res.string.calendar_dialog_confirm),
         dismissText = stringResource(Res.string.cancel),
         onConfirm = {
-            calendarDialogDate?.let { onAddCalendarEvent(it) }
+            calendarDialogDate?.let { onAddCalendarEvent?.invoke(it) }
             calendarDialogDate = null
         },
         onDismiss = { calendarDialogDate = null },

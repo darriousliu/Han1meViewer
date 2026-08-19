@@ -23,6 +23,11 @@ kotlin {
             implementation(project(":core:repository"))
             implementation(project(":core:ui"))
         }
+
+        androidMain.dependencies {
+            // rememberCheckInActions 的 LocalActivity
+            implementation(libs.androidx.activity.compose)
+        }
     }
 }
 

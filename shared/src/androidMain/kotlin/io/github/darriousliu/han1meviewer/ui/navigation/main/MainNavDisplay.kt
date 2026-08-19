@@ -79,6 +79,7 @@ import io.github.darriousliu.han1meviewer.feature.subscription.creatorcenter.Cre
 import io.github.darriousliu.han1meviewer.feature.account.UserAccountViewModel
 import io.github.vinceglb.filekit.PlatformFile
 import kotlinx.serialization.json.Json
+import io.github.darriousliu.han1meviewer.feature.checkin.DailyCheckInRouteScreen
 import io.github.darriousliu.han1meviewer.feature.history.WatchHistoryRouteScreen
 import io.github.darriousliu.han1meviewer.feature.home.HomeRouteScreen
 import io.github.darriousliu.han1meviewer.feature.subscription.SubscriptionRouteScreen
