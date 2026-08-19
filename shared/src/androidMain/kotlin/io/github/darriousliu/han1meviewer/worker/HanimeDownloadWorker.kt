@@ -21,7 +21,7 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import io.github.darriousliu.han1meviewer.core.common.DOWNLOAD_NOTIFICATION_CHANNEL
+import io.github.darriousliu.han1meviewer.core.notification.DOWNLOAD_NOTIFICATION_CHANNEL
 import io.github.darriousliu.han1meviewer.core.common.EMPTY_STRING
 import io.github.darriousliu.han1meviewer.HFileManager
 import io.github.darriousliu.han1meviewer.HFileManager.createVideoName

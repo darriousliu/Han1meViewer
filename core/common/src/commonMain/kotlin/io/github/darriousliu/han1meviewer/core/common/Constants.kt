@@ -83,10 +83,6 @@ const val ALREADY_LOGIN = "already_login"
 
 // Notification
 
-const val DOWNLOAD_NOTIFICATION_CHANNEL = "download_channel"
-
-const val UPDATE_NOTIFICATION_CHANNEL = "update_channel"
-
 // File
 
 const val FILE_PROVIDER_AUTHORITY = "${BuildConfig.APPLICATION_ID}.fileProvider"

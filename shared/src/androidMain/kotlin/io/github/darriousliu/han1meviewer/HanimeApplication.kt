@@ -4,8 +4,6 @@ import android.app.Application
 import android.content.ComponentName
 import android.content.pm.PackageManager
 import android.util.Log
-import androidx.core.app.NotificationChannelCompat
-import androidx.core.app.NotificationManagerCompat
 import com.developer.crashx.config.CrashConfig
 import com.google.android.material.color.DynamicColors
 import com.google.firebase.Firebase
@@ -32,10 +30,9 @@ import org.koin.android.ext.koin.androidContext
 import java.net.ProxySelector
 import io.github.darriousliu.han1meviewer.core.common.BuildConfig
 import io.github.darriousliu.han1meviewer.core.common.util.applicationContext
-import io.github.darriousliu.han1meviewer.core.common.DOWNLOAD_NOTIFICATION_CHANNEL
-import io.github.darriousliu.han1meviewer.core.common.UPDATE_NOTIFICATION_CHANNEL
 import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.core.firebase.FirebaseConstants
+import io.github.darriousliu.han1meviewer.core.notification.createAppNotificationChannels
 
 /**
  * @project Hanime1
@@ -95,7 +92,7 @@ class HanimeApplication : Application() {
         ProxySelector.setDefault(HProxySelector())
         HProxySelector.rebuildNetwork()
         initFirebase()
-        initNotificationChannel()
+        createAppNotificationChannels()
         MPVLib.create(applicationContext)
         MPVLib.init()
 
@@ -140,21 +137,6 @@ class HanimeApplication : Application() {
         Firebase.database.setPersistenceEnabled(true)
     }
 
-    private fun initNotificationChannel() {
-        val nm = NotificationManagerCompat.from(this)
-
-        val hanimeDownloadChannel = NotificationChannelCompat.Builder(
-            DOWNLOAD_NOTIFICATION_CHANNEL,
-            NotificationManagerCompat.IMPORTANCE_HIGH
-        ).setName("Hanime Download").build()
-        nm.createNotificationChannel(hanimeDownloadChannel)
-
-        val appUpdateChannel = NotificationChannelCompat.Builder(
-            UPDATE_NOTIFICATION_CHANNEL,
-            NotificationManagerCompat.IMPORTANCE_HIGH
-        ).setName("App Update").build()
-        nm.createNotificationChannel(appUpdateChannel)
-    }
     fun switchLauncher(alias: String) {
         val pm = packageManager
 

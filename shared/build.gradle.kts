@@ -124,6 +124,8 @@ kotlin {
             api(project(":core:navigation"))
             // 公共组件/主题遍布各屏幕
             api(project(":core:ui"))
+            // 通知门面（渠道 id 被 worker 用）
+            implementation(project(":core:notification"))
             implementation(libs.kotlinx.io.core)
             implementation(libs.ksoup)
             implementation(libs.htmlconverter)
