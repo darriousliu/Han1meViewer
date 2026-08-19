@@ -69,7 +69,7 @@ import io.github.darriousliu.han1meviewer.ui.navigation.settings.HomeSettingsRou
 import io.github.darriousliu.han1meviewer.feature.settings.MpvPlayerSettingsRouteScreen
 import io.github.darriousliu.han1meviewer.ui.navigation.settings.NetworkSettingsRouteScreen
 import io.github.darriousliu.han1meviewer.ui.navigation.settings.PlayerSettingsRouteScreen
-import io.github.darriousliu.han1meviewer.ui.navigation.settings.SettingsScaffold
+import io.github.darriousliu.han1meviewer.feature.settings.SettingsScaffold
 import io.github.darriousliu.han1meviewer.feature.settings.SharedHKeyframesRouteScreen
 import io.github.darriousliu.han1meviewer.feature.account.AccountScreen
 import io.github.darriousliu.han1meviewer.feature.account.AvatarCropScreen
@@ -83,6 +83,8 @@ import io.github.darriousliu.han1meviewer.feature.history.WatchHistoryRouteScree
 import io.github.darriousliu.han1meviewer.feature.subscription.SubscriptionRouteScreen
 import io.github.darriousliu.han1meviewer.feature.preview.GetchuPreviewDetailRouteScreen
 import io.github.darriousliu.han1meviewer.feature.preview.GetchuPreviewRouteScreen
+import io.github.darriousliu.han1meviewer.feature.preview.PreviewCommentRouteScreen
+import io.github.darriousliu.han1meviewer.feature.preview.PreviewRouteScreen
 import io.github.darriousliu.han1meviewer.feature.mylist.MyPlaylistRouteScreen
 import io.github.darriousliu.han1meviewer.feature.mylist.WatchLaterRouteScreen
 import io.github.darriousliu.han1meviewer.feature.mylist.FavVideoRouteScreen

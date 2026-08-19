@@ -23,6 +23,8 @@ kotlin {
             implementation(project(":core:repository"))
             implementation(project(":core:ui"))
             implementation(project(":core:navigation"))
+            // SettingsScaffold 的 onScreenView 走 LocalMainHostActions
+            implementation(project(":feature:main"))
             implementation(libs.serialization.json)
             implementation(libs.aboutlibraries.core)
             implementation(libs.aboutlibraries.compose.m3)

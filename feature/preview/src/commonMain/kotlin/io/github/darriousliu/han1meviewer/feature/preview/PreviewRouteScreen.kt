@@ -1,10 +1,8 @@
-package io.github.darriousliu.han1meviewer.ui.navigation.main
+package io.github.darriousliu.han1meviewer.feature.preview
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.darriousliu.han1meviewer.feature.preview.PreviewScreen
 import io.github.darriousliu.han1meviewer.feature.comment.CommentViewModel
-import io.github.darriousliu.han1meviewer.feature.preview.PreviewViewModel
 import io.github.darriousliu.han1meviewer.feature.comment.PreviewCommentPrefetcher
 import org.koin.compose.viewmodel.koinViewModel
 

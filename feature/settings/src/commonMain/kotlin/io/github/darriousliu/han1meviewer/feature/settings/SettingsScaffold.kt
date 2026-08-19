@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.navigation.settings
+package io.github.darriousliu.han1meviewer.feature.settings
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,7 +22,6 @@ import io.github.darriousliu.han1meviewer.feature.main.LocalMainHostActions
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.back
 import org.jetbrains.compose.resources.stringResource
-import io.github.darriousliu.han1meviewer.feature.settings.SettingsDestinationSpec
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

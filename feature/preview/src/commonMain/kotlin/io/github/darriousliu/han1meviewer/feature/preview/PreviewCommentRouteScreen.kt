@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.navigation.main
+package io.github.darriousliu.han1meviewer.feature.preview
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -21,13 +21,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.darriousliu.han1meviewer.core.common.PREVIEW_COMMENT_PREFIX
 import io.github.darriousliu.han1meviewer.core.storage.Preferences
-import io.github.darriousliu.han1meviewer.R
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.core.ui.component.BottomSheetHandler
 import io.github.darriousliu.han1meviewer.core.navigation.PreviewCommentRoute
@@ -37,10 +34,15 @@ import io.github.darriousliu.han1meviewer.feature.comment.CommentScreen
 import io.github.darriousliu.han1meviewer.feature.comment.CommentViewModel
 import io.github.darriousliu.han1meviewer.feature.comment.PreviewCommentPrefetcher
 import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.back
+import io.github.darriousliu.han1meviewer.core.resource.ic_baseline_arrow_back_24
+import io.github.darriousliu.han1meviewer.core.resource.latest_hanime_comment
 import io.github.darriousliu.han1meviewer.core.resource.there_is_a_small_issue
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -188,12 +190,12 @@ fun PreviewCommentRouteScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.latest_hanime_comment, route.date)) },
+                title = { Text(stringResource(Res.string.latest_hanime_comment, route.date)) },
                 navigationIcon = {
                     FilledIconButton(onClick = onBack) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_baseline_arrow_back_24),
-                            contentDescription = stringResource(R.string.back),
+                            painter = painterResource(Res.drawable.ic_baseline_arrow_back_24),
+                            contentDescription = stringResource(Res.string.back),
                         )
                     }
                 },
