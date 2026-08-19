@@ -4,13 +4,10 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 
 /**
- * 用平台标准的 per-app language API。
+ * 用平台标准的 per-app language API：和系统设置里的「应用语言」双向联动、
+ * 进程死了设置还在、重建由 AppCompat 自己管（API 33+ 交给系统，以下 AppCompat 自己重建）。
  *
- * 比原来手写 `attachBaseContext` + `createConfigurationContext` 好在三点：
- * 和系统设置里的「应用语言」双向联动、进程死了设置还在、重建由 AppCompat 自己管
- * （API 33+ 交给系统，以下 AppCompat 自己重建）。
- *
- * ⚠️ 所以切语言**仍然会重建 Activity**——这是平台行为，绕不过去也不该绕。
+ * ⚠️ 切语言**仍然会重建 Activity**——这是平台行为，绕不过去也不该绕。
  */
 actual fun applyAppLanguage(languageTag: String?) {
     AppCompatDelegate.setApplicationLocales(

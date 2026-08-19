@@ -39,9 +39,9 @@ object DatabaseRepo {
 
         // #issue-106: 剧集分类
         //
-        // 迁移前是 `assets.list("h_keyframes")` 枚举目录，compose-resources 没有这个能力，
-        // 改成读构建期生成的 [SHARED_H_KEYFRAME_CODES]（见 :core:resource:generateSharedHKeyframeIndex）。
-        // 文件布局仍然是一个视频一个 json，贡献方式不变。
+        // compose-resources 没有枚举目录的能力，共享帧清单读构建期生成的
+        // [SHARED_H_KEYFRAME_CODES]（见 :core:resource:generateSharedHKeyframeIndex）。
+        // 文件布局是一个视频一个 json。
         @OptIn(ExperimentalResourceApi::class)
         fun loadAllShared(): Flow<List<HKeyframeType>> = flow {
             val res = SHARED_H_KEYFRAME_CODES
@@ -74,8 +74,8 @@ object DatabaseRepo {
                 return flow t@{
                     val find = hKeyframeDao.findBy(videoCode)
                     if (find == null || Preferences.sharedHKeyframesUseFirst) {
-                        // 迁移前靠 FileNotFoundException 判断「没有这个共享帧」，
-                        // Res.readBytes 抛的是别的类型，改成先查索引。
+                        // Res.readBytes 读不到抛的不是 FileNotFoundException，
+                        // 没法按异常类型判断「没有这个共享帧」，先查索引。
                         if (videoCode !in SHARED_H_KEYFRAME_CODES) {
                             Logger.w(tag = "HKeyframe") { "未找到关键帧文件: $videoCode.json" }
                         } else {

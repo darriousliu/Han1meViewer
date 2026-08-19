@@ -3,19 +3,11 @@ package io.github.darriousliu.han1meviewer.core.common.util
 import androidx.compose.ui.graphics.ImageBitmap
 
 /**
- * 图片的采样解码与编码。**唯一存在的理由是「不能因为一张大图 OOM」**。
+ * 图片的采样解码与编码。**唯一存在的理由是「不能因为一张大图 OOM」**：
+ * 一张 8000×6000 的相机原片全量解码成 ARGB_8888 就是 **183 MB**——必炸。
  *
- * 迁移前的头像裁剪页（`AvatarCropScreen`）直接 `ImageDecoder.decodeBitmap(source)`
- * 全量解码，再 `.copy(ARGB_8888, true)` 复制一份。一张 8000×6000 的相机原片
- * 解成 ARGB_8888 是 **183 MB**，加上那次 copy 峰值 **366 MB**——必炸。
- *
- * 现成库都不解决这件事，逐个查过：
- * - `FileKit.compressImage`（带 maxWidth/maxHeight，最像答案的一个）：Android actual
- *   第一行就是无 `inSampleSize` 的 `BitmapFactory.decodeByteArray`，全量解码完才缩放
- * - CMP commonMain 的 `ByteArray.decodeToImageBitmap()`：同样没有采样参数
- * - `cn.mucute:compose-avatar-cropper`（被本文件替换掉的那个）：解码根本在调用方
- *
- * 所以采样必须发生在**解码器内部**，只能各平台自己来。
+ * 现成库均无采样解码（FileKit `compressImage`、CMP 内置 `decodeToImageBitmap()`
+ * 全是先全量解码再缩放），采样必须发生在**解码器内部**，只能各平台自己解。
  */
 
 /** 预览解码的尺寸上限。2048² 的 ARGB_8888 最坏 16 MB，安全且足够裁剪取景。 */
@@ -24,7 +16,7 @@ const val PREVIEW_MAX_DIMENSION = 2048
 /** 头像输出的尺寸上限。 */
 const val AVATAR_MAX_DIMENSION = 1024
 
-/** 头像 JPEG 画质，与迁移前一致。 */
+/** 头像 JPEG 画质。 */
 const val AVATAR_JPEG_QUALITY = 90
 
 /**
@@ -50,9 +42,8 @@ fun computeSampleSize(srcWidth: Int, srcHeight: Int, maxDimension: Int): Int {
  *
  * 解不出来（格式不支持、数据损坏）返回 null，不抛异常。
  *
- * 各平台都会顺带按 EXIF 把方向转正，唯一例外是 Android API 27
- * （`ImageDecoder` 是 API 28 起，minSdk 是 27）——那条路和迁移前的
- * `MediaStore.Images.Media.getBitmap` 行为一致，不是回归。
+ * 各平台都会顺带按 EXIF 把方向转正，唯一例外是 Android API 27 不转
+ * （`ImageDecoder` 是 API 28 起，minSdk 是 27）。
  */
 expect suspend fun decodeSampledImageBitmap(bytes: ByteArray, maxDimension: Int): ImageBitmap?
 

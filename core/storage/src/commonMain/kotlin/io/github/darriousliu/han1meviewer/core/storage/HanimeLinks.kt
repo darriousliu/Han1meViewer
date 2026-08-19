@@ -4,11 +4,7 @@ import io.github.darriousliu.han1meviewer.core.common.HanimeConstants
 import io.github.darriousliu.han1meviewer.core.common.toVideoCode
 
 /**
- * 站内链接的拼接与解析。原本在 androidMain 的 `HanimeManager.kt`，
- * 都是纯字符串操作，`Parser` 上移 commonMain 时要用到 [toVideoCode]，跟着搬过来。
- *
- * `HanimeManager.kt` 留下的是真正依赖 Android 的部分：`hanimeSpannedTitle`（parseAsHtml）、
- * `pienization`（Composable）、`login`/`logout`（webkit CookieManager）。
+ * 站内链接的拼接与解析，纯字符串操作。
  */
 
 fun getHanimeVideoLink(videoCode: String) = HANIME_BASE_URL + "watch?v=" + videoCode

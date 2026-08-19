@@ -54,7 +54,6 @@ interface HGitHubService {
         @Url url: String,
     ): Artifacts
 
-    // 迁移前这里还有一个 @Streaming 的 request(@Url)，用来下载更新包。
-    // 它已经挪出接口了：走 HanimeNetwork.githubClient 的 prepareGet，
-    // 否则 Ktor 默认会把整个 APK 先读进内存（Retrofit 靠 @Streaming 规避，Ktor 靠 prepare*）。
+    // 更新包下载不放在这个接口里：走 HanimeNetwork.githubClient 的 prepareGet
+    // （见 ApkUpdateDownloader），否则 Ktor 默认会把整个 APK 先读进内存。
 }

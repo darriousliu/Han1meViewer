@@ -7,7 +7,7 @@ import androidx.navigation3.runtime.serialization.NavBackStackSerializer
 
 /*
  * nav3 的返回栈就是一个 `MutableList<HanimeRoute>`，导航动作即列表操作。
- * 这里放建栈入口，以及从 nav2 迁过来时需要保形的那几个语义。
+ * 这里放建栈入口和几个导航语义扩展。
  */
 
 /**
@@ -21,8 +21,7 @@ import androidx.navigation3.runtime.serialization.NavBackStackSerializer
  * 照它说的做就得手写一份 28 条的注册表，漏一条只有运行时才炸。
  *
  * 这里改成把元素类型收窄到 sealed 的 [HanimeRoute]，序列化器直接用 `HanimeRoute.serializer()`：
- * sealed 自动多态，新路由只要挂在 [HanimeRoute] 下就自动进表，一条注册都不用写。
- * 实现与 `rememberNavBackStack` 逐字等价（`rememberSerializable` + `NavBackStackSerializer`），
+ * sealed 自动多态，新路由只要挂在 [HanimeRoute] 下就自动进表，一条注册都不用写，
  * 进程死亡后的返回栈恢复照旧。
  */
 @Composable
@@ -33,7 +32,7 @@ fun rememberHanimeBackStack(vararg elements: HanimeRoute): NavBackStack<HanimeRo
     ) { NavBackStack(*elements) }
 
 /**
- * 替代 nav2 的 `navigateSafely`（`NavControllerExt.kt`）。
+ * 替代 nav2 的 `navigateSafely`。
  *
  * ⚠️ **守卫语义变了**：nav2 那版看的是
  * `currentBackStackEntry.lifecycle.currentState.isAtLeast(STARTED)`，

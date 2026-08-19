@@ -8,10 +8,8 @@ import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.plus
 
 /*
- * 从 androidMain 的 `DailyCheckInUtils.kt` 拆出来的纯计算部分。
- * 平台副作用那半（系统日历、横竖屏切换）在 androidMain 的
+ * 打卡日历的纯计算部分。平台副作用（系统日历、横竖屏切换）在 androidMain 的
  * `ui/navigation/main/DailyCheckInRouteUtils.kt`。
- * 原文件里的 `computeStreaks` 是死代码（VM 里有逐行相同的实现），已删。
  */
 
 /**

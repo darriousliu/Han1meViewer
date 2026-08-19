@@ -30,8 +30,7 @@ class HProxySelector : ProxySelector() {
     }
 
     companion object {
-        // 真正的定义已抽到 commonMain 的 ProxyType（Preferences 上移 commonMain 需要），
-        // 这里保留别名，现有调用点不用改。
+        // commonMain `ProxyType` 的别名，现有调用点不用改。
         const val TYPE_DIRECT = ProxyType.DIRECT
         const val TYPE_SYSTEM = ProxyType.SYSTEM
         const val TYPE_HTTP = ProxyType.HTTP

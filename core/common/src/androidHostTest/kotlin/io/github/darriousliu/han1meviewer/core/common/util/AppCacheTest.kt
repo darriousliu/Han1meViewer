@@ -7,11 +7,7 @@ import org.junit.Test
 import org.junit.rules.TemporaryFolder
 
 /**
- * [calculateSizeRecursively] 是 Step 23 把「清缓存」从 androidMain 的
- * `File.folderSize` 换成 commonMain + FileKit 时新写的递归累加。
- *
- * FileKit 只给单个文件的 `size()`，目录累加要自己走——这是本轮唯一
- * 能用单测钉住的纯函数，所以钉住它。
+ * FileKit 只给单个文件的 `size()`，目录累加要 [calculateSizeRecursively] 自己走。
  */
 class AppCacheTest {
 

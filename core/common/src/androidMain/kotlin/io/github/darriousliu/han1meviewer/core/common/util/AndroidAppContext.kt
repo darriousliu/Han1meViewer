@@ -24,8 +24,7 @@ val application: Application
  * 当前进程是不是主进程（下载 worker 等子进程为 false）。
  *
  * 好几个平台能力只在主进程有意义：OkHttp 磁盘缓存的 DiskLruCache 不能多进程共用、
- * Cloudflare 过盾要拉起 Activity。原来靠「HanimeApplication 只在主进程注入」表达，
- * lambda 注入废弃后由各 actual 自己判断，统一用这一份。
+ * Cloudflare 过盾要拉起 Activity。相关 actual 统一用这一份判断。
  */
 val isMainProcess: Boolean by lazy {
     val app = AndroidAppContext.application

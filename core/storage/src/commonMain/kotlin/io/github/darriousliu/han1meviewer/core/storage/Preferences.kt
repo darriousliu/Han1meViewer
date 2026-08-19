@@ -106,10 +106,8 @@ object Preferences {
     /**
      * 深色模式偏好：`follow_system` / `always_on` / `always_off`。
      *
-     * 做成 StateFlow 是为了让 `HanimeTheme` 能直接观察它——原来主题只看
-     * `isSystemInDarkTheme()`，靠 Android 的 `AppCompatDelegate.setDefaultNightMode`
-     * 改 configuration 间接生效，所以每次切换都得重建 Activity，
-     * 而且这个偏好在 desktop/iOS 上完全是死的。
+     * 做成 StateFlow 是为了让 `HanimeTheme` 能直接观察它：切换即时生效、
+     * 不用重建 Activity，desktop/iOS 也能吃到这个偏好。
      */
     val useDarkModeStateFlow: MutableStateFlow<String>
             by SettingsStore.mmkvString("always_off", key = "useDarkMode").asMutableStateFlow()
@@ -362,8 +360,7 @@ object Preferences {
     /**
      * 导出给备份用的设置快照。
      *
-     * 只含 [SettingsStore]——[AccountStore]（登录 cookie 等）和 [MiscStore] 从来就不在备份范围内，
-     * 迁移到 MMKV 之前也是这样。
+     * 只含 [SettingsStore]——[AccountStore]（登录 cookie 等）和 [MiscStore] 从来就不在备份范围内。
      *
      * 之所以要手写一遍而不是遍历 MMKV：MMKV **不保存值的类型信息**，`allKeys()` 只给 key、
      * 读取必须先知道类型。写在这里的好处是名单和属性声明在同一个文件，加设置项时不容易漏。
@@ -440,7 +437,6 @@ object Preferences {
         ::customMpvParams.name to customMpvParams,
     ) + buildMap {
         // 两个可空项：没设置过就不进备份，免得把 null 写成空串。
-        // 迁移前 `sp.all` 也是只导出写过的 key，行为一致。
         themeColor?.let { put(::themeColor.name, it) }
         safDownloadPath?.let { put(::safDownloadPath.name, it) }
     }
@@ -448,7 +444,7 @@ object Preferences {
     /**
      * 恢复备份里的设置。类型直接取自备份文件里的值，所以不需要另外维护类型表。
      *
-     * 认不出来的 key 会照原样写进 MMKV——反正没人读，和迁移前 `sp.all` 全量写回的行为一致。
+     * 认不出来的 key 会照原样写进 MMKV——反正没人读。
      */
     fun importSettings(settings: Map<String, Any>) {
         val kv = SettingsStore.kv
@@ -465,9 +461,8 @@ object Preferences {
 }
 
 /**
- * [CookieString] 是 value class，MMKV 存不了，落盘时退化成里面的 String。
- * 这样 `loginCookieStateFlow` 对外仍是 `MutableStateFlow<CookieString>`，
- * `HCookieJar` 那几处调用点不用改。
+ * [CookieString] 是 value class，MMKV 存不了，落盘时退化成里面的 String，
+ * 对外仍是 `MutableStateFlow<CookieString>`。
  */
 private fun MMKVOwner.mmkvCookie(key: String? = null) = MMKVProperty(
     owner = this,
@@ -480,7 +475,7 @@ private fun MMKVOwner.mmkvCookie(key: String? = null) = MMKVProperty(
 private fun String.ensureTrailingSlash(): String = if (endsWith('/')) this else "$this/"
 
 /**
- * 取 `scheme://authority`，等价于原先的 `"${uri.scheme}://${uri.encodedAuthority}"`。
+ * 取 `scheme://authority`。
  * 用字符串切割而不是 `androidx.core.net.toUri`，因为要待在 commonMain。
  */
 private fun String.toRootUrl(): String {

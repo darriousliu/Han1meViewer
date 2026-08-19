@@ -111,7 +111,7 @@ private fun buildPlayerSettingsUiState(context: Context, refreshKey: Int): Playe
 
 /**
  * [longPressSpeedOptions] 里的 value 是手写的 `"2"` `"3"` 这种，没有小数点，
- * 而 `Preferences.longPressSpeedTime` 现在是 Float（迁移前 SharedPreferences 存的是 String）。
+ * 而 `Preferences.longPressSpeedTime` 是 Float。
  * 直接 `toString()` 会得到 `"2.0"`，下拉框就选不中了，所以整数值要去掉 `.0`。
  *
  * `speedOptions` 不用管：它的 value 本来就是 `speedArray.map { it.toString() }` 生成的。

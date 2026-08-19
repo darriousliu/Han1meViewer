@@ -18,7 +18,6 @@ private val logger = Logger.withTag(HUpdater.TAG)
  * `Intent.ACTION_VIEW` + FileProvider，iOS 走 App Store 根本没有对应动作；
  * CI 渠道的 zip 解包也依赖 JVM 的 [ZipInputStream]。
  *
- * 迁移前走的是 Retrofit `@Streaming` 的 `githubService.request(url)`。
  * Ktor 这边必须用 `prepareGet {}.execute {}`——直接 `get()` 会把整个 APK
  * 先读进内存（响应体默认是要缓存下来的）。
  *

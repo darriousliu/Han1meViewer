@@ -21,13 +21,12 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
 /*
- * 原来的 LoginActivity / ManualInputCookiesActivity，Step 17 合并成两个导航目的地。
+ * 登录 / 手动输入 Cookie 两个导航目的地。
  * 屏幕在 commonMain（composewebview），平台副作用（Toast、登录网络请求的错误提示）在这里。
  */
 
 /**
  * @param onLoginFinished 登录成功后的收尾：pop 回上一页并刷新首页
- *   （对应原来 `loginDataLauncher` 收到 `RESULT_OK` 后的 `viewModel.getHomePage()`）
  */
 @Composable
 fun LoginRouteScreen(

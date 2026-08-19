@@ -503,7 +503,7 @@ object NetworkRepo {
     ) = websiteIOFlow(
         request = {
             HanimeNetwork.commentService.submitReport(
-                // Ktorfit 不允许 @Path 可空，判空提到这里；迁移前 Retrofit 也是 null 就抛。
+                // Ktorfit 不允许 @Path 可空，判空提到这里。
                 userId = requireNotNull(currentUserId) { "currentUserId is null" },
                 csrfToken = csrfToken,
                 redirectUrl = redirectUrl,

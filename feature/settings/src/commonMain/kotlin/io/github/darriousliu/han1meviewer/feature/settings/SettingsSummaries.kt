@@ -34,22 +34,15 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
 /*
- * 设置页的摘要文案。全部属于第三节分类里的 **A 类**（全平台通用）——
- * 只是把 Preferences 的值拼成人话，没有任何平台能力。
+ * 设置页的摘要文案，全平台通用——只是把 Preferences 的值拼成人话，没有任何平台能力。
  *
- * 从 androidMain 的 `SettingsRouteUtils.kt` 拆出来，那边只剩真平台能力
- * （改名 `SettingsPlatformActions.kt`）。
+ * ⚠️ 为什么是 `@Composable` 而不是普通函数：CMP 侧取字符串只有两条路——
+ * 组合内的 `stringResource`（composable）或非组合的 `getString`（**suspend**），
+ * 在 `remember { … }` 块里两者都用不了，所以整条链是 composable，
+ * 调用点直接 `buildXxx(refreshKey)`、不包 remember。
  *
- * ⚠️ 为什么是 `@Composable` 而不是普通函数：原来靠 `Context.getString`，
- * CMP 侧取字符串只有两条路——组合内的 `stringResource`（composable）
- * 或非组合的 `getString`（**suspend**）。设置页的调用点在
- * `remember(refreshKey) { … }` 里，两者都用不了，所以整条链改成 composable，
- * 调用点从 `remember(refreshKey, context) { buildXxx(context) }`
- * 变成直接 `buildXxx(refreshKey)`。
- *
- * 副作用是每次重组都会重算一遍（原来只在 refreshKey 变时算）。
- * 这些函数只读 MMKV + 资源，代价可忽略，而且**顺带修掉一个隐患**：
- * 原写法只在 refreshKey 变化时刷新，Preferences 从别处被改时 UI 不会跟。
+ * 副作用是每次重组都会重算一遍。这些函数只读 MMKV + 资源，代价可忽略，
+ * 好处是 Preferences 从别处被改时 UI 也能跟上（包 remember 就不会跟）。
  */
 
 /** 镜像站下拉的选项：`域名 (默认/备用/av)` → URL */
@@ -65,12 +58,7 @@ fun buildDomainOptions(): List<Pair<String, String>> {
     )
 }
 
-/**
- * 缓存占用摘要。
- *
- * 原来结尾有个 `parseAsHtml()` 返回 `Spanned`，但**唯一调用点拿到就 `.toString()`**，
- * Span 全丢——等价于纯文本，所以这里直接不做 HTML 解析，行为不变。
- */
+/** 缓存占用摘要，纯文本、不做 HTML 解析。 */
 @Composable
 fun generateClearCacheSummary(size: Long): String =
     stringResource(Res.string.cache_usage_summary, size.formatFileSizeV2())
@@ -114,12 +102,7 @@ fun toPrettySensitivityString(value: Int): String {
     return stringResource(Res.string.current_slide_sensitivity, pretty)
 }
 
-/**
- * 倒计时提醒秒数摘要，等于默认值时加「(默认)」。
- *
- * 默认值原来读的是 androidMain 的 `HJzvdStd.DEF_COUNTDOWN_SEC`，
- * 而那个常量的值就是 commonMain 的 [PlayerDefaults.COUNTDOWN_SEC]，直接引后者。
- */
+/** 倒计时提醒秒数摘要，等于默认值 [PlayerDefaults.COUNTDOWN_SEC] 时加「(默认)」。 */
 @Composable
 fun toPrettyCountdownRemindString(value: Int): String {
     val text = stringResource(Res.string.will_remind_before_d_seconds, value)

@@ -140,11 +140,7 @@ private fun MainNavDisplayContent(
             rememberViewModelStoreNavEntryDecorator(),
             rememberResultEventBusNavEntryDecorator(),
         ),
-        // nav2 是 enter/exit/popEnter/popExit 四条各返回单侧动画，
-        // nav3 是 transitionSpec/popTransitionSpec 两条各返回 ContentTransform（enter togetherWith exit），
-        // 外加一条 predictivePopTransitionSpec（nav2 没有，这里镜像 pop 保证观感一致）。
-        // 内容逐字照搬——nav3 的 receiver 就是 AnimatedContentTransitionScope，
-        // slideIntoContainer / slideOutOfContainer 原样可用。
+        // 动画参数为既定规格；predictivePopTransitionSpec 镜像 pop 保证观感一致。
         transitionSpec = {
             // 新页面：从右侧滑入 + 淡入；旧页面：向左偏移 1/3 + 缩小 + 淡出
             (slideIntoContainer(
@@ -448,7 +444,7 @@ private fun MainNavDisplayContent(
                     onBack = onBack,
                     onLoginFinished = {
                         resultBus.sendResult(LoginSucceeded)
-                        // 把手动输入页和登录页一起退掉（原来是两层 Activity 各自 finish）
+                        // 把手动输入页和登录页一起退掉
                         backStack.popTo(LoginRoute, inclusive = true)
                     },
                 )

@@ -107,8 +107,8 @@ fun HorizontalCardCountDialog(
         bucketHintText = stringResource(
             Res.string.horizontal_card_count_current_bucket_hint,
             horizontalCardCountBucketLabel(currentWidthDp),
-            // 资源里原本是 %2$.1f，但 CMP 的 stringResource(res, vararg) 只替换
-            // %N$d / %N$s，%f 会被原样显示出来。资源改成 %2$s，小数在这里格式化。
+            // CMP 的 stringResource(res, vararg) 只替换 %N$d / %N$s，%f 会被
+            // 原样显示出来，所以资源用 %2$s，小数在这里格式化。
             "%.1f".sprintf(currentConfig.countForWidthDp(currentWidthDp)),
         ),
         options = options,

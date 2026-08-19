@@ -3,14 +3,14 @@ package io.github.darriousliu.han1meviewer.feature.settings.model
 /**
  * 本平台**支持**哪些设置项。不支持的直接不渲染，而不是渲染成灰的。
  *
- * 这是 Step 22 建立的三层结构的中间一层：
+ * 这是三层结构的中间一层：
  *
  * 1. **数据**（[HomeSettingsUiState]）——全平台都是全的
  * 2. **可见性**（本类）——各平台按实际情况引用那份数据
  * 3. **能力**（`HomeSettingsActions`）——expect/actual
  *
- * 分类依据见 `MIGRATION_NEXT.md` 第三节。A 类（全平台通用）的设置项压根不在这里出现，
- * 因为它们永远显示；这里只列 B 类（概念通用、实现按平台分）和 C 类（Android 独有）。
+ * 全平台通用的设置项压根不在这里出现，因为它们永远显示；
+ * 这里只列「概念通用、实现按平台分」和「Android 独有」两类。
  *
  * **所有字段默认 false**，所以新平台的 actual 就是一行
  * `HomeSettingsCapabilities()`，新增一个 flag 也不会打断它们。

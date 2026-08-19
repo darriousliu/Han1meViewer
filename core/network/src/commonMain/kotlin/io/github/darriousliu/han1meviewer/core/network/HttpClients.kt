@@ -15,7 +15,7 @@ import io.ktor.client.request.header
 import io.ktor.http.HttpHeaders
 
 /**
- * 四个用途不同的 client。迁移前对应 `ServiceCreator` 里的四个 `OkHttpClient`。
+ * 四个用途不同的 client。
  */
 enum class HClientSpec(val connectTimeoutMillis: Long) {
     /** 主站。带 cookie、Cloudflare 过盾、磁盘缓存、代理。 */
@@ -47,7 +47,7 @@ internal expect fun createPlatformHttpClient(
 ): HttpClient
 
 internal fun buildHttpClient(spec: HClientSpec): HttpClient = createPlatformHttpClient(spec) {
-    // 迁移前是 Retrofit + okhttp，非 2xx 不抛异常、由调用方自己看 code。保持一致。
+    // 非 2xx 不抛异常，由调用方自己看 code——所有调用点都按这个约定写的。
     expectSuccess = false
 
     install(HttpTimeout) {

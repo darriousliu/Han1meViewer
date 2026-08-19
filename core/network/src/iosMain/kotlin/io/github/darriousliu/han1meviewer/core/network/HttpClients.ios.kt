@@ -14,8 +14,9 @@ import io.ktor.http.Url
  *
  * androidJvmMain 那边挂在 OkHttp engine 上的能力里，**代理已经补上**（见下）；
  * 其余（DoH/自定义 DNS、磁盘缓存、限速、强制 HTTP/1.1）Darwin 没有对应物：
- * `NSURLSession` 不提供 DNS hook，**DoH 在这一端明确不做**，
- * 由 `HomeSettingsCapabilities` 把对应设置项藏掉，而不是留着让它运行时失效。
+ * `NSURLSession` 不提供 DNS hook，**DoH 在这一端明确不做**。
+ * ⚠️ 网络设置页的对应设置项应按平台门控隐藏（待补 NetworkSettingsCapabilities），
+ * 不能留着运行时静默失效——目前门控还没写，接 iOS 导航前必须先补。
  */
 internal actual fun createPlatformHttpClient(
     spec: HClientSpec,

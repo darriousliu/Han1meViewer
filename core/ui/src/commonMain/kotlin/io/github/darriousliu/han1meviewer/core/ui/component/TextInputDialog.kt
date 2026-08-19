@@ -26,24 +26,10 @@ import io.github.darriousliu.han1meviewer.core.resource.confirm
 import org.jetbrains.compose.resources.stringResource
 
 /**
- * 两个文本框的输入对话框（标题 + 描述）。
+ * 两个文本框的输入对话框（标题 + 描述），「新建播放列表」和「修改标题/描述」两处共用。
  *
- * 替代原来 `LayoutInflater.inflate(R.layout.dialog_playlist_modify_edit_text)` 那套
- * ——同一个 layout 被「新建播放列表」和「修改标题/描述」两处 inflate，
- * 所以这里做成一个参数化组件供两处共用。
- *
- * 和被替代的 XML 版相比有两处**刻意的行为改进**：
- * 1. 原来是「第一个框有焦点、键盘不自动弹」（那是 `AlertController` 检测到自定义 view
- *    含 EditText 的副作用，不是代码写的），用户得多点一下。这里主动弹键盘。
- * 2. 原来 XML 写了 `maxLines="3"`，但配的是 `inputType="text"`——Android 下非
- *    multiLine 的 inputType 会强制单行，所以那个 `maxLines` **当年就没生效**。
- *    这里按写 XML 时的意图来：标题单行、描述最多 3 行。
- *
- * 另外原来经 `showAlertDialog` 会给 Activity decorView 加高斯模糊（`RenderEffect`，
- * Android 独有），CMP 的 [AlertDialog] 没有这个效果——commonMain 已有的
- * [ConfirmDialog] 本来也没有，域内早就不统一，这里接受。
- *
- * 确定按钮**无条件可点**（和原实现一致，空标题也能提交），要加校验是另一件事。
+ * 行为约定：标题单行、描述最多 3 行；打开即主动弹键盘；
+ * 确定按钮**无条件可点**（空标题也能提交），要加校验是另一件事。
  */
 @Composable
 fun TextInputDialog(

@@ -22,7 +22,7 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 
 /**
- * 迁移前的 `ServiceCreator` + `HanimeNetwork`。
+ * 全局网络入口：四个 client 与各 Ktorfit service。
  *
  * @project Hanime1
  * @author Yenaly Liew
@@ -66,9 +66,7 @@ object HanimeNetwork {
         private set
 
     /**
-     * 用户改了镜像站/代理/DNS 之后重建。
-     *
-     * 迁移前只是把旧的 `OkHttpClient` 丢掉（连接池就那么挂着），现在显式 `close()`。
+     * 用户改了镜像站/代理/DNS 之后重建，旧 client 显式 `close()` 释放连接池。
      * githubClient 和 downloadClient 不受这些设置影响，不用重建。
      */
     fun rebuildNetwork() {

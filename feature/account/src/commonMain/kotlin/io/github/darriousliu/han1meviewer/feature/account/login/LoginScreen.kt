@@ -54,17 +54,11 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 /**
- * WebView 登录页。原来是独立的 `LoginActivity`（AndroidView + 手写 WebViewClient），
- * Step 17 合并进导航图并换成 composewebview 重写，整个屏幕进 commonMain。
+ * WebView 登录页。
  *
- * 和原实现逐条对齐的行为：
- * - 进入先清全部 cookie 再加载登录页（原来是 `CookieManager.removeAllCookies` + `flush`，
- *   这里用库的 suspend 版并保证清完才 `loadUrl`——原实现其实是同步清但紧接着加载，时序一致）
- * - 重定向回站内任一基础域时拦截：抓当前 cookie 串交给 [onCookiesCaptured]（原来是
- *   `shouldOverrideUrlLoading` 里 `CookieManager.getCookie(host)`）
- * - 主框架加载失败 → 弹账密登录 [LoginDialog]（原来是 `WebViewClient.onReceivedError`）
- * - 返回键：网页能后退就后退，不能才退出本页（原来是 `Activity.onKeyDown`）
- * - 下拉刷新重新加载登录页
+ * 行为约定：进入先清全部 cookie、清完才加载登录页；重定向回站内任一基础域时拦截，
+ * 抓当前 cookie 串交给 [onCookiesCaptured]；主框架加载失败弹账密登录 [LoginDialog] 兜底；
+ * 返回键网页能后退就后退，不能才退出本页；下拉刷新重新加载登录页。
  */
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalComposeUiApi::class)
 @Composable
@@ -116,7 +110,7 @@ fun LoginScreen(
         navigator.loadUrl(HANIME_LOGIN_URL)
     }
 
-    // 主框架加载失败 → 账密登录兜底（原 WebViewClient.onReceivedError 的语义）
+    // 主框架加载失败 → 账密登录兜底
     LaunchedEffect(state.errorsForCurrentRequest.size) {
         if (state.errorsForCurrentRequest.any { it.isFromMainFrame }) {
             showLoginDialog = true

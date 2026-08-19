@@ -21,13 +21,7 @@ import io.github.darriousliu.han1meviewer.core.ui.preview.ComponentPreview
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
-/**
- * 从 androidMain 的 `SettingItem.kt` 拆出来的。
- *
- * 那个文件里另外四个 composable 的 `iconRes` 在设置页被传了 71 次、涉及 66 个 drawable，
- * 整体上移等于把整个 `ui/screen/settings/` 拖进来；而这一个的三个调用点
- * （`ChoiceDialog`、`AdvancedSearchSheet` ×2）都没传 `iconRes`，改签名零影响。
- */
+/** 单选行：可选图标 + 标题（可带摘要），选中时右侧画勾。 */
 @Composable
 fun SettingChoiceItem(
     title: String,

@@ -641,12 +641,7 @@ private fun OnlineHistorySortChip(
     )
 }
 
-/**
- * 毫秒时间戳 -> `yyyy-MM-dd HH:mm`。
- *
- * 原来是 `SimpleDateFormat(..., Locale.getDefault())`，commonMain 没有；
- * [LOCAL_DATE_TIME_FORMAT] 的格式与之完全一致，直接复用。
- */
+/** 毫秒时间戳 -> `yyyy-MM-dd HH:mm`（[LOCAL_DATE_TIME_FORMAT]）。 */
 @OptIn(ExperimentalTime::class)
 private fun formatWatchDate(epochMillis: Long): String =
     Instant.fromEpochMilliseconds(epochMillis)

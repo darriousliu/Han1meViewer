@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
 /**
- * 应用更新检查。原本是 `NetworkRepo.getLatestVersion`。
+ * 应用更新检查。
  *
  * [HUpdater] 里唯一的平台差异（Firebase Remote Config 的 CI 渠道开关）已经收成一个
  * 注入点，检查逻辑本身是纯 GitHub API 调用，所以这层可以留在 commonMain。

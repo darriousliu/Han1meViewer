@@ -66,8 +66,7 @@ interface HanimeCommentService {
     @FormUrlEncoded
     @POST("user/{userId}/report")
     suspend fun submitReport(
-        // Ktorfit 不允许 @Path 可空。迁移前是 Retrofit 的 String?，但它在 null 时也是直接抛，
-        // 所以把判空提到了调用方（NetworkRepo.reportComment），行为不变。
+        // Ktorfit 不允许 @Path 可空，判空在调用方（NetworkRepo.reportComment）。
         @Path("userId") userId: String,
         @Field("_token") csrfToken: String?,
         @Field("redirect-url") redirectUrl: String,

@@ -14,11 +14,8 @@ import kotlinx.coroutines.withContext
 /**
  * 应用缓存的大小与清理。
  *
- * 原来是 androidMain 的 `context.cacheDir` + `File.folderSize`，走
- * `HomeSettingsActions` 的 expect/actual。现在整个进 commonMain——
  * FileKit 的 [FileKit.cacheDir] 三端都有对应目录（Android 的 cacheDir、
- * JVM 的用户缓存目录、iOS 的沙盒 Caches），所以这一项**不需要平台能力抽象**，
- * 从 B 类降成 A 类。
+ * JVM 的用户缓存目录、iOS 的沙盒 Caches），不需要平台能力抽象。
  *
  * 递归求大小要自己写：FileKit 只给单个文件的 [size]，不给目录累加。
  */

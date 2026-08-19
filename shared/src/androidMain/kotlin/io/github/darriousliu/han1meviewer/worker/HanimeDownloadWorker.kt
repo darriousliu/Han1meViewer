@@ -366,9 +366,8 @@ class HanimeDownloadWorker(
                 var delayTime = 0L
                 var retryCount = 0
 
-                // 迁移前是 okhttp 的 newCall().await() + byteStream()；Ktor 这边用
-                // prepareGet{}.execute{}，响应体的生命周期由 execute 的 lambda 界定，
-                // 不用再手动 closeQuietly 一串资源。Range/206 判断和重试逻辑保持原样。
+                // Ktor 的 prepareGet{}.execute{}：响应体的生命周期由 execute 的 lambda 界定，
+                // 不用手动 closeQuietly 一串资源。
                 while (downloadedLength < entity.length) {
                     val requestNeedRange = downloadedLength > 0
                     var failureReason: String? = null
@@ -539,8 +538,8 @@ class HanimeDownloadWorker(
     }
 
     /**
-     * 迁移前用的是 `okhttp3.internal.closeQuietly`。网络资源已经交给 Ktor 的
-     * `execute {}` 管了，这里只剩文件和描述符，没必要为此依赖 okhttp 的内部 API。
+     * 网络资源已经交给 Ktor 的 `execute {}` 管了，这里只剩文件和描述符，
+     * 没必要为此依赖 okhttp 内部的 `closeQuietly`。
      */
     private fun Closeable.closeQuietly() {
         try {

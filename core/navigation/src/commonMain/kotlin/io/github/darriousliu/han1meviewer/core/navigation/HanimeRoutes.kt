@@ -4,9 +4,7 @@ import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
 /*
- * 全 App 的导航目的地。Step 19 从 androidMain 的 `ui/navigation/main/MainRoutes.kt`
- * 与 `ui/navigation/settings/SettingsRoutes.kt` 收进来，统一放在 commonMain 的
- * 同一个包里——两个原因：
+ * 全 App 的导航目的地，统一放在 commonMain 的同一个包里——两个原因：
  *
  * 1. nav3 的 `NavKey` 与路由类都是纯数据，本来就没有平台依赖
  * 2. **sealed 层级要求所有直接实现同包同模块**。收在一起之后返回栈的持久化
@@ -16,8 +14,6 @@ import kotlinx.serialization.Serializable
  *    [rememberHanimeBackStack]；nav3 自带的 `rememberNavBackStack` 写死
  *    `PolymorphicSerializer(NavKey::class)`（开放接口，kotlinx 自动多态不认），
  *    享受不到这条。
- *
- * 两个 `*DestinationSpec` 枚举留在原来的包里，反向 import 这里即可。
  */
 
 /** 所有导航目的地的公共父类型。新增路由**必须**实现它，否则进不了返回栈。 */
@@ -100,8 +96,7 @@ data class VideoRoute(
     val localUri: String? = null,
 ) : HanimeRoute
 
-// ---- 原来是三个独立 Activity（LoginActivity / ManualInputCookiesActivity /
-//      CloudflareActivity），Step 17 合并进导航图 ----
+// ---- 登录 / 手动 Cookie / Cloudflare 过盾 ----
 
 @Serializable
 data object LoginRoute : HanimeRoute

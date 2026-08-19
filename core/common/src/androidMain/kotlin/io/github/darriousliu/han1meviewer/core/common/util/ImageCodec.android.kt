@@ -19,8 +19,7 @@ import java.nio.ByteBuffer
  *
  * minSdk 是 27，那一个版本落到 [BitmapFactory] 的两遍解码：
  * 第一遍 `inJustDecodeBounds = true` 只读图片头拿尺寸不分配像素，第二遍带
- * `inSampleSize` 真解。这条路不读 EXIF——和迁移前 API < 28 走的
- * `MediaStore.Images.Media.getBitmap` 一样，不是回归。
+ * `inSampleSize` 真解。这条路不读 EXIF、不转方向。
  */
 actual suspend fun decodeSampledImageBitmap(
     bytes: ByteArray,

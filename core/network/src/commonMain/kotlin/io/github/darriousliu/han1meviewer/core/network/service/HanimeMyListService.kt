@@ -82,11 +82,8 @@ interface HanimeMyListService {
     ): HttpResponse
 
     /**
-     * 头像上传。
-     *
-     * 迁移前是 Retrofit 的 `@Multipart` + 四个 `@Part`；这里改成整个 body 由调用方拼好传进来，
-     * 因为文件字节的读取本来就在调用方（`NetworkRepo`），
-     * 让 multipart 的组装跟着它比拆成四个参数更直接。
+     * 头像上传。整个 multipart body 由调用方拼好传进来：
+     * 文件字节的读取本来就在调用方（`NetworkRepo`），让组装跟着它比拆成参数更直接。
      */
     @POST("user/{userid}")
     suspend fun updateUserAccountAvatar(

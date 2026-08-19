@@ -143,8 +143,7 @@ fun AccountScreen(
         }
     }
 
-    // 迁移前是 androidMain 的 Context.pickVisualMedia(PickVisualMedia.ImageOnly)，
-    // FileKit 的 FileKitType.Image 在 Android 上底层就是同一个 PickVisualMedia 契约
+    // FileKit 的 FileKitType.Image 在 Android 上底层就是 PickVisualMedia（Photo Picker）契约
     val avatarPicker = rememberFilePickerLauncher(type = FileKitType.Image) { file ->
         if (file != null) onOpenAvatarCrop(file)
     }

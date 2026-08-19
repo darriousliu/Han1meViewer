@@ -15,19 +15,16 @@ import com.dokar.sonner.ToasterState
 import com.dokar.sonner.rememberToasterState
 
 /*
- * commonMain 的轻提示。替代 androidMain 那套 `showShortToast` / `showLongToast`
- * （`util/Toast.kt`，靠 `applicationContext` 拿 Context，只有 Android 有）。
- *
- * 用的是 sonner（io.github.dokar3:sonner）——依赖早就声明在 commonMain 里，
- * 只是一直没接线。它的 `show` 是**普通函数**（非 composable 非 suspend），
- * 所以拿到 state 之后可以在任意回调里调，调用点形状和原来的 showShortToast 一样。
+ * commonMain 的轻提示，基于 sonner（io.github.dokar3:sonner）。
+ * 它的 `show` 是**普通函数**（非 composable 非 suspend），
+ * 拿到 state 之后可以在任意回调里调。
  *
  * ⚠️ 观感与原生 Toast 的差别：这是 App 内的 Compose 浮层，**盖不住 App 之外**，
  * App 退到后台就看不见。没有 Compose 作用域的地方（worker、util）**继续用原生 Toast**，
  * 两套会共存一段时间，这是有意的。
  *
- * ⚠️ 不做全局单例（`object HanimeToast { var state … }`）——那就是第二十节明令
- * 废除的「lambda 注入」：赋值点难追踪、忘了注入只有运行时才暴露。一律走 [LocalToaster]。
+ * ⚠️ 不做全局单例（`object HanimeToast { var state … }`）——那种「lambda 注入」
+ * 赋值点难追踪、忘了注入只有运行时才暴露。一律走 [LocalToaster]。
  */
 
 /** App 根部由 [HanimeToastHost] 提供。没套宿主就用会直接报错，而不是静默不弹。 */

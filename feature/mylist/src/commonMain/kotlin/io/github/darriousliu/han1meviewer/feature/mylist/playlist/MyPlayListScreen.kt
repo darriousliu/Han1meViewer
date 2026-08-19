@@ -82,8 +82,6 @@ fun PlaylistScreen(
         if (uiState.playlists.isEmpty()) viewModel.loadMyPlayList()
     }
 
-    // 原来是 DisposableEffect + LifecycleEventObserver 监听 ON_RESUME，
-    // 那正好是 LifecycleResumeEffect 的语义（lifecycle-runtime-compose，KMP）。
     LifecycleResumeEffect(uiState.showSheet) {
         if (uiState.showSheet) temporarilyHideSheetForNavigation = false
         onPauseOrDispose { }

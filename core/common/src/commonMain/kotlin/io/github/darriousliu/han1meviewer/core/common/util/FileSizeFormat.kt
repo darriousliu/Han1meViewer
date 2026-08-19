@@ -4,16 +4,10 @@ import kotlin.math.roundToLong
 import net.sergeych.sprintf.sprintf
 
 /*
- * 从 androidMain 的 `AndroidFormats.kt` 拆出来的。原实现抄自
- * `yenaly_libs/utils/TextUtil.kt`，唯一的平台依赖是
- * `"%.Nf %s".format(Locale.getDefault(), …)`，换成 mp_stools 的 sprintf。
+ * 文件大小格式化。commonMain 没有 `String.format`，格式化走 mp_stools 的 sprintf。
  *
- * 行为对拍基准见 `yenaly_libs/src/test/java/com/yenaly/yenaly_libs/UtilUnitTest.kt`
- * 的 12 条断言，全部逐条比对过。
- *
- * 一点差异：原来传的是 `Locale.getDefault()`，理论上在小数点用逗号的 locale
- * （德语等）下会输出 `1,5 MiB`；sprintf 固定用 `.`。本 App 只有繁中/简中/英/日
- * 四种语言，都用 `.`，所以实际显示不变。
+ * sprintf 固定用 `.` 作小数点、不跟 locale（小数点用逗号的 locale 如德语
+ * 本会输出 `1,5 MiB`）；本 App 只有繁中/简中/英/日四种语言，都用 `.`，显示不受影响。
  */
 
 private val siFileSizeUnits = arrayOf("B", "kB", "MB", "GB", "TB")

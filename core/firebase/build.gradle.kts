@@ -10,8 +10,9 @@ plugins {
  * Firebase 的跨平台门面。
  *
  * commonMain 只有 `expect object Firebase`（读 Remote Config）。
- * Android 接真身；JVM 是空实现（桌面端没有 Firebase）；iOS 目前也是空实现，
- * 原因见 Firebase.ios.kt——swiftPM 不能挂在被依赖的库模块上。
+ * Android 接真身；JVM 是空实现（桌面端没有 Firebase）；iOS 经下方 swiftPM 链
+ * Analytics/Crashlytics/RemoteConfig，actual 是真实现——但要生效还需宿主 App
+ * 调 `FirebaseApp.configure()`（iosApp 目前还没接）。
  */
 kotlin {
     android {

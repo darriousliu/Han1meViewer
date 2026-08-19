@@ -22,8 +22,7 @@ internal const val HTTP_CACHE_SIZE = 10L * 1024 * 1024
  *
  * 缓存目录要 `Context.cacheDir`（androidJvmMain 拿不到 Android 的 Context），
  * 且 OkHttp 的 DiskLruCache **不能多进程共用**——Android actual 只在主进程返回实例，
- * 下载 worker 等子进程和 jvm 侧都是 null。原来是 lambda 注入（只在主进程赋值来
- * 表达这条约束），废弃后由 actual 自己判断。
+ * 下载 worker 等子进程和 jvm 侧都是 null。
  */
 internal expect fun createHttpDiskCache(): Cache?
 
@@ -31,7 +30,7 @@ object OkHttpNetworkConfig {
 
     /**
      * 共用一个实例：[HDns] 内部缓存了 DoH client 和自定义 hosts 的解析结果，
-     * 每个 client 各建一个会白白多解析几次。迁移前 `ServiceCreator` 也是共用一个。
+     * 每个 client 各建一个会白白多解析几次。
      */
     internal val dns by lazy { HDns() }
 }

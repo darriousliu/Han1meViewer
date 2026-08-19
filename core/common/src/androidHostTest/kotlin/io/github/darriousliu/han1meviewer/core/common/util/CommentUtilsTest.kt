@@ -4,10 +4,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 /**
- * [parseTimeStrToMinutes] 和 [safeSortedBy] 随 Step 24 从 androidMain 搬进 commonMain。
- * 两个都是纯 Kotlin，正好趁搬迁把行为钉住——这是本轮唯一能单测的地方。
- *
- * ⚠️ 注意 `parseTimeStrToMinutes` 的分支顺序是**有意义**的：`"分鐘前"` 必须排在
+ * ⚠️ `parseTimeStrToMinutes` 的分支顺序是**有意义**的：`"分鐘前"` 必须排在
  * `"鐘前"` 之类的子串之前。这里逐个分支都测，改动顺序会被挡住。
  */
 class CommentUtilsTest {

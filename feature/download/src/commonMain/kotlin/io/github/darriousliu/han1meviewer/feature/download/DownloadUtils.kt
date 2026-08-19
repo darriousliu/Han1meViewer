@@ -31,8 +31,7 @@ fun List<VideoWithCategories>.toNodeList(
     groupIdToNameMap: Map<Int, String>,
     collapseDownloadedGroup: Boolean,
 ): List<DownloadHeaderNode> {
-    // toSortedMap 是 JVM-only 的 stdlib 扩展（返回 java.util.SortedMap），
-    // 换成显式按 key 排序，遍历顺序与原来的自然序一致。
+    // toSortedMap 是 JVM-only 的 stdlib 扩展（返回 java.util.SortedMap），这里显式按 key 排序。
     val groupedData = this.groupBy { it.video.groupId }.entries.sortedBy { it.key }
     return buildList {
         for ((groupId, videos) in groupedData) {

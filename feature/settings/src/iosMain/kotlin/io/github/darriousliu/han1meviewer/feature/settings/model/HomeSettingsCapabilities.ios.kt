@@ -5,8 +5,8 @@ package io.github.darriousliu.han1meviewer.feature.settings.model
  * 同时给 `HomeSettingsActions.ios.kt` 加对应的 override。
  */
 actual val homeSettingsCapabilities: HomeSettingsCapabilities = HomeSettingsCapabilities(
-    // Step 23：深色模式改成由 `HanimeTheme` 直接观察偏好，三端一致
+    // 深色模式由 `HanimeTheme` 直接观察偏好，三端一致
     darkModeOverride = true,
-    // Step 23：语言切换有了 AppleLanguages 实现
+    // 语言切换：AppleLanguages 实现
     appLanguageOverride = true,
 )

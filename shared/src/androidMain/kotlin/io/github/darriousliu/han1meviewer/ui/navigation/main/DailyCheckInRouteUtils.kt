@@ -17,9 +17,8 @@ import kotlinx.datetime.plus
 import kotlinx.datetime.toJavaLocalDate
 
 /*
- * 从 `dailycheckin/DailyCheckInUtils.kt` 拆出来的平台副作用半：屏幕层只发回调，
- * 这两个函数由 `DailyCheckInRoute` 执行。纯计算那半在 commonMain 的
- * `dailycheckin/ContributionUtils.kt`。
+ * 打卡页的平台副作用半：屏幕层只发回调，这两个函数由 `DailyCheckInRoute` 执行。
+ * 纯计算那半在 commonMain 的 `dailycheckin/ContributionUtils.kt`。
  */
 
 /**

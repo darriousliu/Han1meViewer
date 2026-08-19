@@ -62,14 +62,10 @@ import kotlin.math.min
 import kotlin.math.roundToInt
 
 /**
- * 头像裁剪页。迁移前是 androidMain 里裹着 `cn.mucute:compose-avatar-cropper` 的一层壳
- * （那个库只发布了 android + jvm 变体，没有 iOS，上不了 commonMain），
- * 现在裁剪框自己写，整页进 commonMain。
+ * 头像裁剪页。裁剪框自己写：`cn.mucute:compose-avatar-cropper` 只发布了
+ * android + jvm 变体，没有 iOS，上不了 commonMain。
  *
- * 链路一并简化：原来是
- * `Uri → 全量解码 Bitmap → cacheDir 落临时 jpg → absolutePath 跨路由回传 → readBytes`，
- * 现在是 `PlatformFile → 采样解码 → 裁剪 → JPEG ByteArray`，不再落临时文件
- * （旧实现那些 `avatar_<时间戳>.jpg` 从来没人清理）。
+ * 链路：`PlatformFile → 采样解码 → 裁剪 → JPEG ByteArray`，全程不落临时文件。
  *
  * 大图安全性见 [decodeSampledImageBitmap]：解码上限 [PREVIEW_MAX_DIMENSION]，
  * 原图多大都不会整张按原分辨率进内存。
@@ -89,7 +85,7 @@ fun AvatarCropScreen(
     LaunchedEffect(source) {
         val bytes = runCatching { source.readBytes() }.getOrNull()
         val decoded = bytes?.let { decodeSampledImageBitmap(it, PREVIEW_MAX_DIMENSION) }
-        // 读不出来/解不出来就直接退，和迁移前一致
+        // 读不出来/解不出来就直接退
         if (decoded == null) onBack() else image = decoded
     }
 

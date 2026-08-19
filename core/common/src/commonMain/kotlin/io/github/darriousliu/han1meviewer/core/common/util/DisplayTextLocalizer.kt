@@ -90,9 +90,8 @@ object DisplayTextLocalizer {
     /**
      * 「1.5 万次」里的 1.5 换算成 15K：十进制小数点右移一位。
      *
-     * 原来用 `BigDecimal(this).multiply(TEN).stripTrailingZeros().toPlainString()`，
-     * commonMain 没有 BigDecimal，改成纯字符串移位——避开 Double 的精度问题，
-     * 输出与原实现逐例一致。解析不了就退回原来的兜底分支。
+     * commonMain 没有 BigDecimal，用纯字符串移位避开 Double 的精度问题；
+     * 解析不了就走兜底分支。
      */
     private fun String.toKViews(): String = shiftDecimalPointRight(trim())?.let { "${it}K" }
         ?: "${this}0K"

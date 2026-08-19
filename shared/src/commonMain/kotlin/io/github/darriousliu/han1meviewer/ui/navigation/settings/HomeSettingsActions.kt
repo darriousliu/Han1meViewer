@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import io.github.darriousliu.han1meviewer.feature.settings.model.HomeSettingsCapabilities
 
 /**
- * 首页设置页背后的**平台能力**。Step 22 三层结构的第三层（前两层见
+ * 首页设置页背后的**平台能力**（能力开关见
  * [io.github.darriousliu.han1meviewer.feature.settings.model.HomeSettingsCapabilities]）。
  *
  * 每个方法都有默认空实现，于是 jvm/ios 的 actual 各一行
@@ -25,8 +25,7 @@ import io.github.darriousliu.han1meviewer.feature.settings.model.HomeSettingsCap
  *
  * 因为其中四个动作（三处 `recreate()` + 深层链接弹窗）**需要 Activity**，
  * 而 Android 侧只有全局 `applicationContext`，没有全局 Activity。
- * 顶层 expect 想拿 Activity 就得加个可变全局持有者，那正是
- * `MIGRATION_NEXT.md` 第四节 ⛔ 那一行禁掉的「隐式平台能力注入」。
+ * 顶层 expect 想拿 Activity 就得加个可变全局持有者——即被禁的「隐式平台能力注入」。
  * 做成 `@Composable expect fun` 工厂就能在组合里取 `LocalActivity`，
  * 一行全局状态都不用加。
  */

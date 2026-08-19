@@ -41,15 +41,11 @@ import org.jetbrains.compose.resources.stringResource
 import io.github.darriousliu.han1meviewer.core.navigation.CloudflareRoute
 
 /**
- * Cloudflare 过盾页。原来是独立的 `CloudflareActivity`（`NEW_TASK` + companion 静态回调），
- * Step 17 合并成导航目的地并换 composewebview 重写，整个屏幕进 commonMain。
+ * Cloudflare 过盾页。
  *
- * 过盾判定与原实现一致：加载进度 ≥90% 后延迟 1 秒读 `document.head.innerHTML`，
+ * 过盾判定：加载进度 ≥90% 后延迟 1 秒读 `document.head.innerHTML`，
  * 三个 challenge 标记（form/success-text/error-text）都不在了，且 cookie 里出现
  * `cf_clearance`，就认为过了——写入 [Preferences.cloudFlareCookie] 并回调 [onSolved]。
- *
- * 顺手修掉原实现的一个小病：UA 版本提示原来在 `loadUrl` **之前**对空白 WebView
- * 求值 `navigator.userAgent`，拿到的是空页的 UA；现在等首次进入加载态之后再求值。
  *
  * 「用户没过盾直接关掉」的兜底不在这里——route 侧的 `DisposableEffect` 保证
  * 无论怎么离开这个页面，等待中的请求都会被放行（见 `MainNavHost` 的 CloudflareRoute）。
@@ -75,7 +71,7 @@ fun CloudflareScreen(
     var pendingVersionCode by remember { mutableStateOf<String?>(null) }
     var pendingCookieCheck by remember { mutableIntStateOf(0) }
 
-    // UA 版本提示：等真的开始加载页面再问 WebView（原实现在空白页上问，结果没意义）
+    // UA 版本提示：等真的开始加载页面再问 WebView（对空白页求值拿到的 UA 没意义）
     var uaChecked by remember { mutableStateOf(false) }
     LaunchedEffect(baseWarning) { tipText = baseWarning }
     LaunchedEffect(state.loadingState, uaChecked) {

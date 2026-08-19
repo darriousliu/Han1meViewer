@@ -82,7 +82,6 @@ fun MainActivityContent(
                 val isDrawerOpen =
                     drawerState.currentValue == DrawerValue.Open || drawerState.targetValue == DrawerValue.Open
 
-                // nav2 时代靠 MainNavHost 的 onDestinationChanged 回调反向推送，nav3 直接从栈顶派生
                 val currentMainDestination =
                     MainDestinationSpec.fromKey(backStack.lastOrNull()) ?: MainDestinationSpec.Home
 
@@ -151,8 +150,6 @@ fun MainActivityContent(
                             scope.launch { drawerState.close() }
                             onOpenAccount()
                         } else {
-                            // 原来是 gotoLoginActivity()（StartActivityForResult），
-                            // Step 17 起登录是导航图内的目的地
                             scope.launch { drawerState.close() }
                             backStack.navigateSafely(LoginRoute)
                         }

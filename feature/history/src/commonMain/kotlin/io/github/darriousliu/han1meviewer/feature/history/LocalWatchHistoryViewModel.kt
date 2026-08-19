@@ -14,10 +14,7 @@ import org.koin.android.annotation.KoinViewModel
 
 private val logger = Logger.withTag("LocalWatchHistoryViewModel")
 
-/**
- * 本地观看历史。原来是 HomePageViewModel 里的三个函数——那会儿历史页和首页
- * 共用一个 VM；拆模块后历史域自己管自己的，不再跨 feature 借。
- */
+/** 本地观看历史。 */
 @KoinViewModel
 class LocalWatchHistoryViewModel : ViewModel() {
 

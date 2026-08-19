@@ -2,8 +2,7 @@ package io.github.darriousliu.han1meviewer.core.common
 
 
 /**
- * 下载相关默认值。原本散在 androidMain 的 `SpeedLimitInterceptor` 和
- * `HanimeDownloadManagerV2` 里，为了让 [Preferences] 能进 commonMain 抽了出来。
+ * 下载相关默认值。
  */
 object DownloadDefaults {
 

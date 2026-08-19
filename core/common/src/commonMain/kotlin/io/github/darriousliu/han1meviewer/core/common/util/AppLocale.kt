@@ -15,8 +15,8 @@ package io.github.darriousliu.han1meviewer.core.common.util
 /**
  * 偏好值 → BCP-47 语言标签；`null` 表示跟随系统。
  *
- * `"zh"` 在本项目里指**繁体**（原实现是 `Locale.TRADITIONAL_CHINESE`），
- * 对应 `composeResources/values`（默认包就是繁体）；简体是 `values-zh-rCN`。
+ * `"zh"` 在本项目里指**繁体**，对应 `composeResources/values`（默认包就是繁体）；
+ * 简体是 `values-zh-rCN`。
  * 映射成 `zh-TW` 之后 compose-resources 找不到 `values-zh-rTW`，
  * 回落到默认包——正好还是繁体，行为不变。
  */

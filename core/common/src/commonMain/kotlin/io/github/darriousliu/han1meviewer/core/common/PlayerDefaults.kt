@@ -2,10 +2,7 @@ package io.github.darriousliu.han1meviewer.core.common
 
 
 /**
- * 播放器默认值。原本定义在 androidMain 的 `HJzvdStd` 伴生对象里，
- * 为了让 [Preferences] 能进 commonMain 抽了出来。
- *
- * `HJzvdStd.DEF_*` 保留为指向这里的别名，现有调用点不受影响。
+ * 播放器默认值。`HJzvdStd.DEF_*` 是指向这里的别名。
  */
 object PlayerDefaults {
 
@@ -27,7 +24,7 @@ object PlayerDefaults {
     const val PLAYER_KERNEL = "ExoPlayer"
 
     /**
-     * Step 25 新增的第四个内核：Media3 + Compose 的播放器。
+     * Media3 + Compose 的播放器内核。
      *
      * 它**不是** `HMediaKernel.Type` 的成员——那个枚举每一项都要带一个
      * `Class<out JZMediaInterface>`，而这条路根本不经过 jzvd。
@@ -36,7 +33,7 @@ object PlayerDefaults {
      */
     const val KERNEL_EXO_COMPOSE = "ExoPlayer (Compose)"
 
-    /** 第五个内核：mpv 走 Compose 播放器（与 jzvd 的 `MpvPlayer` 并存，删 jzvd 后归一）。 */
+    /** mpv 走 Compose 的播放器内核（与 jzvd 的 `MpvPlayer` 并存，删 jzvd 后归一）。 */
     const val KERNEL_MPV_COMPOSE = "MpvPlayer (Compose)"
 
     /** 速度列表；[SPEED_LABELS] 与之同索引。默认档是 [DEF_SPEED_INDEX]（1.0x）。 */

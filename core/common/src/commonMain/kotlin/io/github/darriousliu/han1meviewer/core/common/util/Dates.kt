@@ -17,14 +17,13 @@ fun currentYearMonth(): YearMonth = currentLocalDate().let { YearMonth(it.year, 
  *
  * kotlinx-datetime 没有 locale 感知（`DayOfWeekNames` 要显式给 7 个名字），
  * 而这里要跟设备语言走，所以做成 expect/actual：android + jvm 共用 java.time
- * 的 `DateTimeFormatter`（行为和迁移前逐字节一致），iOS 用 `NSDateFormatter`。
+ * 的 `DateTimeFormatter`，iOS 用 `NSDateFormatter`。
  * 只有打卡页的今日卡片在用。
  */
 expect fun formatMonthDayWithWeekday(date: LocalDate): String
 
-/* 打卡域的三个固定格式。原来是 java.time 的 ofPattern("yyyy年MM月dd日" / "MM月dd日" /
- * "HH:mm")，逐字符等价重写（MM/dd/HH 的零补齐 = kotlinx 默认 Padding.ZERO）。
- * androidHostTest 的 DateFormatTest 和 java.time 原 pattern 对拍。 */
+/* 打卡域的三个固定格式（MM/dd/HH 零补齐，kotlinx 默认就是 Padding.ZERO）。
+ * androidHostTest 的 DateFormatTest 和 java.time 同 pattern 对拍。 */
 
 /** `yyyy年MM月dd日` */
 val CHINESE_FULL_DATE_FORMAT = LocalDate.Format {

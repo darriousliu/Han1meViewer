@@ -102,8 +102,8 @@ private class AndroidHomeSettingsActions(
     }
 
     /**
-     * 原来是硬调 `activity.recreate()`，现在空安全了，多出一个以前没有的静默失败面。
-     * 理论上走不到（route 永远在 `MainActivity.setContent` 里），走到了要能看见。
+     * `activity` 的空安全取用是个静默失败面。理论上走不到
+     * （route 永远在 `MainActivity.setContent` 里），走到了要能看见。
      */
     private fun logMissingActivity(action: String) {
         android.util.Log.w("HomeSettingsActions", "no Activity available for $action")
