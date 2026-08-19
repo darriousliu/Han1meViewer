@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.navigation.main
+package io.github.darriousliu.han1meviewer.feature.home
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -7,39 +7,44 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.LocalActivity
 import androidx.compose.ui.platform.LocalClipboard
-import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.result.ResultEffect
-import io.github.darriousliu.han1meviewer.R
-import io.github.darriousliu.han1meviewer.core.storage.getHanimeShareText
-import io.github.darriousliu.han1meviewer.core.repository.DatabaseRepo
-import io.github.darriousliu.han1meviewer.core.storage.entity.CheckInType
+import io.github.darriousliu.han1meviewer.core.common.util.HOUR_MINUTE_FORMAT
+import io.github.darriousliu.han1meviewer.core.common.util.currentLocalDate
+import io.github.darriousliu.han1meviewer.core.common.util.setPlainText
 import io.github.darriousliu.han1meviewer.core.model.Announcement
 import io.github.darriousliu.han1meviewer.core.navigation.HomeRefreshRequested
 import io.github.darriousliu.han1meviewer.core.navigation.LoginSucceeded
+import io.github.darriousliu.han1meviewer.core.repository.DatabaseRepo
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.checkout_exit
+import io.github.darriousliu.han1meviewer.core.resource.confirm_to_exit
+import io.github.darriousliu.han1meviewer.core.resource.copy_to_clipboard
+import io.github.darriousliu.han1meviewer.core.resource.do_more
+import io.github.darriousliu.han1meviewer.core.resource.exit
+import io.github.darriousliu.han1meviewer.core.resource.finished_masturbating
+import io.github.darriousliu.han1meviewer.core.storage.entity.CheckInType
+import io.github.darriousliu.han1meviewer.core.storage.getHanimeShareText
+import io.github.darriousliu.han1meviewer.core.ui.component.LocalToaster
 import io.github.darriousliu.han1meviewer.core.ui.component.TripleButtonDialog
-import io.github.darriousliu.han1meviewer.feature.home.HomePageScreen
-import io.github.darriousliu.han1meviewer.feature.home.HomePageViewModel
-import io.github.darriousliu.han1meviewer.feature.main.LocalMainHostActions
-import io.github.darriousliu.han1meviewer.feature.home.HomeUiEvent
-import io.github.darriousliu.han1meviewer.feature.home.LocalSearchHistoryQuery
-import io.github.darriousliu.han1meviewer.feature.home.component.AnnouncementDialog
-import io.github.darriousliu.han1meviewer.feature.home.saveImageToGallery
+import io.github.darriousliu.han1meviewer.core.ui.component.showShort
 import io.github.darriousliu.han1meviewer.feature.checkin.CheckInCalendarViewModel
-import io.github.darriousliu.han1meviewer.core.common.util.currentLocalDate
-import io.github.darriousliu.han1meviewer.core.common.util.setPlainText
-import io.github.darriousliu.han1meviewer.util.showShortToast
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
+import io.github.darriousliu.han1meviewer.feature.home.component.AnnouncementDialog
+import io.github.darriousliu.han1meviewer.feature.main.LocalMainHostActions
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format
+import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 @Composable
 fun HomeRouteScreen(
     isDrawerOpen: Boolean,
@@ -49,23 +54,21 @@ fun HomeRouteScreen(
     onNavigateToSearchAdvanced: (Map<String, String>) -> Unit,
     onNavigateToVideo: (String) -> Unit,
 ) {
-    val activity = checkNotNull(LocalActivity.current)
     val hostActions = LocalMainHostActions.current
-    // HomePageViewModel 是刻意的例外：Activity 作用域（首页常驻栈底，实际生命周期一致），
-    // 抽屉头部与宿主的登出刷新共用同一实例。这里按 owner 取到宿主创建的那份。
-    val viewModel: HomePageViewModel = viewModel(
-        viewModelStoreOwner = activity as ComponentActivity,
-    )
+    val toaster = LocalToaster.current
+    // NavEntry 作用域;抽屉头部/宿主要的会话信息经 HomeSessionStore 共享,不共享实例
+    val viewModel: HomePageViewModel = koinViewModel()
     val checkInViewModel: CheckInCalendarViewModel = koinViewModel()
 
     // 登录成功 / 账号页请求刷新：都经结果总线在首页 entry 内消费
     ResultEffect<LoginSucceeded> { viewModel.getHomePage() }
     ResultEffect<HomeRefreshRequested> { viewModel.getHomePage() }
-    val confirmToExit = stringResource(R.string.confirm_to_exit)
-    val finishedMasturbating = stringResource(R.string.finished_masturbating)
-    val doMore = stringResource(R.string.do_more)
-    val checkoutExit = stringResource(R.string.checkout_exit)
-    val exit = stringResource(R.string.exit)
+    val confirmToExit = stringResource(Res.string.confirm_to_exit)
+    val finishedMasturbating = stringResource(Res.string.finished_masturbating)
+    val doMore = stringResource(Res.string.do_more)
+    val checkoutExit = stringResource(Res.string.checkout_exit)
+    val exitText = stringResource(Res.string.exit)
+    val copiedHint = stringResource(Res.string.copy_to_clipboard)
     var showExitDialog by remember { mutableStateOf(false) }
     var announcement by remember { mutableStateOf<Announcement?>(null) }
     val scope = rememberCoroutineScope()
@@ -91,12 +94,12 @@ fun HomeRouteScreen(
                                 getHanimeShareText(event.videoTitle, event.videoCode)
                             )
                         }
-                        showShortToast(R.string.copy_to_clipboard)
+                        toaster.showShort(copiedHint)
                     }
                     is HomeUiEvent.ShowAnnouncementDialog -> { announcement = event.announcement }
                     is HomeUiEvent.ShowExitDialog -> { showExitDialog = true }
                     is HomeUiEvent.ShowRefreshError -> {
-                        scope.launch { showShortToast(getString(event.messageRes)) }
+                        scope.launch { toaster.showShort(getString(event.messageRes)) }
                     }
                 }
             }
@@ -110,12 +113,14 @@ fun HomeRouteScreen(
             message = finishedMasturbating,
             negativeText = doMore,
             neutralText = checkoutExit,
-            positiveText = exit,
+            positiveText = exitText,
             onNegative = { showExitDialog = false },
             onNeutral = {
                 checkInViewModel.addRecord(
                     currentLocalDate(),
-                    LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")),
+                    Clock.System.now()
+                        .toLocalDateTime(TimeZone.currentSystemDefault())
+                        .time.format(HOUR_MINUTE_FORMAT),
                     CheckInType.MASTURBATION.storeName, "", "",
                 )
                 hostActions.onExitApp()
@@ -129,9 +134,8 @@ fun HomeRouteScreen(
         AnnouncementDialog(
             announcementData = data,
             onDismiss = { announcement = null },
-            // 存图走 MediaStore，是 Android 独有的能力，留在 route
             onSaveImage = { imageUrl ->
-                scope.launch(Dispatchers.IO) { saveImageToGallery(activity, imageUrl) }
+                scope.launch(Dispatchers.IO) { saveImageToGallery(imageUrl) }
             },
         )
     }

@@ -44,6 +44,7 @@ import io.github.darriousliu.han1meviewer.core.navigation.VideoRoute
 import io.github.darriousliu.han1meviewer.core.navigation.navigateSafely
 import io.github.darriousliu.han1meviewer.ui.navigation.settings.isDeviceSecureCompat
 import io.github.darriousliu.han1meviewer.feature.home.HomePageViewModel
+import io.github.darriousliu.han1meviewer.feature.home.HomeSessionStore
 import io.github.darriousliu.han1meviewer.ui.screen.main.MainActivityContent
 import io.github.darriousliu.han1meviewer.util.restartApplication
 import io.github.darriousliu.han1meviewer.util.showAlertDialog
@@ -59,6 +60,10 @@ import kotlinx.coroutines.flow.MutableSharedFlow
  */
 class MainActivity : AppCompatActivity(), PermissionRequester, MainHostActions {
 
+    /**
+     * ⚠️ 仅供 jzvd 旧 H 帧适配器(`HKeyframesRvAdapter`)编译存活——它与首页 entry 的
+     * NavEntry 作用域实例**不是同一份**,只承接无状态的 DB 操作。删 jzvd 时一并删。
+     */
     val viewModel by viewModels<HomePageViewModel>()
 
     lateinit var navBackStack: NavBackStack<HanimeRoute>
@@ -88,7 +93,6 @@ class MainActivity : AppCompatActivity(), PermissionRequester, MainHostActions {
         setContent {
             MainActivityContent(
                 activity = this,
-                viewModel = viewModel,
                 pendingNavigationRequests = pendingNavigationRequests,
                 showAuthGuard = showAuthGuard,
                 onOpenAccount = { navBackStack.navigateSafely(AccountRoute) },
@@ -280,7 +284,7 @@ class MainActivity : AppCompatActivity(), PermissionRequester, MainHostActions {
 
     fun logoutWithRefresh() {
         logout()
-        viewModel.getHomePage()
+        HomeSessionStore.requestRefresh()
     }
 
     fun showVideoDetailFragment(videoCode: String, fileUri: String? = null) {

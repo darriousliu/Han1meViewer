@@ -55,6 +55,30 @@ class HomePageViewModel: ViewModel() {
             // 初始化默认已下载分组，防止[FOREIGN KEY constraint failed]
             DatabaseRepo.HanimeDownload.insertDefaultGroup()
         }
+        // 抽屉头部与宿主经 HomeSessionStore 共享首页会话信息(VM 是 NavEntry 作用域)
+        viewModelScope.launch {
+            homePageFlow.collect { state ->
+                HomeSessionStore.updateHeader(
+                    when (state) {
+                        is PageState.Success -> HomeSessionStore.Header(
+                            avatarUrl = state.info.page?.avatarUrl,
+                            username = state.info.page?.username,
+                            isLoading = false,
+                        )
+
+                        is PageState.Loading -> HomeSessionStore.Header(isLoading = true)
+                        else -> HomeSessionStore.Header()
+                    }
+                )
+            }
+        }
+        viewModelScope.launch {
+            sessionExpiredMessage.collect(HomeSessionStore::emitSessionExpired)
+        }
+        // 宿主侧(登出确认框)的刷新请求
+        viewModelScope.launch {
+            HomeSessionStore.refreshRequests.collect { getHomePage() }
+        }
     }
 
     fun getHomePage(isRefresh: Boolean = false){

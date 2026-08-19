@@ -80,6 +80,7 @@ import io.github.darriousliu.han1meviewer.feature.account.UserAccountViewModel
 import io.github.vinceglb.filekit.PlatformFile
 import kotlinx.serialization.json.Json
 import io.github.darriousliu.han1meviewer.feature.history.WatchHistoryRouteScreen
+import io.github.darriousliu.han1meviewer.feature.home.HomeRouteScreen
 import io.github.darriousliu.han1meviewer.feature.subscription.SubscriptionRouteScreen
 import io.github.darriousliu.han1meviewer.feature.preview.GetchuPreviewDetailRouteScreen
 import io.github.darriousliu.han1meviewer.feature.preview.GetchuPreviewRouteScreen

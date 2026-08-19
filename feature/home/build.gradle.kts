@@ -21,6 +21,9 @@ kotlin {
             implementation(project(":core:repository"))
             implementation(project(":core:ui"))
             implementation(project(":core:navigation"))
+            // HomeRouteScreen 的 onExitApp 走 LocalMainHostActions;退出弹窗的打卡记录
+            implementation(project(":feature:main"))
+            implementation(project(":feature:checkin"))
             implementation(libs.serialization.json)
         }
     }

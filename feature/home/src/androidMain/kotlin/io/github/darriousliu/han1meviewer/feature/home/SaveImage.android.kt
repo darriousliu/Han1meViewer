@@ -2,6 +2,7 @@ package io.github.darriousliu.han1meviewer.feature.home
 
 import android.content.ContentValues
 import android.content.Context
+import io.github.darriousliu.han1meviewer.core.common.util.applicationContext
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Environment
@@ -18,15 +19,11 @@ import java.io.File
 import java.io.FileOutputStream
 
 /**
- * 下载远程图片并保存到系统相册。
- *
  * Android 10 及以上通过 [MediaStore] 写入公共图片目录，低版本直接写入 Pictures 目录。
- * 保存成功后会在主线程显示完成提示。
- *
- * @param context 用于加载图片、访问 ContentResolver 和显示 Toast 的上下文
- * @param imageUrl 需要保存的图片地址
+ * 保存成功后在主线程 Toast 提示。
  */
-suspend fun saveImageToGallery(context: Context, imageUrl: String) {
+actual suspend fun saveImageToGallery(imageUrl: String) {
+    val context: Context = applicationContext
     val loader = SingletonImageLoader.get(context)
     val request = ImageRequest.Builder(context)
         .data(imageUrl)

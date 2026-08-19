@@ -1,7 +1,6 @@
 package io.github.darriousliu.han1meviewer.ui.screen.main
 
 import android.content.Intent
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,10 +20,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavBackStack
 import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.R
-import io.github.darriousliu.han1meviewer.core.common.exception.CloudFlareBlockedException
 import io.github.darriousliu.han1meviewer.core.model.github.Latest
 import io.github.darriousliu.han1meviewer.core.network.CloudflareNavBridge
-import io.github.darriousliu.han1meviewer.core.common.state.PageState
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
 import io.github.darriousliu.han1meviewer.core.ui.component.HanimeToastHost
 import io.github.darriousliu.han1meviewer.core.ui.component.UpdateDialog
@@ -33,13 +30,13 @@ import io.github.darriousliu.han1meviewer.core.navigation.CloudflareRoute
 import io.github.darriousliu.han1meviewer.core.navigation.HanimeRoute
 import io.github.darriousliu.han1meviewer.core.navigation.HomeRoute
 import io.github.darriousliu.han1meviewer.core.navigation.LoginRoute
+import io.github.darriousliu.han1meviewer.feature.home.HomeSessionStore
 import io.github.darriousliu.han1meviewer.feature.main.MainDestinationSpec
 import io.github.darriousliu.han1meviewer.ui.navigation.main.MainNavDisplay
 import io.github.darriousliu.han1meviewer.ui.navigation.main.handleMainIntent
 import io.github.darriousliu.han1meviewer.feature.main.navigateDrawerDestination
 import io.github.darriousliu.han1meviewer.core.navigation.navigateSafely
 import io.github.darriousliu.han1meviewer.core.navigation.rememberHanimeBackStack
-import io.github.darriousliu.han1meviewer.feature.home.HomePageViewModel
 import io.github.darriousliu.han1meviewer.core.ui.theme.HanimeTheme
 import io.github.darriousliu.han1meviewer.ui.viewmodel.AppViewModel
 import io.github.darriousliu.han1meviewer.util.getUpdateIfExists
@@ -57,7 +54,6 @@ import io.github.darriousliu.han1meviewer.feature.main.MainActivityScaffold
 @Composable
 fun MainActivityContent(
     activity: MainActivity,
-    viewModel: HomePageViewModel,
     pendingNavigationRequests: Flow<Intent>,
     showAuthGuard: Boolean,
     onOpenAccount: () -> Unit,
@@ -85,19 +81,12 @@ fun MainActivityContent(
                 val currentMainDestination =
                     MainDestinationSpec.fromKey(backStack.lastOrNull()) ?: MainDestinationSpec.Home
 
-                val homeState by viewModel.homePageFlow.collectAsStateWithLifecycle()
+                // 首页 VM 是 NavEntry 作用域,抽屉头部经 HomeSessionStore 拿会话切片
+                val homeHeader by HomeSessionStore.header.collectAsStateWithLifecycle()
                 val isLoggedIn by Preferences.loginStateFlow.collectAsStateWithLifecycle()
-                val headerAvatarUrl = if (isLoggedIn) {
-                    (homeState as? PageState.Success)?.info?.page?.avatarUrl
-                } else {
-                    null
-                }
-                val headerUsername = if (isLoggedIn) {
-                    (homeState as? PageState.Success)?.info?.page?.username
-                } else {
-                    null
-                }
-                val headerIsLoading = isLoggedIn && homeState is PageState.Loading
+                val headerAvatarUrl = if (isLoggedIn) homeHeader.avatarUrl else null
+                val headerUsername = if (isLoggedIn) homeHeader.username else null
+                val headerIsLoading = isLoggedIn && homeHeader.isLoading
                 val selectedDrawerDestination = currentMainDestination.drawerDestination
 
                 LaunchedEffect(backStack) {
@@ -114,8 +103,8 @@ fun MainActivityContent(
                         pendingUpdate = latest
                     }
                 }
-                LaunchedEffect(viewModel) {
-                    viewModel.sessionExpiredMessage.collect { event ->
+                LaunchedEffect(Unit) {
+                    HomeSessionStore.sessionExpired.collect { event ->
                         event.message?.let(::showShortToast) ?: showShortToast(getString(event.fallbackRes))
                     }
                 }
@@ -125,14 +114,6 @@ fun MainActivityContent(
                     CloudflareNavBridge.pending.collect { challenge ->
                         if (challenge != null) {
                             backStack.navigateSafely(CloudflareRoute(challenge.url))
-                        }
-                    }
-                }
-                LaunchedEffect(homeState) {
-                    if (homeState is PageState.Error) {
-                        val throwable = (homeState as PageState.Error).throwable
-                        if (throwable is CloudFlareBlockedException) {
-                            Log.e("error", "被屏蔽时的处理")
                         }
                     }
                 }
