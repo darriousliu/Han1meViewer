@@ -36,6 +36,9 @@ object PlayerDefaults {
      */
     const val KERNEL_EXO_COMPOSE = "ExoPlayer (Compose)"
 
+    /** 第五个内核：mpv 走 Compose 播放器（与 jzvd 的 `MpvPlayer` 并存，删 jzvd 后归一）。 */
+    const val KERNEL_MPV_COMPOSE = "MpvPlayer (Compose)"
+
     /** 速度列表；[SPEED_LABELS] 与之同索引。默认档是 [DEF_SPEED_INDEX]（1.0x）。 */
     val SPEED_ARRAY = floatArrayOf(
         0.5F, 0.75F,

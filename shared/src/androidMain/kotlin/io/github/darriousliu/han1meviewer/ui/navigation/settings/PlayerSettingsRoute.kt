@@ -27,10 +27,11 @@ fun PlayerSettingsRouteScreen(
 
     PlayerSettingsScreen(
         state = uiState,
-        // 第四项不是 HMediaKernel.Type 的成员——那个枚举每项都要带一个
+        // 后两项不是 HMediaKernel.Type 的成员——那个枚举每项都要带一个
         // Class<out JZMediaInterface>，而 Compose 播放器根本不经过 jzvd。
         kernelOptions = HMediaKernel.Type.entries.map { it.name to it.name } +
-                (PlayerDefaults.KERNEL_EXO_COMPOSE to PlayerDefaults.KERNEL_EXO_COMPOSE),
+                (PlayerDefaults.KERNEL_EXO_COMPOSE to PlayerDefaults.KERNEL_EXO_COMPOSE) +
+                (PlayerDefaults.KERNEL_MPV_COMPOSE to PlayerDefaults.KERNEL_MPV_COMPOSE),
         speedOptions = HJzvdStd.speedStringArray.zip(HJzvdStd.speedArray.map { it.toString() }),
         longPressSpeedOptions = listOf(
             stringResource(R.string.d_speed_times, 1f) to "1",
@@ -80,7 +81,8 @@ fun PlayerSettingsRouteScreen(
 @Composable
 private fun buildPlayerSettingsUiState(context: Context, refreshKey: Int): PlayerSettingsUiState {
     val kernel = Preferences.switchPlayerKernel
-    val isMpvPlayer = kernel == HMediaKernel.Type.MpvPlayer.name
+    val isMpvPlayer = kernel == HMediaKernel.Type.MpvPlayer.name ||
+            kernel == PlayerDefaults.KERNEL_MPV_COMPOSE
     val currentSpeed = Preferences.playerSpeed
     val currentLongPressSpeed = Preferences.longPressSpeedTime
     val speedDisplay = HJzvdStd.speedStringArray.getOrElse(

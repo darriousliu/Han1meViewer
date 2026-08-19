@@ -32,6 +32,8 @@ kotlin {
             implementation(libs.media3.exoplayer)
             implementation(libs.media3.exoplayer.hls)
             implementation(libs.media3.ui.compose)
+            // mpv Compose 内核（libmpv 封装）
+            implementation(libs.mpv.lib)
         }
     }
 }

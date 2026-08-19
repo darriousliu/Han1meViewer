@@ -39,8 +39,8 @@ import io.github.darriousliu.han1meviewer.core.common.BuildConfig
 import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.core.common.USER_AGENT
 import io.github.darriousliu.han1meviewer.core.network.HProxySelector
-import io.github.darriousliu.han1meviewer.util.AnimeShaders
-import io.github.darriousliu.han1meviewer.util.AnimeShaders.getCert
+import io.github.darriousliu.han1meviewer.feature.video.player.AnimeShaders
+import io.github.darriousliu.han1meviewer.feature.video.player.AnimeShaders.getCert
 import io.github.darriousliu.han1meviewer.util.showShortToast
 import `is`.xyz.mpv.MPVLib
 import java.util.concurrent.CountDownLatch

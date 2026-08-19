@@ -25,7 +25,8 @@ fun VideoRouteScreen(route: VideoRoute) {
     // 这里自取而不再经导航图传递；宿主彻底解耦留给 UI 上移 commonMain 那一轮
     val activity = LocalActivity.current as MainActivity
     val useCompose = remember {
-        Preferences.switchPlayerKernel == PlayerDefaults.KERNEL_EXO_COMPOSE
+        Preferences.switchPlayerKernel == PlayerDefaults.KERNEL_EXO_COMPOSE ||
+                Preferences.switchPlayerKernel == PlayerDefaults.KERNEL_MPV_COMPOSE
     }
     if (useCompose) {
         Media3VideoRouteHostScreen(activity = activity, route = route)

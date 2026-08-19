@@ -21,7 +21,7 @@ import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
 import io.github.darriousliu.han1meviewer.ui.viewmodel.AppViewModel
 import io.github.darriousliu.han1meviewer.core.common.util.AndroidAppContext
 import io.github.darriousliu.han1meviewer.core.common.util.isMainProcess
-import io.github.darriousliu.han1meviewer.util.AnimeShaders
+import io.github.darriousliu.han1meviewer.feature.video.player.AnimeShaders
 import io.github.darriousliu.han1meviewer.core.common.util.LanguageHelper
 import io.github.darriousliu.han1meviewer.util.ThemeUtils
 import io.github.darriousliu.han1meviewer.core.common.util.migrateAppLanguageToPlatformIfNeeded

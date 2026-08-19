@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.draw.clipToBounds
@@ -75,6 +76,7 @@ import io.github.darriousliu.han1meviewer.feature.video.player.HanimeVideoPlayer
 import io.github.darriousliu.han1meviewer.feature.video.player.MobileDataWarningSession
 import io.github.darriousliu.han1meviewer.feature.video.player.PlaybackVisual
 import io.github.darriousliu.han1meviewer.feature.video.player.playbackVisualOf
+import io.github.darriousliu.han1meviewer.feature.video.player.SuperResolutionController
 import io.github.darriousliu.han1meviewer.feature.video.player.rememberAndroidPlayerEnvironment
 import io.github.darriousliu.han1meviewer.feature.video.player.rememberDeviceMediaControls
 import io.github.darriousliu.han1meviewer.feature.video.player.rememberVideoPlayerController
@@ -156,6 +158,7 @@ fun Media3VideoRouteHostScreen(
     /** 正在播放的清晰度 key（与下载用的 [checkedQuality] 是两回事）。 */
     var playingQuality by remember(route) { mutableStateOf<String?>(null) }
     var showAddHKeyframeDialog by remember(route) { mutableStateOf<Pair<Long, String>?>(null) }
+    var superResolutionIndex by remember(route) { mutableIntStateOf(0) }
     val hKeyframes by viewModel.hKeyframes.collectAsStateWithLifecycle()
     val hostUiState by viewModel.videoHostUiStateFlow.collectAsStateWithLifecycle()
 
@@ -595,6 +598,12 @@ fun Media3VideoRouteHostScreen(
                 showAddHKeyframeDialog = position to (title.ifBlank { "Untitled" })
             },
             environment = environment,
+            showSuperResolution = controller is SuperResolutionController,
+            superResolutionIndex = superResolutionIndex,
+            onSelectSuperResolution = { index ->
+                superResolutionIndex = index
+                (controller as? SuperResolutionController)?.setSuperResolution(index)
+            },
             // 容器收缩、内容以 0.3 倍反向位移 = CollapsingToolbar parallax 0.7 的等价
             modifier = Modifier
                 .fillMaxWidth()

@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.util
+package io.github.darriousliu.han1meviewer.feature.video.player
 
 import android.content.Context
 import java.io.File

@@ -1,5 +1,7 @@
 package io.github.darriousliu.han1meviewer.feature.video.player
 
+import android.view.SurfaceHolder
+import android.view.SurfaceView
 import androidx.annotation.OptIn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -10,6 +12,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.viewinterop.AndroidView
+import io.github.darriousliu.han1meviewer.core.common.PlayerDefaults
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
@@ -44,7 +49,7 @@ import androidx.media3.ui.compose.SURFACE_TYPE_SURFACE_VIEW
  * 也去掉了——和 `ExoPlayer.Builder(context)` 内部建的完全一样。
  */
 @OptIn(UnstableApi::class)
-private class Media3VideoPlayerController(
+internal class Media3VideoPlayerController(
     /** `PlayerSurface` 要的是 media3 的 `Player`，所以这里不设 private。 */
     val exoPlayer: ExoPlayer,
     private val dataSourceFactory: DefaultDataSource.Factory,
@@ -142,6 +147,17 @@ private class Media3VideoPlayerController(
 @Composable
 actual fun rememberVideoPlayerController(key: Any?): VideoPlayerController {
     val context = LocalContext.current
+    // 内核 remember 无 key 读，切内核要退出视频页再进才生效（既有语义）
+    val useMpv = remember { Preferences.switchPlayerKernel == PlayerDefaults.KERNEL_MPV_COMPOSE }
+    if (useMpv) {
+        val mpvController = remember(key) {
+            MpvVideoPlayerController(context.applicationContext)
+        }
+        DisposableEffect(mpvController) {
+            onDispose { mpvController.release() }
+        }
+        return mpvController
+    }
     val controller = remember(key) {
         val dataSourceFactory = DefaultDataSource.Factory(
             context,
@@ -170,6 +186,36 @@ actual fun rememberVideoPlayerController(key: Any?): VideoPlayerController {
 @OptIn(UnstableApi::class)
 @Composable
 actual fun VideoSurface(controller: VideoPlayerController, modifier: Modifier) {
-    val exo = (controller as? Media3VideoPlayerController)?.exoPlayer ?: return
-    PlayerSurface(exo, modifier, SURFACE_TYPE_SURFACE_VIEW)
+    when (controller) {
+        is Media3VideoPlayerController ->
+            PlayerSurface(controller.exoPlayer, modifier, SURFACE_TYPE_SURFACE_VIEW)
+
+        is MpvVideoPlayerController -> AndroidView(
+            factory = { context ->
+                SurfaceView(context).apply {
+                    holder.addCallback(object : SurfaceHolder.Callback {
+                        override fun surfaceCreated(holder: SurfaceHolder) {
+                            controller.onSurfaceCreated(holder.surface)
+                        }
+
+                        override fun surfaceChanged(
+                            holder: SurfaceHolder,
+                            format: Int,
+                            width: Int,
+                            height: Int,
+                        ) {
+                            controller.onSurfaceChanged(width, height)
+                        }
+
+                        override fun surfaceDestroyed(holder: SurfaceHolder) {
+                            controller.onSurfaceDestroyed()
+                        }
+                    })
+                }
+            },
+            modifier = modifier,
+        )
+
+        else -> Unit
+    }
 }
