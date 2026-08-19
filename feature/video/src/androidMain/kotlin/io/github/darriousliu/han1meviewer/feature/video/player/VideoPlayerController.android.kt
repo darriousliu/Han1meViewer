@@ -54,11 +54,15 @@ private class Media3VideoPlayerController(
     private var bufferingState by mutableStateOf(false)
     private var sizeState by mutableStateOf(IntSize.Zero)
     private var errorState by mutableStateOf<Throwable?>(null)
+    private var endedState by mutableStateOf(false)
+    private var firstFrameState by mutableStateOf(false)
 
     override val isPlaying: Boolean get() = playingState
     override val isBuffering: Boolean get() = bufferingState
     override val videoSize: IntSize get() = sizeState
     override val error: Throwable? get() = errorState
+    override val isEnded: Boolean get() = endedState
+    override val firstFrameRendered: Boolean get() = firstFrameState
 
     override val positionMs: Long get() = exoPlayer.currentPosition.coerceAtLeast(0L)
     override val bufferedPositionMs: Long get() = exoPlayer.bufferedPosition.coerceAtLeast(0L)
@@ -73,6 +77,8 @@ private class Media3VideoPlayerController(
 
     override fun load(url: String, startPositionMs: Long) {
         errorState = null
+        endedState = false
+        firstFrameState = false
         val item = MediaItem.fromUri(url)
         val source = if (url.contains(".m3u8")) {
             HlsMediaSource.Factory(dataSourceFactory).createMediaSource(item)
@@ -114,6 +120,11 @@ private class Media3VideoPlayerController(
 
     override fun onPlaybackStateChanged(playbackState: Int) {
         bufferingState = playbackState == Player.STATE_BUFFERING
+        endedState = playbackState == Player.STATE_ENDED
+    }
+
+    override fun onRenderedFirstFrame() {
+        firstFrameState = true
     }
 
     override fun onVideoSizeChanged(videoSize: VideoSize) {

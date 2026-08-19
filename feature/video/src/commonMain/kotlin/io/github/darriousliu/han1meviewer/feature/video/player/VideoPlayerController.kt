@@ -33,6 +33,12 @@ interface VideoPlayerController {
 
     val error: Throwable? get() = null
 
+    /** 完播态（播到末尾）。[load] 后清零；seek 离开末尾也会变回 false。 */
+    val isEnded: Boolean get() = false
+
+    /** 首帧已渲染；封面在此之后隐藏。[load] 后清零。 */
+    val firstFrameRendered: Boolean get() = false
+
     /** @param startPositionMs 续播位置；0 表示从头 */
     fun load(url: String, startPositionMs: Long = 0L) {}
 

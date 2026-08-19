@@ -1,19 +1,26 @@
 package io.github.darriousliu.han1meviewer.ui.screen.video
 
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.darriousliu.han1meviewer.core.common.HanimeConstants
 import io.github.darriousliu.han1meviewer.PermissionRequester
@@ -31,11 +38,17 @@ import io.github.darriousliu.han1meviewer.feature.video.player.HanimeVideoPlayer
 import io.github.darriousliu.han1meviewer.feature.video.player.rememberVideoPlayerController
 import io.github.darriousliu.han1meviewer.feature.comment.CommentViewModel
 import io.github.darriousliu.han1meviewer.feature.video.VideoViewModel
+import io.github.darriousliu.han1meviewer.core.common.exception.ParseException
 import io.github.darriousliu.han1meviewer.core.common.util.copyToClipboard
 import io.github.darriousliu.han1meviewer.core.common.util.loadBundledJson
 import io.github.darriousliu.han1meviewer.core.common.util.localizedTextOrNull
+import io.github.darriousliu.han1meviewer.core.storage.entity.WatchHistoryEntity
+import io.github.darriousliu.han1meviewer.core.storage.getHanimeVideoLink
+import io.github.darriousliu.han1meviewer.util.browse
+import io.github.darriousliu.han1meviewer.util.checkBadGuy
 import io.github.darriousliu.han1meviewer.util.shareText
 import io.github.darriousliu.han1meviewer.util.showShortToast
+import org.jetbrains.compose.resources.getString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -57,6 +70,7 @@ import io.github.darriousliu.han1meviewer.feature.video.VideoRouteContent
  * 那正是旧路径要靠 View 互操作（`rememberHostNestedScrollConnection`）才能做到的事。
  * 这是本轮已知的行为差异，后续再补。
  */
+@OptIn(kotlin.time.ExperimentalTime::class)
 @Composable
 fun Media3VideoRouteHostScreen(
     activity: MainActivity,
@@ -73,11 +87,16 @@ fun Media3VideoRouteHostScreen(
     )
     val controller = rememberVideoPlayerController(route.videoCode to route.localUri)
     val videoState by viewModel.hanimeVideoStateFlow.collectAsStateWithLifecycle()
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     var title by remember(route) { mutableStateOf("") }
     var checkedQuality by remember(route) { mutableStateOf<String?>(null) }
     var pendingDownloadPrompt by remember(route) { mutableStateOf<DownloadPromptState?>(null) }
     var genres by remember(Preferences.baseUrl) { mutableStateOf(emptyList<SearchOption>()) }
+    /** 上次看到的进度（毫秒）；P1 的续播按钮读它。 */
+    var savedProgressMs by remember(route) { mutableLongStateOf(0L) }
+    /** 解析结果里没有可播放链接时置 false；P1 的播放钮据此转为「跳浏览器」。 */
+    var hasPlayableSource by remember(route) { mutableStateOf(true) }
 
     val stringLongPressShare = remember(activity) {
         activity.getString(R.string.long_press_share_to_copy)
@@ -92,24 +111,103 @@ fun Media3VideoRouteHostScreen(
         genres = loadBundledJson<List<SearchOption>>("files/search_options/$genreFile").orEmpty()
     }
 
+    LaunchedEffect(route) {
+        checkBadGuy(activity, R.raw.akarin)
+    }
+
     LaunchedEffect(videoState, controller) {
         when (val state = videoState) {
             is VideoLoadingState.Success -> {
                 title = state.info.title
+                // 先读进度再插历史：insert 若是 REPLACE 会把 progress 清零，
+                // 读在前才能拿到真正的续播位置（旧宿主两者是并发的，这里定序）
+                val resume = DatabaseRepo.WatchHistory.findBy(route.videoCode)?.progress ?: 0L
+                savedProgressMs = resume
+                if (!viewModel.fromDownload) {
+                    viewModel.insertWatchHistoryWithCover(
+                        WatchHistoryEntity(
+                            state.info.coverUrl,
+                            state.info.title,
+                            state.info.uploadTimeMillis,
+                            kotlin.time.Clock.System.now().toEpochMilliseconds(),
+                            route.videoCode,
+                        )
+                    )
+                }
                 val url = state.info.videoUrls.pickPreferredUrl()
                 if (url == null) {
+                    hasPlayableSource = false
                     showShortToast(R.string.fail_to_get_video_link)
                 } else {
-                    val resume = DatabaseRepo.WatchHistory.findBy(route.videoCode)?.progress ?: 0L
+                    hasPlayableSource = true
                     controller.load(url, if (Preferences.allowResumePlayback) resume else 0L)
                     controller.play()
                 }
             }
 
-            is VideoLoadingState.Error ->
+            is VideoLoadingState.Error -> {
                 state.throwable.localizedTextOrNull()?.let { showShortToast(it) }
+                if (state.throwable is ParseException) {
+                    activity.browse(getHanimeVideoLink(route.videoCode))
+                }
+            }
+
+            is VideoLoadingState.NoContent ->
+                showShortToast(R.string.video_might_not_exist)
 
             else -> Unit
+        }
+    }
+
+    // 进度写回 + 后台暂停（对应旧宿主的 lifecycleObserver；goOnPlayOnPause 换成 controller.pause）
+    DisposableEffect(lifecycleOwner, controller) {
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_PAUSE -> {
+                    // position 必须在回调里同步读完（进了协程后 controller 可能已 release）
+                    val progress = controller.positionMs
+                    scope.launch {
+                        DatabaseRepo.WatchHistory.updateProgress(route.videoCode, progress)
+                    }
+                }
+
+                Lifecycle.Event.ON_STOP -> controller.pause()
+
+                else -> Unit
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+
+    // 播放中保持屏幕常亮（旧链路由 jzvd 的 JZUtils 做，这条链路要自己管）
+    DisposableEffect(controller.isPlaying) {
+        val window = activity.window
+        if (controller.isPlaying) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        } else {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
+        onDispose { window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON) }
+    }
+
+    LaunchedEffect(viewModel) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+            viewModel.modifyHKeyframeFlow.collect { (_, message) ->
+                showShortToast(getString(message.resource, *message.args.toTypedArray()))
+            }
+        }
+    }
+
+    LaunchedEffect(viewModel, route.videoCode) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+            viewModel.loadDownloadedFlow.collect { entity ->
+                val newQuality = checkedQuality ?: return@collect
+                pendingDownloadPrompt = DownloadPromptState(
+                    newQuality = newQuality,
+                    oldQuality = entity?.quality,
+                )
+            }
         }
     }
 
@@ -138,13 +236,25 @@ fun Media3VideoRouteHostScreen(
     val pageHost = remember(controller) {
         object : VideoPageHost {
             override fun showCommentBadge(count: Int) = viewModel.setCommentBadgeCount(count)
-            override fun shouldEnterPip(): Boolean = controller.isPlaying
+
+            // 旧语义是 PLAYING || PAUSE：加载完（有时长）、没出错、没播完就允许进 PiP
+            override fun shouldEnterPip(): Boolean =
+                controller.isPlaying ||
+                        (controller.durationMs > 0 && !controller.isEnded && controller.error == null)
+
             override fun enterPipMode() = Unit          // 25-5 补
             override fun onPipModeChanged(isInPip: Boolean) = viewModel.setPipMode(isInPip)
             override fun togglePlayPause() {
                 if (controller.isPlaying) controller.pause() else controller.play()
             }
         }
+    }
+
+    // 不注册的话 MainActivity 的 onUserLeaveHint / PiP 广播全拿到 null——
+    // 按 Home 不进 PiP、PiP 里的播放暂停按钮失灵
+    DisposableEffect(pageHost) {
+        activity.registerCurrentVideoHost(pageHost)
+        onDispose { activity.registerCurrentVideoHost(null) }
     }
 
     Column(Modifier.fillMaxSize()) {
