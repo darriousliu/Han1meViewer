@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.viewmodel
+package io.github.darriousliu.han1meviewer.feature.subscription.creatorcenter
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,7 +11,6 @@ import io.github.darriousliu.han1meviewer.core.model.CreatorUploadingItem
 import io.github.darriousliu.han1meviewer.core.model.HanimeInfo
 import io.github.darriousliu.han1meviewer.core.model.MyListItems
 import io.github.darriousliu.han1meviewer.core.common.state.PageLoadingState
-import io.github.darriousliu.han1meviewer.ui.screen.home.creatorcenter.CreatorCenterUiState
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.not_logged_in_currently
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +20,9 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.android.annotation.KoinViewModel
 
+@KoinViewModel
 class CreatorCenterViewModel : ViewModel() {
 
     private val _selectedTab = MutableStateFlow(CreatorTab.Uploaded)

@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.creatorcenter
+package io.github.darriousliu.han1meviewer.feature.subscription.creatorcenter
 
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.material3.MaterialTheme

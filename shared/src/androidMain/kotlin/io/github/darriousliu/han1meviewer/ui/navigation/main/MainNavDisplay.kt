@@ -73,9 +73,9 @@ import io.github.darriousliu.han1meviewer.ui.navigation.settings.SettingsScaffol
 import io.github.darriousliu.han1meviewer.feature.settings.SharedHKeyframesRouteScreen
 import io.github.darriousliu.han1meviewer.feature.account.AccountScreen
 import io.github.darriousliu.han1meviewer.feature.account.AvatarCropScreen
-import io.github.darriousliu.han1meviewer.ui.screen.home.CreatorCenterScreen
+import io.github.darriousliu.han1meviewer.feature.subscription.creatorcenter.CreatorCenterScreen
 import io.github.darriousliu.han1meviewer.feature.account.web.CloudflareScreen
-import io.github.darriousliu.han1meviewer.ui.viewmodel.CreatorCenterViewModel
+import io.github.darriousliu.han1meviewer.feature.subscription.creatorcenter.CreatorCenterViewModel
 import io.github.darriousliu.han1meviewer.feature.account.UserAccountViewModel
 import io.github.vinceglb.filekit.PlatformFile
 import kotlinx.serialization.json.Json
@@ -220,7 +220,7 @@ fun MainNavDisplay(
                 )
             }
             entry<CreatorCenterRoute> {
-                val creatorViewModel: CreatorCenterViewModel = viewModel()
+                val creatorViewModel: CreatorCenterViewModel = koinViewModel()
                 CreatorCenterScreen(
                     viewModel = creatorViewModel,
                     onBack = onBack,

@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.creatorcenter
+package io.github.darriousliu.han1meviewer.feature.subscription.creatorcenter
 
 import io.github.darriousliu.han1meviewer.core.model.CreatorSort
 import io.github.darriousliu.han1meviewer.core.model.CreatorTab
