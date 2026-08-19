@@ -35,4 +35,29 @@ object PlayerDefaults {
      * 所以万一哪条分支漏了，走的是原来的 jzvd 路径，不会崩。
      */
     const val KERNEL_EXO_COMPOSE = "ExoPlayer (Compose)"
+
+    /** 速度列表；[SPEED_LABELS] 与之同索引。默认档是 [DEF_SPEED_INDEX]（1.0x）。 */
+    val SPEED_ARRAY = floatArrayOf(
+        0.5F, 0.75F,
+        1.0F, 1.25F, 1.5F, 1.75F,
+        2.0F, 2.25F, 2.5F, 2.75F,
+        3.0F,
+    )
+
+    val SPEED_LABELS: List<String> = SPEED_ARRAY.map { "${it}x" }
+
+    /** 默認速度的索引 */
+    const val DEF_SPEED_INDEX = 2
+
+    /**
+     * 將靈敏度轉換為實際數值。高靈敏度（1~5）照舊，低靈敏度差別放大。
+     * 偏好值域是 1..9；越界值钳到边界（原实现是抛异常，这里对脏数据宽容）。
+     */
+    fun toRealSensitivity(sensitivity: Int): Int = when (sensitivity.coerceIn(1, 9)) {
+        6 -> 7
+        7 -> 10
+        8 -> 20
+        9 -> 40
+        else -> sensitivity.coerceIn(1, 5)
+    }
 }

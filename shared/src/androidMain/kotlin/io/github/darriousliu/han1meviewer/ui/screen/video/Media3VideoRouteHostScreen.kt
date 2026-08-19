@@ -3,9 +3,14 @@ package io.github.darriousliu.han1meviewer.ui.screen.video
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.ui.unit.dp
+import com.google.firebase.Firebase
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.analytics
+import com.google.firebase.analytics.logEvent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -39,6 +44,11 @@ import io.github.darriousliu.han1meviewer.feature.video.player.rememberVideoPlay
 import io.github.darriousliu.han1meviewer.feature.comment.CommentViewModel
 import io.github.darriousliu.han1meviewer.feature.video.VideoViewModel
 import io.github.darriousliu.han1meviewer.core.common.exception.ParseException
+import io.github.darriousliu.han1meviewer.core.firebase.FirebaseConstants
+import io.github.darriousliu.han1meviewer.core.navigation.HomeRoute
+import io.github.darriousliu.han1meviewer.core.navigation.popTo
+import io.github.darriousliu.han1meviewer.core.storage.entity.HKeyframeEntity
+import io.github.darriousliu.han1meviewer.core.ui.component.ConfirmDialog
 import io.github.darriousliu.han1meviewer.core.common.util.copyToClipboard
 import io.github.darriousliu.han1meviewer.core.common.util.loadBundledJson
 import io.github.darriousliu.han1meviewer.core.common.util.localizedTextOrNull
@@ -93,10 +103,17 @@ fun Media3VideoRouteHostScreen(
     var checkedQuality by remember(route) { mutableStateOf<String?>(null) }
     var pendingDownloadPrompt by remember(route) { mutableStateOf<DownloadPromptState?>(null) }
     var genres by remember(Preferences.baseUrl) { mutableStateOf(emptyList<SearchOption>()) }
-    /** 上次看到的进度（毫秒）；P1 的续播按钮读它。 */
+    /** 上次看到的进度（毫秒）；续播按钮读它。 */
     var savedProgressMs by remember(route) { mutableLongStateOf(0L) }
-    /** 解析结果里没有可播放链接时置 false；P1 的播放钮据此转为「跳浏览器」。 */
+    /** 解析结果里没有可播放链接时置 false；播放钮据此转为「跳浏览器」。 */
     var hasPlayableSource by remember(route) { mutableStateOf(true) }
+    var coverUrl by remember(route) { mutableStateOf<String?>(null) }
+    var videoUrls by remember(route) { mutableStateOf<ResolutionLinkMap?>(null) }
+    /** 正在播放的清晰度 key（与下载用的 [checkedQuality] 是两回事）。 */
+    var playingQuality by remember(route) { mutableStateOf<String?>(null) }
+    var showAddHKeyframeDialog by remember(route) { mutableStateOf<Pair<Long, String>?>(null) }
+    val hKeyframes by viewModel.hKeyframes.collectAsStateWithLifecycle()
+    val hostUiState by viewModel.videoHostUiStateFlow.collectAsStateWithLifecycle()
 
     val stringLongPressShare = remember(activity) {
         activity.getString(R.string.long_press_share_to_copy)
@@ -119,6 +136,8 @@ fun Media3VideoRouteHostScreen(
         when (val state = videoState) {
             is VideoLoadingState.Success -> {
                 title = state.info.title
+                coverUrl = state.info.coverUrl
+                videoUrls = state.info.videoUrls
                 // 先读进度再插历史：insert 若是 REPLACE 会把 progress 清零，
                 // 读在前才能拿到真正的续播位置（旧宿主两者是并发的，这里定序）
                 val resume = DatabaseRepo.WatchHistory.findBy(route.videoCode)?.progress ?: 0L
@@ -134,13 +153,14 @@ fun Media3VideoRouteHostScreen(
                         )
                     )
                 }
-                val url = state.info.videoUrls.pickPreferredUrl()
-                if (url == null) {
+                val picked = state.info.videoUrls.pickPreferredEntry()
+                if (picked == null) {
                     hasPlayableSource = false
                     showShortToast(R.string.fail_to_get_video_link)
                 } else {
                     hasPlayableSource = true
-                    controller.load(url, if (Preferences.allowResumePlayback) resume else 0L)
+                    playingQuality = picked.first
+                    controller.load(picked.second, if (Preferences.allowResumePlayback) resume else 0L)
                     controller.play()
                 }
             }
@@ -261,8 +281,36 @@ fun Media3VideoRouteHostScreen(
         HanimeVideoPlayer(
             controller = controller,
             title = title,
+            posterUrl = coverUrl,
+            qualityKeys = videoUrls?.keys?.toList().orEmpty(),
+            currentQuality = playingQuality,
+            onSelectQuality = { key ->
+                val link = videoUrls?.get(key)?.link?.takeIf { it.isNotBlank() }
+                if (link != null) {
+                    // changeUrl 语义：换清晰度保留进度
+                    val position = controller.positionMs
+                    playingQuality = key
+                    controller.load(link, position)
+                    controller.play()
+                }
+            },
+            hKeyframes = hKeyframes,
+            savedProgressMs = savedProgressMs,
+            isFullscreen = false,
+            onToggleFullscreen = { /* P3 全屏批接线 */ },
             onBack = { activity.onBackPressedDispatcher.onBackPressed() },
-            modifier = Modifier.fillMaxWidth().aspectRatio(16f / 9f),
+            onGoHome = { activity.navBackStack.popTo(HomeRoute) },
+            isInPip = hostUiState.isInPipMode,
+            hasPlayableSource = hasPlayableSource,
+            onBlockedPlayClick = {
+                showShortToast(R.string.fail_to_get_video_link)
+                activity.browse(getHanimeVideoLink(route.videoCode))
+            },
+            onRetry = { viewModel.getHanimeVideo() },
+            onRequestAddKeyframe = { position ->
+                showAddHKeyframeDialog = position to (title.ifBlank { "Untitled" })
+            },
+            modifier = Modifier.fillMaxWidth().height(250.dp),
         )
         VideoRouteContent(
             videoCode = route.videoCode,
@@ -316,17 +364,45 @@ fun Media3VideoRouteHostScreen(
             pageHost = pageHost,
         )
     }
+
+    showAddHKeyframeDialog?.let { (currentPosition, keyframeTitle) ->
+        ConfirmDialog(
+            visible = true,
+            title = activity.getString(R.string.add_to_h_keyframe),
+            message = buildString {
+                appendLine(activity.getString(R.string.sure_to_add_to_h_keyframe))
+                append(activity.getString(R.string.current_position_d_ms, currentPosition))
+            },
+            confirmText = activity.getString(R.string.confirm),
+            dismissText = activity.getString(R.string.cancel),
+            onConfirm = {
+                viewModel.appendHKeyframe(
+                    route.videoCode,
+                    keyframeTitle,
+                    HKeyframeEntity.Keyframe(position = currentPosition, prompt = null),
+                )
+                Firebase.analytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT) {
+                    param(FirebaseAnalytics.Param.ITEM_ID, FirebaseConstants.H_KEYFRAMES)
+                    param(FirebaseAnalytics.Param.CONTENT_TYPE, FirebaseConstants.H_KEYFRAMES)
+                }
+                showAddHKeyframeDialog = null
+            },
+            onDismiss = { showAddHKeyframeDialog = null },
+        )
+    }
 }
 
 /**
- * 按 `Preferences.videoQuality` 选清晰度，找不到就用第一条。
+ * 按 `Preferences.videoQuality` 选清晰度，找不到就用第一条。返回 (清晰度 key, 链接)。
  *
  * 旧实现（`HJzvdStd:456-471`）绕了一大圈：`urlsMap.keys.indexOf(quality)` 拿到的是
  * `Int?`，再和 `-1` 比——null 的时候 `null != -1` 为真，会走进「找到了」的分支再靠
  * 内层 null 检查兜住。这里直接按 key 取，找不到显式回落。
  */
-private fun ResolutionLinkMap.pickPreferredUrl(): String? {
+private fun ResolutionLinkMap.pickPreferredEntry(): Pair<String, String>? {
     if (isEmpty()) return null
     val preferred = Preferences.videoQuality
-    return (this[preferred] ?: values.first()).link.takeIf { it.isNotBlank() }
+    val key = if (containsKey(preferred)) preferred else keys.first()
+    val link = this[key]?.link?.takeIf { it.isNotBlank() } ?: return null
+    return key to link
 }

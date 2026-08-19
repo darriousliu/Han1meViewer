@@ -894,4 +894,13 @@ hanime1.me以外のドメインは、特定の時間帯にhanime1.meにリダイ
         <item>ワクワクしながら待機中……</item>
         <item>◝(⑅•ᴗ•⑅)◜..°♡ 転送中……</item>
     </string-array>
+    <string name="player_replay">リプレイ</string>
+    <string name="player_video_loading_failed">動画の読み込みに失敗しました</string>
+    <string name="player_click_to_restart">タップして再試行</string>
+    <string name="player_tips_not_wifi">モバイルデータ通信中です。再生を続けると通信量を消費します</string>
+    <string name="player_tips_not_wifi_confirm">再生を続ける</string>
+    <string name="player_tips_not_wifi_cancel">停止</string>
+    <string name="player_brightness">明るさ</string>
+    <string name="player_volume">音量</string>
+    <string name="player_progress">再生位置</string>
 </resources>

@@ -1,162 +1,309 @@
 package io.github.darriousliu.han1meviewer.feature.video.player
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Slider
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import io.github.darriousliu.han1meviewer.core.common.util.formatVideoTime
+import coil3.compose.AsyncImage
+import io.github.darriousliu.han1meviewer.core.common.PlayerDefaults
 import io.github.darriousliu.han1meviewer.core.resource.Res
-import io.github.darriousliu.han1meviewer.core.resource.back
-import io.github.darriousliu.han1meviewer.core.resource.ic_baseline_arrow_back_24
-import io.github.darriousliu.han1meviewer.core.resource.ic_baseline_pause_24
-import io.github.darriousliu.han1meviewer.core.resource.ic_baseline_play_arrow_24
+import io.github.darriousliu.han1meviewer.core.resource.anime_4k
+import io.github.darriousliu.han1meviewer.core.resource.pause_then_long_press
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
+import io.github.darriousliu.han1meviewer.core.storage.entity.HKeyframeEntity
+import io.github.darriousliu.han1meviewer.core.ui.component.LocalToaster
+import io.github.darriousliu.han1meviewer.core.ui.component.showShort
 import kotlinx.coroutines.delay
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 /**
- * Media3 播放器的控件层。
+ * Media3 播放器的控件层总装。UI 结构与显隐语义复刻线上 jzvd 那套
+ * （`layout_jzvd_with_speed.xml` + `HJzvdStd`），显隐矩阵见 [controlsFor]。
  *
- * ⚠️ **本文件目前只是 Step 25-2 的最小可播版本**：表面 + 播放/暂停 + 进度条 + 返回。
- * 目的是先把「只有真机能回答的未知」一次试掉——surface 挂不挂得上、HLS 能不能放、
- * 代理通不通、position 报得准不准。
- *
- * 完整控件（顶栏/底栏/清晰度/倍速/手势/全屏/PiP/H 帧倒计时）在后续几批按
- * `layout_jzvd_with_speed.xml` 的结构补齐——**以现在线上那套 jzvd UI 为准**，
- * 不是以 `VideoPlayerUi.kt` 为准（那是更早的一次尝试，属于老代码）。
+ * 平台差异走参数注入的接口（[PlayerScreenController] / [PlayerEnvironment]），
+ * 播放事实全在 [VideoPlayerController]——本文件纯 commonMain。
  */
 @Composable
 fun HanimeVideoPlayer(
     controller: VideoPlayerController,
     title: String,
+    posterUrl: String?,
+    qualityKeys: List<String>,
+    currentQuality: String?,
+    onSelectQuality: (String) -> Unit,
+    hKeyframes: HKeyframeEntity?,
+    savedProgressMs: Long,
+    isFullscreen: Boolean,
+    onToggleFullscreen: () -> Unit,
     onBack: () -> Unit,
+    onGoHome: () -> Unit,
+    isInPip: Boolean,
+    hasPlayableSource: Boolean,
+    onBlockedPlayClick: () -> Unit,
+    onRetry: () -> Unit,
+    onRequestAddKeyframe: (positionMs: Long) -> Unit,
     modifier: Modifier = Modifier,
+    showSuperResolution: Boolean = false,
+    superResolutionIndex: Int = 0,
+    onSelectSuperResolution: (Int) -> Unit = {},
+    screen: PlayerScreenController = NoopPlayerScreenController,
+    environment: PlayerEnvironment = NoopPlayerEnvironment,
 ) {
-    Box(modifier.background(Color.Black)) {
-        VideoSurface(controller, Modifier.fillMaxSize())
+    val uiState = rememberPlayerUiState(controller)
+    val toaster = LocalToaster.current
+    val pauseThenLongPressHint = stringResource(Res.string.pause_then_long_press)
 
-        if (controller.isBuffering) {
-            CircularProgressIndicator(Modifier.align(Alignment.Center))
-        }
-
-        // 顶栏：返回 + 标题
-        Row(
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .fillMaxWidth()
-                .padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            IconButton(onClick = onBack) {
-                Icon(
-                    painter = painterResource(Res.drawable.ic_baseline_arrow_back_24),
-                    contentDescription = stringResource(Res.string.back),
-                    tint = Color.White,
-                )
-            }
-            Text(
-                text = title,
-                color = Color.White,
-                style = MaterialTheme.typography.titleSmall,
-                modifier = Modifier.padding(start = 4.dp),
-            )
-        }
-
-        // 中央播放/暂停
-        IconButton(
-            onClick = { if (controller.isPlaying) controller.pause() else controller.play() },
-            modifier = Modifier.align(Alignment.Center).size(64.dp),
-        ) {
-            // 用仓里自带的 drawable 而不是 material icons：commonMain 只有
-            // material-icons-core（49 个），且 Step 24 已经定了「图标统一走自带 drawable」
-            Icon(
-                painter = painterResource(
-                    if (controller.isPlaying) Res.drawable.ic_baseline_pause_24
-                    else Res.drawable.ic_baseline_play_arrow_24
-                ),
-                contentDescription = null,
-                tint = Color.White,
-                modifier = Modifier.size(48.dp),
-            )
-        }
-
-        PlayerProgressBar(
-            controller = controller,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 8.dp),
-        )
-    }
-}
-
-/**
- * 进度条。
- *
- * 拖动时只预览不 seek，抬手才提交——和 `HJzvdStd` 的 `touchActionUp` 语义一致。
- * ⚠️ 所有除法都要先判 `durationMs > 0`：未就绪时时长是 0，除下去就是 NaN。
- */
-@Composable
-private fun PlayerProgressBar(
-    controller: VideoPlayerController,
-    modifier: Modifier = Modifier,
-) {
-    var scrubbing by remember { mutableStateOf(false) }
-    var scrubValue by remember { mutableFloatStateOf(0f) }
-    var tick by remember { mutableStateOf(0) }
-
-    // controller 的 position 不是 State（直接读 ExoPlayer），所以自己打点驱动重组
+    // 100ms 打点驱动进度类控件重组（controller 的 position 不是 State）。
+    // 和 HJzvdStd 把 jzvd 300ms 改 100ms 同理：H 帧倒计时要亚秒精度。
+    var tick by remember { mutableLongStateOf(0L) }
     LaunchedEffect(controller) {
         while (true) {
-            delay(TICK_INTERVAL_MS)
+            delay(PLAYER_TICK_INTERVAL_MS)
             tick++
         }
     }
 
-    @Suppress("UNUSED_EXPRESSION") tick
-    val duration = controller.durationMs
-    val position = controller.positionMs
-    val fraction = if (duration > 0L) (position.toFloat() / duration).coerceIn(0f, 1f) else 0f
+    val visual = playbackVisualOf(controller)
+    val visibility = controlsFor(
+        visual = visual,
+        controlsVisible = uiState.controlsVisible,
+        locked = uiState.locked,
+        isFullscreen = isFullscreen,
+        showBottomProgressPref = Preferences.showBottomProgress,
+    )
+    // 控件层展开那一刻取一次电量/时间（jzvd 的 setSystemTimeAndBattery 同款时机）
+    val batteryPercent = remember(uiState.controlsVisible, environment) {
+        environment.batteryPercent()
+    }
+    val timeText = remember(uiState.controlsVisible, environment) {
+        environment.currentTimeText()
+    }
 
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        Text(formatVideoTime(position), color = Color.White, style = MaterialTheme.typography.labelSmall)
-        Slider(
-            value = if (scrubbing) scrubValue else fraction,
-            onValueChange = { scrubbing = true; scrubValue = it },
-            onValueChangeFinished = {
-                if (duration > 0L) controller.seekTo((scrubValue * duration).toLong())
-                scrubbing = false
-            },
-            modifier = Modifier.weight(1f),
+    // 全屏时控件避开状态栏/刘海/导航栏的横向区域（HJzvdStd :628-633 的等价）
+    val chromeInsetsModifier = if (isFullscreen) {
+        Modifier.windowInsetsPadding(
+            WindowInsets.systemBars.union(WindowInsets.displayCutout)
+                .only(WindowInsetsSides.Horizontal)
         )
-        Text(formatVideoTime(duration), color = Color.White, style = MaterialTheme.typography.labelSmall)
+    } else {
+        Modifier
+    }
+
+    Box(modifier.background(Color.Black).clipToBounds()) {
+        VideoSurfaceFit(controller)
+
+        // 封面：首帧渲染前显示；完播不再回到封面（HJzvdStd.onCompletion 语义）
+        if (posterUrl != null && !controller.firstFrameRendered) {
+            AsyncImage(
+                model = posterUrl,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
+
+        if (isInPip) {
+            // PiP 里只留画面和加载圈（setControlsVisible(false) 的等价）
+            if (visibility.loading) {
+                PlayerLoadingIndicator(Modifier.align(Alignment.Center))
+            }
+            return@Box
+        }
+
+        // 单击层：P2 会换成完整手势层（进度/亮度/音量/双击/长按倍速）
+        Box(
+            Modifier
+                .fillMaxSize()
+                .pointerInput(uiState) {
+                    detectTapGestures(onTap = { uiState.toggleControls() })
+                }
+        )
+
+        if (visibility.topBar) {
+            PlayerTopBar(
+                title = title,
+                isFullscreen = isFullscreen,
+                showHKeyframeEntry = Preferences.hKeyframesEnable,
+                speedLabel = uiState.currentSpeedIndex
+                    .takeIf { it != PlayerDefaults.DEF_SPEED_INDEX }
+                    ?.let { PlayerDefaults.SPEED_LABELS[it] },
+                showSuperResolution = showSuperResolution,
+                superResolutionLabel = stringResource(Res.string.anime_4k),
+                batteryPercent = batteryPercent,
+                timeText = timeText,
+                onBack = onBack,
+                onGoHome = onGoHome,
+                onHKeyframeClick = { uiState.openMenu(PlayerMenu.HKeyframes) },
+                onHKeyframeLongClick = {
+                    if (controller.isPlaying) {
+                        toaster.showShort(pauseThenLongPressHint)
+                    } else {
+                        onRequestAddKeyframe(controller.positionMs)
+                    }
+                },
+                onSpeedClick = { uiState.openMenu(PlayerMenu.Speed) },
+                onSuperResolutionClick = { uiState.openMenu(PlayerMenu.SuperResolution) },
+                modifier = Modifier.align(Alignment.TopCenter).then(chromeInsetsModifier),
+            )
+        }
+
+        if (visibility.loading) {
+            PlayerLoadingIndicator(Modifier.align(Alignment.Center))
+        }
+
+        if (visibility.centerButton || visibility.replayText) {
+            PlayerCenterButton(
+                visual = visual,
+                onPlayPause = {
+                    when {
+                        !hasPlayableSource -> onBlockedPlayClick()
+                        controller.isPlaying -> controller.pause()
+                        else -> controller.play()
+                    }
+                },
+                onReplay = {
+                    controller.seekTo(0)
+                    controller.play()
+                },
+                modifier = Modifier.align(Alignment.Center),
+            )
+        }
+
+        if (visibility.retry) {
+            PlayerErrorRetry(
+                onRetry = onRetry,
+                modifier = Modifier.align(Alignment.Center),
+            )
+        }
+
+        if (visibility.lockButton) {
+            PlayerLockButton(
+                locked = uiState.locked,
+                onToggle = { uiState.locked = !uiState.locked },
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .then(chromeInsetsModifier)
+                    .padding(end = 16.dp),
+            )
+        }
+
+        if (visibility.bottomBar) {
+            PlayerBottomBar(
+                controller = controller,
+                uiState = uiState,
+                tick = tick,
+                isFullscreen = isFullscreen,
+                currentQuality = currentQuality,
+                onQualityClick = { uiState.openMenu(PlayerMenu.Clarity) },
+                onToggleFullscreen = onToggleFullscreen,
+                modifier = Modifier.align(Alignment.BottomCenter).then(chromeInsetsModifier),
+            )
+        }
+
+        if (visibility.miniProgress) {
+            PlayerMiniProgressBar(
+                controller = controller,
+                tick = tick,
+                modifier = Modifier.align(Alignment.BottomCenter),
+            )
+        }
+
+        // 续播钮：进度 >5s、开了记忆播放、首帧后出现，5 秒自动消失；点击回到片头
+        var resumeDismissed by remember(controller) { mutableStateOf(false) }
+        val showResume = !uiState.locked && !resumeDismissed &&
+                savedProgressMs > RESUME_MIN_PROGRESS_MS &&
+                Preferences.allowResumePlayback && controller.firstFrameRendered
+        if (showResume) {
+            LaunchedEffect(Unit) {
+                delay(RESUME_AUTO_HIDE_MS)
+                resumeDismissed = true
+            }
+            PlayerResumeButton(
+                onClick = {
+                    controller.seekTo(0)
+                    resumeDismissed = true
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 60.dp),
+            )
+        }
+
+        PlayerSideSheet(
+            menu = uiState.activeMenu,
+            currentSpeedIndex = uiState.currentSpeedIndex,
+            onSelectSpeed = { index ->
+                uiState.currentSpeedIndex = index
+                controller.setSpeed(PlayerDefaults.SPEED_ARRAY[index])
+                uiState.dismissMenu()
+            },
+            qualityKeys = qualityKeys,
+            currentQuality = currentQuality,
+            onSelectQuality = { key ->
+                uiState.dismissMenu()
+                onSelectQuality(key)
+            },
+            showSuperResolution = showSuperResolution,
+            currentSuperResolutionIndex = superResolutionIndex,
+            onSelectSuperResolution = { index ->
+                uiState.dismissMenu()
+                onSelectSuperResolution(index)
+            },
+            hKeyframes = hKeyframes,
+            onSeekToKeyframe = { position -> controller.seekTo(position) },
+            onDismiss = { uiState.dismissMenu() },
+            modifier = Modifier.fillMaxSize(),
+        )
     }
 }
 
-/** 和 `HJzvdStd` 把 jzvd 的 300ms 改成 100ms 是同一个理由：H 帧倒计时要亚秒精度。 */
-private const val TICK_INTERVAL_MS = 100L
+/** surface 按视频实际尺寸 fitCenter；未知尺寸时铺满。 */
+@Composable
+private fun androidx.compose.foundation.layout.BoxScope.VideoSurfaceFit(
+    controller: VideoPlayerController,
+) {
+    val size = controller.videoSize
+    val ratio = if (size != IntSize.Zero && size.height > 0) {
+        size.width.toFloat() / size.height
+    } else {
+        null
+    }
+    VideoSurface(
+        controller = controller,
+        modifier = if (ratio != null) {
+            // aspectRatio 在约束内先试宽再试高，天然就是 fitCenter
+            Modifier.align(Alignment.Center).aspectRatio(ratio)
+        } else {
+            Modifier.fillMaxSize()
+        },
+    )
+}
+
+internal const val PLAYER_TICK_INTERVAL_MS = 100L
+private const val RESUME_MIN_PROGRESS_MS = 5_000L
+private const val RESUME_AUTO_HIDE_MS = 5_000L

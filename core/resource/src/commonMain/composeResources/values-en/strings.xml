@@ -889,4 +889,13 @@ Recommendations are as follows:\n
         <item>Excitedly rubbing hands together in anticipation…</item>
         <item>◝(⑅•ᴗ•⑅)◜..°♡ Teleporting…</item>
     </string-array>
+    <string name="player_replay">Replay</string>
+    <string name="player_video_loading_failed">Video failed to load</string>
+    <string name="player_click_to_restart">Tap to retry</string>
+    <string name="player_tips_not_wifi">You are on mobile data. Playback will use data.</string>
+    <string name="player_tips_not_wifi_confirm">Keep playing</string>
+    <string name="player_tips_not_wifi_cancel">Stop</string>
+    <string name="player_brightness">Brightness</string>
+    <string name="player_volume">Volume</string>
+    <string name="player_progress">Progress</string>
 </resources>
