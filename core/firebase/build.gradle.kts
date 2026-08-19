@@ -1,3 +1,7 @@
+@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
+
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+
 plugins {
     id("han1me.kmp.library")
 }
@@ -12,6 +16,19 @@ plugins {
 kotlin {
     android {
         namespace = "io.github.darriousliu.han1meviewer.core.firebase"
+    }
+
+    swiftPMDependencies {
+        iosMinimumDeploymentTarget.set("15.0")
+        swiftPackage(
+            url = url("https://github.com/firebase/firebase-ios-sdk.git"),
+            version = exact(libs.versions.firebaseApple.get()),
+            products = listOf(
+                product("FirebaseAnalytics"),
+                product("FirebaseCrashlytics"),
+                product("FirebaseRemoteConfig")
+            ),
+        )
     }
 
     sourceSets {

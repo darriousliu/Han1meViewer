@@ -13,27 +13,13 @@ let package = Package(
     )
   ],
   dependencies: [
-    .package(
-      url: "https://github.com/firebase/firebase-ios-sdk.git",
-      exact: "12.17.0"
-    )
+    .package(path: "subpackages/_core_firebase")
   ],
   targets: [
     .target(
       name: "KotlinMultiplatformLinkedPackage",
       dependencies: [
-        .product(
-          name: "FirebaseAnalytics",
-          package: "firebase-ios-sdk"
-        ),
-        .product(
-          name: "FirebaseCrashlytics",
-          package: "firebase-ios-sdk"
-        ),
-        .product(
-          name: "FirebaseRemoteConfig",
-          package: "firebase-ios-sdk"
-        )
+        .product(name: "_core_firebase", package: "_core_firebase")
       ]
     )
   ]

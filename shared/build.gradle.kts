@@ -1,8 +1,6 @@
 @file:Suppress("UnstableApiUsage")
-@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
 
 import io.github.darriousliu.han1meviewer.convention.createAndroidJvmMain
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 // ============================================================================
 // :shared = 多模块的汇总层（相当于 PiPixiv2 的 :composeApp）。
@@ -75,34 +73,13 @@ kotlin {
         }
     }
 
-    // targets（android / jvm / iosArm64 / iosSimulatorArm64）与 applyDefaultHierarchyTemplate
-    // 都由 han1me.kmp.library 建好，这里只补 iOS 的 framework 产物。
+
     listOf(iosArm64(), iosSimulatorArm64()).forEach { target ->
         target.binaries.framework {
             baseName = "Shared"
             isStatic = true
             binaryOption("bundleId", "io.github.darriousliu.han1meviewer.shared")
         }
-    }
-
-
-    // Firebase 的 iOS SDK 走 Kotlin 2.4 内置的 swiftPM 集成。
-    //
-    // ⚠️ 这段**不能**下沉到 :core:firebase。swiftPM 会给模块挂上
-    // dumpXcodebuildArgs* 任务，而依赖方解析该模块的 KMP 元数据时会拉起它们——
-    // 于是在没装完整 Xcode 的机器上，连 :shared:compileKotlinJvm 都会被
-    // "xcodebuild requires Xcode" 打断。放在 umbrella 里只影响 umbrella 自己。
-    swiftPMDependencies {
-        iosMinimumDeploymentTarget.set("15.0")
-        swiftPackage(
-            url = url("https://github.com/firebase/firebase-ios-sdk.git"),
-            version = exact(libs.versions.firebaseApple.get()),
-            products = listOf(
-                product("FirebaseAnalytics"),
-                product("FirebaseCrashlytics"),
-                product("FirebaseRemoteConfig")
-            ),
-        )
     }
 
     sourceSets {
@@ -119,41 +96,41 @@ kotlin {
 
             // Res 出现在很多公开签名里（StringResource / DrawableResource 参数），
             // 用 api 传递出去，消费方不用各自再声明一遍。
-            api(project(":core:resource"))
+            implementation(project(":core:resource"))
             // 异常、状态、格式化这些类型遍布公开签名，用 api 传下去
-            api(project(":core:common"))
+            implementation(project(":core:common"))
             // 模型类遍布公开签名
-            api(project(":core:model"))
+            implementation(project(":core:model"))
             // Preferences / Room 实体遍布公开签名
-            api(project(":core:storage"))
+            implementation(project(":core:storage"))
             implementation(project(":core:parse"))
             // Firebase 门面（Android 接真身，JVM 空实现）
-            api(project(":core:firebase"))
+            implementation(project(":core:firebase"))
             // HttpClient / 各 service 接口遍布公开签名
-            api(project(":core:network"))
+            implementation(project(":core:network"))
             // 各 Repo 遍布 ViewModel 的公开签名
-            api(project(":core:repository"))
+            implementation(project(":core:repository"))
             // 路由类型遍布各 route 与屏幕的签名
-            api(project(":core:navigation"))
+            implementation(project(":core:navigation"))
             // 公共组件/主题遍布各屏幕
-            api(project(":core:ui"))
+            implementation(project(":core:ui"))
             // 通知门面（渠道 id 被 worker 用）
             implementation(project(":core:notification"))
 
             // feature 模块（拆出去的域；MainNavDisplay/AppModule 还要引它们）
-            api(project(":feature:checkin"))
-            api(project(":feature:history"))
-            api(project(":feature:subscription"))
-            api(project(":feature:comment"))
-            api(project(":feature:preview"))
-            api(project(":feature:mylist"))
-            api(project(":feature:download"))
-            api(project(":feature:search"))
-            api(project(":feature:account"))
-            api(project(":feature:settings"))
-            api(project(":feature:home"))
-            api(project(":feature:video"))
-            api(project(":feature:main"))
+            implementation(project(":feature:checkin"))
+            implementation(project(":feature:history"))
+            implementation(project(":feature:subscription"))
+            implementation(project(":feature:comment"))
+            implementation(project(":feature:preview"))
+            implementation(project(":feature:mylist"))
+            implementation(project(":feature:download"))
+            implementation(project(":feature:search"))
+            implementation(project(":feature:account"))
+            implementation(project(":feature:settings"))
+            implementation(project(":feature:home"))
+            implementation(project(":feature:video"))
+            implementation(project(":feature:main"))
             implementation(libs.coil.compose)
             implementation(libs.ktor.client.core)
             implementation(libs.filekit.core)
