@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.myplaylist
+package io.github.darriousliu.han1meviewer.feature.mylist.playlist
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween

@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.myplaylist
+package io.github.darriousliu.han1meviewer.feature.mylist.playlist
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -58,7 +58,7 @@ import io.github.darriousliu.han1meviewer.core.ui.component.lazy.LazyVerticalGri
 import io.github.darriousliu.han1meviewer.core.ui.RetryableImage
 import io.github.darriousliu.han1meviewer.core.ui.theme.SpacingNormal
 import io.github.darriousliu.han1meviewer.core.ui.theme.VideoNormalCardMinWidth
-import io.github.darriousliu.han1meviewer.ui.viewmodel.MyPlayListViewModelV2
+import io.github.darriousliu.han1meviewer.feature.mylist.MyPlayListViewModelV2
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.baseline_edit_24
 import io.github.darriousliu.han1meviewer.core.resource.cancel

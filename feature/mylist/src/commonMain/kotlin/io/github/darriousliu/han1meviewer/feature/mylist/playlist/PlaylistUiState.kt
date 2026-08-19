@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.myplaylist
+package io.github.darriousliu.han1meviewer.feature.mylist.playlist
 
 import io.github.darriousliu.han1meviewer.core.model.Playlists
 import org.jetbrains.compose.resources.StringResource

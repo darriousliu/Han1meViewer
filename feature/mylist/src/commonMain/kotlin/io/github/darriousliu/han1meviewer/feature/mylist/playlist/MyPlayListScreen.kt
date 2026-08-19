@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.myplaylist
+package io.github.darriousliu.han1meviewer.feature.mylist.playlist
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -32,7 +32,7 @@ import io.github.darriousliu.han1meviewer.core.ui.component.PullRefreshOverlay
 import io.github.darriousliu.han1meviewer.core.ui.component.TextInputDialog
 import io.github.darriousliu.han1meviewer.core.ui.component.appbar.HanimeScaffold
 import io.github.darriousliu.han1meviewer.core.ui.component.content.EmptyContent
-import io.github.darriousliu.han1meviewer.ui.viewmodel.MyPlayListViewModelV2
+import io.github.darriousliu.han1meviewer.feature.mylist.MyPlayListViewModelV2
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.add_failed
 import io.github.darriousliu.han1meviewer.core.resource.add_success

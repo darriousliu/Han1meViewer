@@ -4,6 +4,7 @@ import io.github.darriousliu.han1meviewer.core.model.HanimeInfo
 import io.github.darriousliu.han1meviewer.core.model.SubscriptionItem
 import io.github.darriousliu.han1meviewer.core.model.SubscriptionVideosItem
 import io.github.darriousliu.han1meviewer.core.model.VideoComments
+import io.github.darriousliu.han1meviewer.core.model.Playlists
 
 /**
  * `@Preview` 用的假数据里，只依赖 :core:model 的那部分。
@@ -225,3 +226,36 @@ val fakeCommentList = listOf(
 )
 
 val fakeTagList1 = listOf("新番", "预告", "校园", "妹妹", "姐系", "正太", "萝莉")
+
+val fakePlaylists = listOf(
+    Playlists.Playlist(
+        listCode = "code1",
+        title = "浪漫喜剧精选合集",
+        total = 24,
+        coverUrl = "https://picsum.photos/300/200?random=1",
+    ),
+    Playlists.Playlist(
+        listCode = "code2",
+        title = "动作大片必看榜单",
+        total = 18,
+        coverUrl = "https://picsum.photos/300/200?random=2",
+    ),
+    Playlists.Playlist(
+        listCode = "code3",
+        title = "温暖治愈的日常剧推荐",
+        total = 32,
+        coverUrl = "https://picsum.photos/300/200?random=3",
+    ),
+    Playlists.Playlist(
+        listCode = "code4",
+        title = "悬疑推理高分作品",
+        total = 12,
+        coverUrl = "https://picsum.photos/300/200?random=4",
+    ),
+    Playlists.Playlist(
+        listCode = "code5",
+        title = "经典动画短片集锦",
+        total = 45,
+        coverUrl = "https://picsum.photos/300/200?random=5",
+    ),
+)

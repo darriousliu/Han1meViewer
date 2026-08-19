@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.viewmodel.mylist
+package io.github.darriousliu.han1meviewer.feature.mylist
 
 import io.github.darriousliu.han1meviewer.core.repository.NetworkRepo
 import io.github.darriousliu.han1meviewer.core.model.HanimeInfo

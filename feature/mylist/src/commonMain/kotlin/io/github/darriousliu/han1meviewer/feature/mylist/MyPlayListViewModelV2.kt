@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.viewmodel
+package io.github.darriousliu.han1meviewer.feature.mylist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,7 +12,7 @@ import io.github.darriousliu.han1meviewer.core.model.MyListItems
 import io.github.darriousliu.han1meviewer.core.model.Playlists
 import io.github.darriousliu.han1meviewer.core.common.state.PageLoadingState
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
-import io.github.darriousliu.han1meviewer.ui.screen.home.myplaylist.PlaylistUiState
+import io.github.darriousliu.han1meviewer.feature.mylist.playlist.PlaylistUiState
 import io.github.darriousliu.han1meviewer.core.network.CsrfTokenStore.csrfToken
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.android.annotation.KoinViewModel
 
 private val logger = Logger.withTag("MyPlayListViewModel")
 
@@ -33,6 +34,7 @@ data class PlaylistSheetScrollState(
     val firstVisibleItemScrollOffset: Int = 0,
 )
 
+@KoinViewModel
 class MyPlayListViewModelV2 : ViewModel() {
 
     private val _myPlaylistsFlow = MutableStateFlow<WebsiteState<Playlists>>(WebsiteState.Loading)

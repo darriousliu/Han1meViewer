@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.myplaylist
+package io.github.darriousliu.han1meviewer.feature.mylist.playlist
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,7 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.darriousliu.han1meviewer.core.model.Playlists
 import io.github.darriousliu.han1meviewer.core.ui.preview.ComponentPreview
-import io.github.darriousliu.han1meviewer.ui.preview.fakePlaylists
+import io.github.darriousliu.han1meviewer.core.ui.preview.fakePlaylists
 import io.github.darriousliu.han1meviewer.core.ui.RetryableImage
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.h_chan_load_failed

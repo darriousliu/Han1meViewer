@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.videogrid
+package io.github.darriousliu.han1meviewer.feature.mylist
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues

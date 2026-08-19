@@ -83,6 +83,9 @@ import io.github.darriousliu.han1meviewer.feature.history.WatchHistoryRouteScree
 import io.github.darriousliu.han1meviewer.feature.subscription.SubscriptionRouteScreen
 import io.github.darriousliu.han1meviewer.feature.preview.GetchuPreviewDetailRouteScreen
 import io.github.darriousliu.han1meviewer.feature.preview.GetchuPreviewRouteScreen
+import io.github.darriousliu.han1meviewer.feature.mylist.MyPlaylistRouteScreen
+import io.github.darriousliu.han1meviewer.feature.mylist.WatchLaterRouteScreen
+import io.github.darriousliu.han1meviewer.feature.mylist.FavVideoRouteScreen
 
 @Composable
 fun MainNavDisplay(

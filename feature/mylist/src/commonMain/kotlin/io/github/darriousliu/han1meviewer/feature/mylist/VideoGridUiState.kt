@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.videogrid
+package io.github.darriousliu.han1meviewer.feature.mylist
 
 import io.github.darriousliu.han1meviewer.core.model.HanimeInfo
 import io.github.darriousliu.han1meviewer.core.common.state.PageLoadingState

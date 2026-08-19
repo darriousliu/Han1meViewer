@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.navigation.main
+package io.github.darriousliu.han1meviewer.feature.mylist
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -7,15 +7,15 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.darriousliu.han1meviewer.core.storage.getHanimeShareText
 import io.github.darriousliu.han1meviewer.core.ui.component.LocalToaster
 import io.github.darriousliu.han1meviewer.core.ui.component.showShort
-import io.github.darriousliu.han1meviewer.ui.screen.home.myplaylist.PlaylistScreen
-import io.github.darriousliu.han1meviewer.ui.screen.home.myplaylist.PlaylistUiEvent
-import io.github.darriousliu.han1meviewer.ui.viewmodel.MyPlayListViewModelV2
+import io.github.darriousliu.han1meviewer.feature.mylist.playlist.PlaylistScreen
+import io.github.darriousliu.han1meviewer.feature.mylist.playlist.PlaylistUiEvent
 import io.github.darriousliu.han1meviewer.core.common.util.setPlainText
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.copy_to_clipboard
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun MyPlaylistRouteScreen(
@@ -23,7 +23,7 @@ fun MyPlaylistRouteScreen(
     onNavigateToVideo: (String) -> Unit,
 ) {
     val clipboard = LocalClipboard.current
-    val viewModel: MyPlayListViewModelV2 = viewModel()
+    val viewModel: MyPlayListViewModelV2 = koinViewModel()
     val scope = rememberCoroutineScope()
     val toaster = LocalToaster.current
     val copiedHint = stringResource(Res.string.copy_to_clipboard)
