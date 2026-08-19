@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.search
+package io.github.darriousliu.han1meviewer.feature.search
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -55,7 +55,6 @@ import io.github.darriousliu.han1meviewer.core.ui.component.lazy.LazyColumn
 import io.github.darriousliu.han1meviewer.core.ui.component.lazy.LazyVerticalGrid
 import io.github.darriousliu.han1meviewer.core.ui.model.AdvancedSearchDialogState
 import io.github.darriousliu.han1meviewer.core.ui.model.SearchScopeSection
-import io.github.darriousliu.han1meviewer.ui.viewmodel.SearchViewModel
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.advanced_search
 import io.github.darriousliu.han1meviewer.core.resource.advanced_search_combination

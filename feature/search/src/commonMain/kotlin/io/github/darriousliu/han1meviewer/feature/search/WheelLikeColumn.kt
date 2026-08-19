@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.search
+package io.github.darriousliu.han1meviewer.feature.search
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.navigation.main
+package io.github.darriousliu.han1meviewer.feature.search
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -13,9 +13,6 @@ import io.github.darriousliu.han1meviewer.core.storage.getHanimeShareText
 import io.github.darriousliu.han1meviewer.core.ui.component.LocalToaster
 import io.github.darriousliu.han1meviewer.core.ui.component.showShort
 import io.github.darriousliu.han1meviewer.core.navigation.SearchRoute
-import io.github.darriousliu.han1meviewer.ui.screen.search.AdvancedSearchSheet
-import io.github.darriousliu.han1meviewer.ui.screen.search.SearchScreen
-import io.github.darriousliu.han1meviewer.ui.viewmodel.SearchViewModel
 import io.github.darriousliu.han1meviewer.core.common.util.setPlainText
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.copy_to_clipboard

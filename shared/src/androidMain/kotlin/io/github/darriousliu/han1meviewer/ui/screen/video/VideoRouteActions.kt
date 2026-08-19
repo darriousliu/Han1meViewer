@@ -5,7 +5,7 @@ import android.content.Intent
 import android.provider.Settings
 import android.widget.Toast
 import androidx.core.net.toUri
-import io.github.darriousliu.han1meviewer.HAdvancedSearch
+import io.github.darriousliu.han1meviewer.feature.search.HAdvancedSearch
 import io.github.darriousliu.han1meviewer.HCacheManager
 import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.R

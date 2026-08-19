@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.search
+package io.github.darriousliu.han1meviewer.feature.search
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -92,7 +92,6 @@ import io.github.darriousliu.han1meviewer.core.ui.rememberRandomLoadingHint
 import io.github.darriousliu.han1meviewer.core.ui.theme.SpacingNormal
 import io.github.darriousliu.han1meviewer.core.ui.theme.VideoNormalCardMinWidth
 import io.github.darriousliu.han1meviewer.core.ui.theme.VideoSimplifiedCardMinWidth
-import io.github.darriousliu.han1meviewer.ui.viewmodel.SearchViewModel
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.advanced
 import io.github.darriousliu.han1meviewer.core.resource.back

@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer
+package io.github.darriousliu.han1meviewer.feature.search
 
 /**
  * 高级搜索的枚举

@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.viewmodel
+package io.github.darriousliu.han1meviewer.feature.search
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
