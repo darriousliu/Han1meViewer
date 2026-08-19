@@ -5,11 +5,10 @@ import io.github.darriousliu.han1meviewer.convention.createAndroidJvmMain
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
-    // targets / 编译选项 / Compose 那圈公共依赖都在 convention 里
+    // targets 与编译选项在 convention 里；依赖全在下面的 sourceSets 自己声明
     id("han1me.kmp.compose")
     alias(libs.plugins.org.jetbrains.kotlin.plugin.parcelize)
     alias(libs.plugins.org.jetbrains.kotlin.plugin.serialization)
-    alias(libs.plugins.ktorfit)
     alias(libs.plugins.aboutlibraries)
     alias(libs.plugins.ben.manes)
 }
@@ -134,7 +133,6 @@ kotlin {
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
-            implementation(libs.ktorfit.lib.light)
             implementation(libs.mp.stools)
             implementation(libs.aboutlibraries.core)
             implementation(libs.aboutlibraries.compose.m3)
