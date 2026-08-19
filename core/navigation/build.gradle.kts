@@ -17,6 +17,11 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            // convention 不声明依赖，基础几组在模块里自己写
+            implementation(libs.bundles.compose)
+            implementation(libs.coroutines.core)
+            implementation(libs.serialization.json)
+            implementation(libs.kermit)
             // NavKey / NavBackStack 出现在公开签名里
             api(libs.navigation3.ui.jb)
             api(libs.lifecycle.viewmodel.navigation3)

@@ -16,6 +16,12 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            // convention 不声明依赖，基础几组在模块里自己写
+            implementation(libs.bundles.compose)
+            implementation(libs.bundles.lifecycle)
+            implementation(libs.coroutines.core)
+            implementation(libs.datetime)
+            implementation(libs.kermit)
             api(project(":core:common"))
             api(project(":core:model"))
             api(project(":core:resource"))

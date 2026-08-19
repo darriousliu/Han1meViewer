@@ -1,7 +1,6 @@
 @file:Suppress("UnstableApiUsage")
 
 import io.github.darriousliu.han1meviewer.convention.compileSdkVersion
-import io.github.darriousliu.han1meviewer.convention.libs
 import io.github.darriousliu.han1meviewer.convention.minSdkVersion
 import io.github.darriousliu.han1meviewer.convention.targetSdkVersion
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -44,8 +43,4 @@ kotlin {
             "-jvm-default=enable"
         )
     }
-}
-
-dependencies {
-    coreLibraryDesugaring(libs.findLibrary("desugar-jdk-libs").get())
 }

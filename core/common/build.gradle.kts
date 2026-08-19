@@ -67,6 +67,12 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            // convention 不声明依赖，基础几组在模块里自己写
+            implementation(libs.bundles.compose)
+            implementation(libs.coroutines.core)
+            implementation(libs.serialization.json)
+            implementation(libs.datetime)
+            implementation(libs.kermit)
             // 异常带 StringResource（LocalizedException），出现在公开签名里
             api(project(":core:resource"))
             implementation(libs.kotlinx.io.core)

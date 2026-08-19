@@ -6,6 +6,13 @@ kotlin {
     android {
         namespace = "io.github.darriousliu.han1meviewer.core.resource"
     }
+
+    sourceSets {
+        commonMain.dependencies {
+            // convention 不声明依赖，基础几组在模块里自己写
+            implementation(libs.bundles.compose)
+        }
+    }
 }
 
 compose.resources {

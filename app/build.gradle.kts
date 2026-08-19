@@ -91,5 +91,6 @@ dependencies {
     implementation(libs.compose.ui.ui.tooling.preview)
     debugImplementation(project.dependencies.platform(libs.compose.compose.bom))
     debugImplementation(libs.compose.ui.ui.tooling)
-    // coreLibraryDesugaring 在 han1me.android.application 里
+    // convention 只开 isCoreLibraryDesugaringEnabled，脱糖库本体是依赖，模块自己声明
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 }

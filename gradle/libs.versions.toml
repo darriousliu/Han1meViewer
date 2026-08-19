@@ -63,11 +63,10 @@ ktor = "3.5.2"
 ktorfit = "2.7.5"
 kermit = "2.1.0"
 koin = "4.2.2"
-# Koin 的注解处理有两套：官方新的 Kotlin compiler plugin（koinCompiler）和旧的 KSP
-# （koinAnnotations）。compiler plugin 1.1.0 是基于 kotlin-compiler 2.3.20 编的，
-# 在本项目的 Kotlin 2.4.20-Beta2 上 IR 阶段就崩
-# （IrUtilsKt.getValueArgument 签名变了），所以现在只能走 KSP 这条。
-koinCompiler = "1.1.0"
+# Koin 注解走 KSP。官方新的 Kotlin compiler plugin（1.1.0）基于 kotlin-compiler
+# 2.3.20 编译，在本项目的 2.4.20-Beta2 上 IR 阶段就崩，等它跟上编译器版本再换。
+# 这个版本号同时钉住 koin-annotations：处理器生成的 KoinMeta 文件 import 的
+# `org.koin.meta.annotations` 只存在于 2.3.x。
 koinAnnotations = "2.3.1"
 mpStools = "1.6.3"
 sonner = "0.4.0"
@@ -94,7 +93,6 @@ compose-compiler-gradle-plugin = { module = "org.jetbrains.kotlin:compose-compil
 android-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "androidGradle" }
 compose-multiplatform-gradle-plugin = { module = "org.jetbrains.compose:compose-gradle-plugin", version.ref = "composeMultiplatform" }
 ksp-gradle-plugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
-koin-compiler-gradle-plugin = { module = "io.insert-koin:koin-compiler-gradle-plugin", version.ref = "koinCompiler" }
 
 # Android
 aboutlibraries-core = { module = "com.mikepenz:aboutlibraries-core", version.ref = "aboutlibraries" }
@@ -192,15 +190,16 @@ ktorfit-lib-light = { module = "de.jensklingenberg.ktorfit:ktorfit-lib-light", v
 ktorfit-ksp = { module = "de.jensklingenberg.ktorfit:ktorfit-ksp", version.ref = "ktorfit" }
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 
-# Koin。版本统一由 BOM 定，各制品不写版本号。
-koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
-koin-core = { module = "io.insert-koin:koin-core" }
-koin-compose = { module = "io.insert-koin:koin-compose" }
-koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel" }
+# Koin。制品都写显式版本（不用 BOM）：bundles 只能装带版本的坐标，
+# 而且 BOM 会把 koin-annotations 顶到 4.2.x（那条线没有 org.koin.meta.annotations，
+# KSP 生成的代码会编不过）。
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
+koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
 koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koinAnnotations" }
 koin-ksp-compiler = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koinAnnotations" }
-koin-android = { module = "io.insert-koin:koin-android" }
-koin-test = { module = "io.insert-koin:koin-test" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
 # 跨平台 String.sprintf。CMP 的 stringResource(res, vararg) 只认 %N$d/%N$s，
 # 处理不了 %f，所以带小数格式化的地方要靠它。注意它不在 Maven Central，
 # 源在 settings.gradle.kts 里单独声明。
@@ -244,6 +243,29 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 
 [bundles]
 
+# CMP 基础一圈（JB 制品，不是 androidx——后者只有 Android 变体）
+compose = [
+    "compose-multiplatform-runtime",
+    "compose-multiplatform-foundation",
+    "compose-multiplatform-ui",
+    "compose-multiplatform-ui-backhandler",
+    "compose-multiplatform-ui-tooling-preview",
+    "compose-resources",
+    "jetbrains-compose-material3",
+    "jetbrains-compose-material-icons-core",
+]
+
+# KMP 版 lifecycle（viewModel() / collectAsStateWithLifecycle 这套）
+lifecycle = [
+    "lifecycle-viewmodel",
+    "lifecycle-viewmodel-savedstate",
+    "lifecycle-viewmodel-compose",
+    "lifecycle-runtime-compose",
+]
+
+koin = ["koin-core", "koin-annotations"]
+koin-compose = ["koin-compose", "koin-compose-viewmodel"]
+
 android-base = [
     "core",
     "appcompat",
@@ -267,7 +289,6 @@ com-android-library = { id = "com.android.library", version.ref = "androidGradle
 android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "androidGradle" }
 buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildKonfig" }
 com-google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-koin-compiler = { id = "io.insert-koin.compiler.plugin", version.ref = "koinCompiler" }
 androidx-room = { id = "androidx.room3", version.ref = "room" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

@@ -93,12 +93,17 @@ kotlin {
     }
 
     sourceSets {
-        // 下面这些由 convention 提供，不再重复声明：
-        // coroutines-core / serialization-json / datetime / kermit（han1me.kmp.library）
-        // compose runtime|ui|foundation|backhandler|tooling-preview / compose-resources /
-        // jetbrains material3|icons-core / lifecycle viewmodel|savedstate|compose|runtime-compose
-        //   （han1me.kmp.compose）
         commonMain.dependencies {
+            // convention 不声明依赖，基础几组都在这
+            implementation(libs.bundles.compose)
+            implementation(libs.bundles.lifecycle)
+            implementation(libs.bundles.koin)
+            implementation(libs.bundles.koin.compose)
+            implementation(libs.coroutines.core)
+            implementation(libs.serialization.json)
+            implementation(libs.datetime)
+            implementation(libs.kermit)
+
             // Res 出现在很多公开签名里（StringResource / DrawableResource 参数），
             // 用 api 传递出去，消费方不用各自再声明一遍。
             api(project(":core:resource"))
@@ -139,7 +144,6 @@ kotlin {
 
         getByName("androidHostTest").dependencies {
             implementation(libs.junit)
-            implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.test)
         }
 
@@ -151,6 +155,7 @@ kotlin {
         }
 
         androidMain.dependencies {
+            implementation(libs.koin.android)
             implementation(libs.appcompat)
             implementation(libs.androidx.window)
             implementation(libs.androidx.window.java)
@@ -243,10 +248,9 @@ kotlin {
 dependencies {
     androidRuntimeClasspath(libs.compose.ui.ui.tooling)
 
-    // Ktorfit 的 Gradle 插件只注册 compiler-plugin（负责把 ktorfit.create<T>() 重写成
-    // createT()），真正生成实现类的 KSP 处理器要自己加。生成一次进 commonMain metadata，
-    // 各目标共用。
-    add("kspCommonMainMetadata", libs.ktorfit.ksp)
+    // Koin 的注解处理器（@Module/@KoinViewModel → 生成 module）。只挂 commonMain
+    // metadata，生成一次各目标共用；任务排序在 han1me.kmp.library 里。
+    add("kspCommonMainMetadata", libs.koin.ksp.compiler)
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 }
