@@ -175,7 +175,6 @@ fun MainActivityContent(
                 ) {
                     Box(modifier = Modifier.fillMaxSize()) {
                         MainNavDisplay(
-                            activity = activity,
                             backStack = backStack,
                             isDrawerOpen = isDrawerOpen,
                             onOpenDrawer = {
@@ -183,6 +182,7 @@ fun MainActivityContent(
                                     scope.launch { drawerState.open() }
                                 }
                             },
+                            hostActions = activity,
                         )
                         if (showAuthGuard) {
                             Box(

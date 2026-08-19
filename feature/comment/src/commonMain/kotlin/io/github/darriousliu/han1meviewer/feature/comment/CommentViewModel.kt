@@ -50,7 +50,9 @@ class CommentViewModel(
 
     private val commentUiStateMap = mutableMapOf<String, CommentUiState>()
 
+    /** 当前登录用户 id，来自评论接口响应，[getComment] 收到 Success 时自动更新。 */
     var currentUserId: String? = null
+        private set
     //reportMessage为点击举报按钮之后的响应及错误信息
     private val _reportMessage = MutableSharedFlow<Message>()
     val reportMessage = _reportMessage.asSharedFlow()
@@ -128,6 +130,9 @@ class CommentViewModel(
         viewModelScope.launch {
             _videoCommentStateFlow.value = WebsiteState.Loading
             NetworkRepo.getComments(type, code).collect { state ->
+                if (state is WebsiteState.Success) {
+                    currentUserId = state.info.currentUserId
+                }
                 _videoCommentStateFlow.value = state
                 _videoCommentFlow.update { prevList ->
                     when (state) {

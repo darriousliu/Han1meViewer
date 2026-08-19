@@ -60,8 +60,18 @@ class MyPlayListViewModelV2 : ViewModel() {
 
     private val _showSheet = MutableStateFlow(false)
     var currentPage = 1
+        private set
     var isLoadingMore = false
         private set
+
+    fun resetPagination() {
+        currentPage = 1
+    }
+
+    fun loadNextPlaylistPage(listCode: String) {
+        currentPage++
+        getPlaylistItems(currentPage, listCode)
+    }
 
     var playlistPage = 1
     private val _isLoadingMorePlaylists = MutableStateFlow(false)

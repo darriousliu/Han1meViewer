@@ -16,12 +16,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation3.runtime.NavBackStack
-import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
 import io.github.darriousliu.han1meviewer.core.navigation.HanimeRoute
-import io.github.darriousliu.han1meviewer.core.common.util.findActivity
-import io.github.darriousliu.han1meviewer.core.firebase.logScreenViewEvent
+import io.github.darriousliu.han1meviewer.feature.main.LocalMainHostActions
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.back
 import org.jetbrains.compose.resources.stringResource
@@ -35,8 +32,7 @@ fun SettingsScaffold(
     actions: @Composable () -> Unit = {},
     content: @Composable () -> Unit,
 ) {
-    val context = LocalContext.current
-    val activity = context.findActivity<MainActivity>()
+    val hostActions = LocalMainHostActions.current
     val currentDestination = SettingsDestinationSpec.fromKey(backStack.lastOrNull())
         ?: SettingsDestinationSpec.Home
 
@@ -47,7 +43,7 @@ fun SettingsScaffold(
     }
 
     LaunchedEffect(currentDestination) {
-        activity.logScreenViewEvent(currentDestination.screenClassName)
+        hostActions.onScreenView(currentDestination.screenClassName)
     }
 
     Scaffold(

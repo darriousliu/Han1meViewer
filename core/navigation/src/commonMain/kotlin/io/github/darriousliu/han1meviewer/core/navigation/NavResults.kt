@@ -29,3 +29,9 @@ class AvatarCropped(val jpeg: ByteArray)
  * `MainActivity.loginDataLauncher` 里那次 `getHomePage()`。
  */
 data object LoginSucceeded
+
+/**
+ * 请求首页刷新（账号页改完头像等场景）。由首页消费；发送时首页在栈下层，
+ * 结果会缓冲到返回首页时才生效——与「回到首页看到最新状态」的需求一致。
+ */
+data object HomeRefreshRequested

@@ -4,9 +4,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import co.touchlab.kermit.Logger
-import io.github.darriousliu.han1meviewer.core.common.EMPTY_STRING
 import io.github.darriousliu.han1meviewer.core.common.HanimeResolution
 import io.github.darriousliu.han1meviewer.core.repository.DatabaseRepo
 import io.github.darriousliu.han1meviewer.core.repository.NetworkRepo
@@ -24,15 +26,17 @@ import io.github.darriousliu.han1meviewer.core.resource.interval_must_greater_th
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.IO
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
@@ -45,7 +49,12 @@ private val logger = Logger.withTag("VideoViewModel")
  * @author Yenaly Liew
  * @time 2022/06/17 017 19:01
  */
-class VideoViewModel : ViewModel() {
+class VideoViewModel(
+    /** 本页视频的 videoCode；本地文件直开时为 `"-1"`。 */
+    val videoCode: String,
+    /** 本地播放的 content:// 或文件路径；来自下载列表/文件深链时非空。 */
+    val localUri: String? = null,
+) : ViewModel() {
 
     data class IntroScrollState(
         val firstVisibleItemIndex: Int = 0,
@@ -64,8 +73,6 @@ class VideoViewModel : ViewModel() {
 
     private data class VideoIntroUiState(
         val playlistFirstVisibleIndex: Int? = null,
-        val cachedVideo: HanimeVideo? = null,
-        val introRestored: Boolean = false,
         val scrollState: IntroScrollState = IntroScrollState(),
         val selectedTabIndex: Int = 0,
         val isAppBarExpanded: Boolean = true,
@@ -76,18 +83,40 @@ class VideoViewModel : ViewModel() {
          * 最小的 HKeyframe 保存間隔，暫定 5s
          */
         const val MIN_H_KEYFRAME_SAVE_INTERVAL = 5_000 // ms
-    }
-    private val videoIntroUiStateMap = mutableMapOf<String, VideoIntroUiState>()
-    var videoCode: String = EMPTY_STRING
-        set(value) {
-            field = value
-        }
 
-    var fromDownload = false
+        /**
+         * 一个视频页一个实例，参数构造期定死。组合体或 effect 里的「稍后赋值」
+         * 赶不上预组合首帧，一律禁止。
+         */
+        fun factory(videoCode: String, localUri: String? = null): ViewModelProvider.Factory =
+            viewModelFactory {
+                initializer { VideoViewModel(videoCode, localUri) }
+            }
+    }
+
+    val fromDownload: Boolean = videoCode == "-1" || localUri != null
+
+    private val videoIntroUiStateMap = mutableMapOf<String, VideoIntroUiState>()
 
     // 平板横屏模式下，左栏不显示相关视频（右栏已显示）
     var hideRelatedInIntro by mutableStateOf(false)
-    var hKeyframes: HKeyframeEntity? = null
+        private set
+
+    fun setHideRelatedInIntro(hide: Boolean) {
+        hideRelatedInIntro = hide
+    }
+
+    private val _forceRefresh = MutableSharedFlow<Unit>(replay = 1)
+
+    /** 本视频的 H 帧记录，随数据库变化；[appendHKeyframe] 的间隔冲突检查也读它。 */
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val hKeyframes: StateFlow<HKeyframeEntity?> = _forceRefresh
+        .onStart { emit(Unit) }
+        .flatMapLatest {
+            DatabaseRepo.HKeyframe.observe(videoCode).flowOn(Dispatchers.IO)
+        }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
     private val _hanimeVideoStateFlow =
         MutableStateFlow<VideoLoadingState<HanimeVideo>>(VideoLoadingState.Loading)
     val hanimeVideoStateFlow = _hanimeVideoStateFlow.asStateFlow()
@@ -97,25 +126,16 @@ class VideoViewModel : ViewModel() {
     private val _videoHostUiStateFlow = MutableStateFlow(VideoHostUiState())
     val videoHostUiStateFlow = _videoHostUiStateFlow.asStateFlow()
 
+    init {
+        getHanimeVideo()
+    }
+
     fun getPlaylistFirstVisibleIndex(videoCode: String): Int? {
         return videoIntroUiStateMap[videoCode]?.playlistFirstVisibleIndex
     }
 
     fun setPlaylistFirstVisibleIndex(videoCode: String, index: Int) {
         updateVideoIntroUiState(videoCode) { copy(playlistFirstVisibleIndex = index) }
-    }
-
-    fun setVideoIntroCachedData(videoCode: String, video: HanimeVideo?) {
-        updateVideoIntroUiState(videoCode) {
-            copy(
-                cachedVideo = video,
-                introRestored = video != null,
-            )
-        }
-    }
-
-    fun clearVideoIntroRestoredFlag(videoCode: String) {
-        updateVideoIntroUiState(videoCode) { copy(introRestored = false) }
     }
 
     fun getIntroScrollState(videoCode: String): IntroScrollState {
@@ -210,14 +230,13 @@ class VideoViewModel : ViewModel() {
             tags = emptyList(),
         )
     }
-    fun getHanimeVideo(videoCode: String,localUri: String? = null) {
+    fun getHanimeVideo() {
         if (videoCode == "-1"){
             val localPlayInfo = buildLocalPlayInfo(localUri)
             _hanimeVideoStateFlow.value = VideoLoadingState.Success(localPlayInfo)
             _hanimeVideoFlow.value = localPlayInfo
             return
         }
-        if (videoIntroUiStateMap[videoCode]?.introRestored == true) return
         viewModelScope.launch {
             val flow = if (fromDownload) {
                 VideoPlatformBridge.loadCachedVideo(videoCode).map { hv ->
@@ -259,16 +278,6 @@ class VideoViewModel : ViewModel() {
             }
         }
     }
-
-    fun restoreFromCacheIfExists(code: String): Boolean {
-        val cached = videoIntroUiStateMap[code]?.cachedVideo ?: return false
-        updateVideoIntroUiState(code) { copy(introRestored = true) }
-        _hanimeVideoFlow.value = cached
-        _hanimeVideoStateFlow.value = VideoLoadingState.Success(cached)
-        return true
-    }
-
-
 
     private val _addToFavVideoFlow = MutableSharedFlow<WebsiteState<Boolean>>()
     val addToFavVideoFlow = _addToFavVideoFlow.asSharedFlow()
@@ -418,19 +427,10 @@ class VideoViewModel : ViewModel() {
 
     private val _modifyHKeyframeFlow = MutableSharedFlow<Pair<Boolean, Message>>()
     val modifyHKeyframeFlow = _modifyHKeyframeFlow.asSharedFlow()
-    private val _forceRefresh = MutableSharedFlow<Unit>(replay = 1)
-    @OptIn(ExperimentalCoroutinesApi::class)
-    fun observeKeyframe(videoCode: String): Flow<HKeyframeEntity?> {
-        return _forceRefresh
-            .onStart { emit(Unit) }
-            .flatMapLatest {
-                DatabaseRepo.HKeyframe.observe(videoCode).flowOn(Dispatchers.IO)
-            }
-    }
     fun appendHKeyframe(videoCode: String, title: String, hKeyframe: HKeyframeEntity.Keyframe) {
         viewModelScope.launch(Dispatchers.IO) {
             run {
-                this@VideoViewModel.hKeyframes?.keyframes?.forEach { keyframeInDb ->
+                hKeyframes.value?.keyframes?.forEach { keyframeInDb ->
                     if (abs(keyframeInDb.position - hKeyframe.position) < MIN_H_KEYFRAME_SAVE_INTERVAL) {
                         logger.d { "append keyframe time conflict: $keyframeInDb" }
                         _modifyHKeyframeFlow.emit(

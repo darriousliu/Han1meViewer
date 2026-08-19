@@ -35,6 +35,8 @@ import io.github.darriousliu.han1meviewer.PermissionRequester
 import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.R
 import io.github.darriousliu.han1meviewer.core.network.logout
+import io.github.darriousliu.han1meviewer.core.firebase.logScreenViewEvent
+import io.github.darriousliu.han1meviewer.feature.main.MainHostActions
 import io.github.darriousliu.han1meviewer.feature.video.VideoPageHost
 import io.github.darriousliu.han1meviewer.core.navigation.AccountRoute
 import io.github.darriousliu.han1meviewer.core.navigation.HanimeRoute
@@ -55,7 +57,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
  * @author Yenaly Liew
  * @time 2022/06/08 008 17:35
  */
-class MainActivity : AppCompatActivity(), PermissionRequester {
+class MainActivity : AppCompatActivity(), PermissionRequester, MainHostActions {
 
     val viewModel by viewModels<HomePageViewModel>()
 
@@ -254,6 +256,14 @@ class MainActivity : AppCompatActivity(), PermissionRequester {
             setNegativeButton(R.string.no, null)
         }
     }
+
+    // MainHostActions：导航图只认这三个语义，不认识 MainActivity 本身
+    override fun onExitApp() = finish()
+
+    override fun onLogout(closeCurrentPageOnConfirm: Boolean) =
+        showLogoutConfirmDialog(closeCurrentPageOnConfirm)
+
+    override fun onScreenView(screenClassName: String) = logScreenViewEvent(screenClassName)
 
     fun showLogoutConfirmDialog(closeCurrentPageOnConfirm: Boolean = false) {
         showAlertDialog {

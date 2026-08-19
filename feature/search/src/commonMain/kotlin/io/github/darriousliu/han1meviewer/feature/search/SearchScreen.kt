@@ -221,13 +221,12 @@ fun SearchScreen(
         )
     }
 
-    // 初始 query 自动搜索
+    // 初始 query 自动搜索（query 本身已在 VM 构造期注入，这里只做 UI 副作用与触发）
     LaunchedEffect(initialQuery) {
         val query = initialQuery?.trim().orEmpty()
         if (query.isNotBlank() && !hasSearched) {
             hasSearched = true
             searchQuery = query
-            viewModel.query = query
             focusMgr.clearFocus()
             kb?.hide()
             viewModel.insertSearchHistory(SearchHistoryEntity(query = query))

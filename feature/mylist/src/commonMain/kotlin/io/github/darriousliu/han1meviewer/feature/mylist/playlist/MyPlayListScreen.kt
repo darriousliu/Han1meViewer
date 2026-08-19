@@ -118,7 +118,7 @@ fun PlaylistScreen(
             PlaylistEvent.OnDismissSheet -> {
                 temporarilyHideSheetForNavigation = false
                 viewModel.setShowSheet(false)
-                viewModel.currentPage = 1
+                viewModel.resetPagination()
                 viewModel.clearCurrentList()
             }
             is PlaylistEvent.OnCreatePlaylist -> viewModel.createPlaylist(event.title, event.desc)

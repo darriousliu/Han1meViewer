@@ -77,7 +77,7 @@ fun RenderVideoIntroductionContent(
             introFirstVisibleItemIndex = introScrollState.firstVisibleItemIndex,
             introFirstVisibleItemScrollOffset = introScrollState.firstVisibleItemScrollOffset,
             downloadPrompt = pendingDownloadPrompt,
-            onRetry = { viewModel.getHanimeVideo(videoCode) },
+            onRetry = { viewModel.getHanimeVideo() },
             onOpenVideo = onOpenVideo,
             onOpenArtist = onOpenArtist,
             onNavigateToSearch = { tag ->
@@ -163,7 +163,6 @@ fun RenderVideoCommentContent(
         LaunchedEffect(Unit) {
             viewModel.videoCommentStateFlow.collect { state ->
                 if (state is WebsiteState.Success) {
-                    viewModel.currentUserId = state.info.currentUserId
                     pageHost?.showCommentBadge(state.info.videoComment.size)
                 }
             }

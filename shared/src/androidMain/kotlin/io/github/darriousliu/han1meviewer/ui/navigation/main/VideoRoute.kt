@@ -1,5 +1,6 @@
 package io.github.darriousliu.han1meviewer.ui.navigation.main
 
+import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import io.github.darriousliu.han1meviewer.core.common.PlayerDefaults
@@ -19,10 +20,10 @@ import io.github.darriousliu.han1meviewer.ui.screen.video.VideoRouteHostScreen
  * （旧宿主读 `Preferences.switchPlayerKernel` 也是 `remember {}`），本轮不改。
  */
 @Composable
-fun VideoRouteScreen(
-    activity: MainActivity,
-    route: VideoRoute,
-) {
+fun VideoRouteScreen(route: VideoRoute) {
+    // 两个宿主都是 androidMain 胶水，仍要 MainActivity 的成员（返回栈/权限/PiP 注册），
+    // 这里自取而不再经导航图传递；宿主彻底解耦留给 UI 上移 commonMain 那一轮
+    val activity = LocalActivity.current as MainActivity
     val useCompose = remember {
         Preferences.switchPlayerKernel == PlayerDefaults.KERNEL_EXO_COMPOSE
     }

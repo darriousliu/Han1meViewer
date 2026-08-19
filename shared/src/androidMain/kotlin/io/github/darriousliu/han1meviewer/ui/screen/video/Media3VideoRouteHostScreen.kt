@@ -63,10 +63,11 @@ fun Media3VideoRouteHostScreen(
     route: VideoRoute,
 ) {
     val scope = rememberCoroutineScope()
-    val viewModel: VideoViewModel = viewModel(viewModelStoreOwner = activity)
-    // 评论 VM 跟着 NavEntry 走（和旧宿主 VideoRouteHostScreen:100 一致），
-    // 一个视频一个实例，code 构造时定死——不能挂 Activity scope：
-    // 那样第二个视频会拿到第一个视频的实例，factory 被静默忽略，评论就串台了。
+    // 两个 VM 都是 NavEntry 作用域 + 构造注入：一个视频页一个实例，
+    // 挂 Activity scope 会让栈里叠着的两个视频页拿到同一份实例（factory 被静默忽略）。
+    val viewModel: VideoViewModel = viewModel(
+        factory = VideoViewModel.factory(route.videoCode, route.localUri),
+    )
     val commentViewModel: CommentViewModel = viewModel(
         factory = CommentViewModel.factory(route.videoCode),
     )
@@ -82,10 +83,6 @@ fun Media3VideoRouteHostScreen(
         activity.getString(R.string.long_press_share_to_copy)
     }
 
-    // 组合期同步赋值：下面 LaunchedEffect 里的 getHanimeVideo 依赖它选本地缓存还是网络，
-    // tab 列表也要靠它决定挂不挂评论页。旧宿主 VideoRouteHostScreen:126 同样写在组合体里。
-    viewModel.fromDownload = route.videoCode == "-1" || route.localUri != null
-
     LaunchedEffect(Preferences.baseUrl) {
         val genreFile = if (Preferences.baseUrl == HanimeConstants.HANIME_URL[3]) {
             "genre_av.json"
@@ -93,10 +90,6 @@ fun Media3VideoRouteHostScreen(
             "genre.json"
         }
         genres = loadBundledJson<List<SearchOption>>("files/search_options/$genreFile").orEmpty()
-    }
-
-    LaunchedEffect(route) {
-        viewModel.getHanimeVideo(route.videoCode, route.localUri)
     }
 
     LaunchedEffect(videoState, controller) {
@@ -169,7 +162,7 @@ fun Media3VideoRouteHostScreen(
             fromDownload = viewModel.fromDownload,
             pendingDownloadPrompt = pendingDownloadPrompt,
             onPendingDownloadPromptChange = { pendingDownloadPrompt = it },
-            onRetry = { viewModel.getHanimeVideo(route.videoCode, route.localUri) },
+            onRetry = { viewModel.getHanimeVideo() },
             onOpenVideo = { item -> activity.showVideoDetailFragment(item.videoCode) },
             onOpenArtist = actions::openArtistSearch,
             onNavigateToSearch = actions::openTagSearch,

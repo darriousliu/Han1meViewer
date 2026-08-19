@@ -7,17 +7,23 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation3.runtime.result.ResultEffect
 import io.github.darriousliu.han1meviewer.R
 import io.github.darriousliu.han1meviewer.core.storage.getHanimeShareText
 import io.github.darriousliu.han1meviewer.core.repository.DatabaseRepo
 import io.github.darriousliu.han1meviewer.core.storage.entity.CheckInType
 import io.github.darriousliu.han1meviewer.core.model.Announcement
-import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
+import io.github.darriousliu.han1meviewer.core.navigation.HomeRefreshRequested
+import io.github.darriousliu.han1meviewer.core.navigation.LoginSucceeded
 import io.github.darriousliu.han1meviewer.core.ui.component.TripleButtonDialog
 import io.github.darriousliu.han1meviewer.feature.home.HomePageScreen
+import io.github.darriousliu.han1meviewer.feature.home.HomePageViewModel
+import io.github.darriousliu.han1meviewer.feature.main.LocalMainHostActions
 import io.github.darriousliu.han1meviewer.feature.home.HomeUiEvent
 import io.github.darriousliu.han1meviewer.feature.home.LocalSearchHistoryQuery
 import io.github.darriousliu.han1meviewer.feature.home.component.AnnouncementDialog
@@ -36,7 +42,6 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun HomeRouteScreen(
-    activity: MainActivity,
     isDrawerOpen: Boolean,
     onOpenDrawer: () -> Unit,
     onNavigateToPreview: () -> Unit,
@@ -44,8 +49,18 @@ fun HomeRouteScreen(
     onNavigateToSearchAdvanced: (Map<String, String>) -> Unit,
     onNavigateToVideo: (String) -> Unit,
 ) {
-    val viewModel = activity.viewModel
+    val activity = checkNotNull(LocalActivity.current)
+    val hostActions = LocalMainHostActions.current
+    // HomePageViewModel 是刻意的例外：Activity 作用域（首页常驻栈底，实际生命周期一致），
+    // 抽屉头部与宿主的登出刷新共用同一实例。这里按 owner 取到宿主创建的那份。
+    val viewModel: HomePageViewModel = viewModel(
+        viewModelStoreOwner = activity as ComponentActivity,
+    )
     val checkInViewModel: CheckInCalendarViewModel = koinViewModel()
+
+    // 登录成功 / 账号页请求刷新：都经结果总线在首页 entry 内消费
+    ResultEffect<LoginSucceeded> { viewModel.getHomePage() }
+    ResultEffect<HomeRefreshRequested> { viewModel.getHomePage() }
     val confirmToExit = stringResource(R.string.confirm_to_exit)
     val finishedMasturbating = stringResource(R.string.finished_masturbating)
     val doMore = stringResource(R.string.do_more)
@@ -103,9 +118,9 @@ fun HomeRouteScreen(
                     LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")),
                     CheckInType.MASTURBATION.storeName, "", "",
                 )
-                activity.finish()
+                hostActions.onExitApp()
             },
-            onPositive = { activity.finish() },
+            onPositive = { hostActions.onExitApp() },
             onDismiss = { showExitDialog = false },
         )
     }

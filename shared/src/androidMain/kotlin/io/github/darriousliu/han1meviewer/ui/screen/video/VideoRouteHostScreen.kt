@@ -97,7 +97,9 @@ fun VideoRouteHostScreen(
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val scope = rememberCoroutineScope()
-    val viewModel: VideoViewModel = viewModel()
+    val viewModel: VideoViewModel = viewModel(
+        factory = VideoViewModel.factory(route.videoCode, route.localUri),
+    )
     val commentViewModel: CommentViewModel = viewModel(
         factory = CommentViewModel.factory(route.videoCode),
     )
@@ -128,7 +130,6 @@ fun VideoRouteHostScreen(
     }
 
     player.videoCode = route.videoCode
-    viewModel.fromDownload = route.videoCode == "-1" || route.localUri != null
 
     var checkedQuality by remember(
         route.videoCode,
@@ -301,7 +302,7 @@ fun VideoRouteHostScreen(
                 fromDownload = viewModel.fromDownload,
                 pendingDownloadPrompt = pendingDownloadPrompt,
                 onPendingDownloadPromptChange = { pendingDownloadPrompt = it },
-                onRetry = { viewModel.getHanimeVideo(route.videoCode, route.localUri) },
+                onRetry = { viewModel.getHanimeVideo() },
                 onOpenVideo = { item -> activity.showVideoDetailFragment(item.videoCode) },
                 onOpenArtist = actions::openArtistSearch,
                 onNavigateToSearch = actions::openTagSearch,
@@ -478,8 +479,6 @@ fun VideoRouteHostScreen(
         pendingDownloadPrompt = null
         videoTitle = null
         checkBadGuy(activity, R.raw.akarin)
-        viewModel.videoCode = route.videoCode
-        viewModel.getHanimeVideo(route.videoCode, route.localUri)
     }
 
     LaunchedEffect(route.videoCode, route.localUri, player, kernel, viewModel.fromDownload) {
@@ -538,9 +537,8 @@ fun VideoRouteHostScreen(
     @OptIn(ExperimentalTime::class)
     LaunchedEffect(route.videoCode, player) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-            viewModel.observeKeyframe(route.videoCode).collect {
+            viewModel.hKeyframes.collect {
                 player.hKeyframe = it
-                viewModel.hKeyframes = it
             }
         }
     }
@@ -569,7 +567,7 @@ fun VideoRouteHostScreen(
         isTabletMode = Preferences.tabletMode,
         isInPipMode = hostUiState.isInPipMode,
         relatedItems = relatedItems,
-        onHideRelatedInIntroChange = { viewModel.hideRelatedInIntro = it },
+        onHideRelatedInIntroChange = { viewModel.setHideRelatedInIntro(it) },
         onSideRelatedCollapsedChange = { isSideRelatedCollapsed = it },
         onOpenVideo = { item -> activity.showVideoDetailFragment(item.videoCode) },
         mainHostFactory = {

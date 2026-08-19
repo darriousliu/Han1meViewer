@@ -29,7 +29,6 @@ import io.github.darriousliu.han1meviewer.core.common.PREVIEW_COMMENT_PREFIX
 import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.R
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
-import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
 import io.github.darriousliu.han1meviewer.core.ui.component.BottomSheetHandler
 import io.github.darriousliu.han1meviewer.core.navigation.PreviewCommentRoute
 import io.github.darriousliu.han1meviewer.feature.comment.ChildCommentScreen
@@ -46,15 +45,11 @@ import org.jetbrains.compose.resources.getString
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PreviewCommentRouteScreen(
-    activity: MainActivity,
     route: PreviewCommentRoute,
     onBack: () -> Unit,
 ) {
-    // 仍挂 Activity scope（离开再回来评论滚动位置不丢），但按 dateCode 分 key：
-    // 和预览页那个预取缓冲实例共用一个 store，key 撞了 factory 就会被静默忽略。
+    // NavEntry 作用域 + dateCode 构造注入：一个日期页一个实例，随页面存亡。
     val viewModel: CommentViewModel = viewModel(
-        viewModelStoreOwner = activity,
-        key = "CommentViewModel:preview:${route.dateCode}",
         factory = CommentViewModel.factory(route.dateCode),
     )
     val comments = viewModel.videoCommentFlow
@@ -93,14 +88,6 @@ fun PreviewCommentRouteScreen(
             .tag(PreviewCommentPrefetcher.Scope.PREVIEW_COMMENT_ACTIVITY)
         onDispose {
             PreviewCommentPrefetcher.bye(PreviewCommentPrefetcher.Scope.PREVIEW_COMMENT_ACTIVITY)
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        commentState.collect { state ->
-            if (state is WebsiteState.Success) {
-                viewModel.currentUserId = state.info.currentUserId
-            }
         }
     }
 

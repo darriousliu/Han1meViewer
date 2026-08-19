@@ -2,7 +2,11 @@ package io.github.darriousliu.han1meviewer.feature.search
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import co.touchlab.kermit.Logger
 import io.github.darriousliu.han1meviewer.core.common.HanimeConstants.HANIME_URL
 import io.github.darriousliu.han1meviewer.core.storage.Preferences
@@ -26,7 +30,7 @@ import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.koin.android.annotation.KoinViewModel
+import kotlinx.serialization.json.Json
 
 private val logger = Logger.withTag("SearchViewModel")
 
@@ -35,10 +39,53 @@ private val logger = Logger.withTag("SearchViewModel")
  * @author Yenaly Liew
  * @time 2022/06/13 013 22:29
  */
-@KoinViewModel
 class SearchViewModel(
-    private val state: SavedStateHandle
+    private val state: SavedStateHandle,
+    initialQuery: String? = null,
+    advancedSearchJson: String? = null,
 ) : ViewModel() {
+
+    init {
+        applyInitialArgs(initialQuery, advancedSearchJson)
+    }
+
+    /**
+     * 路由初始参数只在实例首次创建时写入一次；进程死亡恢复时 [state] 里已是
+     * 用户最后的筛选值，不能被路由参数覆盖回去。
+     */
+    private fun applyInitialArgs(initialQuery: String?, advancedSearchJson: String?) {
+        if (state.get<Boolean>(KEY_INITIAL_ARGS_APPLIED) == true) return
+        state[KEY_INITIAL_ARGS_APPLIED] = true
+        initialQuery?.trim()?.takeIf { it.isNotBlank() }?.let { query = it }
+        advancedSearchJson ?: return
+        runCatching { Json.decodeFromString<Map<String, String>>(advancedSearchJson) }
+            .onSuccess { params ->
+                params.forEach { (key, value) ->
+                    when (key.uppercase()) {
+                        "QUERY" -> query = value
+                        "GENRE" -> genre = value
+                        "SORT" -> sort = value
+                        "YEAR" -> year = value.toIntOrNull()
+                        "MONTH" -> month = value.toIntOrNull()
+                        "DURATION" -> duration = value
+                    }
+                }
+            }
+    }
+
+    companion object {
+        private const val KEY_INITIAL_ARGS_APPLIED = "initialArgsApplied"
+
+        /** 路由初始参数构造期注入；SavedStateHandle 由 CreationExtras 供给（同 Koin 注入的来源）。 */
+        fun factory(
+            initialQuery: String? = null,
+            advancedSearchJson: String? = null,
+        ): ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                SearchViewModel(createSavedStateHandle(), initialQuery, advancedSearchJson)
+            }
+        }
+    }
 
     data class SearchOptionsState(
         val genres: List<SearchOption> = emptyList(),

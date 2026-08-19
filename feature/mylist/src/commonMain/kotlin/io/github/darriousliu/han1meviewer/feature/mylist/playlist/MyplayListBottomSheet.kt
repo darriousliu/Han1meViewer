@@ -389,8 +389,7 @@ private fun PlaylistSheetContent(
                         playlistState !is PageLoadingState.NoMoreData &&
                         !vm.isLoadingMore
                     ) {
-                        vm.currentPage++
-                        vm.getPlaylistItems(vm.currentPage, currentListCode)
+                        vm.loadNextPlaylistPage(currentListCode)
                     }
                 }
             }

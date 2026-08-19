@@ -3,10 +3,10 @@ package io.github.darriousliu.han1meviewer.ui.navigation.main
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.widget.Toast
+import androidx.activity.compose.LocalActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import io.github.darriousliu.han1meviewer.R
-import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
 import io.github.darriousliu.han1meviewer.feature.checkin.DailyCheckInScreen
 import io.github.darriousliu.han1meviewer.feature.checkin.widget.CheckInWidgetProvider
 import io.github.darriousliu.han1meviewer.util.showShortToast
@@ -15,10 +15,10 @@ import org.jetbrains.compose.resources.getString
 
 @Composable
 fun DailyCheckInRouteScreen(
-    activity: MainActivity,
     onBack: () -> Unit,
     onNavigateToVideo: (String) -> Unit,
 ) {
+    val activity = checkNotNull(LocalActivity.current)
     val scope = rememberCoroutineScope()
     DailyCheckInScreen(
         onBack = onBack,

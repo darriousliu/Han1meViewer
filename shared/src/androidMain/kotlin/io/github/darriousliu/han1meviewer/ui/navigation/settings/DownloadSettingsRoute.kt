@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.provider.Settings
+import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
@@ -26,7 +27,6 @@ import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.R
 import io.github.darriousliu.han1meviewer.core.storage.dao.DownloadDatabase
 import io.github.darriousliu.han1meviewer.core.network.interceptor.SpeedLimitInterceptor
-import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
 import io.github.darriousliu.han1meviewer.core.ui.component.ConfirmDialog
 import io.github.darriousliu.han1meviewer.core.ui.component.TripleButtonDialog
 import io.github.darriousliu.han1meviewer.feature.settings.DownloadSettingsScreen
@@ -38,9 +38,8 @@ import io.github.darriousliu.han1meviewer.feature.settings.toDownloadCountLimitP
 import io.github.darriousliu.han1meviewer.feature.settings.toDownloadSpeedPrettyString
 
 @Composable
-fun DownloadSettingsRouteScreen(
-    activity: MainActivity,
-) {
+fun DownloadSettingsRouteScreen() {
+    val activity = checkNotNull(LocalActivity.current)
     val context = LocalContext.current
     var refreshKey by remember { mutableIntStateOf(0) }
     var showDownloadPathDialog by remember { mutableStateOf(false) }

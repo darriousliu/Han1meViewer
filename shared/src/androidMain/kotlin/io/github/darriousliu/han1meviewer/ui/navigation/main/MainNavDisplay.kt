@@ -9,13 +9,13 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.entryProvider
@@ -25,7 +25,6 @@ import androidx.navigation3.runtime.result.ResultEffect
 import androidx.navigation3.runtime.result.rememberResultEventBusNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import io.github.darriousliu.han1meviewer.core.network.CloudflareNavBridge
-import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
 import io.github.darriousliu.han1meviewer.core.ui.component.LocalToaster
 import io.github.darriousliu.han1meviewer.core.ui.component.showShort
 import io.github.darriousliu.han1meviewer.core.navigation.AccountRoute
@@ -41,6 +40,7 @@ import io.github.darriousliu.han1meviewer.core.navigation.GetchuPreviewRoute
 import io.github.darriousliu.han1meviewer.core.navigation.HKeyframeSettingsRoute
 import io.github.darriousliu.han1meviewer.core.navigation.HKeyframesRoute
 import io.github.darriousliu.han1meviewer.core.navigation.HanimeRoute
+import io.github.darriousliu.han1meviewer.core.navigation.HomeRefreshRequested
 import io.github.darriousliu.han1meviewer.core.navigation.HomeRoute
 import io.github.darriousliu.han1meviewer.core.navigation.HomeSettingsRoute
 import io.github.darriousliu.han1meviewer.core.navigation.LoginRoute
@@ -90,19 +90,44 @@ import io.github.darriousliu.han1meviewer.feature.search.SearchRouteScreen
 import org.koin.compose.viewmodel.koinViewModel
 import io.github.darriousliu.han1meviewer.feature.account.ManualCookiesRouteScreen
 import io.github.darriousliu.han1meviewer.feature.account.LoginRouteScreen
+import io.github.darriousliu.han1meviewer.feature.main.LocalMainHostActions
+import io.github.darriousliu.han1meviewer.feature.main.MainHostActions
 
 @Composable
 fun MainNavDisplay(
-    activity: MainActivity,
     backStack: NavBackStack<HanimeRoute>,
     isDrawerOpen: Boolean,
     onOpenDrawer: () -> Unit,
+    hostActions: MainHostActions,
 ) {
     val onBack: () -> Unit = { backStack.removeLastOrNull() }
     val onNavigateToVideo: (String) -> Unit = { code -> backStack.navigateSafely(VideoRoute(code)) }
     val onNavigateToLocalVideo: (String, String?) -> Unit =
         { code, uri -> backStack.navigateSafely(VideoRoute(code, uri)) }
 
+    CompositionLocalProvider(LocalMainHostActions provides hostActions) {
+        MainNavDisplayContent(
+            backStack = backStack,
+            isDrawerOpen = isDrawerOpen,
+            onOpenDrawer = onOpenDrawer,
+            hostActions = hostActions,
+            onBack = onBack,
+            onNavigateToVideo = onNavigateToVideo,
+            onNavigateToLocalVideo = onNavigateToLocalVideo,
+        )
+    }
+}
+
+@Composable
+private fun MainNavDisplayContent(
+    backStack: NavBackStack<HanimeRoute>,
+    isDrawerOpen: Boolean,
+    onOpenDrawer: () -> Unit,
+    hostActions: MainHostActions,
+    onBack: () -> Unit,
+    onNavigateToVideo: (String) -> Unit,
+    onNavigateToLocalVideo: (String, String?) -> Unit,
+) {
     NavDisplay(
         backStack = backStack,
         onBack = { backStack.removeLastOrNull() },
@@ -156,12 +181,7 @@ fun MainNavDisplay(
         },
         entryProvider = entryProvider {
             entry<HomeRoute> {
-                // 登录成功后刷新首页。原来是 LoginActivity 的 setResult(RESULT_OK)
-                // → loginDataLauncher → getHomePage()，Step 17 退化成回调透传，
-                // 现在走 nav3 的结果总线：登录页 pop 回来时这里收到
-                ResultEffect<LoginSucceeded> { activity.viewModel.getHomePage() }
                 HomeRouteScreen(
-                    activity = activity,
                     isDrawerOpen = isDrawerOpen,
                     onOpenDrawer = onOpenDrawer,
                     onNavigateToPreview = { backStack.navigateSafely(PreviewRoute) },
@@ -207,7 +227,6 @@ fun MainNavDisplay(
             }
             entry<DailyCheckInRoute> {
                 DailyCheckInRouteScreen(
-                    activity = activity,
                     onBack = onBack,
                     onNavigateToVideo = onNavigateToVideo,
                 )
@@ -230,6 +249,7 @@ fun MainNavDisplay(
             }
             entry<AccountRoute> {
                 val toaster = LocalToaster.current
+                val resultBus = LocalResultEventBus.current
                 val accountViewModel: UserAccountViewModel = koinViewModel()
                 ResultEffect<AvatarCropped> { result ->
                     accountViewModel.updateAvatar(result.jpeg, "avatar.jpg")
@@ -242,9 +262,9 @@ fun MainNavDisplay(
                             AvatarCropRoute(Json.encodeToString(PlatformFile.serializer(), file))
                         )
                     },
-                    onRefreshHome = { activity.viewModel.getHomePage() },
+                    onRefreshHome = { resultBus.sendResult(HomeRefreshRequested) },
                     onMessage = toaster::showShort,
-                    onLogout = { activity.showLogoutConfirmDialog(closeCurrentPageOnConfirm = true) },
+                    onLogout = { hostActions.onLogout(closeCurrentPageOnConfirm = true) },
                 )
             }
             entry<AvatarCropRoute> { route ->
@@ -304,7 +324,7 @@ fun MainNavDisplay(
                     backStack = backStack,
                     fallbackDestination = HomeSettingsRoute,
                 ) {
-                    DownloadSettingsRouteScreen(activity = activity)
+                    DownloadSettingsRouteScreen()
                 }
             }
             entry<MpvPlayerSettingsRoute> {
@@ -361,7 +381,6 @@ fun MainNavDisplay(
             }
             entry<PreviewRoute> {
                 PreviewRouteScreen(
-                    activity = activity,
                     onBack = onBack,
                     onNavigateToGetchuPreview = {
                         backStack.navigateSafely(GetchuPreviewRoute)
@@ -388,16 +407,12 @@ fun MainNavDisplay(
             }
             entry<PreviewCommentRoute> { route ->
                 PreviewCommentRouteScreen(
-                    activity = activity,
                     route = route,
                     onBack = onBack,
                 )
             }
             entry<VideoRoute> { route ->
-                VideoRouteScreen(
-                    activity = activity,
-                    route = route,
-                )
+                VideoRouteScreen(route = route)
             }
 
             entry<LoginRoute> {
