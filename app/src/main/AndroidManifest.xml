@@ -141,7 +141,7 @@
         </activity-alias>
 
         <receiver
-            android:name="io.github.darriousliu.han1meviewer.ui.widget.CheckInWidgetProvider"
+            android:name="io.github.darriousliu.han1meviewer.feature.checkin.widget.CheckInWidgetProvider"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

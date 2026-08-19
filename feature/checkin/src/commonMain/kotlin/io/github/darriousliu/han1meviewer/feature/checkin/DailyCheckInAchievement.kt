@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.dailycheckin
+package io.github.darriousliu.han1meviewer.feature.checkin
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -24,7 +24,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import io.github.darriousliu.han1meviewer.ui.viewmodel.MonthlyStats
 import io.github.darriousliu.han1meviewer.core.common.util.currentLocalDate
 import io.github.darriousliu.han1meviewer.core.common.util.currentYearMonth
 import io.github.darriousliu.han1meviewer.core.resource.Res

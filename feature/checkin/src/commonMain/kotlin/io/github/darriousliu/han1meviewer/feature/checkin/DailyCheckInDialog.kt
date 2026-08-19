@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.dailycheckin
+package io.github.darriousliu.han1meviewer.feature.checkin
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

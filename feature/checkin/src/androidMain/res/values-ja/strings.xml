@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="counts">%1$d 回</string>
+    <string name="days">%1$d 日</string>
+    <string name="best_streak">最高連続</string>
+    <string name="widget_today_label">今日</string>
+    <string name="widget_description">オナニー記録ウィジェット — ホーム画面からチェックイン</string>
+    <string name="checkin">チェックイン</string>
+</resources>

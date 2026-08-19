@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.dailycheckin
+package io.github.darriousliu.han1meviewer.feature.checkin
 
 import androidx.compose.ui.graphics.Color
 import io.github.darriousliu.han1meviewer.core.storage.entity.CheckInType

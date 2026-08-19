@@ -1,5 +1,6 @@
 package io.github.darriousliu.han1meviewer.di
 
+import io.github.darriousliu.han1meviewer.feature.checkin.CheckinModule
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
 
@@ -12,6 +13,6 @@ import org.koin.core.annotation.Module
  * 拆模块之后每个 core/feature 模块会有自己的 `@Module`，各扫各的包，
  * 这里改成汇总它们。
  */
-@Module
+@Module(includes = [CheckinModule::class])
 @ComponentScan("io.github.darriousliu.han1meviewer")
 class AppModule

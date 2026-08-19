@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="counts">%1$d Times</string>
+    <string name="days">%1$d Days</string>
+    <string name="best_streak">Best Streak</string>
+    <string name="widget_today_label">Today</string>
+    <string name="widget_description">Fap tracker widget — check in from home screen</string>
+    <string name="checkin">Check In</string>
+</resources>

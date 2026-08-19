@@ -125,6 +125,9 @@ kotlin {
             api(project(":core:ui"))
             // 通知门面（渠道 id 被 worker 用）
             implementation(project(":core:notification"))
+
+            // feature 模块（拆出去的域；MainNavDisplay/AppModule 还要引它们）
+            api(project(":feature:checkin"))
             implementation(libs.kotlinx.io.core)
             implementation(libs.ksoup)
             implementation(libs.htmlconverter)

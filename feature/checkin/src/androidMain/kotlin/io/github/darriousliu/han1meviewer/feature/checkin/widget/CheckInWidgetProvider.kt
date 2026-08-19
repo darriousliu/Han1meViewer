@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.widget
+package io.github.darriousliu.han1meviewer.feature.checkin.widget
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
@@ -6,7 +6,7 @@ import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
-import io.github.darriousliu.han1meviewer.R
+import io.github.darriousliu.han1meviewer.feature.checkin.R
 import io.github.darriousliu.han1meviewer.core.storage.dao.CheckInRecordDatabase
 import io.github.darriousliu.han1meviewer.core.storage.entity.CheckInRecordEntity
 import io.github.darriousliu.han1meviewer.core.storage.entity.CheckInType

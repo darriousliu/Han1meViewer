@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.dailycheckin
+package io.github.darriousliu.han1meviewer.feature.checkin
 
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.updateTransition

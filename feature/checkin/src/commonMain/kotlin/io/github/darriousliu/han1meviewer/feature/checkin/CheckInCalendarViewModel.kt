@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.viewmodel
+package io.github.darriousliu.han1meviewer.feature.checkin
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,7 +7,6 @@ import io.github.darriousliu.han1meviewer.core.storage.dao.HistoryDatabase
 import io.github.darriousliu.han1meviewer.core.storage.entity.CheckInRecordEntity
 import io.github.darriousliu.han1meviewer.core.storage.entity.SideDishEntity
 import io.github.darriousliu.han1meviewer.core.storage.entity.WatchHistoryEntity
-import io.github.darriousliu.han1meviewer.ui.screen.home.dailycheckin.DailyCheckInUiState
 import io.github.darriousliu.han1meviewer.core.common.util.currentLocalDate
 import io.github.darriousliu.han1meviewer.core.common.util.currentYearMonth
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +22,9 @@ import kotlinx.datetime.YearMonth
 import kotlinx.datetime.minusMonth
 import kotlinx.datetime.plus
 import kotlinx.datetime.plusMonth
+import org.koin.android.annotation.KoinViewModel
 
+@KoinViewModel
 class CheckInCalendarViewModel : ViewModel() {
 
     private val _currentMonth = MutableStateFlow(currentYearMonth())

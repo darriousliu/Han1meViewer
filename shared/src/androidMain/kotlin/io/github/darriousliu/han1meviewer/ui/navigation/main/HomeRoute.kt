@@ -22,7 +22,7 @@ import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.HomeUiEvent
 import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.LocalSearchHistoryQuery
 import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.component.AnnouncementDialog
 import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.saveImageToGallery
-import io.github.darriousliu.han1meviewer.ui.viewmodel.CheckInCalendarViewModel
+import io.github.darriousliu.han1meviewer.feature.checkin.CheckInCalendarViewModel
 import io.github.darriousliu.han1meviewer.core.common.util.currentLocalDate
 import io.github.darriousliu.han1meviewer.core.common.util.setPlainText
 import io.github.darriousliu.han1meviewer.util.showShortToast
@@ -32,6 +32,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun HomeRouteScreen(
@@ -44,7 +45,7 @@ fun HomeRouteScreen(
     onNavigateToVideo: (String) -> Unit,
 ) {
     val viewModel = activity.viewModel
-    val checkInViewModel: CheckInCalendarViewModel = viewModel()
+    val checkInViewModel: CheckInCalendarViewModel = koinViewModel()
     val confirmToExit = stringResource(R.string.confirm_to_exit)
     val finishedMasturbating = stringResource(R.string.finished_masturbating)
     val doMore = stringResource(R.string.do_more)

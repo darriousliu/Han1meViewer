@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.dailycheckin
+package io.github.darriousliu.han1meviewer.feature.checkin
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -48,8 +48,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import io.github.darriousliu.han1meviewer.core.storage.entity.CheckInRecordEntity
 import io.github.darriousliu.han1meviewer.core.ui.component.appbar.HanimeScaffold
-import io.github.darriousliu.han1meviewer.ui.viewmodel.CheckInCalendarViewModel
-import io.github.darriousliu.han1meviewer.ui.viewmodel.MonthlyStats
 import io.github.darriousliu.han1meviewer.core.common.util.currentLocalDate
 import io.github.darriousliu.han1meviewer.core.common.util.currentYearMonth
 import io.github.darriousliu.han1meviewer.core.resource.Res

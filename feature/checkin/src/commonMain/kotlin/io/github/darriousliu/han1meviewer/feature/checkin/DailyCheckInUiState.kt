@@ -1,6 +1,5 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.dailycheckin
+package io.github.darriousliu.han1meviewer.feature.checkin
 
-import io.github.darriousliu.han1meviewer.ui.viewmodel.MonthlyStats
 import io.github.darriousliu.han1meviewer.core.common.util.currentLocalDate
 import io.github.darriousliu.han1meviewer.core.common.util.currentYearMonth
 import kotlinx.datetime.LocalDate

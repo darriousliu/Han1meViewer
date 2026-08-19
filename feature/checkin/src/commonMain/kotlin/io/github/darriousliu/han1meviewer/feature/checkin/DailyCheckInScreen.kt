@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home
+package io.github.darriousliu.han1meviewer.feature.checkin
 
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
@@ -24,12 +24,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.darriousliu.han1meviewer.core.ui.component.ConfirmDialog
 import io.github.darriousliu.han1meviewer.core.ui.component.appbar.HanimeScaffold
-import io.github.darriousliu.han1meviewer.ui.screen.home.dailycheckin.CheckInDialog
-import io.github.darriousliu.han1meviewer.ui.screen.home.dailycheckin.ContributionReportDialog
-import io.github.darriousliu.han1meviewer.ui.screen.home.dailycheckin.DailyCheckInContent
-import io.github.darriousliu.han1meviewer.ui.screen.home.dailycheckin.DailyCheckInEvent
-import io.github.darriousliu.han1meviewer.ui.screen.home.dailycheckin.DailyCheckInUiState
-import io.github.darriousliu.han1meviewer.ui.viewmodel.CheckInCalendarViewModel
 import io.github.darriousliu.han1meviewer.core.common.util.CHINESE_MONTH_DAY_FORMAT
 import io.github.darriousliu.han1meviewer.core.common.util.currentLocalDate
 import io.github.darriousliu.han1meviewer.core.common.util.currentYearMonth
@@ -59,6 +53,7 @@ import kotlinx.datetime.number
 import kotlinx.datetime.plus
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 /**
  * 打卡日历页面 Screen 层。
@@ -83,7 +78,7 @@ fun DailyCheckInScreen(
     onAddCalendarEvent: (LocalDate) -> Unit = {},
     onFullscreenChange: (Boolean) -> Unit = {},
     onMessage: (StringResource) -> Unit = {},
-    viewModel: CheckInCalendarViewModel = viewModel(),
+    viewModel: CheckInCalendarViewModel = koinViewModel(),
 ) {
     var showReport by rememberSaveable { mutableStateOf(false) }
     var isReportFullscreen by rememberSaveable { mutableStateOf(false) }

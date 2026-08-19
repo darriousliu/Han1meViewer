@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="counts">%1$d 次</string>
+    <string name="days">%1$d 天</string>
+    <string name="best_streak">最高连续</string>
+    <string name="widget_today_label">今日已冲</string>
+    <string name="widget_description">手冲打卡小部件，桌面即可签到</string>
+    <string name="checkin">打卡</string>
+</resources>

@@ -7,8 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import io.github.darriousliu.han1meviewer.R
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
-import io.github.darriousliu.han1meviewer.ui.screen.home.DailyCheckInScreen
-import io.github.darriousliu.han1meviewer.ui.widget.CheckInWidgetProvider
+import io.github.darriousliu.han1meviewer.feature.checkin.DailyCheckInScreen
+import io.github.darriousliu.han1meviewer.feature.checkin.widget.CheckInWidgetProvider
 import io.github.darriousliu.han1meviewer.util.showShortToast
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
