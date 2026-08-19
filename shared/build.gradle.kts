@@ -94,21 +94,13 @@ kotlin {
             implementation(libs.datetime)
             implementation(libs.kermit)
 
-            // Res 出现在很多公开签名里（StringResource / DrawableResource 参数），
-            // 用 api 传递出去，消费方不用各自再声明一遍。
             implementation(project(":core:resource"))
-            // 异常、状态、格式化这些类型遍布公开签名，用 api 传下去
             implementation(project(":core:common"))
-            // 模型类遍布公开签名
             implementation(project(":core:model"))
-            // Preferences / Room 实体遍布公开签名
             implementation(project(":core:storage"))
             implementation(project(":core:parse"))
-            // Firebase 门面（Android 接真身，JVM 空实现）
             implementation(project(":core:firebase"))
-            // HttpClient / 各 service 接口遍布公开签名
             implementation(project(":core:network"))
-            // 各 Repo 遍布 ViewModel 的公开签名
             implementation(project(":core:repository"))
             // 路由类型遍布各 route 与屏幕的签名
             implementation(project(":core:navigation"))
@@ -171,22 +163,11 @@ kotlin {
 
             implementation(libs.navigation3.ui.androidx)
             implementation(libs.androidx.material.icons.core)
-            // parse
-
-
-            // network
-
-            // Coil 2 的 ImageLoader 还直接用 OkHttpClient（HImageMeower），
-            // 其余网络请求都走 commonMain 的 Ktor，okhttp 由 androidJvmMain 带下来。
-            // coil3 的图片请求也走 Ktor（commonMain 的 coil-network-ktor3）。
 
             // pic
-
             implementation(libs.coil)
 
-
             // video
-
             implementation(libs.jiaozi.video.player)
             implementation(libs.media3.exoplayer)
             implementation(libs.media3.exoplayer.hls)
@@ -194,7 +175,6 @@ kotlin {
             implementation(libs.mpv.lib)
 
             // view
-
             implementation(libs.base.recyclerview.adapter.helper4)
             implementation(libs.spannable.x)
 
