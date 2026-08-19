@@ -32,10 +32,10 @@ import io.github.darriousliu.han1meviewer.core.ui.component.appbar.HanimeScaffol
 import io.github.darriousliu.han1meviewer.core.ui.component.content.EmptyContent
 import io.github.darriousliu.han1meviewer.core.ui.component.content.ErrorContent
 import io.github.darriousliu.han1meviewer.core.ui.preview.ComponentPreview
-import io.github.darriousliu.han1meviewer.ui.preview.fakeHomePageVideos
+import io.github.darriousliu.han1meviewer.core.ui.preview.fakeHomePageVideos
 import io.github.darriousliu.han1meviewer.ui.screen.home.videogrid.VideoGridContent
 import io.github.darriousliu.han1meviewer.ui.screen.home.videogrid.VideoGridUiState
-import io.github.darriousliu.han1meviewer.ui.screen.home.videogrid.canLoadMore
+import io.github.darriousliu.han1meviewer.core.ui.canLoadMore
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.cancel
 import io.github.darriousliu.han1meviewer.core.resource.close

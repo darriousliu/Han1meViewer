@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.viewmodel
+package io.github.darriousliu.han1meviewer.feature.history
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,7 +10,7 @@ import io.github.darriousliu.han1meviewer.core.model.MyListItems
 import io.github.darriousliu.han1meviewer.core.model.OnlineWatchHistorySort
 import io.github.darriousliu.han1meviewer.core.common.state.PageLoadingState
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
-import io.github.darriousliu.han1meviewer.ui.viewmodel.CsrfTokenStore.csrfToken
+import io.github.darriousliu.han1meviewer.core.network.CsrfTokenStore.csrfToken
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.not_logged_in_currently
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -19,7 +19,9 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.android.annotation.KoinViewModel
 
+@KoinViewModel
 class OnlineWatchHistoryViewModel : ViewModel() {
 
     private val _state = MutableStateFlow<PageLoadingState<MyListItems<HanimeInfo>>>(PageLoadingState.Loading)

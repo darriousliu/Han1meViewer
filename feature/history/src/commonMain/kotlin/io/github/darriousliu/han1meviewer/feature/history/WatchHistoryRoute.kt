@@ -1,18 +1,15 @@
-package io.github.darriousliu.han1meviewer.ui.navigation.main
+package io.github.darriousliu.han1meviewer.feature.history
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.darriousliu.han1meviewer.ui.screen.home.WatchHistoryTabScreen
-import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.HomePageViewModel
-import io.github.darriousliu.han1meviewer.ui.viewmodel.OnlineWatchHistoryViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun WatchHistoryRouteScreen(
     onBack: () -> Unit,
     onNavigateToVideo: (String) -> Unit,
 ) {
-    val localViewModel: HomePageViewModel = viewModel()
-    val onlineViewModel: OnlineWatchHistoryViewModel = viewModel()
+    val localViewModel: LocalWatchHistoryViewModel = koinViewModel()
+    val onlineViewModel: OnlineWatchHistoryViewModel = koinViewModel()
     WatchHistoryTabScreen(
         localHistoriesFlow = localViewModel.loadAllWatchHistories(),
         onlineItems = onlineViewModel.items,

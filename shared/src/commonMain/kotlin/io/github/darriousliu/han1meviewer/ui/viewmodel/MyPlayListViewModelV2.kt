@@ -13,7 +13,7 @@ import io.github.darriousliu.han1meviewer.core.model.Playlists
 import io.github.darriousliu.han1meviewer.core.common.state.PageLoadingState
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.ui.screen.home.myplaylist.PlaylistUiState
-import io.github.darriousliu.han1meviewer.ui.viewmodel.CsrfTokenStore.csrfToken
+import io.github.darriousliu.han1meviewer.core.network.CsrfTokenStore.csrfToken
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow

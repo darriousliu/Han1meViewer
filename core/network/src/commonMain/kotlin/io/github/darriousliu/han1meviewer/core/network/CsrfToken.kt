@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.viewmodel
+package io.github.darriousliu.han1meviewer.core.network
 
 interface IHCsrfToken {
     var csrfToken: String?

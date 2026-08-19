@@ -7,7 +7,7 @@ import io.github.darriousliu.han1meviewer.core.model.MyListItems
 import io.github.darriousliu.han1meviewer.core.model.MyListType
 import io.github.darriousliu.han1meviewer.core.common.state.PageLoadingState
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
-import io.github.darriousliu.han1meviewer.ui.viewmodel.CsrfTokenStore.csrfToken
+import io.github.darriousliu.han1meviewer.core.network.CsrfTokenStore.csrfToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.StateFlow

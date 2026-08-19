@@ -13,7 +13,7 @@ import io.github.darriousliu.han1meviewer.core.model.VideoCommentArgs
 import io.github.darriousliu.han1meviewer.core.model.VideoComments
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.ui.screen.video.CommentSortType
-import io.github.darriousliu.han1meviewer.ui.viewmodel.CsrfTokenStore.csrfToken
+import io.github.darriousliu.han1meviewer.core.network.CsrfTokenStore.csrfToken
 import io.github.darriousliu.han1meviewer.core.common.util.loadBundledJson
 import io.github.darriousliu.han1meviewer.core.common.util.localizedTextOrNull
 import io.github.darriousliu.han1meviewer.core.resource.Res

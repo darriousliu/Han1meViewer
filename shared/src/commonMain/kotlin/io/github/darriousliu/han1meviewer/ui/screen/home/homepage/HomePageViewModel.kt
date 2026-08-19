@@ -14,7 +14,7 @@ import io.github.darriousliu.han1meviewer.core.network.fetchPlatformAnnouncement
 import io.github.darriousliu.han1meviewer.core.common.state.PageState
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.logout
-import io.github.darriousliu.han1meviewer.ui.viewmodel.CsrfTokenStore
+import io.github.darriousliu.han1meviewer.core.network.CsrfTokenStore
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.login_state_expired
 import kotlin.time.Clock
@@ -132,24 +132,6 @@ class HomePageViewModel: ViewModel() {
         }
     }
 
-    fun deleteWatchHistory(history: WatchHistoryEntity) {
-        viewModelScope.launch(Dispatchers.IO) {
-            DatabaseRepo.WatchHistory.delete(history)
-            logger.d { "$history DONE!" }
-        }
-    }
-
-    fun deleteAllWatchHistories() {
-        viewModelScope.launch(Dispatchers.IO) {
-            DatabaseRepo.WatchHistory.deleteAll()
-            logger.d { "delete all watch history DONE!" }
-        }
-    }
-
-    fun loadAllWatchHistories() =
-        DatabaseRepo.WatchHistory.loadAll()
-            .catch { e -> e.printStackTrace() }
-            .flowOn(Dispatchers.IO)
     private val _modifyHKeyframeFlow = MutableSharedFlow<Boolean>()
     fun removeHKeyframe(videoCode: String, hKeyframe: HKeyframeEntity.Keyframe) {
         viewModelScope.launch(Dispatchers.IO) {

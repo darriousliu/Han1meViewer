@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home
+package io.github.darriousliu.han1meviewer.feature.history
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -74,8 +74,8 @@ import io.github.darriousliu.han1meviewer.core.ui.component.content.ErrorContent
 import io.github.darriousliu.han1meviewer.core.ui.component.lazy.LazyColumn
 import io.github.darriousliu.han1meviewer.core.ui.component.lazy.LazyVerticalGrid
 import io.github.darriousliu.han1meviewer.core.ui.preview.ComponentPreview
-import io.github.darriousliu.han1meviewer.ui.preview.fakeHomePageVideos
-import io.github.darriousliu.han1meviewer.ui.screen.home.videogrid.canLoadMore
+import io.github.darriousliu.han1meviewer.core.ui.preview.fakeHomePageVideos
+import io.github.darriousliu.han1meviewer.core.ui.canLoadMore
 import io.github.darriousliu.han1meviewer.core.ui.rememberVideoGridColumns
 import io.github.darriousliu.han1meviewer.core.ui.theme.SpacingNormal
 import io.github.darriousliu.han1meviewer.core.resource.Res

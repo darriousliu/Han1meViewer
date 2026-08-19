@@ -16,7 +16,7 @@ import io.github.darriousliu.han1meviewer.core.storage.entity.download.HanimeDow
 import io.github.darriousliu.han1meviewer.core.model.HanimeVideo
 import io.github.darriousliu.han1meviewer.core.common.state.VideoLoadingState
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
-import io.github.darriousliu.han1meviewer.ui.viewmodel.CsrfTokenStore.csrfToken
+import io.github.darriousliu.han1meviewer.core.network.CsrfTokenStore.csrfToken
 import io.github.darriousliu.han1meviewer.core.model.TagLocalizer
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.add_success

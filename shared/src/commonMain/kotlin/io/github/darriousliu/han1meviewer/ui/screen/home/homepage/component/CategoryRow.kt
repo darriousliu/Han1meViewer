@@ -24,7 +24,7 @@ import io.github.darriousliu.han1meviewer.core.model.HanimeInfo
 import io.github.darriousliu.han1meviewer.core.ui.component.VideoCardItem
 import io.github.darriousliu.han1meviewer.core.ui.component.lazy.LazyRow
 import io.github.darriousliu.han1meviewer.core.ui.preview.ComponentPreview
-import io.github.darriousliu.han1meviewer.ui.preview.fakeHomePageVideos
+import io.github.darriousliu.han1meviewer.core.ui.preview.fakeHomePageVideos
 import io.github.darriousliu.han1meviewer.core.ui.rememberCardResponsiveWidth
 import io.github.darriousliu.han1meviewer.core.ui.theme.SpacingLarge
 import io.github.darriousliu.han1meviewer.core.ui.theme.SpacingNormal

@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.videogrid
+package io.github.darriousliu.han1meviewer.core.ui
 
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import io.github.darriousliu.han1meviewer.core.model.HanimeInfo

@@ -26,6 +26,7 @@ import io.github.darriousliu.han1meviewer.core.resource.they_watched
 import kotlin.time.Clock
 import kotlinx.datetime.LocalDate
 import io.github.darriousliu.han1meviewer.core.ui.preview.fakeTagList2
+import io.github.darriousliu.han1meviewer.core.ui.preview.fakeHomePageVideos
 
 
 /**
@@ -151,75 +152,6 @@ val fakeAnnouncements = listOf(
         content = "为营造更好的社区氛围，我们更新了评论社区规范，请各位用户遵守。",
         priority = 2,
         isActive = true,
-    ),
-)
-
-val fakeHomePageVideos = listOf(
-    HanimeInfo(
-        title = "小恶魔的补习计划",
-        coverUrl = "https://vdownload.hembed.com/image/thumbnail/101573l.jpg",
-        videoCode = "101573",
-        duration = "04:34",
-        views = "44.9万次",
-        reviews = "100%",
-        currentArtist = "製作社A",
-        uploadTime = "2010-12-10",
-        itemType = HanimeInfo.NORMAL,
-    ),
-    HanimeInfo(
-        title = "姐姐的秘密训练",
-        coverUrl = "https://vdownload.hembed.com/image/thumbnail/101574l.jpg",
-        videoCode = "101574",
-        duration = "23:15",
-        views = "22.1万次",
-        reviews = "95%",
-        currentArtist = "製作社B",
-        uploadTime = "2010-12-10",
-        itemType = HanimeInfo.NORMAL,
-    ),
-    HanimeInfo(
-        title = "放学后的约定",
-        coverUrl = "https://vdownload.hembed.com/image/thumbnail/101575l.jpg",
-        videoCode = "101575",
-        duration = "18:02",
-        views = "58.3万次",
-        reviews = "97%",
-        currentArtist = "製作社C",
-        uploadTime = "2010-12-10",
-        itemType = HanimeInfo.NORMAL,
-    ),
-    HanimeInfo(
-        title = "班长的福利日",
-        coverUrl = "https://vdownload.hembed.com/image/thumbnail/101576l.jpg",
-        videoCode = "101576",
-        duration = "12:47",
-        views = "30.0万次",
-        reviews = "92%",
-        currentArtist = "製作社D",
-        uploadTime = "2010-12-10",
-        itemType = HanimeInfo.NORMAL,
-    ),
-    HanimeInfo(
-        title = "图书馆的秘密角落",
-        coverUrl = "https://vdownload.hembed.com/image/thumbnail/101577l.jpg",
-        videoCode = "101577",
-        duration = "15:20",
-        views = "61.7万次",
-        reviews = "99%",
-        currentArtist = "製作社E",
-        uploadTime = "2010-12-10",
-        itemType = HanimeInfo.NORMAL,
-    ),
-    HanimeInfo(
-        title = "体育仓库的约定",
-        coverUrl = "https://vdownload.hembed.com/image/thumbnail/101588l.jpg",
-        videoCode = "101588",
-        duration = "22:10",
-        views = "35.2万次",
-        reviews = "94%",
-        currentArtist = "製作社F",
-        uploadTime = "2011-01-15",
-        itemType = HanimeInfo.NORMAL,
     ),
 )
 

@@ -19,7 +19,7 @@ import io.github.darriousliu.han1meviewer.core.ui.component.ConfirmDialog
 import io.github.darriousliu.han1meviewer.core.ui.component.content.EmptyContent
 import io.github.darriousliu.han1meviewer.core.ui.component.lazy.LazyColumn
 import io.github.darriousliu.han1meviewer.core.ui.preview.ComponentPreview
-import io.github.darriousliu.han1meviewer.ui.preview.fakeHomePageVideos
+import io.github.darriousliu.han1meviewer.core.ui.preview.fakeHomePageVideos
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.cancel
 import io.github.darriousliu.han1meviewer.core.resource.confirm

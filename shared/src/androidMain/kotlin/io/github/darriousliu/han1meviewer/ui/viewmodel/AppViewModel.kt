@@ -24,6 +24,8 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import io.github.darriousliu.han1meviewer.core.common.util.application
+import io.github.darriousliu.han1meviewer.core.network.IHCsrfToken
+import io.github.darriousliu.han1meviewer.core.network.CsrfTokenStore
 
 /**
  * @project Han1meViewer

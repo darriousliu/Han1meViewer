@@ -87,7 +87,7 @@ import io.github.darriousliu.han1meviewer.core.common.state.PageLoadingState
 import io.github.darriousliu.han1meviewer.core.ui.component.VideoCardItem
 import io.github.darriousliu.han1meviewer.core.ui.component.content.EmptyContent
 import io.github.darriousliu.han1meviewer.core.ui.component.lazy.LazyVerticalGrid
-import io.github.darriousliu.han1meviewer.ui.preview.fakeHomePageVideos
+import io.github.darriousliu.han1meviewer.core.ui.preview.fakeHomePageVideos
 import io.github.darriousliu.han1meviewer.core.ui.rememberRandomLoadingHint
 import io.github.darriousliu.han1meviewer.core.ui.theme.SpacingNormal
 import io.github.darriousliu.han1meviewer.core.ui.theme.VideoNormalCardMinWidth

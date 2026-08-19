@@ -41,7 +41,7 @@ import coil3.compose.AsyncImage
 import io.github.darriousliu.han1meviewer.core.storage.entity.download.HanimeDownloadEntity
 import io.github.darriousliu.han1meviewer.core.common.state.DownloadState
 import io.github.darriousliu.han1meviewer.core.ui.preview.ComponentPreview
-import io.github.darriousliu.han1meviewer.ui.preview.fakeHomePageVideos
+import io.github.darriousliu.han1meviewer.core.ui.preview.fakeHomePageVideos
 import io.github.darriousliu.han1meviewer.core.common.util.formatFileSizeV2
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.cancel_download
