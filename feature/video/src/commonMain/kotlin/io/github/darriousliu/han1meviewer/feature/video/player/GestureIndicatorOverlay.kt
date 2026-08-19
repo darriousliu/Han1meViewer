@@ -62,8 +62,8 @@ internal fun GestureIndicatorOverlay(
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Box(
                 modifier = Modifier
-                    .size(width = 170.dp, height = 190.dp)
-                    .clip(RoundedCornerShape(36.dp)),
+                    .size(width = 148.dp, height = 148.dp)
+                    .clip(RoundedCornerShape(28.dp)),
             ) {
                 Box(Modifier.matchParentSize().background(Color.Black.copy(alpha = 0.32f)))
                 Box(
@@ -80,13 +80,13 @@ internal fun GestureIndicatorOverlay(
                     Modifier.matchParentSize().border(
                         1.dp,
                         Color.White.copy(alpha = 0.12f),
-                        RoundedCornerShape(36.dp),
+                        RoundedCornerShape(28.dp),
                     )
                 )
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 20.dp, vertical = 22.dp),
+                        .padding(horizontal = 16.dp, vertical = 14.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
                 ) {
@@ -100,9 +100,9 @@ internal fun GestureIndicatorOverlay(
                         ),
                         contentDescription = null,
                         tint = PlayerWhite,
-                        modifier = Modifier.size(42.dp),
+                        modifier = Modifier.size(30.dp),
                     )
-                    Spacer(Modifier.height(18.dp))
+                    Spacer(Modifier.height(10.dp))
                     Text(
                         text = stringResource(
                             when (type) {
@@ -112,22 +112,22 @@ internal fun GestureIndicatorOverlay(
                             }
                         ),
                         color = Color.White.copy(alpha = 0.92f),
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.bodyMedium,
                     )
-                    Spacer(Modifier.height(18.dp))
+                    Spacer(Modifier.height(10.dp))
                     LinearProgressIndicator(
                         progress = { percent.coerceIn(0f, 1f) },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(8.dp)
+                            .height(6.dp)
                             .clip(RoundedCornerShape(100)),
                         trackColor = Color.White.copy(alpha = 0.12f),
                     )
-                    Spacer(Modifier.height(16.dp))
+                    Spacer(Modifier.height(8.dp))
                     Text(
                         text = text,
                         color = PlayerWhite,
-                        style = MaterialTheme.typography.headlineSmall,
+                        style = MaterialTheme.typography.titleMedium,
                     )
                 }
             }

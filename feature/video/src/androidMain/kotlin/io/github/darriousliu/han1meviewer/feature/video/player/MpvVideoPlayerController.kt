@@ -190,6 +190,8 @@ class MpvVideoPlayerController(
                     }
 
                     MPVLib.mpvEventId.MPV_EVENT_FILE_LOADED -> {
+                        // 暂停态下 PLAYBACK_RESTART 未必到来，这里就收起加载圈
+                        bufferingState = false
                         MPVLib.setPropertyDouble("speed", currentSpeed.toDouble())
                         if (pendingSeekMs > 0L) {
                             seekTo(pendingSeekMs)
@@ -254,6 +256,8 @@ class MpvVideoPlayerController(
         bufferingState = true
         pendingSeekMs = startPositionMs
         MPVLib.setOptionString("force-window", "yes")
+        // 进页默认暂停态：loadfile 前先置 pause，加载完停在首帧等用户点播放
+        MPVLib.setPropertyBoolean("pause", true)
         val path = prepareUri(url) ?: run {
             Log.e(TAG, "无法解析播放地址: $url")
             return

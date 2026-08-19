@@ -12,41 +12,32 @@ import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Easing
-import androidx.compose.animation.core.animate
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -109,7 +100,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
-import kotlin.math.roundToInt
 
 /**
  * Media3 + Compose 的视频页宿主。
@@ -121,10 +111,10 @@ import kotlin.math.roundToInt
  * ⚠️ 本文件**绝不能**调 `Jzvd.releaseAllVideos()` / `goOnPlayOnPause()` / `backPress()`——
  * 那三个是全局静态，两套播放器共用会互相踩。
  *
- * 和旧宿主的一处**结构差异**：这里是纯 Compose 的 `Column`（播放器在上、tab 在下），
- * 没有 `CoordinatorLayout`/`AppBarLayout`。所以**滚动列表不会折叠播放器区域**——
- * 那正是旧路径要靠 View 互操作（`rememberHostNestedScrollConnection`）才能做到的事。
- * 这是本轮已知的行为差异，后续再补。
+ * 与旧宿主的两处**有意的行为差异**（用户实机验证后拍板）：
+ * 1. 播放器位置固定，滚动不折叠——纯 Compose 折叠观感差，且容器高度变化会经
+ *    SurfaceHolder 改写 mpv 的 android-surface-size，缩小状态切全屏曾致画面残缺；
+ * 2. 进入页面**不自动播放**：加载完成停在暂停态（首帧可见），由用户点播放。
  */
 @OptIn(kotlin.time.ExperimentalTime::class)
 @Composable
@@ -280,9 +270,10 @@ fun Media3VideoRouteHostScreen(
         }
     }
 
-    // ---- 滚动折叠播放器 + 平板高度（复刻 CoordinatorLayout 的 EXIT_UNTIL_COLLAPSED）----
+    // ---- 平板高度（滚动折叠已按用户决定移除：播放器位置固定，下方内容自行滚动。
+    //      折叠时容器高度变化会经 SurfaceHolder.surfaceChanged 改写 mpv 的
+    //      android-surface-size，在缩小状态切全屏曾出现画面残缺——固定高度从根上消除该链条）----
     val configuration = LocalConfiguration.current
-    val density = LocalDensity.current
     var isSideRelatedCollapsed by remember { mutableStateOf(false) }
     val isTabletLandscape = Preferences.tabletMode &&
             configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
@@ -290,54 +281,6 @@ fun Media3VideoRouteHostScreen(
         isTabletLandscape -> if (isSideRelatedCollapsed) 500.dp else 400.dp
         Preferences.tabletMode -> 350.dp
         else -> 250.dp
-    }
-    val maxCollapsePx = with(density) { basePlayerHeight.toPx() }
-    var collapseOffsetPx by remember { mutableFloatStateOf(0f) }
-    LaunchedEffect(maxCollapsePx) {
-        collapseOffsetPx = collapseOffsetPx.coerceAtMost(maxCollapsePx)
-    }
-    // 播放/加载中禁折叠，且变为播放时展开回 0（旧宿主 :417-434 的 disableScroll + setExpanded）
-    val playbackActive = visual == PlaybackVisual.Playing ||
-            visual == PlaybackVisual.Preparing || visual == PlaybackVisual.Buffering
-    LaunchedEffect(playbackActive) {
-        if (playbackActive && collapseOffsetPx > 0f) {
-            animate(collapseOffsetPx, 0f) { value, _ -> collapseOffsetPx = value }
-        }
-    }
-    val collapseEnabled = rememberUpdatedState(
-        !isFullscreen && !hostUiState.isInPipMode && !playbackActive
-    )
-    val maxCollapse = rememberUpdatedState(maxCollapsePx)
-    val collapseConnection = remember {
-        object : NestedScrollConnection {
-            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-                if (!collapseEnabled.value) return Offset.Zero
-                val delta = available.y
-                if (delta < 0f && collapseOffsetPx < maxCollapse.value) {
-                    // 上滑先收播放器
-                    val consumed = maxOf(delta, -(maxCollapse.value - collapseOffsetPx))
-                    collapseOffsetPx -= consumed
-                    return Offset(0f, consumed)
-                }
-                return Offset.Zero
-            }
-
-            override fun onPostScroll(
-                consumed: Offset,
-                available: Offset,
-                source: NestedScrollSource,
-            ): Offset {
-                if (!collapseEnabled.value) return Offset.Zero
-                val delta = available.y
-                if (delta > 0f && collapseOffsetPx > 0f) {
-                    // 下滑列表到顶后展开播放器
-                    val used = minOf(delta, collapseOffsetPx)
-                    collapseOffsetPx -= used
-                    return Offset(0f, used)
-                }
-                return Offset.Zero
-            }
-        }
     }
 
     val stringLongPressShare = remember(activity) {
@@ -393,11 +336,11 @@ fun Media3VideoRouteHostScreen(
                             !MobileDataWarningSession.accepted &&
                             environment.isNetworkMetered()
                     if (needMeteredWarning) {
+                        // 默认不自动播放，所以进页不弹提醒；用户点播放钮时再弹（见 onBlockedPlayClick）
                         pendingMeteredPlay = picked.second to startPosition
-                        showMeteredDialog = true
                     } else {
+                        // 进入页面默认停在暂停态：只 load（prepare 出首帧），不 play
                         controller.load(picked.second, startPosition)
-                        controller.play()
                     }
                 }
             }
@@ -543,18 +486,7 @@ fun Media3VideoRouteHostScreen(
         onOpenVideo = { item -> activity.showVideoDetailFragment(item.videoCode) },
         modifier = Modifier.fillMaxSize(),
     ) {
-        Column(Modifier.fillMaxSize().nestedScroll(collapseConnection)) {
-        Box(
-            modifier = (if (fillPlayer) {
-                // 全屏/PiP 铺满；竖屏视频入场时高度 0.5→1（顶部对齐即 pivotY=0 语义）
-                Modifier.fillMaxWidth().fillMaxHeight(fullscreenEnterFraction.value)
-            } else {
-                Modifier.fillMaxWidth()
-                    .height(with(density) { (maxCollapsePx - collapseOffsetPx).toDp() })
-            })
-                .clipToBounds()
-                .onGloballyPositioned { playerBounds = it.boundsInWindow() },
-        ) {
+        Column(Modifier.fillMaxSize()) {
         HanimeVideoPlayer(
             controller = controller,
             title = title,
@@ -564,11 +496,12 @@ fun Media3VideoRouteHostScreen(
             onSelectQuality = { key ->
                 val link = videoUrls?.get(key)?.link?.takeIf { it.isNotBlank() }
                 if (link != null) {
-                    // changeUrl 语义：换清晰度保留进度
+                    // changeUrl 语义：换清晰度保留进度与播放状态
                     val position = controller.positionMs
+                    val wasPlaying = controller.isPlaying
                     playingQuality = key
                     controller.load(link, position)
-                    controller.play()
+                    if (wasPlaying) controller.play()
                 }
             },
             hKeyframes = hKeyframes,
@@ -604,20 +537,18 @@ fun Media3VideoRouteHostScreen(
                 superResolutionIndex = index
                 (controller as? SuperResolutionController)?.setSuperResolution(index)
             },
-            // 容器收缩、内容以 0.3 倍反向位移 = CollapsingToolbar parallax 0.7 的等价
-            modifier = Modifier
-                .fillMaxWidth()
-                .then(
-                    if (fillPlayer) Modifier.fillMaxHeight() else Modifier.height(basePlayerHeight)
-                )
-                .offset {
-                    IntOffset(
-                        0,
-                        if (fillPlayer) 0 else (-collapseOffsetPx * 0.3f).roundToInt(),
-                    )
-                },
+            modifier = (if (fillPlayer) {
+                // 全屏/PiP 铺满；竖屏视频入场时高度 0.5→1（顶部对齐即 pivotY=0 语义）
+                Modifier.fillMaxWidth().fillMaxHeight(fullscreenEnterFraction.value)
+            } else {
+                // 非全屏时黑底垫过状态栏，控件从状态栏之下开始，不与系统栏文字重叠
+                Modifier
+                    .fillMaxWidth()
+                    .background(Color.Black)
+                    .statusBarsPadding()
+                    .height(basePlayerHeight)
+            }).onGloballyPositioned { playerBounds = it.boundsInWindow() },
         )
-        }
         if (!fillPlayer) VideoRouteContent(
             videoCode = route.videoCode,
             videoState = videoState,

@@ -186,11 +186,12 @@ fun HanimeVideoPlayer(
             )
         }
 
-        if (visibility.loading) {
+        // 手势指示浮层展示期间隐藏中央按钮与加载圈，避免两者叠在一起
+        if (visibility.loading && !gestureState.indicatorVisible) {
             PlayerLoadingIndicator(Modifier.align(Alignment.Center))
         }
 
-        if (visibility.centerButton || visibility.replayText) {
+        if ((visibility.centerButton || visibility.replayText) && !gestureState.indicatorVisible) {
             PlayerCenterButton(
                 visual = visual,
                 onPlayPause = {
