@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.homepage.component
+package io.github.darriousliu.han1meviewer.feature.home.component
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -42,7 +42,7 @@ import coil3.request.crossfade
 import io.github.darriousliu.han1meviewer.core.model.Announcement
 import io.github.darriousliu.han1meviewer.core.ui.component.ConfirmDialog
 import io.github.darriousliu.han1meviewer.core.ui.preview.ComponentPreview
-import io.github.darriousliu.han1meviewer.ui.preview.fakeAnnouncements
+import io.github.darriousliu.han1meviewer.feature.home.fakeAnnouncements
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.cancel
 import io.github.darriousliu.han1meviewer.core.resource.i_understand

@@ -17,11 +17,11 @@ import io.github.darriousliu.han1meviewer.core.storage.entity.CheckInType
 import io.github.darriousliu.han1meviewer.core.model.Announcement
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
 import io.github.darriousliu.han1meviewer.core.ui.component.TripleButtonDialog
-import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.HomePageScreen
-import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.HomeUiEvent
-import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.LocalSearchHistoryQuery
-import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.component.AnnouncementDialog
-import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.saveImageToGallery
+import io.github.darriousliu.han1meviewer.feature.home.HomePageScreen
+import io.github.darriousliu.han1meviewer.feature.home.HomeUiEvent
+import io.github.darriousliu.han1meviewer.feature.home.LocalSearchHistoryQuery
+import io.github.darriousliu.han1meviewer.feature.home.component.AnnouncementDialog
+import io.github.darriousliu.han1meviewer.feature.home.saveImageToGallery
 import io.github.darriousliu.han1meviewer.feature.checkin.CheckInCalendarViewModel
 import io.github.darriousliu.han1meviewer.core.common.util.currentLocalDate
 import io.github.darriousliu.han1meviewer.core.common.util.setPlainText

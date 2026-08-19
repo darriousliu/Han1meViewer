@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.homepage
+package io.github.darriousliu.han1meviewer.feature.home
 
 import io.github.darriousliu.han1meviewer.core.model.Announcement
 import org.jetbrains.compose.resources.StringResource

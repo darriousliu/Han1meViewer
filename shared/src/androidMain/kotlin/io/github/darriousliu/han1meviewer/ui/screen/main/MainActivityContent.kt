@@ -39,7 +39,7 @@ import io.github.darriousliu.han1meviewer.ui.navigation.main.handleMainIntent
 import io.github.darriousliu.han1meviewer.ui.navigation.main.navigateDrawerDestination
 import io.github.darriousliu.han1meviewer.core.navigation.navigateSafely
 import io.github.darriousliu.han1meviewer.core.navigation.rememberHanimeBackStack
-import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.HomePageViewModel
+import io.github.darriousliu.han1meviewer.feature.home.HomePageViewModel
 import io.github.darriousliu.han1meviewer.core.ui.theme.HanimeTheme
 import io.github.darriousliu.han1meviewer.ui.viewmodel.AppViewModel
 import io.github.darriousliu.han1meviewer.util.getUpdateIfExists

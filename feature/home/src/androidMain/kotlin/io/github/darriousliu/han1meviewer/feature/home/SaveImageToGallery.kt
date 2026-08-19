@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.homepage
+package io.github.darriousliu.han1meviewer.feature.home
 
 import android.content.ContentValues
 import android.content.Context
@@ -11,7 +11,7 @@ import coil3.SingletonImageLoader
 import coil3.request.ImageRequest
 import coil3.request.SuccessResult
 import coil3.toBitmap
-import io.github.darriousliu.han1meviewer.R
+import io.github.darriousliu.han1meviewer.feature.home.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -26,7 +26,7 @@ import java.io.FileOutputStream
  * @param context 用于加载图片、访问 ContentResolver 和显示 Toast 的上下文
  * @param imageUrl 需要保存的图片地址
  */
-internal suspend fun saveImageToGallery(context: Context, imageUrl: String) {
+suspend fun saveImageToGallery(context: Context, imageUrl: String) {
     val loader = SingletonImageLoader.get(context)
     val request = ImageRequest.Builder(context)
         .data(imageUrl)

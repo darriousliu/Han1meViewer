@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.homepage.component
+package io.github.darriousliu.han1meviewer.feature.home.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

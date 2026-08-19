@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.homepage.component
+package io.github.darriousliu.han1meviewer.feature.home.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -34,7 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.darriousliu.han1meviewer.core.model.HomePage
 import io.github.darriousliu.han1meviewer.core.ui.preview.ComponentPreview
-import io.github.darriousliu.han1meviewer.ui.preview.fakeBanner
+import io.github.darriousliu.han1meviewer.feature.home.fakeBanner
 import io.github.darriousliu.han1meviewer.core.ui.RetryableImage
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.h_chan_load_failed

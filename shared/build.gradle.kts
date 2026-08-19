@@ -137,6 +137,7 @@ kotlin {
             api(project(":feature:search"))
             api(project(":feature:account"))
             api(project(":feature:settings"))
+            api(project(":feature:home"))
             implementation(libs.kotlinx.io.core)
             implementation(libs.ksoup)
             implementation(libs.htmlconverter)

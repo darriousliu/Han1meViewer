@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.homepage
+package io.github.darriousliu.han1meviewer.feature.home
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
@@ -31,7 +31,7 @@ import io.github.darriousliu.han1meviewer.core.ui.component.PullRefreshOverlay
 import io.github.darriousliu.han1meviewer.core.ui.component.isFirstPageEmpty
 import io.github.darriousliu.han1meviewer.core.ui.component.isFirstPageError
 import io.github.darriousliu.han1meviewer.core.ui.component.isFirstPageLoading
-import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.component.HomePageTopBar
+import io.github.darriousliu.han1meviewer.feature.home.component.HomePageTopBar
 import io.github.darriousliu.han1meviewer.core.ui.rememberRandomLoadingHint
 import io.github.darriousliu.han1meviewer.core.common.util.toNetworkErrorMessage
 import org.jetbrains.compose.resources.stringResource

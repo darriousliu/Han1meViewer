@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.homepage
+package io.github.darriousliu.han1meviewer.feature.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -31,9 +31,11 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 import org.jetbrains.compose.resources.StringResource
+import org.koin.android.annotation.KoinViewModel
 
 private val logger = Logger.withTag("HomePageViewModel")
 
+@KoinViewModel
 class HomePageViewModel: ViewModel() {
     data class SessionExpiredMessage(
         val message: String?,

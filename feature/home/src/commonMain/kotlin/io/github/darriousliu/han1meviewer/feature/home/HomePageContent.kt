@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.homepage
+package io.github.darriousliu.han1meviewer.feature.home
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -12,11 +12,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.darriousliu.han1meviewer.core.ui.component.lazy.LazyColumn
 import io.github.darriousliu.han1meviewer.core.ui.preview.ComponentPreview
-import io.github.darriousliu.han1meviewer.ui.preview.fakeAnnouncements
-import io.github.darriousliu.han1meviewer.ui.preview.fakeHomePage
-import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.component.AnnouncementCard
-import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.component.BannerCarousel
-import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.component.CategoryRow
+import io.github.darriousliu.han1meviewer.feature.home.fakeAnnouncements
+import io.github.darriousliu.han1meviewer.feature.home.fakeHomePage
+import io.github.darriousliu.han1meviewer.feature.home.component.AnnouncementCard
+import io.github.darriousliu.han1meviewer.feature.home.component.BannerCarousel
+import io.github.darriousliu.han1meviewer.feature.home.component.CategoryRow
 
 /**
  * 渲染首页可滚动内容区域。

@@ -41,7 +41,7 @@ import io.github.darriousliu.han1meviewer.core.navigation.HanimeRoute
 import io.github.darriousliu.han1meviewer.core.navigation.VideoRoute
 import io.github.darriousliu.han1meviewer.core.navigation.navigateSafely
 import io.github.darriousliu.han1meviewer.ui.navigation.settings.isDeviceSecureCompat
-import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.HomePageViewModel
+import io.github.darriousliu.han1meviewer.feature.home.HomePageViewModel
 import io.github.darriousliu.han1meviewer.ui.screen.main.MainActivityContent
 import io.github.darriousliu.han1meviewer.util.restartApplication
 import io.github.darriousliu.han1meviewer.util.showAlertDialog

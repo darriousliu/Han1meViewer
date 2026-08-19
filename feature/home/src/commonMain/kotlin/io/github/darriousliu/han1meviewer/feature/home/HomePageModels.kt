@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.homepage
+package io.github.darriousliu.han1meviewer.feature.home
 
 import androidx.compose.runtime.staticCompositionLocalOf
 import io.github.darriousliu.han1meviewer.core.model.Announcement
