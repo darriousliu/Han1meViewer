@@ -25,6 +25,20 @@ import io.github.darriousliu.han1meviewer.core.resource.mmd
 import io.github.darriousliu.han1meviewer.core.resource.ranking_this_month
 import io.github.darriousliu.han1meviewer.core.resource.ranking_today
 import io.github.darriousliu.han1meviewer.core.resource.they_watched
+import io.github.darriousliu.han1meviewer.core.storage.homeCategoryOrder
+import io.github.darriousliu.han1meviewer.core.storage.hiddenHomeCategoryKeys
+import io.github.darriousliu.han1meviewer.core.storage.HOME_CATEGORY_WATCHING_NOW
+import io.github.darriousliu.han1meviewer.core.storage.HOME_CATEGORY_SHORT_EPISODE
+import io.github.darriousliu.han1meviewer.core.storage.HOME_CATEGORY_MOTION_ANIME
+import io.github.darriousliu.han1meviewer.core.storage.HOME_CATEGORY_MMD
+import io.github.darriousliu.han1meviewer.core.storage.HOME_CATEGORY_LATEST_UPLOAD
+import io.github.darriousliu.han1meviewer.core.storage.HOME_CATEGORY_LATEST_RELEASE
+import io.github.darriousliu.han1meviewer.core.storage.HOME_CATEGORY_LATEST_HANIME
+import io.github.darriousliu.han1meviewer.core.storage.HOME_CATEGORY_COSPLAY
+import io.github.darriousliu.han1meviewer.core.storage.HOME_CATEGORY_AI_GENERATED
+import io.github.darriousliu.han1meviewer.core.storage.HOME_CATEGORY_3D_CG
+import io.github.darriousliu.han1meviewer.core.storage.HOME_CATEGORY_2_5D
+import io.github.darriousliu.han1meviewer.core.storage.HOME_CATEGORY_2D_ANIME
 
 /**
  * 将首页原始数据转换为 UI 可直接展示的分类行数据。

@@ -8,10 +8,11 @@ import io.github.darriousliu.han1meviewer.core.common.util.applyAppLanguage
 import io.github.darriousliu.han1meviewer.core.common.util.toLanguageTagOrNull
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import io.github.darriousliu.han1meviewer.feature.settings.model.HomeSettingsCapabilities
 
 /**
  * 首页设置页背后的**平台能力**。Step 22 三层结构的第三层（前两层见
- * [io.github.darriousliu.han1meviewer.ui.screen.settings.model.HomeSettingsCapabilities]）。
+ * [io.github.darriousliu.han1meviewer.feature.settings.model.HomeSettingsCapabilities]）。
  *
  * 每个方法都有默认空实现，于是 jvm/ios 的 actual 各一行
  * （`= NoopHomeSettingsActions`），以后加方法也不会打断它们——

@@ -25,6 +25,7 @@ import io.github.darriousliu.han1meviewer.core.firebase.logScreenViewEvent
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.back
 import org.jetbrains.compose.resources.stringResource
+import io.github.darriousliu.han1meviewer.feature.settings.SettingsDestinationSpec
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

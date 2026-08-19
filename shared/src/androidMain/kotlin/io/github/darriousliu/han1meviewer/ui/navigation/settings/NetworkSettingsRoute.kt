@@ -29,10 +29,10 @@ import io.github.darriousliu.han1meviewer.core.network.HanimeNetwork
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.core.network.logout
 import io.github.darriousliu.han1meviewer.core.ui.component.ConfirmDialog
-import io.github.darriousliu.han1meviewer.ui.screen.settings.DelayResultUi
-import io.github.darriousliu.han1meviewer.ui.screen.settings.DohTestResultUi
-import io.github.darriousliu.han1meviewer.ui.screen.settings.NetworkSettingsScreen
-import io.github.darriousliu.han1meviewer.ui.screen.settings.NetworkSettingsUiState
+import io.github.darriousliu.han1meviewer.feature.settings.DelayResultUi
+import io.github.darriousliu.han1meviewer.feature.settings.DohTestResultUi
+import io.github.darriousliu.han1meviewer.feature.settings.NetworkSettingsScreen
+import io.github.darriousliu.han1meviewer.feature.settings.NetworkSettingsUiState
 import io.github.darriousliu.han1meviewer.core.common.util.applicationContext
 import io.github.darriousliu.han1meviewer.util.restartApplication
 import io.github.darriousliu.han1meviewer.util.showAlertDialog
@@ -44,6 +44,7 @@ import io.ktor.http.isSuccess
 import kotlinx.coroutines.runBlocking
 import java.net.InetAddress
 import java.util.concurrent.Executors
+import io.github.darriousliu.han1meviewer.feature.settings.buildDomainOptions
 
 private enum class DohConflictTarget {
     EnableDoH,

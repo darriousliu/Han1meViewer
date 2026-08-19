@@ -29,11 +29,13 @@ import io.github.darriousliu.han1meviewer.core.network.interceptor.SpeedLimitInt
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
 import io.github.darriousliu.han1meviewer.core.ui.component.ConfirmDialog
 import io.github.darriousliu.han1meviewer.core.ui.component.TripleButtonDialog
-import io.github.darriousliu.han1meviewer.ui.screen.settings.DownloadSettingsScreen
-import io.github.darriousliu.han1meviewer.ui.screen.settings.DownloadSettingsUiState
+import io.github.darriousliu.han1meviewer.feature.settings.DownloadSettingsScreen
+import io.github.darriousliu.han1meviewer.feature.settings.DownloadSettingsUiState
 import io.github.darriousliu.han1meviewer.util.SafFileManager
 import io.github.darriousliu.han1meviewer.util.showToast
 import io.github.darriousliu.han1meviewer.worker.HanimeDownloadManagerV2
+import io.github.darriousliu.han1meviewer.feature.settings.toDownloadCountLimitPrettyString
+import io.github.darriousliu.han1meviewer.feature.settings.toDownloadSpeedPrettyString
 
 @Composable
 fun DownloadSettingsRouteScreen(

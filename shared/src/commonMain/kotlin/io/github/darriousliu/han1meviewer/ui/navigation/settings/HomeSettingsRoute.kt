@@ -26,17 +26,17 @@ import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.core.ui.component.ConfirmDialog
 import io.github.darriousliu.han1meviewer.core.ui.component.LocalToaster
 import io.github.darriousliu.han1meviewer.core.ui.component.showShort
-import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.defaultHomeCategoryPreferenceItems
-import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.hiddenHomeCategoryKeys
-import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.homeCategoryOrder
-import io.github.darriousliu.han1meviewer.ui.screen.home.homepage.saveHomeCategoryPreferences
-import io.github.darriousliu.han1meviewer.ui.screen.settings.HomeSettingsScreen
-import io.github.darriousliu.han1meviewer.ui.screen.settings.dialog.AnalyticsConsentDialog
-import io.github.darriousliu.han1meviewer.ui.screen.settings.dialog.FakeLauncherIconDialog
-import io.github.darriousliu.han1meviewer.ui.screen.settings.dialog.LauncherIconOption
-import io.github.darriousliu.han1meviewer.ui.screen.settings.dialog.LicenseDialog
-import io.github.darriousliu.han1meviewer.ui.screen.settings.dialog.launcherIconOptions
-import io.github.darriousliu.han1meviewer.ui.screen.settings.model.HomeSettingsUiState
+import io.github.darriousliu.han1meviewer.core.storage.defaultHomeCategoryPreferenceItems
+import io.github.darriousliu.han1meviewer.core.storage.hiddenHomeCategoryKeys
+import io.github.darriousliu.han1meviewer.core.storage.homeCategoryOrder
+import io.github.darriousliu.han1meviewer.core.storage.saveHomeCategoryPreferences
+import io.github.darriousliu.han1meviewer.feature.settings.HomeSettingsScreen
+import io.github.darriousliu.han1meviewer.feature.settings.dialog.AnalyticsConsentDialog
+import io.github.darriousliu.han1meviewer.feature.settings.dialog.FakeLauncherIconDialog
+import io.github.darriousliu.han1meviewer.feature.settings.dialog.LauncherIconOption
+import io.github.darriousliu.han1meviewer.feature.settings.dialog.LicenseDialog
+import io.github.darriousliu.han1meviewer.feature.settings.dialog.launcherIconOptions
+import io.github.darriousliu.han1meviewer.feature.settings.model.HomeSettingsUiState
 import io.github.darriousliu.han1meviewer.core.ui.theme.ThemeColorPreset
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.action_app_open_by_default_settings_not_support
@@ -82,6 +82,8 @@ import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
+import io.github.darriousliu.han1meviewer.feature.settings.toIntervalDaysPrettyString
+import io.github.darriousliu.han1meviewer.feature.settings.generateClearCacheSummary
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

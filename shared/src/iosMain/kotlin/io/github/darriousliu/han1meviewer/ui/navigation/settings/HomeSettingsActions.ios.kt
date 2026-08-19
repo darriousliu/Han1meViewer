@@ -1,6 +1,7 @@
 package io.github.darriousliu.han1meviewer.ui.navigation.settings
 
 import androidx.compose.runtime.Composable
+import io.github.darriousliu.han1meviewer.feature.settings.model.HomeSettingsCapabilities
 
 /**
  * 目前一个能力都还没落地，所以全走默认空实现——对应

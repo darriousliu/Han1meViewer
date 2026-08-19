@@ -11,10 +11,11 @@ import androidx.compose.ui.res.stringResource
 import io.github.darriousliu.han1meviewer.core.common.PlayerDefaults
 import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.R
-import io.github.darriousliu.han1meviewer.ui.screen.settings.PlayerSettingsScreen
-import io.github.darriousliu.han1meviewer.ui.screen.settings.PlayerSettingsUiState
+import io.github.darriousliu.han1meviewer.feature.settings.PlayerSettingsScreen
+import io.github.darriousliu.han1meviewer.feature.settings.PlayerSettingsUiState
 import io.github.darriousliu.han1meviewer.ui.view.video.HJzvdStd
 import io.github.darriousliu.han1meviewer.ui.view.video.HMediaKernel
+import io.github.darriousliu.han1meviewer.feature.settings.toPrettySensitivityString
 
 @Composable
 fun PlayerSettingsRouteScreen(
