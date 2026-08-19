@@ -5,6 +5,7 @@ import androidx.navigation3.runtime.NavBackStack
 import io.github.darriousliu.han1meviewer.core.navigation.HanimeRoute
 import io.github.darriousliu.han1meviewer.core.navigation.VideoRoute
 import io.github.darriousliu.han1meviewer.core.navigation.navigateSafely
+import io.github.darriousliu.han1meviewer.feature.main.navigateDrawerDestination
 
 /*
  * 深链分派——原 `MainNavigationActions.kt` 的后半。

@@ -33,10 +33,10 @@ import io.github.darriousliu.han1meviewer.core.navigation.CloudflareRoute
 import io.github.darriousliu.han1meviewer.core.navigation.HanimeRoute
 import io.github.darriousliu.han1meviewer.core.navigation.HomeRoute
 import io.github.darriousliu.han1meviewer.core.navigation.LoginRoute
-import io.github.darriousliu.han1meviewer.ui.navigation.main.MainDestinationSpec
+import io.github.darriousliu.han1meviewer.feature.main.MainDestinationSpec
 import io.github.darriousliu.han1meviewer.ui.navigation.main.MainNavDisplay
 import io.github.darriousliu.han1meviewer.ui.navigation.main.handleMainIntent
-import io.github.darriousliu.han1meviewer.ui.navigation.main.navigateDrawerDestination
+import io.github.darriousliu.han1meviewer.feature.main.navigateDrawerDestination
 import io.github.darriousliu.han1meviewer.core.navigation.navigateSafely
 import io.github.darriousliu.han1meviewer.core.navigation.rememberHanimeBackStack
 import io.github.darriousliu.han1meviewer.feature.home.HomePageViewModel
@@ -51,6 +51,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import kotlin.time.ExperimentalTime
+import io.github.darriousliu.han1meviewer.feature.main.MainActivityScaffold
 
 @OptIn(ExperimentalTime::class)
 @Composable

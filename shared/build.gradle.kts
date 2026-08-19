@@ -139,6 +139,7 @@ kotlin {
             api(project(":feature:settings"))
             api(project(":feature:home"))
             api(project(":feature:video"))
+            api(project(":feature:main"))
             implementation(libs.kotlinx.io.core)
             implementation(libs.ksoup)
             implementation(libs.htmlconverter)

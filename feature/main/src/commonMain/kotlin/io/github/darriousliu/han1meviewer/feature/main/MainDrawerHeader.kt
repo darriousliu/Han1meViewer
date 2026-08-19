@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.main
+package io.github.darriousliu.han1meviewer.feature.main
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable

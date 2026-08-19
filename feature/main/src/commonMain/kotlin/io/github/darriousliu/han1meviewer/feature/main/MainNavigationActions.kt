@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.navigation.main
+package io.github.darriousliu.han1meviewer.feature.main
 
 import androidx.navigation3.runtime.NavBackStack
 import io.github.darriousliu.han1meviewer.core.navigation.CreatorCenterRoute
