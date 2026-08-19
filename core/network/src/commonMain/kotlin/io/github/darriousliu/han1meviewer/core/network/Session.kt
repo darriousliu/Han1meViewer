@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer
+package io.github.darriousliu.han1meviewer.core.network
 
 import androidx.compose.runtime.Composable
 import io.github.darriousliu.han1meviewer.core.storage.Preferences.isAlreadyLogin

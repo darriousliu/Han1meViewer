@@ -135,6 +135,7 @@ kotlin {
             api(project(":feature:mylist"))
             api(project(":feature:download"))
             api(project(":feature:search"))
+            api(project(":feature:account"))
             implementation(libs.kotlinx.io.core)
             implementation(libs.ksoup)
             implementation(libs.htmlconverter)

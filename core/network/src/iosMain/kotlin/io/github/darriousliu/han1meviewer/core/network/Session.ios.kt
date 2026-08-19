@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer
+package io.github.darriousliu.han1meviewer.core.network
 
 import platform.Foundation.NSHTTPCookie
 import platform.Foundation.NSHTTPCookieStorage

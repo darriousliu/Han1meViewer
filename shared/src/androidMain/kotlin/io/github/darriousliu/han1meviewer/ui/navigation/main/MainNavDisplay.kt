@@ -71,12 +71,12 @@ import io.github.darriousliu.han1meviewer.ui.navigation.settings.NetworkSettings
 import io.github.darriousliu.han1meviewer.ui.navigation.settings.PlayerSettingsRouteScreen
 import io.github.darriousliu.han1meviewer.ui.navigation.settings.SettingsScaffold
 import io.github.darriousliu.han1meviewer.ui.navigation.settings.SharedHKeyframesRouteScreen
-import io.github.darriousliu.han1meviewer.ui.screen.account.AccountScreen
-import io.github.darriousliu.han1meviewer.ui.screen.account.AvatarCropScreen
+import io.github.darriousliu.han1meviewer.feature.account.AccountScreen
+import io.github.darriousliu.han1meviewer.feature.account.AvatarCropScreen
 import io.github.darriousliu.han1meviewer.ui.screen.home.CreatorCenterScreen
-import io.github.darriousliu.han1meviewer.ui.screen.web.CloudflareScreen
+import io.github.darriousliu.han1meviewer.feature.account.web.CloudflareScreen
 import io.github.darriousliu.han1meviewer.ui.viewmodel.CreatorCenterViewModel
-import io.github.darriousliu.han1meviewer.ui.viewmodel.UserAccountViewModel
+import io.github.darriousliu.han1meviewer.feature.account.UserAccountViewModel
 import io.github.vinceglb.filekit.PlatformFile
 import kotlinx.serialization.json.Json
 import io.github.darriousliu.han1meviewer.feature.history.WatchHistoryRouteScreen
@@ -87,6 +87,9 @@ import io.github.darriousliu.han1meviewer.feature.mylist.MyPlaylistRouteScreen
 import io.github.darriousliu.han1meviewer.feature.mylist.WatchLaterRouteScreen
 import io.github.darriousliu.han1meviewer.feature.mylist.FavVideoRouteScreen
 import io.github.darriousliu.han1meviewer.feature.search.SearchRouteScreen
+import org.koin.compose.viewmodel.koinViewModel
+import io.github.darriousliu.han1meviewer.feature.account.ManualCookiesRouteScreen
+import io.github.darriousliu.han1meviewer.feature.account.LoginRouteScreen
 
 @Composable
 fun MainNavDisplay(
@@ -227,7 +230,7 @@ fun MainNavDisplay(
             }
             entry<AccountRoute> {
                 val toaster = LocalToaster.current
-                val accountViewModel: UserAccountViewModel = viewModel()
+                val accountViewModel: UserAccountViewModel = koinViewModel()
                 ResultEffect<AvatarCropped> { result ->
                     accountViewModel.updateAvatar(result.jpeg, "avatar.jpg")
                 }

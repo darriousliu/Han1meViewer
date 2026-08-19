@@ -13,7 +13,7 @@ import io.github.darriousliu.han1meviewer.core.model.Announcement
 import io.github.darriousliu.han1meviewer.core.network.fetchPlatformAnnouncements
 import io.github.darriousliu.han1meviewer.core.common.state.PageState
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
-import io.github.darriousliu.han1meviewer.logout
+import io.github.darriousliu.han1meviewer.core.network.logout
 import io.github.darriousliu.han1meviewer.core.network.CsrfTokenStore
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.login_state_expired

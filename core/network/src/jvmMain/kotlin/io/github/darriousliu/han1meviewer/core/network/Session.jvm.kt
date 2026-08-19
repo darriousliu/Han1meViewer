@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer
+package io.github.darriousliu.han1meviewer.core.network
 
 import java.net.CookieHandler
 import java.net.CookieManager

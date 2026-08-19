@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.account
+package io.github.darriousliu.han1meviewer.feature.account
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -69,7 +69,6 @@ import io.github.darriousliu.han1meviewer.core.resource.icon.Visibility
 import io.github.darriousliu.han1meviewer.core.resource.icon.VisibilityOff
 import io.github.darriousliu.han1meviewer.core.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.core.ui.rememberRandomLoadingHint
-import io.github.darriousliu.han1meviewer.ui.viewmodel.UserAccountViewModel
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.account_stats_summary
 import io.github.darriousliu.han1meviewer.core.resource.bg_default_header

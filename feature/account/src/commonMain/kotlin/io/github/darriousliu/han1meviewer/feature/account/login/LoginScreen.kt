@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.login
+package io.github.darriousliu.han1meviewer.feature.account.login
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

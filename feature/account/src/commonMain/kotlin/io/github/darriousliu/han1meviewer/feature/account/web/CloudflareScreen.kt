@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.web
+package io.github.darriousliu.han1meviewer.feature.account.web
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

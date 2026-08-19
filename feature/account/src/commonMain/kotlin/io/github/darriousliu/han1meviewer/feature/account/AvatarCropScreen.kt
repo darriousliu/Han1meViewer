@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.account
+package io.github.darriousliu.han1meviewer.feature.account
 
 import androidx.compose.foundation.Canvas as DrawCanvas
 import androidx.compose.foundation.background

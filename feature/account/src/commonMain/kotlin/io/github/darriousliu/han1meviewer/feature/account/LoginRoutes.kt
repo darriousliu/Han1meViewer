@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.navigation.main
+package io.github.darriousliu.han1meviewer.feature.account
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -8,11 +8,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import io.github.darriousliu.han1meviewer.core.repository.NetworkRepo
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
-import io.github.darriousliu.han1meviewer.login
+import io.github.darriousliu.han1meviewer.core.network.login
 import io.github.darriousliu.han1meviewer.core.ui.component.LocalToaster
 import io.github.darriousliu.han1meviewer.core.ui.component.showShort
-import io.github.darriousliu.han1meviewer.ui.screen.login.LoginScreen
-import io.github.darriousliu.han1meviewer.ui.screen.login.ManualInputCookiesScreen
+import io.github.darriousliu.han1meviewer.feature.account.login.LoginScreen
+import io.github.darriousliu.han1meviewer.feature.account.login.ManualInputCookiesScreen
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.account_or_password_wrong
 import io.github.darriousliu.han1meviewer.core.resource.login_failed
