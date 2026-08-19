@@ -1,11 +1,28 @@
 package io.github.darriousliu.han1meviewer.ui.screen.video
 
+import android.app.PendingIntent
+import android.app.PictureInPictureParams
+import android.app.RemoteAction
+import android.content.Intent
+import android.graphics.drawable.Icon
+import android.util.Rational
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.Easing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.layout.boundsInWindow
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.google.firebase.Firebase
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -40,7 +57,11 @@ import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
 import io.github.darriousliu.han1meviewer.feature.video.VideoPageHost
 import io.github.darriousliu.han1meviewer.core.navigation.VideoRoute
 import io.github.darriousliu.han1meviewer.feature.video.player.HanimeVideoPlayer
+import io.github.darriousliu.han1meviewer.feature.video.player.PlaybackVisual
+import io.github.darriousliu.han1meviewer.feature.video.player.playbackVisualOf
+import io.github.darriousliu.han1meviewer.feature.video.player.rememberDeviceMediaControls
 import io.github.darriousliu.han1meviewer.feature.video.player.rememberVideoPlayerController
+import io.github.darriousliu.han1meviewer.util.OrientationManager
 import io.github.darriousliu.han1meviewer.feature.comment.CommentViewModel
 import io.github.darriousliu.han1meviewer.feature.video.VideoViewModel
 import io.github.darriousliu.han1meviewer.core.common.exception.ParseException
@@ -114,6 +135,119 @@ fun Media3VideoRouteHostScreen(
     var showAddHKeyframeDialog by remember(route) { mutableStateOf<Pair<Long, String>?>(null) }
     val hKeyframes by viewModel.hKeyframes.collectAsStateWithLifecycle()
     val hostUiState by viewModel.videoHostUiStateFlow.collectAsStateWithLifecycle()
+
+    // ---- 全屏 / 方向 / PiP ----
+    var isFullscreen by rememberSaveable(route.videoCode, route.localUri) { mutableStateOf(false) }
+    val fullscreenEnterFraction = remember { Animatable(1f) }
+    var playerBounds by remember { mutableStateOf<Rect?>(null) }
+    var lastAutoFullscreenAt by remember { mutableLongStateOf(0L) }
+    val deviceControls = rememberDeviceMediaControls()
+    val isPortraitVideo = controller.videoSize.let { it != IntSize.Zero && it.height > it.width }
+
+    val orientationListener = remember {
+        mutableStateOf<(OrientationManager.ScreenOrientation) -> Unit>({})
+    }
+    val orientationManager = remember(activity) {
+        OrientationManager(activity) { orientation -> orientationListener.value(orientation) }
+    }
+    val screenBridge = remember(activity, orientationManager) {
+        AndroidPlayerScreenController(activity, orientationManager)
+    }
+
+    fun enterFullscreen() {
+        if (isFullscreen) return
+        isFullscreen = true
+        screenBridge.onEnterFullscreen(portraitVideo = isPortraitVideo)
+    }
+
+    fun exitFullscreen() {
+        if (!isFullscreen) return
+        isFullscreen = false
+        screenBridge.onExitFullscreen()
+        // 全屏里调过的亮度还给系统（HJzvdStd :882-890 的快照还原语义）
+        deviceControls.restoreSystemBrightness()
+    }
+
+    // 重力感应自动进出全屏（条件照旧宿主 :359-375；2 秒防抖只作用于进入）
+    SideEffect {
+        orientationListener.value = listener@{ orientation ->
+            if (Preferences.tabletMode) return@listener
+            val visual = playbackVisualOf(controller)
+            val playingOrPaused =
+                visual == PlaybackVisual.Playing || visual == PlaybackVisual.Paused
+            if (!playingOrPaused || isPortraitVideo) return@listener
+            if (orientation.isLandscape && !isFullscreen) {
+                val now = System.currentTimeMillis()
+                if (now - lastAutoFullscreenAt > 2000) {
+                    lastAutoFullscreenAt = now
+                    enterFullscreen()
+                }
+            } else if (orientation == OrientationManager.ScreenOrientation.PORTRAIT && isFullscreen) {
+                exitFullscreen()
+            }
+        }
+    }
+
+    DisposableEffect(lifecycleOwner, orientationManager) {
+        lifecycleOwner.lifecycle.addObserver(orientationManager)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(orientationManager)
+            orientationManager.disable()
+        }
+    }
+
+    // 全屏状态下直接退出页面：方向与系统栏必须解锁
+    DisposableEffect(screenBridge) {
+        onDispose {
+            if (isFullscreen) {
+                screenBridge.onExitFullscreen()
+            }
+        }
+    }
+
+    // 竖屏视频入场动画：SurfaceView 不吃 graphicsLayer，动容器高度 0.5→1（300ms 减速）
+    LaunchedEffect(isFullscreen) {
+        if (isFullscreen && isPortraitVideo) {
+            fullscreenEnterFraction.snapTo(0.5f)
+            fullscreenEnterFraction.animateTo(1f, tween(300, easing = DecelerateEasing))
+        } else {
+            fullscreenEnterFraction.snapTo(1f)
+        }
+    }
+
+    BackHandler(enabled = isFullscreen) { exitFullscreen() }
+
+    fun buildPipParams(sourceRect: android.graphics.Rect?): PictureInPictureParams {
+        val isPlaying = controller.isPlaying
+        val icon = Icon.createWithResource(
+            activity,
+            if (isPlaying) R.drawable.ic_pip_pause_24 else R.drawable.ic_pip_play_arrow_24,
+        )
+        val intent = PendingIntent.getBroadcast(
+            activity,
+            0,
+            Intent(MainActivity.ACTION_TOGGLE_PLAY).setPackage(activity.packageName),
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
+        )
+        val action = RemoteAction(
+            icon,
+            activity.getString(R.string.play_pause),
+            activity.getString(R.string.play_pause),
+            intent,
+        )
+        return PictureInPictureParams.Builder()
+            .setAspectRatio(Rational(16, 9))
+            .setActions(listOf(action))
+            .apply { if (sourceRect != null) setSourceRectHint(sourceRect) }
+            .build()
+    }
+
+    // PiP 中播放状态变化时刷新 RemoteAction 图标（旧宿主 updatePipAction）
+    LaunchedEffect(controller.isPlaying, hostUiState.isInPipMode) {
+        if (hostUiState.isInPipMode) {
+            activity.setPictureInPictureParams(buildPipParams(null))
+        }
+    }
 
     val stringLongPressShare = remember(activity) {
         activity.getString(R.string.long_press_share_to_copy)
@@ -191,7 +325,12 @@ fun Media3VideoRouteHostScreen(
                     }
                 }
 
-                Lifecycle.Event.ON_STOP -> controller.pause()
+                Lifecycle.Event.ON_STOP -> {
+                    if (!activity.isInPictureInPictureMode) {
+                        exitFullscreen()
+                    }
+                    controller.pause()
+                }
 
                 else -> Unit
             }
@@ -262,10 +401,22 @@ fun Media3VideoRouteHostScreen(
                 controller.isPlaying ||
                         (controller.durationMs > 0 && !controller.isEnded && controller.error == null)
 
-            override fun enterPipMode() = Unit          // 25-5 补
+            override fun enterPipMode() {
+                val rect = playerBounds?.let {
+                    android.graphics.Rect(
+                        it.left.toInt(), it.top.toInt(), it.right.toInt(), it.bottom.toInt(),
+                    )
+                }
+                activity.enterPictureInPictureMode(buildPipParams(rect))
+            }
+
             override fun onPipModeChanged(isInPip: Boolean) = viewModel.setPipMode(isInPip)
+
             override fun togglePlayPause() {
                 if (controller.isPlaying) controller.pause() else controller.play()
+                if (activity.isInPictureInPictureMode) {
+                    activity.setPictureInPictureParams(buildPipParams(null))
+                }
             }
         }
     }
@@ -296,10 +447,15 @@ fun Media3VideoRouteHostScreen(
             },
             hKeyframes = hKeyframes,
             savedProgressMs = savedProgressMs,
-            isFullscreen = false,
-            onToggleFullscreen = { /* P3 全屏批接线 */ },
+            isFullscreen = isFullscreen,
+            onToggleFullscreen = {
+                if (isFullscreen) exitFullscreen() else enterFullscreen()
+            },
             onBack = { activity.onBackPressedDispatcher.onBackPressed() },
-            onGoHome = { activity.navBackStack.popTo(HomeRoute) },
+            onGoHome = {
+                exitFullscreen()
+                activity.navBackStack.popTo(HomeRoute)
+            },
             isInPip = hostUiState.isInPipMode,
             hasPlayableSource = hasPlayableSource,
             onBlockedPlayClick = {
@@ -310,9 +466,14 @@ fun Media3VideoRouteHostScreen(
             onRequestAddKeyframe = { position ->
                 showAddHKeyframeDialog = position to (title.ifBlank { "Untitled" })
             },
-            modifier = Modifier.fillMaxWidth().height(250.dp),
+            modifier = (if (isFullscreen) {
+                // 竖屏视频入场时高度 0.5→1（顶部对齐即 pivotY=0 语义）
+                Modifier.fillMaxWidth().fillMaxHeight(fullscreenEnterFraction.value)
+            } else {
+                Modifier.fillMaxWidth().height(250.dp)
+            }).onGloballyPositioned { playerBounds = it.boundsInWindow() },
         )
-        VideoRouteContent(
+        if (!isFullscreen) VideoRouteContent(
             videoCode = route.videoCode,
             videoState = videoState,
             videoViewModel = viewModel,
@@ -399,6 +560,9 @@ fun Media3VideoRouteHostScreen(
  * `Int?`，再和 `-1` 比——null 的时候 `null != -1` 为真，会走进「找到了」的分支再靠
  * 内层 null 检查兜住。这里直接按 key 取，找不到显式回落。
  */
+/** `DecelerateInterpolator(1f)` 的等价 easing（HJzvdStd :975-986 的入场动画曲线）。 */
+private val DecelerateEasing = Easing { fraction -> 1f - (1f - fraction) * (1f - fraction) }
+
 private fun ResolutionLinkMap.pickPreferredEntry(): Pair<String, String>? {
     if (isEmpty()) return null
     val preferred = Preferences.videoQuality
