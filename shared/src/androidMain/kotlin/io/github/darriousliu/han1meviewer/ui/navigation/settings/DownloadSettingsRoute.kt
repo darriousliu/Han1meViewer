@@ -31,7 +31,7 @@ import io.github.darriousliu.han1meviewer.core.ui.component.ConfirmDialog
 import io.github.darriousliu.han1meviewer.core.ui.component.TripleButtonDialog
 import io.github.darriousliu.han1meviewer.feature.settings.DownloadSettingsScreen
 import io.github.darriousliu.han1meviewer.feature.settings.DownloadSettingsUiState
-import io.github.darriousliu.han1meviewer.util.SafFileManager
+import io.github.darriousliu.han1meviewer.core.storage.SafFileManager
 import io.github.darriousliu.han1meviewer.util.showToast
 import io.github.darriousliu.han1meviewer.worker.HanimeDownloadManagerV2
 import io.github.darriousliu.han1meviewer.feature.settings.toDownloadCountLimitPrettyString

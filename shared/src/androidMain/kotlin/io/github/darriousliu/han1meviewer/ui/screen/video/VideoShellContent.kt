@@ -37,6 +37,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import io.github.darriousliu.han1meviewer.core.model.HanimeInfo
+import io.github.darriousliu.han1meviewer.feature.video.RelatedVideosSection
 
 @Composable
 fun VideoShellContent(

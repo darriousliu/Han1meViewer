@@ -14,6 +14,7 @@ import io.github.darriousliu.han1meviewer.R
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import io.github.darriousliu.han1meviewer.core.common.util.dpF
+import io.github.darriousliu.han1meviewer.core.common.util.activity
 
 fun Context.getDialogDefaultDrawable(): Drawable {
     val color = MaterialColors.getColor(

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="save_failed_title">Save Failed</string>
+    <string name="save_failed_message">Due to external storage permissions or other reasons, the video info file failed to save.\nAutomatically switched to app private path.\nIf you reinstalled the app, try cleaning the Download/Han1meViewer directory and switch download location in settings. Otherwise, continue using private directory and please move out files before uninstalling or clearing data!</string>
+    <string name="understood">Understood</string>
+</resources>

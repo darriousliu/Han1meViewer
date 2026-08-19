@@ -25,12 +25,12 @@ import io.github.darriousliu.han1meviewer.core.storage.dao.CheckInRecordDatabase
 import io.github.darriousliu.han1meviewer.core.model.SearchOption
 import io.github.darriousliu.han1meviewer.core.common.state.VideoLoadingState
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
-import io.github.darriousliu.han1meviewer.ui.bridge.VideoPageHost
+import io.github.darriousliu.han1meviewer.feature.video.VideoPageHost
 import io.github.darriousliu.han1meviewer.core.navigation.VideoRoute
-import io.github.darriousliu.han1meviewer.ui.screen.video.player.HanimeVideoPlayer
-import io.github.darriousliu.han1meviewer.ui.screen.video.player.rememberVideoPlayerController
+import io.github.darriousliu.han1meviewer.feature.video.player.HanimeVideoPlayer
+import io.github.darriousliu.han1meviewer.feature.video.player.rememberVideoPlayerController
 import io.github.darriousliu.han1meviewer.feature.comment.CommentViewModel
-import io.github.darriousliu.han1meviewer.ui.viewmodel.VideoViewModel
+import io.github.darriousliu.han1meviewer.feature.video.VideoViewModel
 import io.github.darriousliu.han1meviewer.core.common.util.copyToClipboard
 import io.github.darriousliu.han1meviewer.core.common.util.loadBundledJson
 import io.github.darriousliu.han1meviewer.core.common.util.localizedTextOrNull
@@ -39,6 +39,8 @@ import io.github.darriousliu.han1meviewer.util.showShortToast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import io.github.darriousliu.han1meviewer.feature.video.DownloadPromptState
+import io.github.darriousliu.han1meviewer.feature.video.VideoRouteContent
 
 /**
  * Media3 + Compose 的视频页宿主。

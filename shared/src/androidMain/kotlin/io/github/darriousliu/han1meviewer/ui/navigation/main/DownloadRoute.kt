@@ -18,9 +18,9 @@ import io.github.darriousliu.han1meviewer.core.ui.component.ConfirmDialog
 import io.github.darriousliu.han1meviewer.feature.download.DownloadScreen
 import io.github.darriousliu.han1meviewer.feature.download.DownloadEvent
 import io.github.darriousliu.han1meviewer.feature.download.DownloadViewModel
-import io.github.darriousliu.han1meviewer.util.SafFileManager
-import io.github.darriousliu.han1meviewer.util.SafFileManager.checkSafPermissions
-import io.github.darriousliu.han1meviewer.util.SafFileManager.scanAndImportHanimeDownloads
+import io.github.darriousliu.han1meviewer.core.storage.SafFileManager
+import io.github.darriousliu.han1meviewer.core.storage.SafFileManager.checkSafPermissions
+import io.github.darriousliu.han1meviewer.core.storage.SafFileManager.scanAndImportHanimeDownloads
 import io.github.darriousliu.han1meviewer.core.common.util.application
 import io.github.darriousliu.han1meviewer.util.openDownloadedHanimeVideoLocally
 import io.github.darriousliu.han1meviewer.util.showLongToast

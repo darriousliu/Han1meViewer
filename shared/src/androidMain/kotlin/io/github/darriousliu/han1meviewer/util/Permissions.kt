@@ -9,6 +9,7 @@ import android.provider.Settings
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import io.github.darriousliu.han1meviewer.R
+import io.github.darriousliu.han1meviewer.core.common.util.requireComponentActivity
 /**
  * 獲得發送通知權限
  */

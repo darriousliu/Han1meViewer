@@ -12,9 +12,10 @@ import com.google.android.material.button.MaterialButton
 import io.github.darriousliu.han1meviewer.R
 import io.github.darriousliu.han1meviewer.core.storage.entity.HKeyframeEntity
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
-import io.github.darriousliu.han1meviewer.util.findActivityOrNull
+import io.github.darriousliu.han1meviewer.core.common.util.findActivityOrNull
 import io.github.darriousliu.han1meviewer.util.showAlertDialog
 import io.github.darriousliu.han1meviewer.util.showShortToast
+import io.github.darriousliu.han1meviewer.core.common.util.findActivityOrNull
 
 /**
  * @project Han1meViewer

@@ -27,8 +27,8 @@ import com.google.android.material.textview.MaterialTextView
 import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.R
 import io.github.darriousliu.han1meviewer.core.storage.dao.download.HanimeDownloadDao
-import io.github.darriousliu.han1meviewer.util.SafFileManager.checkSafPermissions
-import io.github.darriousliu.han1meviewer.util.SafFileManager.migratePrivateToSaf
+import io.github.darriousliu.han1meviewer.core.storage.SafFileManager.checkSafPermissions
+import io.github.darriousliu.han1meviewer.core.storage.SafFileManager.migratePrivateToSaf
 import io.github.darriousliu.han1meviewer.util.showAlertDialog
 import io.github.darriousliu.han1meviewer.util.showLongToast
 import io.github.darriousliu.han1meviewer.util.showShortToast

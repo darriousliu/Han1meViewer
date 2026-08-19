@@ -6,7 +6,7 @@ import android.provider.Settings
 import android.widget.Toast
 import androidx.core.net.toUri
 import io.github.darriousliu.han1meviewer.feature.search.HAdvancedSearch
-import io.github.darriousliu.han1meviewer.HCacheManager
+import io.github.darriousliu.han1meviewer.feature.video.HCacheManager
 import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.R
 import io.github.darriousliu.han1meviewer.core.storage.getHanimeVideoDownloadLink
@@ -16,7 +16,7 @@ import io.github.darriousliu.han1meviewer.core.model.SearchOption
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
 import io.github.darriousliu.han1meviewer.core.navigation.SearchRoute
 import io.github.darriousliu.han1meviewer.core.navigation.navigateSafely
-import io.github.darriousliu.han1meviewer.ui.viewmodel.VideoViewModel
+import io.github.darriousliu.han1meviewer.feature.video.VideoViewModel
 import io.github.darriousliu.han1meviewer.util.browse
 import io.github.darriousliu.han1meviewer.core.common.util.copyToClipboard
 import io.github.darriousliu.han1meviewer.util.requestPostNotificationPermission
@@ -30,6 +30,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
+import io.github.darriousliu.han1meviewer.feature.video.DownloadPromptState
 
 class VideoRouteActions(
     private val context: Context,

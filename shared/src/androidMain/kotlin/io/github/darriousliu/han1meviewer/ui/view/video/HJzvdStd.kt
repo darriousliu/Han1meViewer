@@ -59,7 +59,7 @@ import io.github.darriousliu.han1meviewer.core.navigation.HomeRoute
 import io.github.darriousliu.han1meviewer.core.navigation.popTo
 import io.github.darriousliu.han1meviewer.util.OrientationManager
 import io.github.darriousliu.han1meviewer.core.common.util.appScreenWidth
-import io.github.darriousliu.han1meviewer.util.findActivityOrNull
+import io.github.darriousliu.han1meviewer.core.common.util.findActivityOrNull
 import io.github.darriousliu.han1meviewer.core.common.util.navBarHeight
 import io.github.darriousliu.han1meviewer.util.removeItself
 import io.github.darriousliu.han1meviewer.util.setStateViewLayout
@@ -68,6 +68,8 @@ import io.github.darriousliu.han1meviewer.core.common.util.statusBarHeight
 import java.util.Timer
 import kotlin.math.absoluteValue
 import io.github.darriousliu.han1meviewer.core.common.util.applicationContext
+import io.github.darriousliu.han1meviewer.core.common.util.findActivityOrNull
+import io.github.darriousliu.han1meviewer.core.common.util.activity
 
 /**
  * @project Hanime1

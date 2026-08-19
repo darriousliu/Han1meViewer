@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="save_failed_title">保存失敗</string>
+    <string name="save_failed_message">外部ストレージ権限或其他原因により、動画情報ファイル保存失敗。\n自動でアプリプライベートパスに切替。\nアプリ再インストールの場合はDownload/Han1meViewerディレクトリ削除後、設定でダウンロード場所切替再試行。否则プライベートディレクトリ使用継続。アプリ削除或データクリア前にはファイル移出必須！</string>
+    <string name="understood">了解</string>
+</resources>

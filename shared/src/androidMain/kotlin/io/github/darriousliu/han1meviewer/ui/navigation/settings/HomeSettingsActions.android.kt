@@ -15,7 +15,7 @@ import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.ui.viewmodel.AppViewModel
 import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.util.ThemeUtils
-import io.github.darriousliu.han1meviewer.util.activity
+import io.github.darriousliu.han1meviewer.core.common.util.activity
 import io.github.darriousliu.han1meviewer.util.restartApplication
 import kotlinx.coroutines.flow.StateFlow
 import io.github.darriousliu.han1meviewer.core.common.util.applicationContext

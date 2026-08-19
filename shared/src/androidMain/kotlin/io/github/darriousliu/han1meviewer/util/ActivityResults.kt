@@ -14,6 +14,7 @@ import kotlinx.coroutines.withContext
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+import io.github.darriousliu.han1meviewer.core.common.util.requireComponentActivity
 
 private val activityResultRequestId = AtomicInteger()
 

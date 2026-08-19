@@ -61,7 +61,7 @@ import io.github.darriousliu.han1meviewer.core.common.exception.ParseException
 import io.github.darriousliu.han1meviewer.core.model.SearchOption
 import io.github.darriousliu.han1meviewer.core.common.state.VideoLoadingState
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
-import io.github.darriousliu.han1meviewer.ui.bridge.VideoPageHost
+import io.github.darriousliu.han1meviewer.feature.video.VideoPageHost
 import io.github.darriousliu.han1meviewer.core.ui.component.ConfirmDialog
 import io.github.darriousliu.han1meviewer.core.navigation.VideoRoute
 import io.github.darriousliu.han1meviewer.ui.view.video.ExoMediaKernel
@@ -70,7 +70,7 @@ import io.github.darriousliu.han1meviewer.ui.view.video.HMediaKernel
 import io.github.darriousliu.han1meviewer.ui.view.video.HanimeDataSource
 import io.github.darriousliu.han1meviewer.ui.view.video.VideoPlayerAppBarBehavior
 import io.github.darriousliu.han1meviewer.feature.comment.CommentViewModel
-import io.github.darriousliu.han1meviewer.ui.viewmodel.VideoViewModel
+import io.github.darriousliu.han1meviewer.feature.video.VideoViewModel
 import io.github.darriousliu.han1meviewer.util.OrientationManager
 import io.github.darriousliu.han1meviewer.util.browse
 import io.github.darriousliu.han1meviewer.util.checkBadGuy
@@ -86,6 +86,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.getString
 import kotlin.time.ExperimentalTime
+import io.github.darriousliu.han1meviewer.feature.video.DownloadPromptState
+import io.github.darriousliu.han1meviewer.feature.video.VideoRouteContent
 
 @OptIn(ExperimentalTime::class)
 @Composable
