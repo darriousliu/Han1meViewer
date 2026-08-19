@@ -1,7 +1,6 @@
 package io.github.darriousliu.han1meviewer.feature.video.player
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -25,7 +24,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
@@ -75,6 +73,8 @@ fun HanimeVideoPlayer(
     environment: PlayerEnvironment = NoopPlayerEnvironment,
 ) {
     val uiState = rememberPlayerUiState(controller)
+    val gestureState = rememberPlayerGestureState()
+    val deviceControls = rememberDeviceMediaControls()
     val toaster = LocalToaster.current
     val pauseThenLongPressHint = stringResource(Res.string.pause_then_long_press)
 
@@ -135,13 +135,15 @@ fun HanimeVideoPlayer(
             return@Box
         }
 
-        // 单击层：P2 会换成完整手势层（进度/亮度/音量/双击/长按倍速）
-        Box(
-            Modifier
-                .fillMaxSize()
-                .pointerInput(uiState) {
-                    detectTapGestures(onTap = { uiState.toggleControls() })
-                }
+        PlayerGestureLayer(
+            controller = controller,
+            uiState = uiState,
+            gestureState = gestureState,
+            deviceControls = deviceControls,
+            onDoubleTapPlayPause = {
+                if (controller.isPlaying) controller.pause() else controller.play()
+            },
+            modifier = Modifier.fillMaxSize(),
         )
 
         if (visibility.topBar) {
@@ -277,6 +279,14 @@ fun HanimeVideoPlayer(
             hKeyframes = hKeyframes,
             onSeekToKeyframe = { position -> controller.seekTo(position) },
             onDismiss = { uiState.dismissMenu() },
+            modifier = Modifier.fillMaxSize(),
+        )
+
+        GestureIndicatorOverlay(
+            visible = gestureState.indicatorVisible,
+            type = gestureState.indicatorType,
+            percent = gestureState.indicatorPercent,
+            text = gestureState.indicatorText,
             modifier = Modifier.fillMaxSize(),
         )
     }
