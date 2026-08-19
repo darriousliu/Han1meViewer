@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.logic
+package io.github.darriousliu.han1meviewer.feature.download
 
 import io.github.darriousliu.han1meviewer.core.storage.entity.download.VideoWithCategories
 

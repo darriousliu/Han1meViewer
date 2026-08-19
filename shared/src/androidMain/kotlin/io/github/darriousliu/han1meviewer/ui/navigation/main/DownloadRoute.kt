@@ -15,9 +15,9 @@ import io.github.darriousliu.han1meviewer.core.storage.dao.DownloadDatabase
 import io.github.darriousliu.han1meviewer.core.storage.entity.download.HanimeDownloadEntity
 import io.github.darriousliu.han1meviewer.core.storage.entity.download.VideoWithCategories
 import io.github.darriousliu.han1meviewer.core.ui.component.ConfirmDialog
-import io.github.darriousliu.han1meviewer.ui.screen.home.DownloadScreen
-import io.github.darriousliu.han1meviewer.ui.screen.home.download.DownloadEvent
-import io.github.darriousliu.han1meviewer.ui.viewmodel.DownloadViewModel
+import io.github.darriousliu.han1meviewer.feature.download.DownloadScreen
+import io.github.darriousliu.han1meviewer.feature.download.DownloadEvent
+import io.github.darriousliu.han1meviewer.feature.download.DownloadViewModel
 import io.github.darriousliu.han1meviewer.util.SafFileManager
 import io.github.darriousliu.han1meviewer.util.SafFileManager.checkSafPermissions
 import io.github.darriousliu.han1meviewer.util.SafFileManager.scanAndImportHanimeDownloads
@@ -28,6 +28,7 @@ import io.github.darriousliu.han1meviewer.worker.HanimeDownloadManagerV2
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun DownloadRouteScreen(
@@ -36,7 +37,7 @@ fun DownloadRouteScreen(
     onNavigateToLocalVideo: (String, String?) -> Unit,
 ) {
     val context = LocalContext.current
-    val viewModel: DownloadViewModel = viewModel()
+    val viewModel: DownloadViewModel = koinViewModel()
     val scope = rememberCoroutineScope()
     val dao = remember { DownloadDatabase.instance.hanimeDownloadDao }
     var showVideoNotExistConfirm by remember { mutableStateOf<VideoWithCategories?>(null) }

@@ -133,6 +133,7 @@ kotlin {
             api(project(":feature:comment"))
             api(project(":feature:preview"))
             api(project(":feature:mylist"))
+            api(project(":feature:download"))
             implementation(libs.kotlinx.io.core)
             implementation(libs.ksoup)
             implementation(libs.htmlconverter)

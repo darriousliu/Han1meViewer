@@ -1,9 +1,8 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.download
+package io.github.darriousliu.han1meviewer.feature.download
 
 import io.github.darriousliu.han1meviewer.core.storage.entity.download.DownloadGroupEntity
 import io.github.darriousliu.han1meviewer.core.storage.entity.download.HanimeDownloadEntity
 import io.github.darriousliu.han1meviewer.core.storage.entity.download.VideoWithCategories
-import io.github.darriousliu.han1meviewer.logic.DownloadedNode
 
 /**
  * 下载页面 UI 状态。

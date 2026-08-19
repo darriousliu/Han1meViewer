@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.download
+package io.github.darriousliu.han1meviewer.feature.download
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -36,15 +36,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.darriousliu.han1meviewer.core.storage.entity.download.DownloadGroupEntity
 import io.github.darriousliu.han1meviewer.core.storage.entity.download.VideoWithCategories
-import io.github.darriousliu.han1meviewer.logic.DownloadHeaderNode
-import io.github.darriousliu.han1meviewer.logic.DownloadItemNode
 import io.github.darriousliu.han1meviewer.core.ui.component.ConfirmDialog
 import io.github.darriousliu.han1meviewer.core.ui.component.content.EmptyContent
 import io.github.darriousliu.han1meviewer.core.ui.component.lazy.LazyColumn
 import io.github.darriousliu.han1meviewer.core.resource.icon.DriveFileMove
 import io.github.darriousliu.han1meviewer.core.ui.preview.ComponentPreview
-import io.github.darriousliu.han1meviewer.ui.preview.fakeDownloadedGroups
-import io.github.darriousliu.han1meviewer.ui.preview.fakeDownloadedNodes
+import io.github.darriousliu.han1meviewer.feature.download.fakeDownloadedGroups
+import io.github.darriousliu.han1meviewer.feature.download.fakeDownloadedNodes
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.cancel
 import io.github.darriousliu.han1meviewer.core.resource.close

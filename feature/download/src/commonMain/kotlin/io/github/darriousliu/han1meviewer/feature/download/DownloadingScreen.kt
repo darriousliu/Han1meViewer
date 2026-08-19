@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.download
+package io.github.darriousliu.han1meviewer.feature.download
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

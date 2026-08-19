@@ -1,11 +1,8 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.download
+package io.github.darriousliu.han1meviewer.feature.download
 
 import androidx.compose.runtime.Composable
 import io.github.darriousliu.han1meviewer.core.storage.entity.download.DownloadGroupEntity
 import io.github.darriousliu.han1meviewer.core.storage.entity.download.VideoWithCategories
-import io.github.darriousliu.han1meviewer.logic.DownloadHeaderNode
-import io.github.darriousliu.han1meviewer.logic.DownloadItemNode
-import io.github.darriousliu.han1meviewer.logic.DownloadedNode
 import io.github.darriousliu.han1meviewer.core.common.state.DownloadState
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.already_in_queue

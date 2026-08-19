@@ -6,6 +6,7 @@ import io.github.darriousliu.han1meviewer.feature.subscription.SubscriptionModul
 import io.github.darriousliu.han1meviewer.feature.comment.CommentModule
 import io.github.darriousliu.han1meviewer.feature.preview.PreviewModule
 import io.github.darriousliu.han1meviewer.feature.mylist.MylistModule
+import io.github.darriousliu.han1meviewer.feature.download.DownloadModule
 import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
 
@@ -18,6 +19,6 @@ import org.koin.core.annotation.Module
  * 拆模块之后每个 core/feature 模块会有自己的 `@Module`，各扫各的包，
  * 这里改成汇总它们。
  */
-@Module(includes = [CheckinModule::class, HistoryModule::class, SubscriptionModule::class, CommentModule::class, PreviewModule::class, MylistModule::class])
+@Module(includes = [CheckinModule::class, HistoryModule::class, SubscriptionModule::class, CommentModule::class, PreviewModule::class, MylistModule::class, DownloadModule::class])
 @ComponentScan("io.github.darriousliu.han1meviewer")
 class AppModule

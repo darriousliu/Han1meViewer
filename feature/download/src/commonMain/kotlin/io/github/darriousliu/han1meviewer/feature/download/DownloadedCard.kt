@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.download
+package io.github.darriousliu.han1meviewer.feature.download
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -41,9 +41,8 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import io.github.darriousliu.han1meviewer.core.common.LOCAL_DATE_TIME_FORMAT
 import io.github.darriousliu.han1meviewer.core.storage.entity.download.VideoWithCategories
-import io.github.darriousliu.han1meviewer.logic.DownloadHeaderNode
 import io.github.darriousliu.han1meviewer.core.ui.preview.ComponentPreview
-import io.github.darriousliu.han1meviewer.ui.preview.fakeDownloadedNodes
+import io.github.darriousliu.han1meviewer.feature.download.fakeDownloadedNodes
 import io.github.darriousliu.han1meviewer.core.common.util.formatFileSizeV2
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.collapse
@@ -348,7 +347,7 @@ private fun PreviewDownloadGroupHeader() {
 @Composable
 private fun PreviewDownloadedVideoCard() {
     val node = fakeDownloadedNodes
-        .filterIsInstance<io.github.darriousliu.han1meviewer.logic.DownloadItemNode>()
+        .filterIsInstance<io.github.darriousliu.han1meviewer.feature.download.DownloadItemNode>()
         .firstOrNull()?.data
         ?: return
     ComponentPreview {
