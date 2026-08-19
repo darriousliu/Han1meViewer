@@ -11,6 +11,7 @@ import io.github.darriousliu.han1meviewer.convention.createAndroidJvmMain
 plugins {
     id("han1me.kmp.compose")
     alias(libs.plugins.org.jetbrains.kotlin.plugin.parcelize)
+    alias(libs.plugins.org.jetbrains.kotlin.plugin.serialization)
     alias(libs.plugins.buildkonfig)
 }
 

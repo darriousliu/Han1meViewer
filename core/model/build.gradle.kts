@@ -1,6 +1,7 @@
 plugins {
     id("han1me.kmp.compose")
     alias(libs.plugins.org.jetbrains.kotlin.plugin.parcelize)
+    alias(libs.plugins.org.jetbrains.kotlin.plugin.serialization)
 }
 
 kotlin {
