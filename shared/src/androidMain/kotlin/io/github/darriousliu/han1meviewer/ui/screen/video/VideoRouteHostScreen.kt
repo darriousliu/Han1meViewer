@@ -48,36 +48,38 @@ import com.google.firebase.Firebase
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
 import com.google.firebase.analytics.logEvent
-import io.github.darriousliu.han1meviewer.core.firebase.FirebaseConstants
 import io.github.darriousliu.han1meviewer.PermissionRequester
-import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.R
-import io.github.darriousliu.han1meviewer.core.storage.getHanimeVideoLink
+import io.github.darriousliu.han1meviewer.core.common.exception.ParseException
+import io.github.darriousliu.han1meviewer.core.common.state.VideoLoadingState
+import io.github.darriousliu.han1meviewer.core.common.util.copyToClipboard
+import io.github.darriousliu.han1meviewer.core.common.util.dpPx
+import io.github.darriousliu.han1meviewer.core.common.util.loadBundledJson
+import io.github.darriousliu.han1meviewer.core.common.util.localizedTextOrNull
+import io.github.darriousliu.han1meviewer.core.firebase.FirebaseConstants
+import io.github.darriousliu.han1meviewer.core.model.SearchOption
+import io.github.darriousliu.han1meviewer.core.navigation.VideoRoute
 import io.github.darriousliu.han1meviewer.core.repository.DatabaseRepo
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.core.storage.dao.CheckInRecordDatabase
 import io.github.darriousliu.han1meviewer.core.storage.entity.HKeyframeEntity
 import io.github.darriousliu.han1meviewer.core.storage.entity.WatchHistoryEntity
-import io.github.darriousliu.han1meviewer.core.common.exception.ParseException
-import io.github.darriousliu.han1meviewer.core.model.SearchOption
-import io.github.darriousliu.han1meviewer.core.common.state.VideoLoadingState
-import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
-import io.github.darriousliu.han1meviewer.feature.video.VideoPageHost
+import io.github.darriousliu.han1meviewer.core.storage.getHanimeVideoLink
 import io.github.darriousliu.han1meviewer.core.ui.component.ConfirmDialog
-import io.github.darriousliu.han1meviewer.core.navigation.VideoRoute
+import io.github.darriousliu.han1meviewer.feature.comment.CommentViewModel
+import io.github.darriousliu.han1meviewer.feature.video.DownloadPromptState
+import io.github.darriousliu.han1meviewer.feature.video.VideoPageHost
+import io.github.darriousliu.han1meviewer.feature.video.VideoRouteContent
+import io.github.darriousliu.han1meviewer.feature.video.VideoViewModel
+import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
 import io.github.darriousliu.han1meviewer.ui.view.video.ExoMediaKernel
 import io.github.darriousliu.han1meviewer.ui.view.video.HJzvdStd
 import io.github.darriousliu.han1meviewer.ui.view.video.HMediaKernel
 import io.github.darriousliu.han1meviewer.ui.view.video.HanimeDataSource
 import io.github.darriousliu.han1meviewer.ui.view.video.VideoPlayerAppBarBehavior
-import io.github.darriousliu.han1meviewer.feature.comment.CommentViewModel
-import io.github.darriousliu.han1meviewer.feature.video.VideoViewModel
 import io.github.darriousliu.han1meviewer.util.OrientationManager
 import io.github.darriousliu.han1meviewer.util.browse
 import io.github.darriousliu.han1meviewer.util.checkBadGuy
-import io.github.darriousliu.han1meviewer.core.common.util.copyToClipboard
-import io.github.darriousliu.han1meviewer.core.common.util.dpPx
-import io.github.darriousliu.han1meviewer.core.common.util.loadBundledJson
-import io.github.darriousliu.han1meviewer.core.common.util.localizedTextOrNull
 import io.github.darriousliu.han1meviewer.util.shareText
 import io.github.darriousliu.han1meviewer.util.showShortToast
 import io.github.darriousliu.han1meviewer.util.startActivity
@@ -86,8 +88,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.getString
 import kotlin.time.ExperimentalTime
-import io.github.darriousliu.han1meviewer.feature.video.DownloadPromptState
-import io.github.darriousliu.han1meviewer.feature.video.VideoRouteContent
 
 @OptIn(ExperimentalTime::class)
 @Composable
@@ -567,7 +567,7 @@ fun VideoRouteHostScreen(
         isTabletMode = Preferences.tabletMode,
         isInPipMode = hostUiState.isInPipMode,
         relatedItems = relatedItems,
-        onHideRelatedInIntroChange = { viewModel.setHideRelatedInIntro(it) },
+        onHideRelatedInIntroChange = { viewModel.hideRelatedInIntro(it) },
         onSideRelatedCollapsedChange = { isSideRelatedCollapsed = it },
         onOpenVideo = { item -> activity.showVideoDetailFragment(item.videoCode) },
         mainHostFactory = {

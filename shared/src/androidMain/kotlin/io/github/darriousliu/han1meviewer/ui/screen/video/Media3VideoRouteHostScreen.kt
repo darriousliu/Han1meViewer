@@ -21,11 +21,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
@@ -39,77 +49,67 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import kotlin.math.roundToInt
-import com.google.firebase.Firebase
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.analytics
-import com.google.firebase.analytics.logEvent
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.darriousliu.han1meviewer.core.common.HanimeConstants
+import com.google.firebase.Firebase
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.analytics
+import com.google.firebase.analytics.logEvent
 import io.github.darriousliu.han1meviewer.PermissionRequester
-import io.github.darriousliu.han1meviewer.core.storage.Preferences
 import io.github.darriousliu.han1meviewer.R
+import io.github.darriousliu.han1meviewer.core.common.HanimeConstants
 import io.github.darriousliu.han1meviewer.core.common.ResolutionLinkMap
-import io.github.darriousliu.han1meviewer.core.repository.DatabaseRepo
-import io.github.darriousliu.han1meviewer.core.storage.dao.CheckInRecordDatabase
-import io.github.darriousliu.han1meviewer.core.model.SearchOption
+import io.github.darriousliu.han1meviewer.core.common.exception.ParseException
 import io.github.darriousliu.han1meviewer.core.common.state.VideoLoadingState
-import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
-import io.github.darriousliu.han1meviewer.feature.video.VideoPageHost
+import io.github.darriousliu.han1meviewer.core.common.util.copyToClipboard
+import io.github.darriousliu.han1meviewer.core.common.util.loadBundledJson
+import io.github.darriousliu.han1meviewer.core.common.util.localizedTextOrNull
+import io.github.darriousliu.han1meviewer.core.firebase.FirebaseConstants
+import io.github.darriousliu.han1meviewer.core.model.SearchOption
+import io.github.darriousliu.han1meviewer.core.navigation.HomeRoute
 import io.github.darriousliu.han1meviewer.core.navigation.VideoRoute
-import io.github.darriousliu.han1meviewer.feature.video.player.HanimeVideoPlayer
-import io.github.darriousliu.han1meviewer.feature.video.player.MobileDataWarningSession
-import io.github.darriousliu.han1meviewer.feature.video.player.PlaybackVisual
-import io.github.darriousliu.han1meviewer.feature.video.player.playbackVisualOf
-import io.github.darriousliu.han1meviewer.feature.video.player.SuperResolutionController
-import io.github.darriousliu.han1meviewer.feature.video.player.rememberAndroidPlayerEnvironment
-import io.github.darriousliu.han1meviewer.feature.video.player.rememberDeviceMediaControls
-import io.github.darriousliu.han1meviewer.feature.video.player.rememberVideoPlayerController
+import io.github.darriousliu.han1meviewer.core.navigation.popTo
+import io.github.darriousliu.han1meviewer.core.repository.DatabaseRepo
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.player_tips_not_wifi
 import io.github.darriousliu.han1meviewer.core.resource.player_tips_not_wifi_cancel
 import io.github.darriousliu.han1meviewer.core.resource.player_tips_not_wifi_confirm
 import io.github.darriousliu.han1meviewer.core.resource.warning
-import org.jetbrains.compose.resources.stringResource
-import io.github.darriousliu.han1meviewer.util.OrientationManager
-import io.github.darriousliu.han1meviewer.feature.comment.CommentViewModel
-import io.github.darriousliu.han1meviewer.feature.video.VideoViewModel
-import io.github.darriousliu.han1meviewer.core.common.exception.ParseException
-import io.github.darriousliu.han1meviewer.core.firebase.FirebaseConstants
-import io.github.darriousliu.han1meviewer.core.navigation.HomeRoute
-import io.github.darriousliu.han1meviewer.core.navigation.popTo
+import io.github.darriousliu.han1meviewer.core.storage.Preferences
+import io.github.darriousliu.han1meviewer.core.storage.dao.CheckInRecordDatabase
 import io.github.darriousliu.han1meviewer.core.storage.entity.HKeyframeEntity
-import io.github.darriousliu.han1meviewer.core.ui.component.ConfirmDialog
-import io.github.darriousliu.han1meviewer.core.common.util.copyToClipboard
-import io.github.darriousliu.han1meviewer.core.common.util.loadBundledJson
-import io.github.darriousliu.han1meviewer.core.common.util.localizedTextOrNull
 import io.github.darriousliu.han1meviewer.core.storage.entity.WatchHistoryEntity
 import io.github.darriousliu.han1meviewer.core.storage.getHanimeVideoLink
+import io.github.darriousliu.han1meviewer.core.ui.component.ConfirmDialog
+import io.github.darriousliu.han1meviewer.feature.comment.CommentViewModel
+import io.github.darriousliu.han1meviewer.feature.video.DownloadPromptState
+import io.github.darriousliu.han1meviewer.feature.video.VideoPageHost
+import io.github.darriousliu.han1meviewer.feature.video.VideoRouteContent
+import io.github.darriousliu.han1meviewer.feature.video.VideoViewModel
+import io.github.darriousliu.han1meviewer.feature.video.player.HanimeVideoPlayer
+import io.github.darriousliu.han1meviewer.feature.video.player.MobileDataWarningSession
+import io.github.darriousliu.han1meviewer.feature.video.player.PlaybackVisual
+import io.github.darriousliu.han1meviewer.feature.video.player.SuperResolutionController
+import io.github.darriousliu.han1meviewer.feature.video.player.playbackVisualOf
+import io.github.darriousliu.han1meviewer.feature.video.player.rememberAndroidPlayerEnvironment
+import io.github.darriousliu.han1meviewer.feature.video.player.rememberDeviceMediaControls
+import io.github.darriousliu.han1meviewer.feature.video.player.rememberVideoPlayerController
+import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
+import io.github.darriousliu.han1meviewer.util.OrientationManager
 import io.github.darriousliu.han1meviewer.util.browse
 import io.github.darriousliu.han1meviewer.util.checkBadGuy
 import io.github.darriousliu.han1meviewer.util.shareText
 import io.github.darriousliu.han1meviewer.util.showShortToast
-import org.jetbrains.compose.resources.getString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import io.github.darriousliu.han1meviewer.feature.video.DownloadPromptState
-import io.github.darriousliu.han1meviewer.feature.video.VideoRouteContent
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
+import kotlin.math.roundToInt
 
 /**
  * Media3 + Compose 的视频页宿主。
@@ -538,7 +538,7 @@ fun Media3VideoRouteHostScreen(
         isTabletMode = Preferences.tabletMode,
         forceMainOnly = fillPlayer,
         relatedItems = relatedItems,
-        onHideRelatedInIntroChange = { viewModel.setHideRelatedInIntro(it) },
+        onHideRelatedInIntroChange = { viewModel.hideRelatedInIntro(it) },
         onSideRelatedCollapsedChange = { isSideRelatedCollapsed = it },
         onOpenVideo = { item -> activity.showVideoDetailFragment(item.videoCode) },
         modifier = Modifier.fillMaxSize(),

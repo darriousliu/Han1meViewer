@@ -10,19 +10,19 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import co.touchlab.kermit.Logger
 import io.github.darriousliu.han1meviewer.core.common.HanimeResolution
-import io.github.darriousliu.han1meviewer.core.repository.DatabaseRepo
-import io.github.darriousliu.han1meviewer.core.repository.NetworkRepo
-import io.github.darriousliu.han1meviewer.core.storage.entity.HKeyframeEntity
-import io.github.darriousliu.han1meviewer.core.storage.entity.WatchHistoryEntity
-import io.github.darriousliu.han1meviewer.core.storage.entity.download.HanimeDownloadEntity
-import io.github.darriousliu.han1meviewer.core.model.HanimeVideo
 import io.github.darriousliu.han1meviewer.core.common.state.VideoLoadingState
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
-import io.github.darriousliu.han1meviewer.core.network.CsrfTokenStore.csrfToken
+import io.github.darriousliu.han1meviewer.core.model.HanimeVideo
 import io.github.darriousliu.han1meviewer.core.model.TagLocalizer
+import io.github.darriousliu.han1meviewer.core.network.CsrfTokenStore.csrfToken
+import io.github.darriousliu.han1meviewer.core.repository.DatabaseRepo
+import io.github.darriousliu.han1meviewer.core.repository.NetworkRepo
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.add_success
 import io.github.darriousliu.han1meviewer.core.resource.interval_must_greater_than_d
+import io.github.darriousliu.han1meviewer.core.storage.entity.HKeyframeEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.WatchHistoryEntity
+import io.github.darriousliu.han1meviewer.core.storage.entity.download.HanimeDownloadEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.IO
@@ -102,7 +102,7 @@ class VideoViewModel(
     var hideRelatedInIntro by mutableStateOf(false)
         private set
 
-    fun setHideRelatedInIntro(hide: Boolean) {
+    fun hideRelatedInIntro(hide: Boolean) {
         hideRelatedInIntro = hide
     }
 
