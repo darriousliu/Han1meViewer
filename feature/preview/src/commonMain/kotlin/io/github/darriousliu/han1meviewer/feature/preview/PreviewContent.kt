@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.preview
+package io.github.darriousliu.han1meviewer.feature.preview
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateContentSize
@@ -47,7 +47,7 @@ import coil3.compose.AsyncImage
 import io.github.darriousliu.han1meviewer.core.common.exception.HanimeNotFoundException
 import io.github.darriousliu.han1meviewer.core.model.HanimePreview
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
-import io.github.darriousliu.han1meviewer.pienization
+import io.github.darriousliu.han1meviewer.core.common.util.pienization
 import io.github.darriousliu.han1meviewer.core.ui.component.content.EmptyContent
 import io.github.darriousliu.han1meviewer.core.ui.component.content.ErrorContent
 import io.github.darriousliu.han1meviewer.core.ui.component.content.LoadingContent

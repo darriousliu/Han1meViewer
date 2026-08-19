@@ -20,3 +20,7 @@ fun Throwable.localizedText(): String =
  */
 suspend fun Throwable.localizedTextOrNull(): String? =
     if (this is LocalizedException) getString(messageRes) else message
+
+/** 错误文案前面加个 🥺。原在 :shared 的 HanimeManager.kt。 */
+@Composable
+fun Throwable.pienization(): String = "🥺\n" + localizedText()

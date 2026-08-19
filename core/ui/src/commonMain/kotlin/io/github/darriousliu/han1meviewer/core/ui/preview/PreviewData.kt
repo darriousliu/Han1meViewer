@@ -223,3 +223,5 @@ val fakeCommentList = listOf(
         reportableType = "comment",
     )
 )
+
+val fakeTagList1 = listOf("新番", "预告", "校园", "妹妹", "姐系", "正太", "萝莉")

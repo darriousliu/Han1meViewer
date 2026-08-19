@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.viewmodel
+package io.github.darriousliu.han1meviewer.feature.preview
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,12 +14,14 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.android.annotation.KoinViewModel
 
 /**
  * @project Hanime1
  * @author Yenaly Liew
  * @time 2022/06/23 023 16:47
  */
+@KoinViewModel
 class PreviewViewModel : ViewModel() {
 
     private val previewCache = linkedMapOf<String, WebsiteState<HanimePreview>>()

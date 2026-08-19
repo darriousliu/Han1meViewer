@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.preview.getchupreview
+package io.github.darriousliu.han1meviewer.feature.preview.getchu
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -16,7 +16,7 @@ import coil3.ImageLoader
 import io.github.darriousliu.han1meviewer.core.model.GetchuPreview
 import io.github.darriousliu.han1meviewer.core.ui.component.lazy.LazyColumn
 import io.github.darriousliu.han1meviewer.core.ui.preview.ComponentPreview
-import io.github.darriousliu.han1meviewer.ui.preview.fakeGetchuPreview
+import io.github.darriousliu.han1meviewer.feature.preview.fakeGetchuPreview
 
 @Composable
 internal fun GetchuPreviewContent(

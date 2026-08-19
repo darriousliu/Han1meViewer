@@ -131,6 +131,7 @@ kotlin {
             api(project(":feature:history"))
             api(project(":feature:subscription"))
             api(project(":feature:comment"))
+            api(project(":feature:preview"))
             implementation(libs.kotlinx.io.core)
             implementation(libs.ksoup)
             implementation(libs.htmlconverter)

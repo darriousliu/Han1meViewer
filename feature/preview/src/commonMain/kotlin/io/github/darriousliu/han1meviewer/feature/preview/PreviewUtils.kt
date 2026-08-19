@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.preview
+package io.github.darriousliu.han1meviewer.feature.preview
 
 import androidx.compose.foundation.lazy.LazyListState
 import io.github.darriousliu.han1meviewer.core.common.util.currentLocalDate

@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.preview.getchupreview
+package io.github.darriousliu.han1meviewer.feature.preview.getchu
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

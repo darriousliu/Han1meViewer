@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home
+package io.github.darriousliu.han1meviewer.feature.preview
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.pager.rememberPagerState
@@ -24,19 +24,9 @@ import io.github.darriousliu.han1meviewer.core.model.HanimePreview
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.core.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.core.ui.preview.fakeHomePageVideos
-import io.github.darriousliu.han1meviewer.ui.preview.fakeNewHanimeInfo
+import io.github.darriousliu.han1meviewer.feature.preview.fakeNewHanimeInfo
 import io.github.darriousliu.han1meviewer.feature.comment.CommentViewModel
 import io.github.darriousliu.han1meviewer.feature.comment.PreviewCommentPrefetcher
-import io.github.darriousliu.han1meviewer.ui.viewmodel.PreviewViewModel
-import io.github.darriousliu.han1meviewer.ui.screen.home.preview.PreviewContent
-import io.github.darriousliu.han1meviewer.ui.screen.home.preview.PreviewEvent
-import io.github.darriousliu.han1meviewer.ui.screen.home.preview.PreviewImageViewerDialog
-import io.github.darriousliu.han1meviewer.ui.screen.home.preview.PreviewImageViewerState
-import io.github.darriousliu.han1meviewer.ui.screen.home.preview.PreviewMonthHeaderState
-import io.github.darriousliu.han1meviewer.ui.screen.home.preview.PreviewRouteUiState
-import io.github.darriousliu.han1meviewer.ui.screen.home.preview.PreviewUiState
-import io.github.darriousliu.han1meviewer.ui.screen.home.preview.shiftMonthCode
-import io.github.darriousliu.han1meviewer.ui.screen.home.preview.toNormalDateLabel
 import kotlinx.coroutines.launch
 
 /**
@@ -44,7 +34,7 @@ import kotlinx.coroutines.launch
  *
  * 持有 [PreviewViewModel] 和 [CommentViewModel]，负责状态收集、图片预加载、
  * 评论预取器生命周期、月份翻页编排和图片查看器 UI 管理。
- * 渲染委托给 [io.github.darriousliu.han1meviewer.ui.screen.home.preview.PreviewContent]。
+ * 渲染委托给 [io.github.darriousliu.han1meviewer.feature.preview.PreviewContent]。
  *
  * @param onBack 返回回调
  * @param onNavigateToGetchuPreview 打开 Getchu 新番预告页回调

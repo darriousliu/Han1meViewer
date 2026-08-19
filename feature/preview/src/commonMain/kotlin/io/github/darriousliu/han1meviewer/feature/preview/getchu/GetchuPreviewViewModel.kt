@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.preview.getchupreview
+package io.github.darriousliu.han1meviewer.feature.preview.getchu
 
 import co.touchlab.kermit.Logger
 import androidx.lifecycle.ViewModel
@@ -15,9 +15,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.koin.android.annotation.KoinViewModel
 
 private val logger = Logger.withTag("GetchuPreviewVM")
 
+@KoinViewModel
 class GetchuPreviewViewModel : ViewModel() {
 
     private val previewCache = linkedMapOf<String, PageState<GetchuPreview>>()

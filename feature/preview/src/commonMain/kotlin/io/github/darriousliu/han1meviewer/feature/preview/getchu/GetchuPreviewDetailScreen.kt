@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.preview.getchupreview
+package io.github.darriousliu.han1meviewer.feature.preview.getchu
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -20,13 +20,13 @@ import coil3.compose.LocalPlatformContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.darriousliu.han1meviewer.core.common.state.PageState
 import io.github.darriousliu.han1meviewer.core.common.state.dataOrNull
-import io.github.darriousliu.han1meviewer.pienization
+import io.github.darriousliu.han1meviewer.core.common.util.pienization
 import io.github.darriousliu.han1meviewer.core.ui.component.PageContent
 import io.github.darriousliu.han1meviewer.core.ui.component.isFirstPageEmpty
 import io.github.darriousliu.han1meviewer.core.ui.component.isFirstPageError
 import io.github.darriousliu.han1meviewer.core.ui.component.isFirstPageLoading
-import io.github.darriousliu.han1meviewer.ui.screen.home.preview.PreviewImageViewerDialog
-import io.github.darriousliu.han1meviewer.ui.screen.home.preview.PreviewImageViewerState
+import io.github.darriousliu.han1meviewer.feature.preview.PreviewImageViewerDialog
+import io.github.darriousliu.han1meviewer.feature.preview.PreviewImageViewerState
 import io.github.darriousliu.han1meviewer.core.ui.rememberRandomLoadingHint
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.back

@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.preview
+package io.github.darriousliu.han1meviewer.feature.preview
 
 import androidx.compose.runtime.saveable.listSaver
 import io.github.darriousliu.han1meviewer.core.model.HanimePreview

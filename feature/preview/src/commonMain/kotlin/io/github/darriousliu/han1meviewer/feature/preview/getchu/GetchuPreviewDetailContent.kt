@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.preview.getchupreview
+package io.github.darriousliu.han1meviewer.feature.preview.getchu
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -44,7 +44,7 @@ import io.github.darriousliu.han1meviewer.core.ui.component.lazy.LazyRow
 import io.github.darriousliu.han1meviewer.core.resource.icon.OpenInNew
 import io.github.darriousliu.han1meviewer.core.resource.icon.PlayCircleOutline
 import io.github.darriousliu.han1meviewer.core.ui.preview.ComponentPreview
-import io.github.darriousliu.han1meviewer.ui.preview.fakeGetchuPreviewDetail
+import io.github.darriousliu.han1meviewer.feature.preview.fakeGetchuPreviewDetail
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.brand
 import io.github.darriousliu.han1meviewer.core.resource.getchu_series

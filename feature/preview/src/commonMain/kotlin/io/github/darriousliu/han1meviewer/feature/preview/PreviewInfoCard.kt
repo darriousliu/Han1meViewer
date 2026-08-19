@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.preview
+package io.github.darriousliu.han1meviewer.feature.preview
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -30,7 +30,7 @@ import io.github.darriousliu.han1meviewer.core.model.HanimePreview
 import io.github.darriousliu.han1meviewer.core.ui.component.TagChipGroup
 import io.github.darriousliu.han1meviewer.core.ui.component.lazy.LazyRow
 import io.github.darriousliu.han1meviewer.core.ui.preview.ComponentPreview
-import io.github.darriousliu.han1meviewer.ui.preview.fakeNewHanimeInfo
+import io.github.darriousliu.han1meviewer.feature.preview.fakeNewHanimeInfo
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.brand
 import io.github.darriousliu.han1meviewer.core.resource.play_trailer

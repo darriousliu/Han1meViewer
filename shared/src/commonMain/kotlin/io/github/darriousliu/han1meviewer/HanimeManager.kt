@@ -16,8 +16,6 @@ import io.github.darriousliu.han1meviewer.core.common.EMPTY_STRING
  * 是 @Composable 而不是普通属性：数据层的异常现在只带 StringResource，
  * 解析要有 composition 上下文，见 [localizedText]。
  */
-@Composable
-fun Throwable.pienization(): String = "🥺\n" + localizedText()
 
 // log in and log out
 

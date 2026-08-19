@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.preview.getchupreview
+package io.github.darriousliu.han1meviewer.feature.preview.getchu
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,7 +26,7 @@ import io.github.darriousliu.han1meviewer.core.model.GetchuPreview
 import io.github.darriousliu.han1meviewer.core.model.GetchuPreviewDetail
 import io.github.darriousliu.han1meviewer.core.ui.component.lazy.LazyRow
 import io.github.darriousliu.han1meviewer.core.ui.preview.ComponentPreview
-import io.github.darriousliu.han1meviewer.ui.preview.fakeGetchuPreviewItem
+import io.github.darriousliu.han1meviewer.feature.preview.fakeGetchuPreviewItem
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.brand
 import io.github.darriousliu.han1meviewer.core.resource.getchu_product_intro
