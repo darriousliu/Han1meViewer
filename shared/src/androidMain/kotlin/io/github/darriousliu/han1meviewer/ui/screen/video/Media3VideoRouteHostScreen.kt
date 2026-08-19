@@ -57,10 +57,18 @@ import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
 import io.github.darriousliu.han1meviewer.feature.video.VideoPageHost
 import io.github.darriousliu.han1meviewer.core.navigation.VideoRoute
 import io.github.darriousliu.han1meviewer.feature.video.player.HanimeVideoPlayer
+import io.github.darriousliu.han1meviewer.feature.video.player.MobileDataWarningSession
 import io.github.darriousliu.han1meviewer.feature.video.player.PlaybackVisual
 import io.github.darriousliu.han1meviewer.feature.video.player.playbackVisualOf
+import io.github.darriousliu.han1meviewer.feature.video.player.rememberAndroidPlayerEnvironment
 import io.github.darriousliu.han1meviewer.feature.video.player.rememberDeviceMediaControls
 import io.github.darriousliu.han1meviewer.feature.video.player.rememberVideoPlayerController
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.player_tips_not_wifi
+import io.github.darriousliu.han1meviewer.core.resource.player_tips_not_wifi_cancel
+import io.github.darriousliu.han1meviewer.core.resource.player_tips_not_wifi_confirm
+import io.github.darriousliu.han1meviewer.core.resource.warning
+import org.jetbrains.compose.resources.stringResource
 import io.github.darriousliu.han1meviewer.util.OrientationManager
 import io.github.darriousliu.han1meviewer.feature.comment.CommentViewModel
 import io.github.darriousliu.han1meviewer.feature.video.VideoViewModel
@@ -142,6 +150,10 @@ fun Media3VideoRouteHostScreen(
     var playerBounds by remember { mutableStateOf<Rect?>(null) }
     var lastAutoFullscreenAt by remember { mutableLongStateOf(0L) }
     val deviceControls = rememberDeviceMediaControls()
+    val environment = rememberAndroidPlayerEnvironment()
+    /** 流量提醒确认前挂起的 (url, 起播位置)；确认后播、取消则点播放钮再弹。 */
+    var pendingMeteredPlay by remember(route) { mutableStateOf<Pair<String, Long>?>(null) }
+    var showMeteredDialog by remember(route) { mutableStateOf(false) }
     val isPortraitVideo = controller.videoSize.let { it != IntSize.Zero && it.height > it.width }
 
     val orientationListener = remember {
@@ -294,8 +306,20 @@ fun Media3VideoRouteHostScreen(
                 } else {
                     hasPlayableSource = true
                     playingQuality = picked.first
-                    controller.load(picked.second, if (Preferences.allowResumePlayback) resume else 0L)
-                    controller.play()
+                    val startPosition = if (Preferences.allowResumePlayback) resume else 0L
+                    // 流量提醒只在首播检查一次（进程内确认过就不再弹）；
+                    // 播放中切到流量不再监听——CONNECTIVITY_CHANGE 已废弃，断流靠出错重试兜底
+                    val needMeteredWarning = !viewModel.fromDownload &&
+                            !Preferences.disableMobileDataWarning &&
+                            !MobileDataWarningSession.accepted &&
+                            environment.isNetworkMetered()
+                    if (needMeteredWarning) {
+                        pendingMeteredPlay = picked.second to startPosition
+                        showMeteredDialog = true
+                    } else {
+                        controller.load(picked.second, startPosition)
+                        controller.play()
+                    }
                 }
             }
 
@@ -457,15 +481,21 @@ fun Media3VideoRouteHostScreen(
                 activity.navBackStack.popTo(HomeRoute)
             },
             isInPip = hostUiState.isInPipMode,
-            hasPlayableSource = hasPlayableSource,
+            // 流量提醒待确认时也走「点播放钮再弹」的路径（jzvd clickStart 语义）
+            hasPlayableSource = hasPlayableSource && pendingMeteredPlay == null,
             onBlockedPlayClick = {
-                showShortToast(R.string.fail_to_get_video_link)
-                activity.browse(getHanimeVideoLink(route.videoCode))
+                if (pendingMeteredPlay != null) {
+                    showMeteredDialog = true
+                } else {
+                    showShortToast(R.string.fail_to_get_video_link)
+                    activity.browse(getHanimeVideoLink(route.videoCode))
+                }
             },
             onRetry = { viewModel.getHanimeVideo() },
             onRequestAddKeyframe = { position ->
                 showAddHKeyframeDialog = position to (title.ifBlank { "Untitled" })
             },
+            environment = environment,
             modifier = (if (isFullscreen) {
                 // 竖屏视频入场时高度 0.5→1（顶部对齐即 pivotY=0 语义）
                 Modifier.fillMaxWidth().fillMaxHeight(fullscreenEnterFraction.value)
@@ -523,6 +553,26 @@ fun Media3VideoRouteHostScreen(
             onIntroductionLinkClick = actions::openIntroductionLink,
             stringLongPressShare = stringLongPressShare,
             pageHost = pageHost,
+        )
+    }
+
+    if (showMeteredDialog) {
+        ConfirmDialog(
+            visible = true,
+            title = stringResource(Res.string.warning),
+            message = stringResource(Res.string.player_tips_not_wifi),
+            confirmText = stringResource(Res.string.player_tips_not_wifi_confirm),
+            dismissText = stringResource(Res.string.player_tips_not_wifi_cancel),
+            onConfirm = {
+                MobileDataWarningSession.accepted = true
+                pendingMeteredPlay?.let { (url, startPosition) ->
+                    controller.load(url, startPosition)
+                    controller.play()
+                }
+                pendingMeteredPlay = null
+                showMeteredDialog = false
+            },
+            onDismiss = { showMeteredDialog = false },
         )
     }
 

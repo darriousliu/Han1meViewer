@@ -174,6 +174,18 @@ fun HanimeVideoPlayer(
             )
         }
 
+        if (isFullscreen && Preferences.hKeyframesEnable) {
+            PlayerCountdownOverlay(
+                controller = controller,
+                tick = tick,
+                hKeyframes = hKeyframes,
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .then(chromeInsetsModifier)
+                    .padding(start = 8.dp, top = 64.dp),
+            )
+        }
+
         if (visibility.loading) {
             PlayerLoadingIndicator(Modifier.align(Alignment.Center))
         }
