@@ -23,7 +23,7 @@ import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.ui.bridge.VideoPageHost
 import io.github.darriousliu.han1meviewer.core.ui.component.BottomSheetHandler
 import io.github.darriousliu.han1meviewer.core.ui.theme.HanimeTheme
-import io.github.darriousliu.han1meviewer.ui.viewmodel.CommentViewModel
+import io.github.darriousliu.han1meviewer.feature.comment.CommentViewModel
 import io.github.darriousliu.han1meviewer.ui.viewmodel.VideoViewModel
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.there_is_a_small_issue
@@ -32,6 +32,9 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
+import io.github.darriousliu.han1meviewer.feature.comment.CommentScreen
+import io.github.darriousliu.han1meviewer.feature.comment.ChildCommentScreen
+import io.github.darriousliu.han1meviewer.feature.comment.CommentMessage
 
 @Composable
 fun RenderVideoIntroductionContent(

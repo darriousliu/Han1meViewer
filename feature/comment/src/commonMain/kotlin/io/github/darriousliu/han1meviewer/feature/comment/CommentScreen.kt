@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.video
+package io.github.darriousliu.han1meviewer.feature.comment
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -65,7 +65,7 @@ import io.github.darriousliu.han1meviewer.core.ui.component.content.EmptyContent
 import io.github.darriousliu.han1meviewer.core.ui.component.content.ErrorContent
 import io.github.darriousliu.han1meviewer.core.ui.component.lazy.LazyColumn
 import io.github.darriousliu.han1meviewer.core.ui.component.rememberHostNestedScrollConnection
-import io.github.darriousliu.han1meviewer.ui.preview.fakeCommentList
+import io.github.darriousliu.han1meviewer.core.ui.preview.fakeCommentList
 import io.github.darriousliu.han1meviewer.core.common.util.parseTimeStrToMinutes
 import io.github.darriousliu.han1meviewer.core.common.util.safeSortedBy
 import io.github.darriousliu.han1meviewer.core.resource.Res

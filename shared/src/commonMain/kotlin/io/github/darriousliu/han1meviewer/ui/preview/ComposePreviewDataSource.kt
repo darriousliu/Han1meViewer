@@ -181,44 +181,6 @@ val fakeNewHanimeInfo = listOf(
     )
 )
 
-val fakeCommentList = listOf(
-    VideoComments.VideoComment(
-        avatar = "https://picsum.photos/64/64",
-        username = "preview_child_1",
-        date = "10分鐘前",
-        content = "這是一條子評論預覽內容，用來確認 Compose 版底部評論頁的列表與對話框入口樣式。",
-        thumbUp = 8,
-        isChildComment = true,
-        hasMoreReplies = false,
-        replyCount = 0,
-        id = "1",
-        post = VideoComments.VideoComment.POST(
-            foreignId = "1",
-            likeCommentStatus = false,
-            unlikeCommentStatus = false,
-        ),
-        reportableId = "1",
-        reportableType = "comment",
-    ),
-    VideoComments.VideoComment(
-        avatar = "https://picsum.photos/64/65",
-        username = "preview_child_2",
-        date = "3分鐘前",
-        content = "第二條子評論，帶一點更短的文案和不同的點贊狀態。",
-        thumbUp = 15,
-        isChildComment = true,
-        hasMoreReplies = false,
-        replyCount = 0,
-        id = "2",
-        post = VideoComments.VideoComment.POST(
-            foreignId = "2",
-            likeCommentStatus = true,
-            unlikeCommentStatus = false,
-        ),
-        reportableId = "2",
-        reportableType = "comment",
-    )
-)
 val fakeDownloadedVideos = fakeHomePageVideos.take(3).mapIndexed { index, item ->
     VideoWithCategories(
         video = HanimeDownloadEntity(

@@ -25,8 +25,8 @@ import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.core.ui.preview.ComponentPreview
 import io.github.darriousliu.han1meviewer.core.ui.preview.fakeHomePageVideos
 import io.github.darriousliu.han1meviewer.ui.preview.fakeNewHanimeInfo
-import io.github.darriousliu.han1meviewer.ui.viewmodel.CommentViewModel
-import io.github.darriousliu.han1meviewer.ui.viewmodel.PreviewCommentPrefetcher
+import io.github.darriousliu.han1meviewer.feature.comment.CommentViewModel
+import io.github.darriousliu.han1meviewer.feature.comment.PreviewCommentPrefetcher
 import io.github.darriousliu.han1meviewer.ui.viewmodel.PreviewViewModel
 import io.github.darriousliu.han1meviewer.ui.screen.home.preview.PreviewContent
 import io.github.darriousliu.han1meviewer.ui.screen.home.preview.PreviewEvent

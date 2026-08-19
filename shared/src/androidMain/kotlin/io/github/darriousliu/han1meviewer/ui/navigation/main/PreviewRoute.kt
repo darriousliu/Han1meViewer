@@ -4,8 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
 import io.github.darriousliu.han1meviewer.ui.screen.home.PreviewScreen
-import io.github.darriousliu.han1meviewer.ui.viewmodel.CommentViewModel
+import io.github.darriousliu.han1meviewer.feature.comment.CommentViewModel
 import io.github.darriousliu.han1meviewer.ui.viewmodel.PreviewViewModel
+import io.github.darriousliu.han1meviewer.feature.comment.PreviewCommentPrefetcher
 
 @Composable
 fun PreviewRouteScreen(

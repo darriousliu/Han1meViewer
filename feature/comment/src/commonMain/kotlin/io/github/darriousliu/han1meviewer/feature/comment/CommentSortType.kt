@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.video
+package io.github.darriousliu.han1meviewer.feature.comment
 
 enum class CommentSortType {
     LATEST,

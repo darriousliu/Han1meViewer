@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.viewmodel
+package io.github.darriousliu.han1meviewer.feature.comment
 
 import co.touchlab.kermit.Logger
 import io.github.darriousliu.han1meviewer.core.model.VideoComments

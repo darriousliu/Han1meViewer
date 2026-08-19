@@ -29,7 +29,7 @@ import io.github.darriousliu.han1meviewer.ui.bridge.VideoPageHost
 import io.github.darriousliu.han1meviewer.core.navigation.VideoRoute
 import io.github.darriousliu.han1meviewer.ui.screen.video.player.HanimeVideoPlayer
 import io.github.darriousliu.han1meviewer.ui.screen.video.player.rememberVideoPlayerController
-import io.github.darriousliu.han1meviewer.ui.viewmodel.CommentViewModel
+import io.github.darriousliu.han1meviewer.feature.comment.CommentViewModel
 import io.github.darriousliu.han1meviewer.ui.viewmodel.VideoViewModel
 import io.github.darriousliu.han1meviewer.core.common.util.copyToClipboard
 import io.github.darriousliu.han1meviewer.core.common.util.loadBundledJson

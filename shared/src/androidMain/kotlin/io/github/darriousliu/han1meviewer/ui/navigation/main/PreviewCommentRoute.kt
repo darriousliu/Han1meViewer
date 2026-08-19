@@ -32,11 +32,11 @@ import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
 import io.github.darriousliu.han1meviewer.ui.activity.MainActivity
 import io.github.darriousliu.han1meviewer.core.ui.component.BottomSheetHandler
 import io.github.darriousliu.han1meviewer.core.navigation.PreviewCommentRoute
-import io.github.darriousliu.han1meviewer.ui.screen.video.ChildCommentScreen
-import io.github.darriousliu.han1meviewer.ui.screen.video.CommentMessage
-import io.github.darriousliu.han1meviewer.ui.screen.video.CommentScreen
-import io.github.darriousliu.han1meviewer.ui.viewmodel.CommentViewModel
-import io.github.darriousliu.han1meviewer.ui.viewmodel.PreviewCommentPrefetcher
+import io.github.darriousliu.han1meviewer.feature.comment.ChildCommentScreen
+import io.github.darriousliu.han1meviewer.feature.comment.CommentMessage
+import io.github.darriousliu.han1meviewer.feature.comment.CommentScreen
+import io.github.darriousliu.han1meviewer.feature.comment.CommentViewModel
+import io.github.darriousliu.han1meviewer.feature.comment.PreviewCommentPrefetcher
 import io.github.darriousliu.han1meviewer.core.resource.Res
 import io.github.darriousliu.han1meviewer.core.resource.there_is_a_small_issue
 import kotlinx.coroutines.flow.map

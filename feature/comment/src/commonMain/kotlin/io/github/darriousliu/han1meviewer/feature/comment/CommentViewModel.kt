@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.viewmodel
+package io.github.darriousliu.han1meviewer.feature.comment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -12,7 +12,6 @@ import io.github.darriousliu.han1meviewer.core.model.ReportReason
 import io.github.darriousliu.han1meviewer.core.model.VideoCommentArgs
 import io.github.darriousliu.han1meviewer.core.model.VideoComments
 import io.github.darriousliu.han1meviewer.core.common.state.WebsiteState
-import io.github.darriousliu.han1meviewer.ui.screen.video.CommentSortType
 import io.github.darriousliu.han1meviewer.core.network.CsrfTokenStore.csrfToken
 import io.github.darriousliu.han1meviewer.core.common.util.loadBundledJson
 import io.github.darriousliu.han1meviewer.core.common.util.localizedTextOrNull

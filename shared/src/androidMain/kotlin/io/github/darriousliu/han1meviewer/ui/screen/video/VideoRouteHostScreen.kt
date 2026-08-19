@@ -69,7 +69,7 @@ import io.github.darriousliu.han1meviewer.ui.view.video.HJzvdStd
 import io.github.darriousliu.han1meviewer.ui.view.video.HMediaKernel
 import io.github.darriousliu.han1meviewer.ui.view.video.HanimeDataSource
 import io.github.darriousliu.han1meviewer.ui.view.video.VideoPlayerAppBarBehavior
-import io.github.darriousliu.han1meviewer.ui.viewmodel.CommentViewModel
+import io.github.darriousliu.han1meviewer.feature.comment.CommentViewModel
 import io.github.darriousliu.han1meviewer.ui.viewmodel.VideoViewModel
 import io.github.darriousliu.han1meviewer.util.OrientationManager
 import io.github.darriousliu.han1meviewer.util.browse
