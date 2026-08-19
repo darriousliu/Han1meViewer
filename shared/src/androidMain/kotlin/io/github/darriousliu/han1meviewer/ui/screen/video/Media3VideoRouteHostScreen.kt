@@ -471,7 +471,8 @@ fun Media3VideoRouteHostScreen(
     // 按 Home 不进 PiP、PiP 里的播放暂停按钮失灵
     DisposableEffect(pageHost) {
         activity.registerCurrentVideoHost(pageHost)
-        onDispose { activity.registerCurrentVideoHost(null) }
+        // 条件注销：叠页转场时旧页后销毁，不能顶掉新页刚注册的 host
+        onDispose { activity.unregisterVideoHost(pageHost) }
     }
 
     val relatedItems =

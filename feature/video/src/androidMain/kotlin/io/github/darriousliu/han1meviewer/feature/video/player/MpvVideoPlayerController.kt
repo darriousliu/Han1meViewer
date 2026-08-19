@@ -26,14 +26,25 @@ private const val TAG = "MpvVideoPlayerController"
  * 选项表、fd:// 打开 content/file、事件观察者、超分（Anime4K glsl-shaders）全部照搬；
  * 去掉的是 jzvd 状态机回调——播放事实映射成 Compose state。
  *
- * MPVLib 是进程级单例（`create/init` 在 HanimeApplication），这里只做
- * per-会话的 option/observer/surface 管理。⚠️ 和 media3 一样不走 OkHttp：
- * mpv 不吃进程级 `ProxySelector`，HTTP 代理要单独喂 `http-proxy` 选项。
+ * ⚠️ **MPVLib 是进程级单例**（`create/init` 在 HanimeApplication），播放页叠播放页时
+ * nav3 转场会让两个控制器短暂共存：后创建的实例经 [owner] 令牌**接管**会话，被接管的
+ * 旧实例立即失效（只摘掉自己的观察者，不碰全局的 vo/surface/文件）；`release` 里的
+ * 全局拆除（loadfile ""、vo=null、detachSurface）只有**仍是所有者**时才执行——
+ * 否则旧页销毁会把新页刚加载的会话整个拆掉，两页互杀。
+ *
+ * 另：和 media3 一样不走 OkHttp——mpv 不吃进程级 `ProxySelector`，
+ * HTTP 代理要单独喂 `http-proxy` 选项。
  */
 @Stable
 class MpvVideoPlayerController(
     private val context: Context,
 ) : VideoPlayerController, SuperResolutionController {
+
+    companion object {
+        /** 当前持有 MPVLib 会话的实例；创建新实例即接管。 */
+        @Volatile
+        private var owner: MpvVideoPlayerController? = null
+    }
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -59,7 +70,12 @@ class MpvVideoPlayerController(
     private var currentSpeed: Float = Preferences.playerSpeed
     private var speedBeforeBoost: Float? = null
     private var pendingSeekMs = 0L
+
+    /** 已释放或已被新实例接管；此后不得再碰 MPVLib 的任何全局状态。 */
+    @Volatile
     private var released = false
+
+    private val isOwner: Boolean get() = owner === this
 
     // fd:// 打开 content/file 的句柄管理（照 MpvMediaKernel）
     private var currentPfd: ParcelFileDescriptor? = null
@@ -149,36 +165,46 @@ class MpvVideoPlayerController(
         override fun eventProperty(property: String, value: Long) {
             when (property) {
                 "video-params/w" -> handler.post {
-                    sizeState = IntSize(value.toInt(), sizeState.height)
+                    if (!released) sizeState = IntSize(value.toInt(), sizeState.height)
                 }
 
                 "video-params/h" -> handler.post {
-                    sizeState = IntSize(sizeState.width, value.toInt())
+                    if (!released) sizeState = IntSize(sizeState.width, value.toInt())
                 }
             }
         }
 
         override fun eventProperty(property: String, value: Boolean) {
             when (property) {
-                "pause" -> handler.post { playingState = !value && !endedState }
+                "pause" -> handler.post {
+                    if (!released) playingState = !value && !endedState
+                }
+
                 "paused-for-cache" -> handler.post {
-                    if (firstFrameState) bufferingState = value
+                    if (!released && firstFrameState) bufferingState = value
                 }
             }
         }
 
         override fun eventProperty(property: String, value: Double) {
             when (property) {
-                "time-pos" -> handler.post { positionMsState = (value * 1_000).toLong() }
-                "duration" -> handler.post { durationMsState = (value * 1_000).toLong() }
+                "time-pos" -> handler.post {
+                    if (!released) positionMsState = (value * 1_000).toLong()
+                }
+
+                "duration" -> handler.post {
+                    if (!released) durationMsState = (value * 1_000).toLong()
+                }
+
                 "demuxer-cache-duration" -> handler.post {
-                    cacheDurationMsState = (value * 1_000).toLong()
+                    if (!released) cacheDurationMsState = (value * 1_000).toLong()
                 }
             }
         }
 
         override fun event(eventId: Int) {
             handler.post {
+                if (released) return@post
                 when (eventId) {
                     MPVLib.mpvEventId.MPV_EVENT_START_FILE -> {
                         positionMsState = 0L
@@ -206,10 +232,8 @@ class MpvVideoPlayerController(
 
                     MPVLib.mpvEventId.MPV_EVENT_END_FILE -> {
                         releaseCurrentPfd()
-                        if (!released) {
-                            endedState = true
-                            playingState = false
-                        }
+                        endedState = true
+                        playingState = false
                     }
                 }
             }
@@ -217,12 +241,23 @@ class MpvVideoPlayerController(
     }
 
     init {
+        // 接管进程级会话：旧实例立即失效（只摘观察者，不做全局拆除）
+        owner?.supersede()
+        owner = this
         mpvOptions.forEach { (key, value) -> MPVLib.setOptionString(key, value) }
         runCatching {
             parseCustomMpvParams().forEach { (key, value) -> MPVLib.setOptionString(key, value) }
         }.onFailure { Log.w(TAG, "custom mpv params 解析失败", it) }
         observedProperties.forEach { (name, type) -> MPVLib.observeProperty(name, type) }
         MPVLib.addObserver(mpvEventObserver)
+    }
+
+    /** 被更新的实例接管：自己出局，但不动全局 vo/surface/文件（它们已归新实例）。 */
+    private fun supersede() {
+        if (released) return
+        released = true
+        MPVLib.removeObserver(mpvEventObserver)
+        handler.postDelayed({ releaseCurrentPfd() }, 200)
     }
 
     private fun prepareUri(url: String): String? {
@@ -251,6 +286,7 @@ class MpvVideoPlayerController(
     }
 
     override fun load(url: String, startPositionMs: Long) {
+        if (released) return
         endedState = false
         firstFrameState = false
         bufferingState = true
@@ -266,14 +302,17 @@ class MpvVideoPlayerController(
     }
 
     override fun play() {
+        if (released) return
         MPVLib.setPropertyBoolean("pause", false)
     }
 
     override fun pause() {
+        if (released) return
         MPVLib.setPropertyBoolean("pause", true)
     }
 
     override fun seekTo(positionMs: Long) {
+        if (released) return
         endedState = false
         MPVLib.command(
             arrayOf("seek", (positionMs.coerceAtLeast(0L) / 1000.0).toString(), "absolute", "exact")
@@ -282,21 +321,27 @@ class MpvVideoPlayerController(
 
     override fun setSpeed(speed: Float) {
         currentSpeed = speed
+        if (released) return
         MPVLib.setPropertyDouble("speed", speed.toDouble())
     }
 
     override fun boostSpeed(multiplier: Float) {
-        if (speedBeforeBoost != null) return
+        if (released || speedBeforeBoost != null) return
         speedBeforeBoost = currentSpeed
         MPVLib.setPropertyDouble("speed", (currentSpeed * multiplier).toDouble())
     }
 
     override fun restoreSpeed() {
+        if (released) {
+            speedBeforeBoost = null
+            return
+        }
         speedBeforeBoost?.let { MPVLib.setPropertyDouble("speed", it.toDouble()) }
         speedBeforeBoost = null
     }
 
     override fun setSuperResolution(index: Int) {
+        if (released) return
         if (index != 0) {
             MPVLib.command(
                 arrayOf("change-list", "glsl-shaders", "set", AnimeShaders.getShader(context, index))
@@ -311,30 +356,55 @@ class MpvVideoPlayerController(
     }
 
     override fun release() {
+        if (released) {
+            // 已被新实例接管：全局会话归它，这里只兜底清自己的 pfd
+            releaseCurrentPfd()
+            return
+        }
         released = true
-        clearSuperResolution()
-        MPVLib.setPropertyBoolean("pause", true)
-        MPVLib.command(arrayOf("loadfile", "", "replace"))
-        MPVLib.setPropertyString("vo", "null")
-        MPVLib.setOptionString("force-window", "no")
-        MPVLib.detachSurface()
         MPVLib.removeObserver(mpvEventObserver)
+        if (isOwner) {
+            owner = null
+            clearSuperResolution()
+            MPVLib.setPropertyBoolean("pause", true)
+            MPVLib.command(arrayOf("loadfile", "", "replace"))
+            MPVLib.setPropertyString("vo", "null")
+            MPVLib.setOptionString("force-window", "no")
+            MPVLib.detachSurface()
+        }
         handler.postDelayed({ releaseCurrentPfd() }, 200)
     }
 
     // ---- Surface 桥（由 VideoSurface 的 SurfaceHolder 回调驱动）----
 
     fun onSurfaceCreated(surface: Surface) {
+        if (released) return
         MPVLib.attachSurface(surface)
+        redrawIfPaused()
     }
 
     fun onSurfaceChanged(width: Int, height: Int) {
+        if (released) return
         MPVLib.setPropertyString("android-surface-size", "${width}x${height}")
+        redrawIfPaused()
     }
 
     fun onSurfaceDestroyed() {
-        if (!released) {
+        // 只有仍持有会话的实例才允许拆全局 surface——
+        // 被接管的旧页在销毁时拆走会把新页的画面弄没
+        if (!released && isOwner) {
             MPVLib.detachSurface()
+        }
+    }
+
+    /**
+     * 暂停时 vo 不出新帧，surface 尺寸变化后画面会停留在旧尺寸的最后一帧
+     * （切全屏/退全屏时表现为画面残缺；播放中下一帧即自愈）。
+     * 用零距离 exact seek 强制 mpv 按新尺寸重绘当前帧。
+     */
+    private fun redrawIfPaused() {
+        if (!playingState && durationMsState > 0L) {
+            MPVLib.command(arrayOf("seek", "0", "relative", "exact"))
         }
     }
 }

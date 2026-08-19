@@ -295,6 +295,16 @@ class MainActivity : AppCompatActivity(), PermissionRequester, MainHostActions {
         currentVideoHost = host
     }
 
+    /**
+     * 只在当前注册的就是 [host] 时注销。播放页叠播放页时 nav 转场让两页短暂共存，
+     * 旧页销毁若无条件清 null，会把新页刚注册的 host 顶掉（PiP 失灵）。
+     */
+    fun unregisterVideoHost(host: VideoPageHost) {
+        if (currentVideoHost === host) {
+            currentVideoHost = null
+        }
+    }
+
     private var onGranted: (() -> Unit)? = null
     private var onDenied: (() -> Unit)? = null
     private var onPermanentlyDenied: (() -> Unit)? = null
