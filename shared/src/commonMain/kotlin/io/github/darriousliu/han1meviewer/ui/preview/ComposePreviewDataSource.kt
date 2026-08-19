@@ -32,54 +32,6 @@ import io.github.darriousliu.han1meviewer.core.ui.preview.fakeHomePageVideos
 /**
  * Compose预览用数据源
  */
-val fakeVideos = listOf(
-    SubscriptionVideosItem(
-        title = "小恶魔的补习计划",
-        coverUrl = "https://vdownload.hembed.com/image/thumbnail/101573l.jpg",
-        videoCode = "101573",
-        duration = "04:34",
-        views = "44.9万次",
-        reviews = "100%",
-        uploadTime = "2010-12-10",
-    ),
-    SubscriptionVideosItem(
-        title = "姐姐的秘密训练",
-        coverUrl = "https://vdownload.hembed.com/image/thumbnail/101574l.jpg",
-        videoCode = "101574",
-        duration = "23:15",
-        views = "22.1万次",
-        reviews = "95%",
-        uploadTime = "2010-12-10",
-    ),
-    SubscriptionVideosItem(
-        title = "放学后的约定",
-        coverUrl = "https://vdownload.hembed.com/image/thumbnail/101575l.jpg",
-        videoCode = "101575",
-        duration = "18:02",
-        views = "58.3万次",
-        reviews = "97%",
-        uploadTime = "2010-12-10",
-    ),
-    SubscriptionVideosItem(
-        title = "班长的福利日",
-        coverUrl = "https://vdownload.hembed.com/image/thumbnail/101576l.jpg",
-        videoCode = "101576",
-        duration = "12:47",
-        views = "30.0万次",
-        reviews = "92%",
-        uploadTime = "2010-12-10",
-    ),
-    SubscriptionVideosItem(
-        title = "图书馆的秘密角落",
-        coverUrl = "https://vdownload.hembed.com/image/thumbnail/101577l.jpg",
-        videoCode = "101577",
-        duration = "15:20",
-        views = "61.7万次",
-        reviews = "99%",
-        uploadTime = "2010-12-10",
-    ),
-)
-
 val fakePlaylists = listOf(
     Playlists.Playlist(
         listCode = "code1",

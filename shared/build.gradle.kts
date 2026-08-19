@@ -129,6 +129,7 @@ kotlin {
             // feature 模块（拆出去的域；MainNavDisplay/AppModule 还要引它们）
             api(project(":feature:checkin"))
             api(project(":feature:history"))
+            api(project(":feature:subscription"))
             implementation(libs.kotlinx.io.core)
             implementation(libs.ksoup)
             implementation(libs.htmlconverter)

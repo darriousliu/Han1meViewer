@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.subscription
+package io.github.darriousliu.han1meviewer.feature.subscription
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
@@ -51,7 +51,7 @@ import io.github.darriousliu.han1meviewer.core.ui.component.LoadMoreFooter
 import io.github.darriousliu.han1meviewer.core.ui.component.VideoCardItem
 import io.github.darriousliu.han1meviewer.core.ui.component.lazy.LazyVerticalGrid
 import io.github.darriousliu.han1meviewer.core.ui.preview.fakeArtists
-import io.github.darriousliu.han1meviewer.ui.preview.fakeVideos
+import io.github.darriousliu.han1meviewer.core.ui.preview.fakeVideos
 import io.github.darriousliu.han1meviewer.core.ui.rememberVideoGridColumns
 import io.github.darriousliu.han1meviewer.core.ui.theme.ArtistIconSize
 import io.github.darriousliu.han1meviewer.core.ui.theme.SpacingNormal

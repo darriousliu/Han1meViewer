@@ -28,7 +28,8 @@ kotlin {
             // 少数组件读偏好（网格列数、卡片尺寸等展示配置）
             implementation(project(":core:storage"))
             implementation(libs.coil.compose)
-            implementation(libs.sonner)
+            // LocalToaster 的 ToasterState 在公开签名里，消费方要看得见 sonner 的类型
+            api(libs.sonner)
             implementation(libs.htmlconverter)
             implementation(libs.filekit.core)
         }

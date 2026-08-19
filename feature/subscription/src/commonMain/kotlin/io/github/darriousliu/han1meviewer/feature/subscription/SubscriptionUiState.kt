@@ -1,4 +1,4 @@
-package io.github.darriousliu.han1meviewer.ui.screen.home.subscription
+package io.github.darriousliu.han1meviewer.feature.subscription
 
 import io.github.darriousliu.han1meviewer.core.model.SubscriptionItem
 import io.github.darriousliu.han1meviewer.core.model.SubscriptionVideosItem
