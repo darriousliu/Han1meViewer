@@ -4,6 +4,7 @@ import android.app.PendingIntent
 import android.app.PictureInPictureParams
 import android.app.RemoteAction
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.drawable.Icon
 import android.util.Rational
 import android.view.WindowManager
@@ -11,19 +12,33 @@ import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Easing
+import androidx.compose.animation.core.animate
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import kotlin.math.roundToInt
 import com.google.firebase.Firebase
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
@@ -145,6 +160,7 @@ fun Media3VideoRouteHostScreen(
     val hostUiState by viewModel.videoHostUiStateFlow.collectAsStateWithLifecycle()
 
     // ---- 全屏 / 方向 / PiP ----
+    val visual = playbackVisualOf(controller)
     var isFullscreen by rememberSaveable(route.videoCode, route.localUri) { mutableStateOf(false) }
     val fullscreenEnterFraction = remember { Animatable(1f) }
     var playerBounds by remember { mutableStateOf<Rect?>(null) }
@@ -258,6 +274,66 @@ fun Media3VideoRouteHostScreen(
     LaunchedEffect(controller.isPlaying, hostUiState.isInPipMode) {
         if (hostUiState.isInPipMode) {
             activity.setPictureInPictureParams(buildPipParams(null))
+        }
+    }
+
+    // ---- 滚动折叠播放器 + 平板高度（复刻 CoordinatorLayout 的 EXIT_UNTIL_COLLAPSED）----
+    val configuration = LocalConfiguration.current
+    val density = LocalDensity.current
+    var isSideRelatedCollapsed by remember { mutableStateOf(false) }
+    val isTabletLandscape = Preferences.tabletMode &&
+            configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val basePlayerHeight = when {
+        isTabletLandscape -> if (isSideRelatedCollapsed) 500.dp else 400.dp
+        Preferences.tabletMode -> 350.dp
+        else -> 250.dp
+    }
+    val maxCollapsePx = with(density) { basePlayerHeight.toPx() }
+    var collapseOffsetPx by remember { mutableFloatStateOf(0f) }
+    LaunchedEffect(maxCollapsePx) {
+        collapseOffsetPx = collapseOffsetPx.coerceAtMost(maxCollapsePx)
+    }
+    // 播放/加载中禁折叠，且变为播放时展开回 0（旧宿主 :417-434 的 disableScroll + setExpanded）
+    val playbackActive = visual == PlaybackVisual.Playing ||
+            visual == PlaybackVisual.Preparing || visual == PlaybackVisual.Buffering
+    LaunchedEffect(playbackActive) {
+        if (playbackActive && collapseOffsetPx > 0f) {
+            animate(collapseOffsetPx, 0f) { value, _ -> collapseOffsetPx = value }
+        }
+    }
+    val collapseEnabled = rememberUpdatedState(
+        !isFullscreen && !hostUiState.isInPipMode && !playbackActive
+    )
+    val maxCollapse = rememberUpdatedState(maxCollapsePx)
+    val collapseConnection = remember {
+        object : NestedScrollConnection {
+            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                if (!collapseEnabled.value) return Offset.Zero
+                val delta = available.y
+                if (delta < 0f && collapseOffsetPx < maxCollapse.value) {
+                    // 上滑先收播放器
+                    val consumed = maxOf(delta, -(maxCollapse.value - collapseOffsetPx))
+                    collapseOffsetPx -= consumed
+                    return Offset(0f, consumed)
+                }
+                return Offset.Zero
+            }
+
+            override fun onPostScroll(
+                consumed: Offset,
+                available: Offset,
+                source: NestedScrollSource,
+            ): Offset {
+                if (!collapseEnabled.value) return Offset.Zero
+                val delta = available.y
+                if (delta > 0f && collapseOffsetPx > 0f) {
+                    // 下滑列表到顶后展开播放器
+                    val used = minOf(delta, collapseOffsetPx)
+                    collapseOffsetPx -= used
+                    return Offset(0f, used)
+                }
+                return Offset.Zero
+            }
         }
     }
 
@@ -452,7 +528,30 @@ fun Media3VideoRouteHostScreen(
         onDispose { activity.registerCurrentVideoHost(null) }
     }
 
-    Column(Modifier.fillMaxSize()) {
+    val relatedItems =
+        viewModel.hanimeVideoFlow.collectAsStateWithLifecycle().value?.relatedHanimes.orEmpty()
+    val fillPlayer = isFullscreen || hostUiState.isInPipMode
+    Media3VideoShellContent(
+        isTabletMode = Preferences.tabletMode,
+        forceMainOnly = fillPlayer,
+        relatedItems = relatedItems,
+        onHideRelatedInIntroChange = { viewModel.setHideRelatedInIntro(it) },
+        onSideRelatedCollapsedChange = { isSideRelatedCollapsed = it },
+        onOpenVideo = { item -> activity.showVideoDetailFragment(item.videoCode) },
+        modifier = Modifier.fillMaxSize(),
+    ) {
+        Column(Modifier.fillMaxSize().nestedScroll(collapseConnection)) {
+        Box(
+            modifier = (if (fillPlayer) {
+                // 全屏/PiP 铺满；竖屏视频入场时高度 0.5→1（顶部对齐即 pivotY=0 语义）
+                Modifier.fillMaxWidth().fillMaxHeight(fullscreenEnterFraction.value)
+            } else {
+                Modifier.fillMaxWidth()
+                    .height(with(density) { (maxCollapsePx - collapseOffsetPx).toDp() })
+            })
+                .clipToBounds()
+                .onGloballyPositioned { playerBounds = it.boundsInWindow() },
+        ) {
         HanimeVideoPlayer(
             controller = controller,
             title = title,
@@ -496,14 +595,21 @@ fun Media3VideoRouteHostScreen(
                 showAddHKeyframeDialog = position to (title.ifBlank { "Untitled" })
             },
             environment = environment,
-            modifier = (if (isFullscreen) {
-                // 竖屏视频入场时高度 0.5→1（顶部对齐即 pivotY=0 语义）
-                Modifier.fillMaxWidth().fillMaxHeight(fullscreenEnterFraction.value)
-            } else {
-                Modifier.fillMaxWidth().height(250.dp)
-            }).onGloballyPositioned { playerBounds = it.boundsInWindow() },
+            // 容器收缩、内容以 0.3 倍反向位移 = CollapsingToolbar parallax 0.7 的等价
+            modifier = Modifier
+                .fillMaxWidth()
+                .then(
+                    if (fillPlayer) Modifier.fillMaxHeight() else Modifier.height(basePlayerHeight)
+                )
+                .offset {
+                    IntOffset(
+                        0,
+                        if (fillPlayer) 0 else (-collapseOffsetPx * 0.3f).roundToInt(),
+                    )
+                },
         )
-        if (!isFullscreen) VideoRouteContent(
+        }
+        if (!fillPlayer) VideoRouteContent(
             videoCode = route.videoCode,
             videoState = videoState,
             videoViewModel = viewModel,
@@ -554,6 +660,7 @@ fun Media3VideoRouteHostScreen(
             stringLongPressShare = stringLongPressShare,
             pageHost = pageHost,
         )
+        }
     }
 
     if (showMeteredDialog) {
