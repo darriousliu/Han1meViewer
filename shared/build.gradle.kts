@@ -4,6 +4,20 @@
 import io.github.darriousliu.han1meviewer.convention.createAndroidJvmMain
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
+// ============================================================================
+// :shared = 多模块的汇总层（相当于 PiPixiv2 的 :composeApp）。
+//
+// 各平台壳（:app / :desktopApp / iosApp）只认它一个；core/feature 在这里合流。
+// 钉死在本模块、**不能**下放的职责：
+//   - iOS framework 导出（baseName "Shared"，iosApp 直接链它）
+//   - swiftPMDependencies（Firebase iOS）——swiftPM 会给模块挂 dumpXcodebuildArgs*
+//     任务，依赖方解析元数据时会拉起它们；放在叶子模块会让没装 Xcode 的机器
+//     连 jvm 编译都跑不了，放这里只影响本模块自己
+//   - aboutLibraries 聚合——必须挂在能看到全部依赖图的模块，否则收集出 30 字节空 json
+//   - Koin 的 AppModule（includes 全部 feature module）与 startKoin
+// 代码内容：App() 入口、DI 装配、MainActivity/MainNavDisplay/route 包装、
+// workers、jzvd 等 Android 宿主胶水与叶子能力。
+// ============================================================================
 plugins {
     // targets 与编译选项在 convention 里；依赖全在下面的 sourceSets 自己声明
     id("han1me.kmp.compose")
@@ -140,19 +154,8 @@ kotlin {
             api(project(":feature:home"))
             api(project(":feature:video"))
             api(project(":feature:main"))
-            implementation(libs.kotlinx.io.core)
-            implementation(libs.ksoup)
-            implementation(libs.htmlconverter)
             implementation(libs.coil.compose)
-            implementation(libs.coil.network.ktor3)
             implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.serialization.kotlinx.json)
-            implementation(libs.mp.stools)
-            implementation(libs.aboutlibraries.core)
-            implementation(libs.aboutlibraries.compose.m3)
-            implementation(libs.sonner)
-            implementation(libs.composewebview)
             implementation(libs.filekit.core)
             implementation(libs.filekit.dialogs.compose)
         }
@@ -172,17 +175,14 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.koin.android)
             implementation(libs.appcompat)
-            implementation(libs.androidx.window)
-            implementation(libs.androidx.window.java)
             implementation(libs.androidx.biometric)
-            implementation(libs.androidx.core.splashscreen)
-            implementation(libs.androidx.swiperefreshlayout)
+            // 包名是 androidx.compose.material.icons.filled.*，别按 "extended" 字样判断使用点
             implementation(libs.androidx.material.icons.extended)
+            implementation(libs.androidx.core.splashscreen)
             // android related
 
             implementation(libs.bundles.android.base)
             implementation(libs.bundles.android.jetpack)
-            implementation(libs.palette)
             implementation(libs.material)
             //compose
             implementation(project.dependencies.platform(libs.compose.compose.bom))
@@ -218,19 +218,15 @@ kotlin {
 
             // view
 
-            implementation(libs.multitype)
             implementation(libs.base.recyclerview.adapter.helper4)
-            implementation(libs.expandable.textview)
             implementation(libs.spannable.x)
-            implementation(libs.about)
-            implementation(libs.circular.reveal.switch)
-            implementation(libs.drawerlayout)
 
             // firebase
 
             implementation(project.dependencies.platform(libs.firebase.bom))
             implementation(libs.firebase.analytics)
             implementation(libs.firebase.crashlytics)
+            // 代码里零引用，但 :app 的 firebase-perf 插件在运行时需要它
             implementation(libs.firebase.perf)
             implementation(libs.firebase.config)
 
