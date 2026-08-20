@@ -261,13 +261,15 @@ class MainActivity : AppCompatActivity(), PermissionRequester, MainHostActions {
         }
     }
 
-    // MainHostActions：导航图只认这三个语义，不认识 MainActivity 本身
+    // MainHostActions：导航图只认这几个语义，不认识 MainActivity 本身
     override fun onExitApp() = finish()
 
     override fun onLogout(closeCurrentPageOnConfirm: Boolean) =
         showLogoutConfirmDialog(closeCurrentPageOnConfirm)
 
     override fun onScreenView(screenClassName: String) = logScreenViewEvent(screenClassName)
+
+    override fun onRestartApp() = restartApplication(killProcess = true)
 
     fun showLogoutConfirmDialog(closeCurrentPageOnConfirm: Boolean = false) {
         showAlertDialog {

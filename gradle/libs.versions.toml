@@ -165,6 +165,7 @@ compose-multiplatform-ui-tooling-preview = { module = "org.jetbrains.compose.ui:
 compose-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity" }
+androidx-documentfile = { group = "androidx.documentfile", name = "documentfile", version = "1.1.0" }
 compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "compose-material3" }
 compose-ui-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 compose-ui-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }

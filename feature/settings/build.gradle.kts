@@ -1,3 +1,5 @@
+import io.github.darriousliu.han1meviewer.convention.createAndroidJvmMain
+
 plugins {
     id("han1me.kmp.compose")
 }
@@ -21,6 +23,8 @@ kotlin {
             // 网格配置对话框的 %.1f 文案
             implementation(libs.mp.stools)
             implementation(project(":core:repository"))
+            // 自定义镜像站测试要对首页 HTML 跑一遍解析
+            implementation(project(":core:parse"))
             implementation(project(":core:ui"))
             implementation(project(":core:navigation"))
             // SettingsScaffold 的 onScreenView 走 LocalMainHostActions
@@ -38,7 +42,16 @@ kotlin {
         androidMain.dependencies {
             // 下载设置的 SAF 目录选择与运行时权限 launcher
             implementation(libs.androidx.activity.compose)
+            // SAF 迁移检查要数 DocumentFile 树里的文件
+            implementation(libs.androidx.documentfile)
         }
+    }
+
+    // 网络设置的 DNS/DoH/延迟测试依赖 okhttp 侧能力(HDns/HProxySelector),
+    // android 和 jvm 共用一份 actual,iOS 走门控 Noop。
+    createAndroidJvmMain().dependencies {
+        // HDns 实现 okhttp3.Dns,编译期解析超类型要看得见 okhttp
+        implementation(libs.okhttp)
     }
 }
 

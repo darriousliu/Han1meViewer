@@ -154,6 +154,11 @@ fun NetworkSettingsScreen(
     onDismissDelayTest: () -> Unit,
     onDismissDohTest: () -> Unit,
     onApplyProxy: (Int, String, Int) -> Unit,
+    // 平台能力门控:没有对应能力(iOS)的条目整条不渲染
+    showProxy: Boolean = true,
+    showHosts: Boolean = true,
+    showDoh: Boolean = true,
+    showLatencyTest: Boolean = true,
 ) {
     var showDomainDialog by rememberSaveable { mutableStateOf(false) }
     var showProxyDialog by rememberSaveable { mutableStateOf(false) }
@@ -268,7 +273,7 @@ fun NetworkSettingsScreen(
             )
         }
 
-        item {
+        if (showProxy) item {
             SettingNavigationItem(
                 title = stringResource(Res.string.proxy),
                 summary = state.proxySummary,
@@ -277,9 +282,9 @@ fun NetworkSettingsScreen(
             )
         }
 
-        item { NetworkGroupTitle(stringResource(Res.string.builtin_dns)) }
+        if (showHosts || showDoh) item { NetworkGroupTitle(stringResource(Res.string.builtin_dns)) }
 
-        item {
+        if (showHosts) item {
             SettingSwitchItem(
                 title = stringResource(Res.string.use_built_in_hosts),
                 summary = stringResource(Res.string.use_built_in_hosts_summary),
@@ -289,7 +294,7 @@ fun NetworkSettingsScreen(
             )
         }
 
-        item {
+        if (showHosts) item {
             SettingNavigationItem(
                 title = stringResource(Res.string.custom_hosts),
                 summary = if (customHostsData.isBlank()) stringResource(Res.string.custom_hosts_empty_summary) else customHostsData.take(60),
@@ -298,7 +303,7 @@ fun NetworkSettingsScreen(
             )
         }
 
-        item {
+        if (showDoh) item {
             SettingNavigationItem(
                 title = stringResource(Res.string.use_doh),
                 summary = state.dohSummary,
@@ -307,9 +312,9 @@ fun NetworkSettingsScreen(
             )
         }
 
-        item { NetworkGroupTitle(stringResource(Res.string.debug)) }
+        if (showLatencyTest || showDoh) item { NetworkGroupTitle(stringResource(Res.string.debug)) }
 
-        item {
+        if (showLatencyTest) item {
             SettingNavigationItem(
                 title = stringResource(Res.string.view_node_latency),
                 summary = state.delaySummary,
@@ -318,7 +323,7 @@ fun NetworkSettingsScreen(
             )
         }
 
-        item {
+        if (showDoh) item {
             SettingNavigationItem(
                 title = stringResource(Res.string.test_doh),
                 summary = stringResource(Res.string.test_doh_summary),

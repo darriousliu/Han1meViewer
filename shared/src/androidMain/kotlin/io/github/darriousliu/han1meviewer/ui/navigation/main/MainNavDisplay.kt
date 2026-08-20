@@ -67,7 +67,7 @@ import io.github.darriousliu.han1meviewer.feature.settings.HKeyframesRouteScreen
 import io.github.darriousliu.han1meviewer.feature.settings.HKeyframesTopBarActions
 import io.github.darriousliu.han1meviewer.ui.navigation.settings.HomeSettingsRouteScreen
 import io.github.darriousliu.han1meviewer.feature.settings.MpvPlayerSettingsRouteScreen
-import io.github.darriousliu.han1meviewer.ui.navigation.settings.NetworkSettingsRouteScreen
+import io.github.darriousliu.han1meviewer.feature.settings.NetworkSettingsRouteScreen
 import io.github.darriousliu.han1meviewer.ui.navigation.settings.PlayerSettingsRouteScreen
 import io.github.darriousliu.han1meviewer.feature.settings.SettingsScaffold
 import io.github.darriousliu.han1meviewer.feature.settings.SharedHKeyframesRouteScreen

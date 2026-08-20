@@ -18,6 +18,9 @@ interface MainHostActions {
 
     /** 页面浏览埋点;没有统计后端的平台保持空实现。 */
     fun onScreenView(screenClassName: String) {}
+
+    /** 重启进程使网络层配置生效(换域名/hosts)。做不到自杀重启的平台保持空实现。 */
+    fun onRestartApp() {}
 }
 
 object NoopMainHostActions : MainHostActions
