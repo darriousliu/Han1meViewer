@@ -61,7 +61,7 @@ import io.github.darriousliu.han1meviewer.core.navigation.VideoRoute
 import io.github.darriousliu.han1meviewer.core.navigation.WatchHistoryRoute
 import io.github.darriousliu.han1meviewer.core.navigation.navigateSafely
 import io.github.darriousliu.han1meviewer.core.navigation.popTo
-import io.github.darriousliu.han1meviewer.ui.navigation.settings.DownloadSettingsRouteScreen
+import io.github.darriousliu.han1meviewer.feature.settings.DownloadSettingsRouteScreen
 import io.github.darriousliu.han1meviewer.feature.settings.HKeyframeSettingsRouteScreen
 import io.github.darriousliu.han1meviewer.feature.settings.HKeyframesRouteScreen
 import io.github.darriousliu.han1meviewer.feature.settings.HKeyframesTopBarActions
@@ -80,6 +80,7 @@ import io.github.darriousliu.han1meviewer.feature.account.UserAccountViewModel
 import io.github.vinceglb.filekit.PlatformFile
 import kotlinx.serialization.json.Json
 import io.github.darriousliu.han1meviewer.feature.checkin.DailyCheckInRouteScreen
+import io.github.darriousliu.han1meviewer.feature.download.DownloadRouteScreen
 import io.github.darriousliu.han1meviewer.feature.history.WatchHistoryRouteScreen
 import io.github.darriousliu.han1meviewer.feature.home.HomeRouteScreen
 import io.github.darriousliu.han1meviewer.feature.subscription.SubscriptionRouteScreen

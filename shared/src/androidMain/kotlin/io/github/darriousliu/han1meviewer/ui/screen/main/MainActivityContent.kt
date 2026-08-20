@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -30,6 +31,7 @@ import io.github.darriousliu.han1meviewer.core.navigation.CloudflareRoute
 import io.github.darriousliu.han1meviewer.core.navigation.HanimeRoute
 import io.github.darriousliu.han1meviewer.core.navigation.HomeRoute
 import io.github.darriousliu.han1meviewer.core.navigation.LoginRoute
+import io.github.darriousliu.han1meviewer.feature.download.LocalDownloadTaskEngine
 import io.github.darriousliu.han1meviewer.feature.home.HomeSessionStore
 import io.github.darriousliu.han1meviewer.feature.main.MainDestinationSpec
 import io.github.darriousliu.han1meviewer.ui.navigation.main.MainNavDisplay
@@ -66,6 +68,8 @@ fun MainActivityContent(
     // 它真正起作用的是 desktop/iOS —— 那两端没有重建机制。
     val appLanguage by Preferences.appLanguageStateFlow.collectAsStateWithLifecycle()
     key(appLanguage) {
+        // 下载任务引擎在 shared,经 CompositionLocal 注给 commonMain 的下载 route
+        CompositionLocalProvider(LocalDownloadTaskEngine provides AndroidDownloadTaskEngine) {
         HanimeTheme {
             HanimeToastHost {
                 // 用自家的建栈入口而不是 nav3 的 rememberNavBackStack，理由见 rememberHanimeBackStack：
@@ -201,6 +205,7 @@ fun MainActivityContent(
                     }
                 }
             }
+        }
         }
     }
 }

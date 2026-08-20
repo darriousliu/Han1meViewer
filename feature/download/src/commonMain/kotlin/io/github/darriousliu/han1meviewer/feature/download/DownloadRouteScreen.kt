@@ -1,33 +1,38 @@
-package io.github.darriousliu.han1meviewer.ui.navigation.main
+package io.github.darriousliu.han1meviewer.feature.download
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.darriousliu.han1meviewer.core.storage.Preferences
-import io.github.darriousliu.han1meviewer.R
-import io.github.darriousliu.han1meviewer.core.storage.dao.DownloadDatabase
 import io.github.darriousliu.han1meviewer.core.storage.entity.download.HanimeDownloadEntity
 import io.github.darriousliu.han1meviewer.core.storage.entity.download.VideoWithCategories
+import io.github.darriousliu.han1meviewer.core.resource.Res
+import io.github.darriousliu.han1meviewer.core.resource.cancel
+import io.github.darriousliu.han1meviewer.core.resource.confirm
+import io.github.darriousliu.han1meviewer.core.resource.create_group_success
+import io.github.darriousliu.han1meviewer.core.resource.delete
+import io.github.darriousliu.han1meviewer.core.resource.delete_success
+import io.github.darriousliu.han1meviewer.core.resource.group_name_empty
+import io.github.darriousliu.han1meviewer.core.resource.group_renamed
+import io.github.darriousliu.han1meviewer.core.resource.ok
+import io.github.darriousliu.han1meviewer.core.resource.permission_error
+import io.github.darriousliu.han1meviewer.core.resource.prepare_to_delete_s
+import io.github.darriousliu.han1meviewer.core.resource.read_download_dir_message
+import io.github.darriousliu.han1meviewer.core.resource.read_download_dir_title
+import io.github.darriousliu.han1meviewer.core.resource.read_success
+import io.github.darriousliu.han1meviewer.core.resource.select_custom_directory
+import io.github.darriousliu.han1meviewer.core.resource.sure_to_delete
+import io.github.darriousliu.han1meviewer.core.resource.video_deleted_sure_to_delete_item
+import io.github.darriousliu.han1meviewer.core.resource.video_not_exist
 import io.github.darriousliu.han1meviewer.core.ui.component.ConfirmDialog
-import io.github.darriousliu.han1meviewer.feature.download.DownloadScreen
-import io.github.darriousliu.han1meviewer.feature.download.DownloadEvent
-import io.github.darriousliu.han1meviewer.feature.download.DownloadViewModel
-import io.github.darriousliu.han1meviewer.core.storage.SafFileManager
-import io.github.darriousliu.han1meviewer.core.storage.SafFileManager.checkSafPermissions
-import io.github.darriousliu.han1meviewer.core.storage.SafFileManager.scanAndImportHanimeDownloads
-import io.github.darriousliu.han1meviewer.core.common.util.application
-import io.github.darriousliu.han1meviewer.util.openDownloadedHanimeVideoLocally
-import io.github.darriousliu.han1meviewer.util.showLongToast
-import io.github.darriousliu.han1meviewer.worker.HanimeDownloadManagerV2
-import kotlinx.coroutines.Dispatchers
+import io.github.darriousliu.han1meviewer.core.ui.component.LocalToaster
+import io.github.darriousliu.han1meviewer.core.ui.component.showLong
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -36,10 +41,11 @@ fun DownloadRouteScreen(
     onNavigateToVideo: (String) -> Unit,
     onNavigateToLocalVideo: (String, String?) -> Unit,
 ) {
-    val context = LocalContext.current
     val viewModel: DownloadViewModel = koinViewModel()
     val scope = rememberCoroutineScope()
-    val dao = remember { DownloadDatabase.instance.hanimeDownloadDao }
+    val toaster = LocalToaster.current
+    val engine = LocalDownloadTaskEngine.current
+    val platform = rememberDownloadPlatformActions()
     var showVideoNotExistConfirm by remember { mutableStateOf<VideoWithCategories?>(null) }
     var showDeleteVideoConfirm by remember { mutableStateOf<VideoWithCategories?>(null) }
     var showImportDownloadedConfirm by remember { mutableStateOf(false) }
@@ -48,22 +54,22 @@ fun DownloadRouteScreen(
     val handleEvent: (DownloadEvent) -> Unit = { event ->
         when (event) {
             is DownloadEvent.OnPauseAll -> event.items.forEach { entity ->
-                if (entity.isDownloading) HanimeDownloadManagerV2.stopTask(entity)
+                if (entity.isDownloading) engine.pause(entity)
             }
             is DownloadEvent.OnResumeAll -> event.items.forEach { entity ->
-                if (!entity.isDownloading) HanimeDownloadManagerV2.resumeTask(entity)
+                if (!entity.isDownloading) engine.resume(entity)
             }
-            is DownloadEvent.OnPauseItem -> HanimeDownloadManagerV2.stopTask(event.item)
-            is DownloadEvent.OnResumeItem -> HanimeDownloadManagerV2.resumeTask(event.item)
-            is DownloadEvent.OnDeleteDownloadingItem -> HanimeDownloadManagerV2.deleteTask(event.item)
+            is DownloadEvent.OnPauseItem -> engine.pause(event.item)
+            is DownloadEvent.OnResumeItem -> engine.resume(event.item)
+            is DownloadEvent.OnDeleteDownloadingItem -> engine.delete(event.item)
 
             is DownloadEvent.OnImportDownloaded -> {
-                if (!Preferences.safDownloadPath.isNullOrBlank() &&
-                    !Preferences.isUsePrivateStorage && !isImportingDownloaded
-                ) {
+                if (platform.canImportFromDirectory() && !isImportingDownloaded) {
                     showImportDownloadedConfirm = true
                 } else {
-                    showLongToast(application.getString(R.string.select_custom_directory))
+                    scope.launch {
+                        toaster.showLong(getString(Res.string.select_custom_directory))
+                    }
                 }
             }
 
@@ -73,7 +79,7 @@ fun DownloadRouteScreen(
             )
 
             is DownloadEvent.OnExternalPlayback -> {
-                context.openDownloadedHanimeVideoLocally(event.video.video.videoUri) {
+                platform.playExternally(event.video.video.videoUri) {
                     showVideoNotExistConfirm = event.video
                 }
             }
@@ -86,26 +92,30 @@ fun DownloadRouteScreen(
 
             is DownloadEvent.OnRenameGroup -> {
                 viewModel.updateGroupName(event.groupId, event.newName)
-                showLongToast(application.getString(R.string.group_renamed, event.newName))
+                scope.launch {
+                    toaster.showLong(getString(Res.string.group_renamed, event.newName))
+                }
             }
 
             is DownloadEvent.OnCreateGroup -> {
                 if (event.name.isBlank()) {
-                    showLongToast(application.getString(R.string.group_name_empty))
+                    scope.launch { toaster.showLong(getString(Res.string.group_name_empty)) }
                 } else {
                     viewModel.createNewGroup(event.name)
-                    showLongToast(application.getString(R.string.create_group_success, event.name))
+                    scope.launch {
+                        toaster.showLong(getString(Res.string.create_group_success, event.name))
+                    }
                 }
             }
 
             is DownloadEvent.OnDeleteGroup -> {
                 viewModel.deleteGroup(event.group)
-                showLongToast(application.getString(R.string.delete_success))
+                scope.launch { toaster.showLong(getString(Res.string.delete_success)) }
             }
 
             is DownloadEvent.OnBatchDelete -> event.videos.forEach { video ->
                 viewModel.deleteDownloadHanimeBy(video.video.videoCode, video.video.quality)
-                SafFileManager.deleteDownloadVideoFolder(context, video.video.videoCode)
+                platform.deleteDownloadedFiles(video.video.videoCode)
             }
 
             is DownloadEvent.OnBatchMoveGroup -> event.videos.forEach { video ->
@@ -136,37 +146,29 @@ fun DownloadRouteScreen(
             )
         },
         onEvent = handleEvent,
+        showImportEntry = downloadCapabilities.importFromDirectory,
     )
 
     ConfirmDialog(
         visible = showImportDownloadedConfirm,
-        title = application.getString(R.string.read_download_dir_title),
-        message = application.getString(R.string.read_download_dir_message),
-        confirmText = application.getString(R.string.ok),
-        dismissText = application.getString(R.string.cancel),
+        title = stringResource(Res.string.read_download_dir_title),
+        message = stringResource(Res.string.read_download_dir_message),
+        confirmText = stringResource(Res.string.ok),
+        dismissText = stringResource(Res.string.cancel),
         onConfirm = {
             showImportDownloadedConfirm = false
             isImportingDownloaded = true
             scope.launch {
-                val importSucceeded = withContext(Dispatchers.IO) {
-                    try {
-                        if (!checkSafPermissions(context)) return@withContext false
-                        scanAndImportHanimeDownloads(context, dao)
-                        true
-                    } catch (e: Exception) {
-                        Log.e("ImportHanime", "Failed to import downloaded videos", e)
-                        false
-                    }
-                }
+                val importSucceeded = platform.importFromDirectory()
                 isImportingDownloaded = false
                 if (importSucceeded) {
                     viewModel.loadAllDownloadedHanime(
                         sortedBy = HanimeDownloadEntity.SortedBy.ID,
                         ascending = false,
                     )
-                    showLongToast(application.getString(R.string.read_success))
+                    toaster.showLong(getString(Res.string.read_success))
                 } else {
-                    showLongToast(application.getString(R.string.permission_error))
+                    toaster.showLong(getString(Res.string.permission_error))
                 }
             }
         },
@@ -176,10 +178,10 @@ fun DownloadRouteScreen(
     showVideoNotExistConfirm?.let { video ->
         ConfirmDialog(
             visible = true,
-            title = application.getString(R.string.video_not_exist),
-            message = application.getString(R.string.video_deleted_sure_to_delete_item),
-            confirmText = application.getString(R.string.delete),
-            dismissText = application.getString(R.string.cancel),
+            title = stringResource(Res.string.video_not_exist),
+            message = stringResource(Res.string.video_deleted_sure_to_delete_item),
+            confirmText = stringResource(Res.string.delete),
+            dismissText = stringResource(Res.string.cancel),
             onConfirm = {
                 viewModel.deleteDownloadHanimeBy(video.video.videoCode, video.video.quality)
                 showVideoNotExistConfirm = null
@@ -191,12 +193,12 @@ fun DownloadRouteScreen(
     showDeleteVideoConfirm?.let { video ->
         ConfirmDialog(
             visible = true,
-            title = application.getString(R.string.sure_to_delete),
-            message = application.getString(R.string.prepare_to_delete_s, video.video.title),
-            confirmText = application.getString(R.string.confirm),
-            dismissText = application.getString(R.string.cancel),
+            title = stringResource(Res.string.sure_to_delete),
+            message = stringResource(Res.string.prepare_to_delete_s, video.video.title),
+            confirmText = stringResource(Res.string.confirm),
+            dismissText = stringResource(Res.string.cancel),
             onConfirm = {
-                SafFileManager.deleteDownloadVideoFolder(context, video.video.videoCode)
+                platform.deleteDownloadedFiles(video.video.videoCode)
                 viewModel.deleteDownloadHanimeBy(video.video.videoCode, video.video.quality)
                 showDeleteVideoConfirm = null
             },

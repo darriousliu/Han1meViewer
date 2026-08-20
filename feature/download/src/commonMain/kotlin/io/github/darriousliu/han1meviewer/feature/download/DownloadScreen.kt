@@ -82,6 +82,8 @@ fun DownloadScreen(
     onBack: () -> Unit,
     onLoadDownloaded: () -> Unit,
     onEvent: (DownloadEvent) -> Unit,
+    /** 「读取下载目录」入口;平台没有目录扫描能力(非 SAF)时不渲染。 */
+    showImportEntry: Boolean = true,
 ) {
     val downloadingItems by downloadingFlow.collectAsStateWithLifecycle(initialValue = emptyList())
     val downloadedItems by downloadedFlow.collectAsStateWithLifecycle()
@@ -223,7 +225,7 @@ fun DownloadScreen(
                             contentDescription = stringResource(Res.string.create_new_group),
                         )
                     }
-                    FilledIconButton(
+                    if (showImportEntry) FilledIconButton(
                         onClick = { handleEvent(DownloadEvent.OnImportDownloaded) }
                     ) {
                         Icon(

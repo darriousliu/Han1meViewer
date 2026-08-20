@@ -34,9 +34,11 @@ fun DownloadSettingsScreen(
     state: DownloadSettingsUiState,
     maxDownloadCountLimit: Int,
     maxDownloadSpeedLimitIndex: Int,
-    onOpenDownloadPath: () -> Unit,
+    /** 平台没有目录选择能力(iOS)时传 null,整条不渲染。 */
+    onOpenDownloadPath: (() -> Unit)?,
     onRestoreDefaultPath: () -> Unit,
-    onImportDownloadedFiles: () -> Unit,
+    /** 「匯出下載記錄」是移动文件+改库的迁移;平台不提供时传 null,整条不渲染。 */
+    onImportDownloadedFiles: (() -> Unit)?,
     onDownloadCountLimitChange: (Int) -> Unit,
     onDownloadSpeedLimitChange: (Int) -> Unit,
 ) {
@@ -44,7 +46,7 @@ fun DownloadSettingsScreen(
         contentPadding = PaddingValues(vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(2.dp),
     ) {
-        item {
+        if (onOpenDownloadPath != null) item {
             SettingNavigationItem(
                 title = stringResource(Res.string.download_path),
                 summary = state.downloadPathSummary,
@@ -53,7 +55,7 @@ fun DownloadSettingsScreen(
             )
         }
 
-        item {
+        if (onImportDownloadedFiles != null) item {
             SettingNavigationItem(
                 title = stringResource(Res.string.pref_export_downloads_title),
                 summary = stringResource(Res.string.pref_export_downloads_summary),
