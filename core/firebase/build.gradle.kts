@@ -54,24 +54,3 @@ kotlin {
         }
     }
 }
-
-// swiftPM import 的 dump→convert→cinterop 三层任务要完整 Xcode(CommandLineTools
-// 的 xcodebuild 是必失败的 stub),而 HMPP 的 metadata transform 链让**所有模块的
-// 一切编译**都在它们下游——dump 一失败,全部 Kotlin 编译被静默跳过,构建假绿。
-// 没有完整 Xcode 的机器上把这三层直接 SKIP,下游改用上一次成功构建留在 build/
-// 里的输出(klib/def/ld dump)。有 Xcode 的机器不受影响。
-// ⚠️ 全新 clone 且无 Xcode 时没有残留输出,依旧编不过 iOS 侧——预期内。
-val xcodeDeveloperDir = providers.exec {
-    commandLine("/usr/bin/xcode-select", "-p")
-    isIgnoreExitValue = true
-}.standardOutput.asText.map { it.trim() }
-
-tasks.matching {
-    it.name.startsWith("dumpXcodebuildArgs") ||
-        it.name.startsWith("convertSyntheticImportProjectIntoDefFile") ||
-        it.name.startsWith("cinteropSwiftPMImport")
-}.configureEach {
-    onlyIf("full Xcode is required; reuse previous outputs otherwise") {
-        xcodeDeveloperDir.get().contains("Xcode.app")
-    }
-}
